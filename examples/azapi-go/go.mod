@@ -3,7 +3,7 @@ module azapi-go
 go 1.19
 
 require (
-	github.com/dirien/pulumi-azapi v1.3.0
+	github.com/dirien/pulumi-azapi v1.2.9
 	github.com/pulumi/pulumi/sdk/v3 v3.55.0
 )
 
@@ -43,6 +43,7 @@ require (
 	github.com/pulumi/pulumi-azure-native-sdk v1.95.0 // indirect
 	github.com/pulumi/pulumi-azure-native-sdk/managedidentity v1.95.0 // indirect
 	github.com/pulumi/pulumi-azure-native-sdk/resources v1.95.0 // indirect
+	github.com/pulumi/pulumi-azure/sdk/v5 v5.35.0 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
 	github.com/rogpeppe/go-internal v1.9.0 // indirect
 	github.com/sabhiram/go-gitignore v0.0.0-20210923224102-525f6e181f06 // indirect

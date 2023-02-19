@@ -111,6 +111,8 @@ github.com/pulumi/pulumi-azure-native-sdk/managedidentity v1.95.0 h1:DVqhTtYHZHO
 github.com/pulumi/pulumi-azure-native-sdk/managedidentity v1.95.0/go.mod h1:xu2EHDTkcbN5S0KBi8R392D31PYfkEJoQ0ckN6SLa24=
 github.com/pulumi/pulumi-azure-native-sdk/resources v1.95.0 h1:85J76pMJ74lSCQzlj0ViVAPbBLokPIWBG+iEdd+JzPs=
 github.com/pulumi/pulumi-azure-native-sdk/resources v1.95.0/go.mod h1:Ta2jP79PSZRMRabGFv4tFNW+IuAjR5D73zR5fN2WvNk=
+github.com/pulumi/pulumi-azure/sdk/v5 v5.35.0 h1:3SFcqH8+y/EV9VMXwqch8kySNVBnaMzYFPyzKnHGJoY=
+github.com/pulumi/pulumi-azure/sdk/v5 v5.35.0/go.mod h1:TENJ0y8WOaOojqTGdxfpQYNgBkp1IylDBwDLFuVV/L4=
 github.com/pulumi/pulumi/sdk/v3 v3.55.0 h1:sQuye2RWItyJS+KRgbo3rNGsRmZNHv9FDNR35tPBEdM=
 github.com/pulumi/pulumi/sdk/v3 v3.55.0/go.mod h1:sDKcGZ9ChAy1zHYtzEsHyXzD8AvgiKVyQUc8lgzuGhY=
 github.com/rivo/uniseg v0.2.0 h1:S1pD9weZBuJdFmowNwbpi7BJ8TNftyUImj/0WQi72jY=
