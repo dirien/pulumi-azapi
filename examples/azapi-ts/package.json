@@ -1,0 +1,12 @@
+{
+    "name": "azapi-ts",
+    "main": "index.ts",
+    "devDependencies": {
+        "@types/node": "^18"
+    },
+    "dependencies": {
+        "@pulumi/pulumi": "3.55.0",
+        "@pulumi/azure": "5.35.0",
+        "@ediri/azapi": "1.2.9"
+    }
+}
