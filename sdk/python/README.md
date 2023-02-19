@@ -1,6 +1,6 @@
 # AzAPI Resource Provider
 
-![](/Users/dirien/Tools/repos/pulumi-azapi/img/azure.svg)
+![AzAPI](./img/azure.svg)
 
 The AzAPI Resource Provider lets you manage [AzAPI](https://learn.microsoft.com/en-us/azure/developer/terraform/overview-azapi-provider) resources.
 

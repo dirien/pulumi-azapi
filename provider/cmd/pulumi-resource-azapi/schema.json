@@ -11,6 +11,7 @@
     "license": "Apache-2.0",
     "attribution": "This Pulumi package is based on the [`azapi` Terraform Provider](https://github.com/Azure/terraform-provider-azapi).",
     "repository": "https://github.com/dirien/pulumi-azapi",
+    "logoUrl": "https://raw.githubusercontent.com/dirien/pulumi-azapi/main/img/azure.svg",
     "pluginDownloadURL": "github://api.github.com/dirien/pulumi-azapi",
     "publisher": "dirien",
     "meta": {
