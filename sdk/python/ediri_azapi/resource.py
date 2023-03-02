@@ -25,6 +25,7 @@ class ResourceArgs:
                  location: Optional[pulumi.Input[str]] = None,
                  locks: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]] = None,
                  name: Optional[pulumi.Input[str]] = None,
+                 removing_special_chars: Optional[pulumi.Input[bool]] = None,
                  response_export_values: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]] = None,
                  schema_validation_enabled: Optional[pulumi.Input[bool]] = None,
                  tags: Optional[pulumi.Input[Mapping[str, pulumi.Input[str]]]] = None):
@@ -39,6 +40,7 @@ class ResourceArgs:
         :param pulumi.Input[str] location: The Azure Region where the azure resource should exist.
         :param pulumi.Input[Sequence[pulumi.Input[str]]] locks: A list of ARM resource IDs which are used to avoid create/modify/delete azapi resources at the same time.
         :param pulumi.Input[str] name: Specifies the name of the azure resource. Changing this forces a new resource to be created.
+        :param pulumi.Input[bool] removing_special_chars: Whether to remove special characters in resource name. Defaults to `false`.
         :param pulumi.Input[Sequence[pulumi.Input[str]]] response_export_values: A list of path that needs to be exported from response body.
                Setting it to `["*"]` will export the full response body.
                Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
@@ -64,6 +66,8 @@ class ResourceArgs:
             pulumi.set(__self__, "locks", locks)
         if name is not None:
             pulumi.set(__self__, "name", name)
+        if removing_special_chars is not None:
+            pulumi.set(__self__, "removing_special_chars", removing_special_chars)
         if response_export_values is not None:
             pulumi.set(__self__, "response_export_values", response_export_values)
         if schema_validation_enabled is not None:
@@ -178,6 +182,18 @@ class ResourceArgs:
         pulumi.set(self, "name", value)
 
     @property
+    @pulumi.getter(name="removingSpecialChars")
+    def removing_special_chars(self) -> Optional[pulumi.Input[bool]]:
+        """
+        Whether to remove special characters in resource name. Defaults to `false`.
+        """
+        return pulumi.get(self, "removing_special_chars")
+
+    @removing_special_chars.setter
+    def removing_special_chars(self, value: Optional[pulumi.Input[bool]]):
+        pulumi.set(self, "removing_special_chars", value)
+
+    @property
     @pulumi.getter(name="responseExportValues")
     def response_export_values(self) -> Optional[pulumi.Input[Sequence[pulumi.Input[str]]]]:
         """
@@ -231,6 +247,7 @@ class _ResourceState:
                  name: Optional[pulumi.Input[str]] = None,
                  output: Optional[pulumi.Input[str]] = None,
                  parent_id: Optional[pulumi.Input[str]] = None,
+                 removing_special_chars: Optional[pulumi.Input[bool]] = None,
                  response_export_values: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]] = None,
                  schema_validation_enabled: Optional[pulumi.Input[bool]] = None,
                  tags: Optional[pulumi.Input[Mapping[str, pulumi.Input[str]]]] = None,
@@ -245,6 +262,7 @@ class _ResourceState:
         :param pulumi.Input[Sequence[pulumi.Input[str]]] locks: A list of ARM resource IDs which are used to avoid create/modify/delete azapi resources at the same time.
         :param pulumi.Input[str] name: Specifies the name of the azure resource. Changing this forces a new resource to be created.
         :param pulumi.Input[str] output: The output json containing the properties specified in `response_export_values`. Here're some examples to decode json and extract the value.
+        :param pulumi.Input[bool] removing_special_chars: Whether to remove special characters in resource name. Defaults to `false`.
         :param pulumi.Input[Sequence[pulumi.Input[str]]] response_export_values: A list of path that needs to be exported from response body.
                Setting it to `["*"]` will export the full response body.
                Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
@@ -274,6 +292,8 @@ class _ResourceState:
             pulumi.set(__self__, "output", output)
         if parent_id is not None:
             pulumi.set(__self__, "parent_id", parent_id)
+        if removing_special_chars is not None:
+            pulumi.set(__self__, "removing_special_chars", removing_special_chars)
         if response_export_values is not None:
             pulumi.set(__self__, "response_export_values", response_export_values)
         if schema_validation_enabled is not None:
@@ -389,6 +409,18 @@ class _ResourceState:
         pulumi.set(self, "parent_id", value)
 
     @property
+    @pulumi.getter(name="removingSpecialChars")
+    def removing_special_chars(self) -> Optional[pulumi.Input[bool]]:
+        """
+        Whether to remove special characters in resource name. Defaults to `false`.
+        """
+        return pulumi.get(self, "removing_special_chars")
+
+    @removing_special_chars.setter
+    def removing_special_chars(self, value: Optional[pulumi.Input[bool]]):
+        pulumi.set(self, "removing_special_chars", value)
+
+    @property
     @pulumi.getter(name="responseExportValues")
     def response_export_values(self) -> Optional[pulumi.Input[Sequence[pulumi.Input[str]]]]:
         """
@@ -456,6 +488,7 @@ class Resource(pulumi.CustomResource):
                  locks: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]] = None,
                  name: Optional[pulumi.Input[str]] = None,
                  parent_id: Optional[pulumi.Input[str]] = None,
+                 removing_special_chars: Optional[pulumi.Input[bool]] = None,
                  response_export_values: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]] = None,
                  schema_validation_enabled: Optional[pulumi.Input[bool]] = None,
                  tags: Optional[pulumi.Input[Mapping[str, pulumi.Input[str]]]] = None,
@@ -487,6 +520,7 @@ class Resource(pulumi.CustomResource):
         :param pulumi.Input[str] location: The Azure Region where the azure resource should exist.
         :param pulumi.Input[Sequence[pulumi.Input[str]]] locks: A list of ARM resource IDs which are used to avoid create/modify/delete azapi resources at the same time.
         :param pulumi.Input[str] name: Specifies the name of the azure resource. Changing this forces a new resource to be created.
+        :param pulumi.Input[bool] removing_special_chars: Whether to remove special characters in resource name. Defaults to `false`.
         :param pulumi.Input[Sequence[pulumi.Input[str]]] response_export_values: A list of path that needs to be exported from response body.
                Setting it to `["*"]` will export the full response body.
                Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
@@ -544,6 +578,7 @@ class Resource(pulumi.CustomResource):
                  locks: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]] = None,
                  name: Optional[pulumi.Input[str]] = None,
                  parent_id: Optional[pulumi.Input[str]] = None,
+                 removing_special_chars: Optional[pulumi.Input[bool]] = None,
                  response_export_values: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]] = None,
                  schema_validation_enabled: Optional[pulumi.Input[bool]] = None,
                  tags: Optional[pulumi.Input[Mapping[str, pulumi.Input[str]]]] = None,
@@ -567,6 +602,7 @@ class Resource(pulumi.CustomResource):
             if parent_id is None and not opts.urn:
                 raise TypeError("Missing required property 'parent_id'")
             __props__.__dict__["parent_id"] = parent_id
+            __props__.__dict__["removing_special_chars"] = removing_special_chars
             __props__.__dict__["response_export_values"] = response_export_values
             __props__.__dict__["schema_validation_enabled"] = schema_validation_enabled
             __props__.__dict__["tags"] = tags
@@ -593,6 +629,7 @@ class Resource(pulumi.CustomResource):
             name: Optional[pulumi.Input[str]] = None,
             output: Optional[pulumi.Input[str]] = None,
             parent_id: Optional[pulumi.Input[str]] = None,
+            removing_special_chars: Optional[pulumi.Input[bool]] = None,
             response_export_values: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]] = None,
             schema_validation_enabled: Optional[pulumi.Input[bool]] = None,
             tags: Optional[pulumi.Input[Mapping[str, pulumi.Input[str]]]] = None,
@@ -612,6 +649,7 @@ class Resource(pulumi.CustomResource):
         :param pulumi.Input[Sequence[pulumi.Input[str]]] locks: A list of ARM resource IDs which are used to avoid create/modify/delete azapi resources at the same time.
         :param pulumi.Input[str] name: Specifies the name of the azure resource. Changing this forces a new resource to be created.
         :param pulumi.Input[str] output: The output json containing the properties specified in `response_export_values`. Here're some examples to decode json and extract the value.
+        :param pulumi.Input[bool] removing_special_chars: Whether to remove special characters in resource name. Defaults to `false`.
         :param pulumi.Input[Sequence[pulumi.Input[str]]] response_export_values: A list of path that needs to be exported from response body.
                Setting it to `["*"]` will export the full response body.
                Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
@@ -636,6 +674,7 @@ class Resource(pulumi.CustomResource):
         __props__.__dict__["name"] = name
         __props__.__dict__["output"] = output
         __props__.__dict__["parent_id"] = parent_id
+        __props__.__dict__["removing_special_chars"] = removing_special_chars
         __props__.__dict__["response_export_values"] = response_export_values
         __props__.__dict__["schema_validation_enabled"] = schema_validation_enabled
         __props__.__dict__["tags"] = tags
@@ -710,6 +749,14 @@ class Resource(pulumi.CustomResource):
     @pulumi.getter(name="parentId")
     def parent_id(self) -> pulumi.Output[str]:
         return pulumi.get(self, "parent_id")
+
+    @property
+    @pulumi.getter(name="removingSpecialChars")
+    def removing_special_chars(self) -> pulumi.Output[Optional[bool]]:
+        """
+        Whether to remove special characters in resource name. Defaults to `false`.
+        """
+        return pulumi.get(self, "removing_special_chars")
 
     @property
     @pulumi.getter(name="responseExportValues")

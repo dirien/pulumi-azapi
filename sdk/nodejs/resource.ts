@@ -85,6 +85,10 @@ export class Resource extends pulumi.CustomResource {
     public /*out*/ readonly output!: pulumi.Output<string>;
     public readonly parentId!: pulumi.Output<string>;
     /**
+     * Whether to remove special characters in resource name. Defaults to `false`.
+     */
+    public readonly removingSpecialChars!: pulumi.Output<boolean | undefined>;
+    /**
      * A list of path that needs to be exported from response body.
      * Setting it to `["*"]` will export the full response body.
      * Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
@@ -129,6 +133,7 @@ export class Resource extends pulumi.CustomResource {
             resourceInputs["name"] = state ? state.name : undefined;
             resourceInputs["output"] = state ? state.output : undefined;
             resourceInputs["parentId"] = state ? state.parentId : undefined;
+            resourceInputs["removingSpecialChars"] = state ? state.removingSpecialChars : undefined;
             resourceInputs["responseExportValues"] = state ? state.responseExportValues : undefined;
             resourceInputs["schemaValidationEnabled"] = state ? state.schemaValidationEnabled : undefined;
             resourceInputs["tags"] = state ? state.tags : undefined;
@@ -149,6 +154,7 @@ export class Resource extends pulumi.CustomResource {
             resourceInputs["locks"] = args ? args.locks : undefined;
             resourceInputs["name"] = args ? args.name : undefined;
             resourceInputs["parentId"] = args ? args.parentId : undefined;
+            resourceInputs["removingSpecialChars"] = args ? args.removingSpecialChars : undefined;
             resourceInputs["responseExportValues"] = args ? args.responseExportValues : undefined;
             resourceInputs["schemaValidationEnabled"] = args ? args.schemaValidationEnabled : undefined;
             resourceInputs["tags"] = args ? args.tags : undefined;
@@ -197,6 +203,10 @@ export interface ResourceState {
      */
     output?: pulumi.Input<string>;
     parentId?: pulumi.Input<string>;
+    /**
+     * Whether to remove special characters in resource name. Defaults to `false`.
+     */
+    removingSpecialChars?: pulumi.Input<boolean>;
     /**
      * A list of path that needs to be exported from response body.
      * Setting it to `["*"]` will export the full response body.
@@ -254,6 +264,10 @@ export interface ResourceArgs {
      */
     name?: pulumi.Input<string>;
     parentId: pulumi.Input<string>;
+    /**
+     * Whether to remove special characters in resource name. Defaults to `false`.
+     */
+    removingSpecialChars?: pulumi.Input<boolean>;
     /**
      * A list of path that needs to be exported from response body.
      * Setting it to `["*"]` will export the full response body.

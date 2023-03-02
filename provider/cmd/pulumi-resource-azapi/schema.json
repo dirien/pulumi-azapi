@@ -78,6 +78,15 @@
             "defaultLocation": {
                 "type": "string"
             },
+            "defaultName": {
+                "type": "string"
+            },
+            "defaultNamingPrefix": {
+                "type": "string"
+            },
+            "defaultNamingSuffix": {
+                "type": "string"
+            },
             "defaultTags": {
                 "type": "object",
                 "additionalProperties": {
@@ -272,6 +281,15 @@
             "defaultLocation": {
                 "type": "string"
             },
+            "defaultName": {
+                "type": "string"
+            },
+            "defaultNamingPrefix": {
+                "type": "string"
+            },
+            "defaultNamingSuffix": {
+                "type": "string"
+            },
             "defaultTags": {
                 "type": "object",
                 "additionalProperties": {
@@ -348,6 +366,15 @@
                 "description": "The Client Secret which should be used. For use When authenticating as a Service Principal using a Client Secret.\n"
             },
             "defaultLocation": {
+                "type": "string"
+            },
+            "defaultName": {
+                "type": "string"
+            },
+            "defaultNamingPrefix": {
+                "type": "string"
+            },
+            "defaultNamingSuffix": {
                 "type": "string"
             },
             "defaultTags": {
@@ -451,6 +478,10 @@
                 "parentId": {
                     "type": "string"
                 },
+                "removingSpecialChars": {
+                    "type": "boolean",
+                    "description": "Whether to remove special characters in resource name. Defaults to `false`.\n"
+                },
                 "responseExportValues": {
                     "type": "array",
                     "items": {
@@ -520,6 +551,10 @@
                 "parentId": {
                     "type": "string",
                     "willReplaceOnChanges": true
+                },
+                "removingSpecialChars": {
+                    "type": "boolean",
+                    "description": "Whether to remove special characters in resource name. Defaults to `false`.\n"
                 },
                 "responseExportValues": {
                     "type": "array",
@@ -591,6 +626,10 @@
                     "parentId": {
                         "type": "string",
                         "willReplaceOnChanges": true
+                    },
+                    "removingSpecialChars": {
+                        "type": "boolean",
+                        "description": "Whether to remove special characters in resource name. Defaults to `false`.\n"
                     },
                     "responseExportValues": {
                         "type": "array",

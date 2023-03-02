@@ -61,6 +61,30 @@ Object.defineProperty(exports, "defaultLocation", {
     enumerable: true,
 });
 
+export declare const defaultName: string | undefined;
+Object.defineProperty(exports, "defaultName", {
+    get() {
+        return __config.get("defaultName");
+    },
+    enumerable: true,
+});
+
+export declare const defaultNamingPrefix: string | undefined;
+Object.defineProperty(exports, "defaultNamingPrefix", {
+    get() {
+        return __config.get("defaultNamingPrefix");
+    },
+    enumerable: true,
+});
+
+export declare const defaultNamingSuffix: string | undefined;
+Object.defineProperty(exports, "defaultNamingSuffix", {
+    get() {
+        return __config.get("defaultNamingSuffix");
+    },
+    enumerable: true,
+});
+
 export declare const defaultTags: {[key: string]: string} | undefined;
 Object.defineProperty(exports, "defaultTags", {
     get() {

@@ -32,6 +32,15 @@ func GetClientSecret(ctx *pulumi.Context) string {
 func GetDefaultLocation(ctx *pulumi.Context) string {
 	return config.Get(ctx, "azapi:defaultLocation")
 }
+func GetDefaultName(ctx *pulumi.Context) string {
+	return config.Get(ctx, "azapi:defaultName")
+}
+func GetDefaultNamingPrefix(ctx *pulumi.Context) string {
+	return config.Get(ctx, "azapi:defaultNamingPrefix")
+}
+func GetDefaultNamingSuffix(ctx *pulumi.Context) string {
+	return config.Get(ctx, "azapi:defaultNamingSuffix")
+}
 func GetDefaultTags(ctx *pulumi.Context) string {
 	return config.Get(ctx, "azapi:defaultTags")
 }

@@ -44,6 +44,9 @@ export class Provider extends pulumi.ProviderResource {
      */
     public readonly clientSecret!: pulumi.Output<string | undefined>;
     public readonly defaultLocation!: pulumi.Output<string | undefined>;
+    public readonly defaultName!: pulumi.Output<string | undefined>;
+    public readonly defaultNamingPrefix!: pulumi.Output<string | undefined>;
+    public readonly defaultNamingSuffix!: pulumi.Output<string | undefined>;
     /**
      * The Cloud Environment which should be used. Possible values are public, usgovernment and china. Defaults to public.
      */
@@ -98,6 +101,9 @@ export class Provider extends pulumi.ProviderResource {
             resourceInputs["clientId"] = args ? args.clientId : undefined;
             resourceInputs["clientSecret"] = args ? args.clientSecret : undefined;
             resourceInputs["defaultLocation"] = args ? args.defaultLocation : undefined;
+            resourceInputs["defaultName"] = args ? args.defaultName : undefined;
+            resourceInputs["defaultNamingPrefix"] = args ? args.defaultNamingPrefix : undefined;
+            resourceInputs["defaultNamingSuffix"] = args ? args.defaultNamingSuffix : undefined;
             resourceInputs["defaultTags"] = pulumi.output(args ? args.defaultTags : undefined).apply(JSON.stringify);
             resourceInputs["disableCorrelationRequestId"] = pulumi.output(args ? args.disableCorrelationRequestId : undefined).apply(JSON.stringify);
             resourceInputs["disableTerraformPartnerId"] = pulumi.output(args ? args.disableTerraformPartnerId : undefined).apply(JSON.stringify);
@@ -140,6 +146,9 @@ export interface ProviderArgs {
      */
     clientSecret?: pulumi.Input<string>;
     defaultLocation?: pulumi.Input<string>;
+    defaultName?: pulumi.Input<string>;
+    defaultNamingPrefix?: pulumi.Input<string>;
+    defaultNamingSuffix?: pulumi.Input<string>;
     defaultTags?: pulumi.Input<{[key: string]: pulumi.Input<string>}>;
     /**
      * This will disable the x-ms-correlation-request-id header.

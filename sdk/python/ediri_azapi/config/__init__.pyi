@@ -33,6 +33,12 @@ The Client Secret which should be used. For use When authenticating as a Service
 
 defaultLocation: Optional[str]
 
+defaultName: Optional[str]
+
+defaultNamingPrefix: Optional[str]
+
+defaultNamingSuffix: Optional[str]
+
 defaultTags: Optional[str]
 
 disableCorrelationRequestId: Optional[bool]

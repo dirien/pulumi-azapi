@@ -20,6 +20,9 @@ class ProviderArgs:
                  client_id: Optional[pulumi.Input[str]] = None,
                  client_secret: Optional[pulumi.Input[str]] = None,
                  default_location: Optional[pulumi.Input[str]] = None,
+                 default_name: Optional[pulumi.Input[str]] = None,
+                 default_naming_prefix: Optional[pulumi.Input[str]] = None,
+                 default_naming_suffix: Optional[pulumi.Input[str]] = None,
                  default_tags: Optional[pulumi.Input[Mapping[str, pulumi.Input[str]]]] = None,
                  disable_correlation_request_id: Optional[pulumi.Input[bool]] = None,
                  disable_terraform_partner_id: Optional[pulumi.Input[bool]] = None,
@@ -66,6 +69,12 @@ class ProviderArgs:
             pulumi.set(__self__, "client_secret", client_secret)
         if default_location is not None:
             pulumi.set(__self__, "default_location", default_location)
+        if default_name is not None:
+            pulumi.set(__self__, "default_name", default_name)
+        if default_naming_prefix is not None:
+            pulumi.set(__self__, "default_naming_prefix", default_naming_prefix)
+        if default_naming_suffix is not None:
+            pulumi.set(__self__, "default_naming_suffix", default_naming_suffix)
         if default_tags is not None:
             pulumi.set(__self__, "default_tags", default_tags)
         if disable_correlation_request_id is not None:
@@ -161,6 +170,33 @@ class ProviderArgs:
     @default_location.setter
     def default_location(self, value: Optional[pulumi.Input[str]]):
         pulumi.set(self, "default_location", value)
+
+    @property
+    @pulumi.getter(name="defaultName")
+    def default_name(self) -> Optional[pulumi.Input[str]]:
+        return pulumi.get(self, "default_name")
+
+    @default_name.setter
+    def default_name(self, value: Optional[pulumi.Input[str]]):
+        pulumi.set(self, "default_name", value)
+
+    @property
+    @pulumi.getter(name="defaultNamingPrefix")
+    def default_naming_prefix(self) -> Optional[pulumi.Input[str]]:
+        return pulumi.get(self, "default_naming_prefix")
+
+    @default_naming_prefix.setter
+    def default_naming_prefix(self, value: Optional[pulumi.Input[str]]):
+        pulumi.set(self, "default_naming_prefix", value)
+
+    @property
+    @pulumi.getter(name="defaultNamingSuffix")
+    def default_naming_suffix(self) -> Optional[pulumi.Input[str]]:
+        return pulumi.get(self, "default_naming_suffix")
+
+    @default_naming_suffix.setter
+    def default_naming_suffix(self, value: Optional[pulumi.Input[str]]):
+        pulumi.set(self, "default_naming_suffix", value)
 
     @property
     @pulumi.getter(name="defaultTags")
@@ -316,6 +352,9 @@ class Provider(pulumi.ProviderResource):
                  client_id: Optional[pulumi.Input[str]] = None,
                  client_secret: Optional[pulumi.Input[str]] = None,
                  default_location: Optional[pulumi.Input[str]] = None,
+                 default_name: Optional[pulumi.Input[str]] = None,
+                 default_naming_prefix: Optional[pulumi.Input[str]] = None,
+                 default_naming_suffix: Optional[pulumi.Input[str]] = None,
                  default_tags: Optional[pulumi.Input[Mapping[str, pulumi.Input[str]]]] = None,
                  disable_correlation_request_id: Optional[pulumi.Input[bool]] = None,
                  disable_terraform_partner_id: Optional[pulumi.Input[bool]] = None,
@@ -391,6 +430,9 @@ class Provider(pulumi.ProviderResource):
                  client_id: Optional[pulumi.Input[str]] = None,
                  client_secret: Optional[pulumi.Input[str]] = None,
                  default_location: Optional[pulumi.Input[str]] = None,
+                 default_name: Optional[pulumi.Input[str]] = None,
+                 default_naming_prefix: Optional[pulumi.Input[str]] = None,
+                 default_naming_suffix: Optional[pulumi.Input[str]] = None,
                  default_tags: Optional[pulumi.Input[Mapping[str, pulumi.Input[str]]]] = None,
                  disable_correlation_request_id: Optional[pulumi.Input[bool]] = None,
                  disable_terraform_partner_id: Optional[pulumi.Input[bool]] = None,
@@ -418,6 +460,9 @@ class Provider(pulumi.ProviderResource):
             __props__.__dict__["client_id"] = client_id
             __props__.__dict__["client_secret"] = client_secret
             __props__.__dict__["default_location"] = default_location
+            __props__.__dict__["default_name"] = default_name
+            __props__.__dict__["default_naming_prefix"] = default_naming_prefix
+            __props__.__dict__["default_naming_suffix"] = default_naming_suffix
             __props__.__dict__["default_tags"] = pulumi.Output.from_input(default_tags).apply(pulumi.runtime.to_json) if default_tags is not None else None
             __props__.__dict__["disable_correlation_request_id"] = pulumi.Output.from_input(disable_correlation_request_id).apply(pulumi.runtime.to_json) if disable_correlation_request_id is not None else None
             __props__.__dict__["disable_terraform_partner_id"] = pulumi.Output.from_input(disable_terraform_partner_id).apply(pulumi.runtime.to_json) if disable_terraform_partner_id is not None else None
@@ -477,6 +522,21 @@ class Provider(pulumi.ProviderResource):
     @pulumi.getter(name="defaultLocation")
     def default_location(self) -> pulumi.Output[Optional[str]]:
         return pulumi.get(self, "default_location")
+
+    @property
+    @pulumi.getter(name="defaultName")
+    def default_name(self) -> pulumi.Output[Optional[str]]:
+        return pulumi.get(self, "default_name")
+
+    @property
+    @pulumi.getter(name="defaultNamingPrefix")
+    def default_naming_prefix(self) -> pulumi.Output[Optional[str]]:
+        return pulumi.get(self, "default_naming_prefix")
+
+    @property
+    @pulumi.getter(name="defaultNamingSuffix")
+    def default_naming_suffix(self) -> pulumi.Output[Optional[str]]:
+        return pulumi.get(self, "default_naming_suffix")
 
     @property
     @pulumi.getter

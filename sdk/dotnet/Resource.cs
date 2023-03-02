@@ -82,6 +82,12 @@ namespace ediri.Azapi
         public Output<string> ParentId { get; private set; } = null!;
 
         /// <summary>
+        /// Whether to remove special characters in resource name. Defaults to `false`.
+        /// </summary>
+        [Output("removingSpecialChars")]
+        public Output<bool?> RemovingSpecialChars { get; private set; } = null!;
+
+        /// <summary>
         /// A list of path that needs to be exported from response body.
         /// Setting it to `["*"]` will export the full response body.
         /// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
@@ -214,6 +220,12 @@ namespace ediri.Azapi
         [Input("parentId", required: true)]
         public Input<string> ParentId { get; set; } = null!;
 
+        /// <summary>
+        /// Whether to remove special characters in resource name. Defaults to `false`.
+        /// </summary>
+        [Input("removingSpecialChars")]
+        public Input<bool>? RemovingSpecialChars { get; set; }
+
         [Input("responseExportValues")]
         private InputList<string>? _responseExportValues;
 
@@ -325,6 +337,12 @@ namespace ediri.Azapi
 
         [Input("parentId")]
         public Input<string>? ParentId { get; set; }
+
+        /// <summary>
+        /// Whether to remove special characters in resource name. Defaults to `false`.
+        /// </summary>
+        [Input("removingSpecialChars")]
+        public Input<bool>? RemovingSpecialChars { get; set; }
 
         [Input("responseExportValues")]
         private InputList<string>? _responseExportValues;

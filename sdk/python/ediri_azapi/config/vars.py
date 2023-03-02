@@ -50,6 +50,18 @@ class _ExportableConfig(types.ModuleType):
         return __config__.get('defaultLocation')
 
     @property
+    def default_name(self) -> Optional[str]:
+        return __config__.get('defaultName')
+
+    @property
+    def default_naming_prefix(self) -> Optional[str]:
+        return __config__.get('defaultNamingPrefix')
+
+    @property
+    def default_naming_suffix(self) -> Optional[str]:
+        return __config__.get('defaultNamingSuffix')
+
+    @property
     def default_tags(self) -> Optional[str]:
         return __config__.get('defaultTags')
 
