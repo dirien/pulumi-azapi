@@ -48,6 +48,15 @@ namespace ediri.Azapi
         [Output("defaultLocation")]
         public Output<string?> DefaultLocation { get; private set; } = null!;
 
+        [Output("defaultName")]
+        public Output<string?> DefaultName { get; private set; } = null!;
+
+        [Output("defaultNamingPrefix")]
+        public Output<string?> DefaultNamingPrefix { get; private set; } = null!;
+
+        [Output("defaultNamingSuffix")]
+        public Output<string?> DefaultNamingSuffix { get; private set; } = null!;
+
         /// <summary>
         /// The Cloud Environment which should be used. Possible values are public, usgovernment and china. Defaults to public.
         /// </summary>
@@ -155,6 +164,15 @@ namespace ediri.Azapi
 
         [Input("defaultLocation")]
         public Input<string>? DefaultLocation { get; set; }
+
+        [Input("defaultName")]
+        public Input<string>? DefaultName { get; set; }
+
+        [Input("defaultNamingPrefix")]
+        public Input<string>? DefaultNamingPrefix { get; set; }
+
+        [Input("defaultNamingSuffix")]
+        public Input<string>? DefaultNamingSuffix { get; set; }
 
         [Input("defaultTags", json: true)]
         private InputMap<string>? _defaultTags;

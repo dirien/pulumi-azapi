@@ -81,6 +81,27 @@ namespace ediri.Azapi
             set => _defaultLocation.Set(value);
         }
 
+        private static readonly __Value<string?> _defaultName = new __Value<string?>(() => __config.Get("defaultName"));
+        public static string? DefaultName
+        {
+            get => _defaultName.Get();
+            set => _defaultName.Set(value);
+        }
+
+        private static readonly __Value<string?> _defaultNamingPrefix = new __Value<string?>(() => __config.Get("defaultNamingPrefix"));
+        public static string? DefaultNamingPrefix
+        {
+            get => _defaultNamingPrefix.Get();
+            set => _defaultNamingPrefix.Set(value);
+        }
+
+        private static readonly __Value<string?> _defaultNamingSuffix = new __Value<string?>(() => __config.Get("defaultNamingSuffix"));
+        public static string? DefaultNamingSuffix
+        {
+            get => _defaultNamingSuffix.Get();
+            set => _defaultNamingSuffix.Set(value);
+        }
+
         private static readonly __Value<ImmutableDictionary<string, string>?> _defaultTags = new __Value<ImmutableDictionary<string, string>?>(() => __config.GetObject<ImmutableDictionary<string, string>>("defaultTags"));
         public static ImmutableDictionary<string, string>? DefaultTags
         {

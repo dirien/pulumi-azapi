@@ -27,8 +27,11 @@ type Provider struct {
 	// The Client ID which should be used.
 	ClientId pulumi.StringPtrOutput `pulumi:"clientId"`
 	// The Client Secret which should be used. For use When authenticating as a Service Principal using a Client Secret.
-	ClientSecret    pulumi.StringPtrOutput `pulumi:"clientSecret"`
-	DefaultLocation pulumi.StringPtrOutput `pulumi:"defaultLocation"`
+	ClientSecret        pulumi.StringPtrOutput `pulumi:"clientSecret"`
+	DefaultLocation     pulumi.StringPtrOutput `pulumi:"defaultLocation"`
+	DefaultName         pulumi.StringPtrOutput `pulumi:"defaultName"`
+	DefaultNamingPrefix pulumi.StringPtrOutput `pulumi:"defaultNamingPrefix"`
+	DefaultNamingSuffix pulumi.StringPtrOutput `pulumi:"defaultNamingSuffix"`
 	// The Cloud Environment which should be used. Possible values are public, usgovernment and china. Defaults to public.
 	Environment pulumi.StringOutput `pulumi:"environment"`
 	// The bearer token for the request to the OIDC provider. For use When authenticating as a Service Principal using OpenID
@@ -78,9 +81,12 @@ type providerArgs struct {
 	// The Client ID which should be used.
 	ClientId *string `pulumi:"clientId"`
 	// The Client Secret which should be used. For use When authenticating as a Service Principal using a Client Secret.
-	ClientSecret    *string           `pulumi:"clientSecret"`
-	DefaultLocation *string           `pulumi:"defaultLocation"`
-	DefaultTags     map[string]string `pulumi:"defaultTags"`
+	ClientSecret        *string           `pulumi:"clientSecret"`
+	DefaultLocation     *string           `pulumi:"defaultLocation"`
+	DefaultName         *string           `pulumi:"defaultName"`
+	DefaultNamingPrefix *string           `pulumi:"defaultNamingPrefix"`
+	DefaultNamingSuffix *string           `pulumi:"defaultNamingSuffix"`
+	DefaultTags         map[string]string `pulumi:"defaultTags"`
 	// This will disable the x-ms-correlation-request-id header.
 	DisableCorrelationRequestId *bool `pulumi:"disableCorrelationRequestId"`
 	// This will disable the Terraform Partner ID which is used if a custom `partner_id` isn't specified.
@@ -120,9 +126,12 @@ type ProviderArgs struct {
 	// The Client ID which should be used.
 	ClientId pulumi.StringPtrInput
 	// The Client Secret which should be used. For use When authenticating as a Service Principal using a Client Secret.
-	ClientSecret    pulumi.StringPtrInput
-	DefaultLocation pulumi.StringPtrInput
-	DefaultTags     pulumi.StringMapInput
+	ClientSecret        pulumi.StringPtrInput
+	DefaultLocation     pulumi.StringPtrInput
+	DefaultName         pulumi.StringPtrInput
+	DefaultNamingPrefix pulumi.StringPtrInput
+	DefaultNamingSuffix pulumi.StringPtrInput
+	DefaultTags         pulumi.StringMapInput
 	// This will disable the x-ms-correlation-request-id header.
 	DisableCorrelationRequestId pulumi.BoolPtrInput
 	// This will disable the Terraform Partner ID which is used if a custom `partner_id` isn't specified.
@@ -212,6 +221,18 @@ func (o ProviderOutput) ClientSecret() pulumi.StringPtrOutput {
 
 func (o ProviderOutput) DefaultLocation() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *Provider) pulumi.StringPtrOutput { return v.DefaultLocation }).(pulumi.StringPtrOutput)
+}
+
+func (o ProviderOutput) DefaultName() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *Provider) pulumi.StringPtrOutput { return v.DefaultName }).(pulumi.StringPtrOutput)
+}
+
+func (o ProviderOutput) DefaultNamingPrefix() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *Provider) pulumi.StringPtrOutput { return v.DefaultNamingPrefix }).(pulumi.StringPtrOutput)
+}
+
+func (o ProviderOutput) DefaultNamingSuffix() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *Provider) pulumi.StringPtrOutput { return v.DefaultNamingSuffix }).(pulumi.StringPtrOutput)
 }
 
 // The Cloud Environment which should be used. Possible values are public, usgovernment and china. Defaults to public.

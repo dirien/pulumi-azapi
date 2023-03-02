@@ -50,6 +50,8 @@ type Resource struct {
 	// The output json containing the properties specified in `responseExportValues`. Here're some examples to decode json and extract the value.
 	Output   pulumi.StringOutput `pulumi:"output"`
 	ParentId pulumi.StringOutput `pulumi:"parentId"`
+	// Whether to remove special characters in resource name. Defaults to `false`.
+	RemovingSpecialChars pulumi.BoolPtrOutput `pulumi:"removingSpecialChars"`
 	// A list of path that needs to be exported from response body.
 	// Setting it to `["*"]` will export the full response body.
 	// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
@@ -129,6 +131,8 @@ type resourceState struct {
 	// The output json containing the properties specified in `responseExportValues`. Here're some examples to decode json and extract the value.
 	Output   *string `pulumi:"output"`
 	ParentId *string `pulumi:"parentId"`
+	// Whether to remove special characters in resource name. Defaults to `false`.
+	RemovingSpecialChars *bool `pulumi:"removingSpecialChars"`
 	// A list of path that needs to be exported from response body.
 	// Setting it to `["*"]` will export the full response body.
 	// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
@@ -173,6 +177,8 @@ type ResourceState struct {
 	// The output json containing the properties specified in `responseExportValues`. Here're some examples to decode json and extract the value.
 	Output   pulumi.StringPtrInput
 	ParentId pulumi.StringPtrInput
+	// Whether to remove special characters in resource name. Defaults to `false`.
+	RemovingSpecialChars pulumi.BoolPtrInput
 	// A list of path that needs to be exported from response body.
 	// Setting it to `["*"]` will export the full response body.
 	// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
@@ -219,6 +225,8 @@ type resourceArgs struct {
 	// Specifies the name of the azure resource. Changing this forces a new resource to be created.
 	Name     *string `pulumi:"name"`
 	ParentId string  `pulumi:"parentId"`
+	// Whether to remove special characters in resource name. Defaults to `false`.
+	RemovingSpecialChars *bool `pulumi:"removingSpecialChars"`
 	// A list of path that needs to be exported from response body.
 	// Setting it to `["*"]` will export the full response body.
 	// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
@@ -262,6 +270,8 @@ type ResourceArgs struct {
 	// Specifies the name of the azure resource. Changing this forces a new resource to be created.
 	Name     pulumi.StringPtrInput
 	ParentId pulumi.StringInput
+	// Whether to remove special characters in resource name. Defaults to `false`.
+	RemovingSpecialChars pulumi.BoolPtrInput
 	// A list of path that needs to be exported from response body.
 	// Setting it to `["*"]` will export the full response body.
 	// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
@@ -417,6 +427,11 @@ func (o ResourceOutput) Output() pulumi.StringOutput {
 
 func (o ResourceOutput) ParentId() pulumi.StringOutput {
 	return o.ApplyT(func(v *Resource) pulumi.StringOutput { return v.ParentId }).(pulumi.StringOutput)
+}
+
+// Whether to remove special characters in resource name. Defaults to `false`.
+func (o ResourceOutput) RemovingSpecialChars() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v *Resource) pulumi.BoolPtrOutput { return v.RemovingSpecialChars }).(pulumi.BoolPtrOutput)
 }
 
 // A list of path that needs to be exported from response body.
