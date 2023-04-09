@@ -1,6 +1,6 @@
 module azapi-go
 
-go 1.19
+go 1.20
 
 require (
 	github.com/dirien/pulumi-azapi v1.2.9

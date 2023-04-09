@@ -1,9 +1,9 @@
 module github.com/Azure/terraform-provider-azapi/shim
 
-go 1.19
+go 1.20
 
 require (
-	github.com/Azure/terraform-provider-azapi v1.4.0
+	github.com/Azure/terraform-provider-azapi v1.5.0
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.26.1
 )
 

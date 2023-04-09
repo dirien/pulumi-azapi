@@ -282,8 +282,8 @@ github.com/Azure/go-autorest/logger v0.2.1 h1:IG7i4p/mDa2Ce4TRyAO8IHnVhAVF3RFU+Z
 github.com/Azure/go-autorest/logger v0.2.1/go.mod h1:T9E3cAhj2VqvPOtCYAvby9aBXkZmbF5NWuPV8+WeEW8=
 github.com/Azure/go-autorest/tracing v0.6.0 h1:TYi4+3m5t6K48TGI9AUdb+IzbnSxvnvUMfuitfgcfuo=
 github.com/Azure/go-autorest/tracing v0.6.0/go.mod h1:+vhtPC754Xsa23ID7GlGsrdKBpUA79WCAKPPZVC2DeU=
-github.com/Azure/terraform-provider-azapi v1.4.0 h1:27RUEWKEmoKnDkXkDpBJpWf/V50N5/3+vrbHvVFhISo=
-github.com/Azure/terraform-provider-azapi v1.4.0/go.mod h1:oCpDs5cKNKKhXRVXQsVppSHb3O+9HyylKj6rbfynw18=
+github.com/Azure/terraform-provider-azapi v1.5.0 h1:fP8iMvH0xlpk88O+7GLOlnT3Y5pp0DlEbkQSVBP92sg=
+github.com/Azure/terraform-provider-azapi v1.5.0/go.mod h1:oCpDs5cKNKKhXRVXQsVppSHb3O+9HyylKj6rbfynw18=
 github.com/AzureAD/microsoft-authentication-library-for-go v0.4.0/go.mod h1:Vt9sXTKwMyGcOxSmLDMnGPgqsUg7m8pe215qMLrDXw4=
 github.com/AzureAD/microsoft-authentication-library-for-go v0.8.1 h1:oPdPEZFSbl7oSPEAIPMPBMUmiL+mqgzBJwM/9qYcwNg=
 github.com/AzureAD/microsoft-authentication-library-for-go v0.8.1/go.mod h1:4qFor3D/HDsvBME35Xy9rwW9DecL+M2sNw1ybjPtwA0=
