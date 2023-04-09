@@ -1,6 +1,6 @@
 module github.com/dirien/pulumi-azapi/provider
 
-go 1.18
+go 1.20
 
 replace (
 	github.com/Azure/terraform-provider-azapi/shim => ./shim
@@ -38,7 +38,7 @@ require (
 	github.com/Azure/go-autorest/autorest/validation v0.3.1 // indirect
 	github.com/Azure/go-autorest/logger v0.2.1 // indirect
 	github.com/Azure/go-autorest/tracing v0.6.0 // indirect
-	github.com/Azure/terraform-provider-azapi v1.4.0 // indirect
+	github.com/Azure/terraform-provider-azapi v1.5.0 // indirect
 	github.com/AzureAD/microsoft-authentication-library-for-go v0.8.1 // indirect
 	github.com/Masterminds/goutils v1.1.1 // indirect
 	github.com/Masterminds/semver v1.5.0 // indirect
