@@ -10,52 +10,6 @@ import * as utilities from "./utilities";
  * > **Note** This resource is used to add or modify properties on an existing resource.
  * When delete `azapi.UpdateResource`, no operation will be performed, and these properties will stay unchanged.
  * If you want to restore the modified properties to some values, you must apply the restored properties before deleting.
- *
- * ## Example Usage
- *
- * ```typescript
- * import * as pulumi from "@pulumi/pulumi";
- * import * as azapi from "@ediri/azapi";
- * import * as azure from "@pulumi/azure";
- *
- * const exampleResourceGroup = new azure.core.ResourceGroup("exampleResourceGroup", {location: "west europe"});
- * const examplePublicIp = new azure.network.PublicIp("examplePublicIp", {
- *     location: exampleResourceGroup.location,
- *     resourceGroupName: exampleResourceGroup.name,
- *     allocationMethod: "Static",
- * });
- * const exampleLoadBalancer = new azure.lb.LoadBalancer("exampleLoadBalancer", {
- *     location: exampleResourceGroup.location,
- *     resourceGroupName: exampleResourceGroup.name,
- *     frontendIpConfigurations: [{
- *         name: "PublicIPAddress",
- *         publicIpAddressId: examplePublicIp.id,
- *     }],
- * });
- * const exampleNatRule = new azure.lb.NatRule("exampleNatRule", {
- *     resourceGroupName: exampleResourceGroup.name,
- *     loadbalancerId: exampleLoadBalancer.id,
- *     protocol: "Tcp",
- *     frontendPort: 3389,
- *     backendPort: 3389,
- *     frontendIpConfigurationName: "PublicIPAddress",
- * });
- * const exampleUpdateResource = new azapi.UpdateResource("exampleUpdateResource", {
- *     type: "Microsoft.Network/loadBalancers@2021-03-01",
- *     resourceId: exampleLoadBalancer.id,
- *     body: JSON.stringify({
- *         properties: {
- *             inboundNatRules: [{
- *                 properties: {
- *                     idleTimeoutInMinutes: 15,
- *                 },
- *             }],
- *         },
- *     }),
- * }, {
- *     dependsOn: [exampleNatRule],
- * });
- * ```
  */
 export class UpdateResource extends pulumi.CustomResource {
     /**

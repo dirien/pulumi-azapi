@@ -16,63 +16,6 @@ namespace ediri.Azapi
     /// if user wants to perform readonly action.
     /// 
     /// &gt; **Note** When delete `azapi.ResourceAction`, no operation will be performed.
-    /// 
-    /// ## Example Usage
-    /// 
-    /// ```csharp
-    /// using System.Collections.Generic;
-    /// using Pulumi;
-    /// using Azapi = ediri.Azapi;
-    /// using Azure = Pulumi.Azure;
-    /// 
-    /// return await Deployment.RunAsync(() =&gt; 
-    /// {
-    ///     var config = new Config();
-    ///     var enabled = config.GetBoolean("enabled") ?? false;
-    ///     var example = new Azure.Core.ResourceGroup("example", new()
-    ///     {
-    ///         Location = "west europe",
-    ///     });
-    /// 
-    ///     var test = new Azure.AppPlatform.SpringCloudService("test", new()
-    ///     {
-    ///         ResourceGroupName = azurerm_resource_group.Test.Name,
-    ///         Location = azurerm_resource_group.Test.Location,
-    ///         SkuName = "S0",
-    ///     });
-    /// 
-    ///     var start = new List&lt;Azapi.ResourceAction&gt;();
-    ///     for (var rangeIndex = 0; rangeIndex &lt; (enabled ? 1 : 0 == true); rangeIndex++)
-    ///     {
-    ///         var range = new { Value = rangeIndex };
-    ///         start.Add(new Azapi.ResourceAction($"start-{range.Value}", new()
-    ///         {
-    ///             Type = "Microsoft.AppPlatform/Spring@2022-05-01-preview",
-    ///             ResourceId = test.Id,
-    ///             Action = "start",
-    ///             ResponseExportValues = new[]
-    ///             {
-    ///                 "*",
-    ///             },
-    ///         }));
-    ///     }
-    ///     var stop = new List&lt;Azapi.ResourceAction&gt;();
-    ///     for (var rangeIndex = 0; rangeIndex &lt; (enabled ? 0 : 1 == true); rangeIndex++)
-    ///     {
-    ///         var range = new { Value = rangeIndex };
-    ///         stop.Add(new Azapi.ResourceAction($"stop-{range.Value}", new()
-    ///         {
-    ///             Type = "Microsoft.AppPlatform/Spring@2022-05-01-preview",
-    ///             ResourceId = test.Id,
-    ///             Action = "stop",
-    ///             ResponseExportValues = new[]
-    ///             {
-    ///                 "*",
-    ///             },
-    ///         }));
-    ///     }
-    /// });
-    /// ```
     /// </summary>
     [AzapiResourceType("azapi:index/resourceAction:ResourceAction")]
     public partial class ResourceAction : global::Pulumi.CustomResource
