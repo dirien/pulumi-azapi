@@ -38,6 +38,7 @@ def readme():
 
 
 setup(name='ediri_azapi',
+      python_requires='>=3.7',
       version=VERSION,
       description="A Pulumi package for creating and managing Azapi resources",
       long_description=readme(),
