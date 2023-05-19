@@ -122,6 +122,24 @@ def get_resource_action(action: Optional[str] = None,
     It's recommended to use `ResourceAction` data source to perform readonly action, please use `ResourceAction` resource,
     if user wants to perform actions which change a resource's state.
 
+    ## Example Usage
+
+    ```python
+    import pulumi
+    import pulumi_azapi as azapi
+    import pulumi_azure as azure
+
+    example_resource_group = azure.core.ResourceGroup("exampleResourceGroup", location="west europe")
+    example_account = azure.automation.Account("exampleAccount",
+        resource_group_name=example_resource_group.name,
+        location=example_resource_group.location,
+        sku_name="Basic")
+    example_resource_action = azapi.get_resource_action_output(type="Microsoft.Automation/automationAccounts@2021-06-22",
+        resource_id=example_account.id,
+        action="listKeys",
+        response_export_values=["*"])
+    ```
+
 
     :param str action: The name of the resource action. It's also possible to make Http requests towards the resource ID if leave this field empty.
     :param str body: A JSON object that contains the request body.
@@ -169,6 +187,24 @@ def get_resource_action_output(action: Optional[pulumi.Input[Optional[str]]] = N
     This resource can perform resource action which gets information from an existing resource.
     It's recommended to use `ResourceAction` data source to perform readonly action, please use `ResourceAction` resource,
     if user wants to perform actions which change a resource's state.
+
+    ## Example Usage
+
+    ```python
+    import pulumi
+    import pulumi_azapi as azapi
+    import pulumi_azure as azure
+
+    example_resource_group = azure.core.ResourceGroup("exampleResourceGroup", location="west europe")
+    example_account = azure.automation.Account("exampleAccount",
+        resource_group_name=example_resource_group.name,
+        location=example_resource_group.location,
+        sku_name="Basic")
+    example_resource_action = azapi.get_resource_action_output(type="Microsoft.Automation/automationAccounts@2021-06-22",
+        resource_id=example_account.id,
+        action="listKeys",
+        response_export_values=["*"])
+    ```
 
 
     :param str action: The name of the resource action. It's also possible to make Http requests towards the resource ID if leave this field empty.

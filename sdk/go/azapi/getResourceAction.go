@@ -13,6 +13,50 @@ import (
 // This resource can perform resource action which gets information from an existing resource.
 // It's recommended to use `ResourceAction` data source to perform readonly action, please use `ResourceAction` resource,
 // if user wants to perform actions which change a resource's state.
+//
+// ## Example Usage
+//
+// ```go
+// package main
+//
+// import (
+//
+//	"github.com/pulumi/pulumi-azapi/sdk/go/azapi"
+//	"github.com/pulumi/pulumi-azure/sdk/v5/go/azure/automation"
+//	"github.com/pulumi/pulumi-azure/sdk/v5/go/azure/core"
+//	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
+//
+// )
+//
+//	func main() {
+//		pulumi.Run(func(ctx *pulumi.Context) error {
+//			exampleResourceGroup, err := core.NewResourceGroup(ctx, "exampleResourceGroup", &core.ResourceGroupArgs{
+//				Location: pulumi.String("west europe"),
+//			})
+//			if err != nil {
+//				return err
+//			}
+//			exampleAccount, err := automation.NewAccount(ctx, "exampleAccount", &automation.AccountArgs{
+//				ResourceGroupName: exampleResourceGroup.Name,
+//				Location:          exampleResourceGroup.Location,
+//				SkuName:           pulumi.String("Basic"),
+//			})
+//			if err != nil {
+//				return err
+//			}
+//			_ = azapi.LookupResourceActionOutput(ctx, azapi.GetResourceActionOutputArgs{
+//				Type:       pulumi.String("Microsoft.Automation/automationAccounts@2021-06-22"),
+//				ResourceId: exampleAccount.ID(),
+//				Action:     pulumi.String("listKeys"),
+//				ResponseExportValues: pulumi.StringArray{
+//					pulumi.String("*"),
+//				},
+//			}, nil)
+//			return nil
+//		})
+//	}
+//
+// ```
 func LookupResourceAction(ctx *pulumi.Context, args *LookupResourceActionArgs, opts ...pulumi.InvokeOption) (*LookupResourceActionResult, error) {
 	opts = pkgInvokeDefaultOpts(opts)
 	var rv LookupResourceActionResult

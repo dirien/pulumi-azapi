@@ -3,14 +3,14 @@ module github.com/Azure/terraform-provider-azapi/shim
 go 1.20
 
 require (
-	github.com/Azure/terraform-provider-azapi v1.5.0
+	github.com/Azure/terraform-provider-azapi v1.6.0
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.26.1
 )
 
 require (
-	github.com/Azure/azure-sdk-for-go/sdk/azcore v1.3.1 // indirect
+	github.com/Azure/azure-sdk-for-go/sdk/azcore v1.5.0 // indirect
 	github.com/Azure/azure-sdk-for-go/sdk/azidentity v1.2.1 // indirect
-	github.com/Azure/azure-sdk-for-go/sdk/internal v1.1.2 // indirect
+	github.com/Azure/azure-sdk-for-go/sdk/internal v1.3.0 // indirect
 	github.com/AzureAD/microsoft-authentication-library-for-go v0.8.1 // indirect
 	github.com/agext/levenshtein v1.2.3 // indirect
 	github.com/apparentlymart/go-textseg/v13 v13.0.0 // indirect

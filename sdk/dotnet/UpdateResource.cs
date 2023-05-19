@@ -16,6 +16,85 @@ namespace ediri.Azapi
     /// &gt; **Note** This resource is used to add or modify properties on an existing resource.
     /// When delete `azapi.UpdateResource`, no operation will be performed, and these properties will stay unchanged.
     /// If you want to restore the modified properties to some values, you must apply the restored properties before deleting.
+    /// 
+    /// ## Example Usage
+    /// 
+    /// ```csharp
+    /// using System.Collections.Generic;
+    /// using System.Linq;
+    /// using System.Text.Json;
+    /// using Pulumi;
+    /// using Azapi = ediri.Azapi;
+    /// using Azure = Pulumi.Azure;
+    /// 
+    /// return await Deployment.RunAsync(() =&gt; 
+    /// {
+    ///     var exampleResourceGroup = new Azure.Core.ResourceGroup("exampleResourceGroup", new()
+    ///     {
+    ///         Location = "west europe",
+    ///     });
+    /// 
+    ///     var examplePublicIp = new Azure.Network.PublicIp("examplePublicIp", new()
+    ///     {
+    ///         Location = exampleResourceGroup.Location,
+    ///         ResourceGroupName = exampleResourceGroup.Name,
+    ///         AllocationMethod = "Static",
+    ///     });
+    /// 
+    ///     var exampleLoadBalancer = new Azure.Lb.LoadBalancer("exampleLoadBalancer", new()
+    ///     {
+    ///         Location = exampleResourceGroup.Location,
+    ///         ResourceGroupName = exampleResourceGroup.Name,
+    ///         FrontendIpConfigurations = new[]
+    ///         {
+    ///             new Azure.Lb.Inputs.LoadBalancerFrontendIpConfigurationArgs
+    ///             {
+    ///                 Name = "PublicIPAddress",
+    ///                 PublicIpAddressId = examplePublicIp.Id,
+    ///             },
+    ///         },
+    ///     });
+    /// 
+    ///     var exampleNatRule = new Azure.Lb.NatRule("exampleNatRule", new()
+    ///     {
+    ///         ResourceGroupName = exampleResourceGroup.Name,
+    ///         LoadbalancerId = exampleLoadBalancer.Id,
+    ///         Protocol = "Tcp",
+    ///         FrontendPort = 3389,
+    ///         BackendPort = 3389,
+    ///         FrontendIpConfigurationName = "PublicIPAddress",
+    ///     });
+    /// 
+    ///     var exampleUpdateResource = new Azapi.UpdateResource("exampleUpdateResource", new()
+    ///     {
+    ///         Type = "Microsoft.Network/loadBalancers@2021-03-01",
+    ///         ResourceId = exampleLoadBalancer.Id,
+    ///         Body = JsonSerializer.Serialize(new Dictionary&lt;string, object?&gt;
+    ///         {
+    ///             ["properties"] = new Dictionary&lt;string, object?&gt;
+    ///             {
+    ///                 ["inboundNatRules"] = new[]
+    ///                 {
+    ///                     new Dictionary&lt;string, object?&gt;
+    ///                     {
+    ///                         ["properties"] = new Dictionary&lt;string, object?&gt;
+    ///                         {
+    ///                             ["idleTimeoutInMinutes"] = 15,
+    ///                         },
+    ///                     },
+    ///                 },
+    ///             },
+    ///         }),
+    ///     }, new CustomResourceOptions
+    ///     {
+    ///         DependsOn = new[]
+    ///         {
+    ///             exampleNatRule,
+    ///         },
+    ///     });
+    /// 
+    /// });
+    /// ```
     /// </summary>
     [AzapiResourceType("azapi:index/updateResource:UpdateResource")]
     public partial class UpdateResource : global::Pulumi.CustomResource
@@ -71,6 +150,7 @@ namespace ediri.Azapi
         /// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
         /// ```csharp
         /// using System.Collections.Generic;
+        /// using System.Linq;
         /// using Pulumi;
         /// 
         /// return await Deployment.RunAsync(() =&gt; 
@@ -189,6 +269,7 @@ namespace ediri.Azapi
         /// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
         /// ```csharp
         /// using System.Collections.Generic;
+        /// using System.Linq;
         /// using Pulumi;
         /// 
         /// return await Deployment.RunAsync(() =&gt; 
@@ -277,6 +358,7 @@ namespace ediri.Azapi
         /// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
         /// ```csharp
         /// using System.Collections.Generic;
+        /// using System.Linq;
         /// using Pulumi;
         /// 
         /// return await Deployment.RunAsync(() =&gt; 
