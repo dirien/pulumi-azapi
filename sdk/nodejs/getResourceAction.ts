@@ -8,27 +8,6 @@ import * as utilities from "./utilities";
  * This resource can perform resource action which gets information from an existing resource.
  * It's recommended to use `azapi.ResourceAction` data source to perform readonly action, please use `azapi.ResourceAction` resource,
  * if user wants to perform actions which change a resource's state.
- *
- * ## Example Usage
- *
- * ```typescript
- * import * as pulumi from "@pulumi/pulumi";
- * import * as azapi from "@pulumi/azapi";
- * import * as azure from "@pulumi/azure";
- *
- * const exampleResourceGroup = new azure.core.ResourceGroup("exampleResourceGroup", {location: "west europe"});
- * const exampleAccount = new azure.automation.Account("exampleAccount", {
- *     resourceGroupName: exampleResourceGroup.name,
- *     location: exampleResourceGroup.location,
- *     skuName: "Basic",
- * });
- * const exampleResourceAction = azapi.getResourceActionOutput({
- *     type: "Microsoft.Automation/automationAccounts@2021-06-22",
- *     resourceId: exampleAccount.id,
- *     action: "listKeys",
- *     responseExportValues: ["*"],
- * });
- * ```
  */
 export function getResourceAction(args: GetResourceActionArgs, opts?: pulumi.InvokeOptions): Promise<GetResourceActionResult> {
 
@@ -102,27 +81,6 @@ export interface GetResourceActionResult {
  * This resource can perform resource action which gets information from an existing resource.
  * It's recommended to use `azapi.ResourceAction` data source to perform readonly action, please use `azapi.ResourceAction` resource,
  * if user wants to perform actions which change a resource's state.
- *
- * ## Example Usage
- *
- * ```typescript
- * import * as pulumi from "@pulumi/pulumi";
- * import * as azapi from "@pulumi/azapi";
- * import * as azure from "@pulumi/azure";
- *
- * const exampleResourceGroup = new azure.core.ResourceGroup("exampleResourceGroup", {location: "west europe"});
- * const exampleAccount = new azure.automation.Account("exampleAccount", {
- *     resourceGroupName: exampleResourceGroup.name,
- *     location: exampleResourceGroup.location,
- *     skuName: "Basic",
- * });
- * const exampleResourceAction = azapi.getResourceActionOutput({
- *     type: "Microsoft.Automation/automationAccounts@2021-06-22",
- *     resourceId: exampleAccount.id,
- *     action: "listKeys",
- *     responseExportValues: ["*"],
- * });
- * ```
  */
 export function getResourceActionOutput(args: GetResourceActionOutputArgs, opts?: pulumi.InvokeOptions): pulumi.Output<GetResourceActionResult> {
     return pulumi.output(args).apply((a: any) => getResourceAction(a, opts))

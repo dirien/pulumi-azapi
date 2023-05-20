@@ -155,7 +155,17 @@ def get_resource(identity: Optional[pulumi.InputType['GetResourceIdentityArgs']]
 
     :param pulumi.InputType['GetResourceIdentityArgs'] identity: An `identity` block as defined below, which contains the Managed Service Identity information for this azure resource.
     :param str name: Specifies the name of the azure resource.
+    :param str parent_id: The ID of the azure resource in which this resource is created. It supports different kinds of deployment scope for **top level** resources: 
+           - resource group scope: `parent_id` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.
+           - management group scope: `parent_id` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.
+           - extension scope: `parent_id` should be the ID of the resource you're adding the extension to.
+           - subscription scope: `parent_id` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`
+           - tenant scope: `parent_id` should be `/`
+           
+           For child level resources, the `parent_id` should be the ID of its parent resource, for example, subnet resource's `parent_id` is the ID of the vnet.
     :param str resource_id: The ID of an existing azure source.
+           
+           > **Note:** Configuring `name` and `parent_id` is an alternative way to configure `resource_id`.
     :param Sequence[str] response_export_values: A list of path that needs to be exported from response body.
            Setting it to `["*"]` will export the full response body.
            Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
@@ -202,7 +212,17 @@ def get_resource_output(identity: Optional[pulumi.Input[Optional[pulumi.InputTyp
 
     :param pulumi.InputType['GetResourceIdentityArgs'] identity: An `identity` block as defined below, which contains the Managed Service Identity information for this azure resource.
     :param str name: Specifies the name of the azure resource.
+    :param str parent_id: The ID of the azure resource in which this resource is created. It supports different kinds of deployment scope for **top level** resources: 
+           - resource group scope: `parent_id` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.
+           - management group scope: `parent_id` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.
+           - extension scope: `parent_id` should be the ID of the resource you're adding the extension to.
+           - subscription scope: `parent_id` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`
+           - tenant scope: `parent_id` should be `/`
+           
+           For child level resources, the `parent_id` should be the ID of its parent resource, for example, subnet resource's `parent_id` is the ID of the vnet.
     :param str resource_id: The ID of an existing azure source.
+           
+           > **Note:** Configuring `name` and `parent_id` is an alternative way to configure `resource_id`.
     :param Sequence[str] response_export_values: A list of path that needs to be exported from response body.
            Setting it to `["*"]` will export the full response body.
            Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.

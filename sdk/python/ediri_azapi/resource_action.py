@@ -309,38 +309,6 @@ class ResourceAction(pulumi.CustomResource):
 
         > **Note** When delete `ResourceAction`, no operation will be performed.
 
-        ## Example Usage
-
-        ```python
-        import pulumi
-        import ediri_azapi as azapi
-        import pulumi_azure as azure
-
-        config = pulumi.Config()
-        enabled = config.get_bool("enabled")
-        if enabled is None:
-            enabled = False
-        example = azure.core.ResourceGroup("example", location="west europe")
-        test = azure.appplatform.SpringCloudService("test",
-            resource_group_name=azurerm_resource_group["test"]["name"],
-            location=azurerm_resource_group["test"]["location"],
-            sku_name="S0")
-        start = []
-        for range in [{"value": i} for i in range(0, 1 if enabled else 0 == True)]:
-            start.append(azapi.ResourceAction(f"start-{range['value']}",
-                type="Microsoft.AppPlatform/Spring@2022-05-01-preview",
-                resource_id=test.id,
-                action="start",
-                response_export_values=["*"]))
-        stop = []
-        for range in [{"value": i} for i in range(0, 0 if enabled else 1 == True)]:
-            stop.append(azapi.ResourceAction(f"stop-{range['value']}",
-                type="Microsoft.AppPlatform/Spring@2022-05-01-preview",
-                resource_id=test.id,
-                action="stop",
-                response_export_values=["*"]))
-        ```
-
         :param str resource_name: The name of the resource.
         :param pulumi.ResourceOptions opts: Options for the resource.
         :param pulumi.Input[str] action: The name of the resource action. It's also possible to make Http requests towards the resource ID if leave this field empty.
@@ -369,38 +337,6 @@ class ResourceAction(pulumi.CustomResource):
         if user wants to perform readonly action.
 
         > **Note** When delete `ResourceAction`, no operation will be performed.
-
-        ## Example Usage
-
-        ```python
-        import pulumi
-        import ediri_azapi as azapi
-        import pulumi_azure as azure
-
-        config = pulumi.Config()
-        enabled = config.get_bool("enabled")
-        if enabled is None:
-            enabled = False
-        example = azure.core.ResourceGroup("example", location="west europe")
-        test = azure.appplatform.SpringCloudService("test",
-            resource_group_name=azurerm_resource_group["test"]["name"],
-            location=azurerm_resource_group["test"]["location"],
-            sku_name="S0")
-        start = []
-        for range in [{"value": i} for i in range(0, 1 if enabled else 0 == True)]:
-            start.append(azapi.ResourceAction(f"start-{range['value']}",
-                type="Microsoft.AppPlatform/Spring@2022-05-01-preview",
-                resource_id=test.id,
-                action="start",
-                response_export_values=["*"]))
-        stop = []
-        for range in [{"value": i} for i in range(0, 0 if enabled else 1 == True)]:
-            stop.append(azapi.ResourceAction(f"stop-{range['value']}",
-                type="Microsoft.AppPlatform/Spring@2022-05-01-preview",
-                resource_id=test.id,
-                action="stop",
-                response_export_values=["*"]))
-        ```
 
         :param str resource_name: The name of the resource.
         :param ResourceActionArgs args: The arguments to use to populate this resource's properties.

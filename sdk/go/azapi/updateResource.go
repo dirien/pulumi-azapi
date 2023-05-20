@@ -16,94 +16,6 @@ import (
 // > **Note** This resource is used to add or modify properties on an existing resource.
 // When delete `UpdateResource`, no operation will be performed, and these properties will stay unchanged.
 // If you want to restore the modified properties to some values, you must apply the restored properties before deleting.
-//
-// ## Example Usage
-//
-// ```go
-// package main
-//
-// import (
-//
-//	"encoding/json"
-//
-//	"github.com/pulumi/pulumi-azapi/sdk/go/azapi"
-//	"github.com/pulumi/pulumi-azure/sdk/v5/go/azure/core"
-//	"github.com/pulumi/pulumi-azure/sdk/v5/go/azure/lb"
-//	"github.com/pulumi/pulumi-azure/sdk/v5/go/azure/network"
-//	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
-//
-// )
-//
-//	func main() {
-//		pulumi.Run(func(ctx *pulumi.Context) error {
-//			exampleResourceGroup, err := core.NewResourceGroup(ctx, "exampleResourceGroup", &core.ResourceGroupArgs{
-//				Location: pulumi.String("west europe"),
-//			})
-//			if err != nil {
-//				return err
-//			}
-//			examplePublicIp, err := network.NewPublicIp(ctx, "examplePublicIp", &network.PublicIpArgs{
-//				Location:          exampleResourceGroup.Location,
-//				ResourceGroupName: exampleResourceGroup.Name,
-//				AllocationMethod:  pulumi.String("Static"),
-//			})
-//			if err != nil {
-//				return err
-//			}
-//			exampleLoadBalancer, err := lb.NewLoadBalancer(ctx, "exampleLoadBalancer", &lb.LoadBalancerArgs{
-//				Location:          exampleResourceGroup.Location,
-//				ResourceGroupName: exampleResourceGroup.Name,
-//				FrontendIpConfigurations: lb.LoadBalancerFrontendIpConfigurationArray{
-//					&lb.LoadBalancerFrontendIpConfigurationArgs{
-//						Name:              pulumi.String("PublicIPAddress"),
-//						PublicIpAddressId: examplePublicIp.ID(),
-//					},
-//				},
-//			})
-//			if err != nil {
-//				return err
-//			}
-//			exampleNatRule, err := lb.NewNatRule(ctx, "exampleNatRule", &lb.NatRuleArgs{
-//				ResourceGroupName:           exampleResourceGroup.Name,
-//				LoadbalancerId:              exampleLoadBalancer.ID(),
-//				Protocol:                    pulumi.String("Tcp"),
-//				FrontendPort:                pulumi.Int(3389),
-//				BackendPort:                 pulumi.Int(3389),
-//				FrontendIpConfigurationName: pulumi.String("PublicIPAddress"),
-//			})
-//			if err != nil {
-//				return err
-//			}
-//			tmpJSON0, err := json.Marshal(map[string]interface{}{
-//				"properties": map[string]interface{}{
-//					"inboundNatRules": []map[string]interface{}{
-//						map[string]interface{}{
-//							"properties": map[string]interface{}{
-//								"idleTimeoutInMinutes": 15,
-//							},
-//						},
-//					},
-//				},
-//			})
-//			if err != nil {
-//				return err
-//			}
-//			json0 := string(tmpJSON0)
-//			_, err = azapi.NewUpdateResource(ctx, "exampleUpdateResource", &azapi.UpdateResourceArgs{
-//				Type:       pulumi.String("Microsoft.Network/loadBalancers@2021-03-01"),
-//				ResourceId: exampleLoadBalancer.ID(),
-//				Body:       pulumi.String(json0),
-//			}, pulumi.DependsOn([]pulumi.Resource{
-//				exampleNatRule,
-//			}))
-//			if err != nil {
-//				return err
-//			}
-//			return nil
-//		})
-//	}
-//
-// ```
 type UpdateResource struct {
 	pulumi.CustomResourceState
 
@@ -118,9 +30,19 @@ type UpdateResource struct {
 	// Specifies the name of the azure resource. Changing this forces a new resource to be created.
 	Name pulumi.StringOutput `pulumi:"name"`
 	// The output json containing the properties specified in `responseExportValues`. Here're some examples to decode json and extract the value.
-	Output   pulumi.StringOutput `pulumi:"output"`
+	Output pulumi.StringOutput `pulumi:"output"`
+	// The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created. It supports different kinds of deployment scope for **top level** resources:
+	// - resource group scope: `parentId` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.
+	// - management group scope: `parentId` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.
+	// - extension scope: `parentId` should be the ID of the resource you're adding the extension to.
+	// - subscription scope: `parentId` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`
+	// - tenant scope: `parentId` should be `/`
+	//
+	// For child level resources, the `parentId` should be the ID of its parent resource, for example, subnet resource's `parentId` is the ID of the vnet.
 	ParentId pulumi.StringOutput `pulumi:"parentId"`
 	// The ID of an existing azure source. Changing this forces a new azure resource to be created.
+	//
+	// > **Note:** Configuring `name` and `parentId` is an alternative way to configure `resourceId`.
 	ResourceId pulumi.StringOutput `pulumi:"resourceId"`
 	// A list of path that needs to be exported from response body.
 	// Setting it to `["*"]` will export the full response body.
@@ -188,9 +110,19 @@ type updateResourceState struct {
 	// Specifies the name of the azure resource. Changing this forces a new resource to be created.
 	Name *string `pulumi:"name"`
 	// The output json containing the properties specified in `responseExportValues`. Here're some examples to decode json and extract the value.
-	Output   *string `pulumi:"output"`
+	Output *string `pulumi:"output"`
+	// The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created. It supports different kinds of deployment scope for **top level** resources:
+	// - resource group scope: `parentId` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.
+	// - management group scope: `parentId` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.
+	// - extension scope: `parentId` should be the ID of the resource you're adding the extension to.
+	// - subscription scope: `parentId` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`
+	// - tenant scope: `parentId` should be `/`
+	//
+	// For child level resources, the `parentId` should be the ID of its parent resource, for example, subnet resource's `parentId` is the ID of the vnet.
 	ParentId *string `pulumi:"parentId"`
 	// The ID of an existing azure source. Changing this forces a new azure resource to be created.
+	//
+	// > **Note:** Configuring `name` and `parentId` is an alternative way to configure `resourceId`.
 	ResourceId *string `pulumi:"resourceId"`
 	// A list of path that needs to be exported from response body.
 	// Setting it to `["*"]` will export the full response body.
@@ -226,9 +158,19 @@ type UpdateResourceState struct {
 	// Specifies the name of the azure resource. Changing this forces a new resource to be created.
 	Name pulumi.StringPtrInput
 	// The output json containing the properties specified in `responseExportValues`. Here're some examples to decode json and extract the value.
-	Output   pulumi.StringPtrInput
+	Output pulumi.StringPtrInput
+	// The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created. It supports different kinds of deployment scope for **top level** resources:
+	// - resource group scope: `parentId` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.
+	// - management group scope: `parentId` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.
+	// - extension scope: `parentId` should be the ID of the resource you're adding the extension to.
+	// - subscription scope: `parentId` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`
+	// - tenant scope: `parentId` should be `/`
+	//
+	// For child level resources, the `parentId` should be the ID of its parent resource, for example, subnet resource's `parentId` is the ID of the vnet.
 	ParentId pulumi.StringPtrInput
 	// The ID of an existing azure source. Changing this forces a new azure resource to be created.
+	//
+	// > **Note:** Configuring `name` and `parentId` is an alternative way to configure `resourceId`.
 	ResourceId pulumi.StringPtrInput
 	// A list of path that needs to be exported from response body.
 	// Setting it to `["*"]` will export the full response body.
@@ -266,9 +208,19 @@ type updateResourceArgs struct {
 	// A list of ARM resource IDs which are used to avoid create/modify/delete azapi resources at the same time.
 	Locks []string `pulumi:"locks"`
 	// Specifies the name of the azure resource. Changing this forces a new resource to be created.
-	Name     *string `pulumi:"name"`
+	Name *string `pulumi:"name"`
+	// The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created. It supports different kinds of deployment scope for **top level** resources:
+	// - resource group scope: `parentId` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.
+	// - management group scope: `parentId` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.
+	// - extension scope: `parentId` should be the ID of the resource you're adding the extension to.
+	// - subscription scope: `parentId` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`
+	// - tenant scope: `parentId` should be `/`
+	//
+	// For child level resources, the `parentId` should be the ID of its parent resource, for example, subnet resource's `parentId` is the ID of the vnet.
 	ParentId *string `pulumi:"parentId"`
 	// The ID of an existing azure source. Changing this forces a new azure resource to be created.
+	//
+	// > **Note:** Configuring `name` and `parentId` is an alternative way to configure `resourceId`.
 	ResourceId *string `pulumi:"resourceId"`
 	// A list of path that needs to be exported from response body.
 	// Setting it to `["*"]` will export the full response body.
@@ -303,9 +255,19 @@ type UpdateResourceArgs struct {
 	// A list of ARM resource IDs which are used to avoid create/modify/delete azapi resources at the same time.
 	Locks pulumi.StringArrayInput
 	// Specifies the name of the azure resource. Changing this forces a new resource to be created.
-	Name     pulumi.StringPtrInput
+	Name pulumi.StringPtrInput
+	// The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created. It supports different kinds of deployment scope for **top level** resources:
+	// - resource group scope: `parentId` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.
+	// - management group scope: `parentId` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.
+	// - extension scope: `parentId` should be the ID of the resource you're adding the extension to.
+	// - subscription scope: `parentId` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`
+	// - tenant scope: `parentId` should be `/`
+	//
+	// For child level resources, the `parentId` should be the ID of its parent resource, for example, subnet resource's `parentId` is the ID of the vnet.
 	ParentId pulumi.StringPtrInput
 	// The ID of an existing azure source. Changing this forces a new azure resource to be created.
+	//
+	// > **Note:** Configuring `name` and `parentId` is an alternative way to configure `resourceId`.
 	ResourceId pulumi.StringPtrInput
 	// A list of path that needs to be exported from response body.
 	// Setting it to `["*"]` will export the full response body.
@@ -446,11 +408,21 @@ func (o UpdateResourceOutput) Output() pulumi.StringOutput {
 	return o.ApplyT(func(v *UpdateResource) pulumi.StringOutput { return v.Output }).(pulumi.StringOutput)
 }
 
+// The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created. It supports different kinds of deployment scope for **top level** resources:
+// - resource group scope: `parentId` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.
+// - management group scope: `parentId` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.
+// - extension scope: `parentId` should be the ID of the resource you're adding the extension to.
+// - subscription scope: `parentId` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`
+// - tenant scope: `parentId` should be `/`
+//
+// For child level resources, the `parentId` should be the ID of its parent resource, for example, subnet resource's `parentId` is the ID of the vnet.
 func (o UpdateResourceOutput) ParentId() pulumi.StringOutput {
 	return o.ApplyT(func(v *UpdateResource) pulumi.StringOutput { return v.ParentId }).(pulumi.StringOutput)
 }
 
 // The ID of an existing azure source. Changing this forces a new azure resource to be created.
+//
+// > **Note:** Configuring `name` and `parentId` is an alternative way to configure `resourceId`.
 func (o UpdateResourceOutput) ResourceId() pulumi.StringOutput {
 	return o.ApplyT(func(v *UpdateResource) pulumi.StringOutput { return v.ResourceId }).(pulumi.StringOutput)
 }

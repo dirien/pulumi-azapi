@@ -26,9 +26,19 @@ type LookupResourceArgs struct {
 	// An `identity` block as defined below, which contains the Managed Service Identity information for this azure resource.
 	Identity *GetResourceIdentity `pulumi:"identity"`
 	// Specifies the name of the azure resource.
-	Name     *string `pulumi:"name"`
+	Name *string `pulumi:"name"`
+	// The ID of the azure resource in which this resource is created. It supports different kinds of deployment scope for **top level** resources:
+	// - resource group scope: `parentId` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.
+	// - management group scope: `parentId` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.
+	// - extension scope: `parentId` should be the ID of the resource you're adding the extension to.
+	// - subscription scope: `parentId` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`
+	// - tenant scope: `parentId` should be `/`
+	//
+	// For child level resources, the `parentId` should be the ID of its parent resource, for example, subnet resource's `parentId` is the ID of the vnet.
 	ParentId *string `pulumi:"parentId"`
 	// The ID of an existing azure source.
+	//
+	// > **Note:** Configuring `name` and `parentId` is an alternative way to configure `resourceId`.
 	ResourceId *string `pulumi:"resourceId"`
 	// A list of path that needs to be exported from response body.
 	// Setting it to `["*"]` will export the full response body.
@@ -90,9 +100,19 @@ type LookupResourceOutputArgs struct {
 	// An `identity` block as defined below, which contains the Managed Service Identity information for this azure resource.
 	Identity GetResourceIdentityPtrInput `pulumi:"identity"`
 	// Specifies the name of the azure resource.
-	Name     pulumi.StringPtrInput `pulumi:"name"`
+	Name pulumi.StringPtrInput `pulumi:"name"`
+	// The ID of the azure resource in which this resource is created. It supports different kinds of deployment scope for **top level** resources:
+	// - resource group scope: `parentId` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.
+	// - management group scope: `parentId` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.
+	// - extension scope: `parentId` should be the ID of the resource you're adding the extension to.
+	// - subscription scope: `parentId` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`
+	// - tenant scope: `parentId` should be `/`
+	//
+	// For child level resources, the `parentId` should be the ID of its parent resource, for example, subnet resource's `parentId` is the ID of the vnet.
 	ParentId pulumi.StringPtrInput `pulumi:"parentId"`
 	// The ID of an existing azure source.
+	//
+	// > **Note:** Configuring `name` and `parentId` is an alternative way to configure `resourceId`.
 	ResourceId pulumi.StringPtrInput `pulumi:"resourceId"`
 	// A list of path that needs to be exported from response body.
 	// Setting it to `["*"]` will export the full response body.

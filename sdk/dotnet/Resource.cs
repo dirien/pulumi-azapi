@@ -78,6 +78,16 @@ namespace ediri.Azapi
         [Output("output")]
         public Output<string> Output { get; private set; } = null!;
 
+        /// <summary>
+        /// The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created. It supports different kinds of deployment scope for **top level** resources: 
+        /// - resource group scope: `parent_id` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.
+        /// - management group scope: `parent_id` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.
+        /// - extension scope: `parent_id` should be the ID of the resource you're adding the extension to.
+        /// - subscription scope: `parent_id` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`
+        /// - tenant scope: `parent_id` should be `/`
+        /// 
+        /// For child level resources, the `parent_id` should be the ID of its parent resource, for example, subnet resource's `parent_id` is the ID of the vnet.
+        /// </summary>
         [Output("parentId")]
         public Output<string> ParentId { get; private set; } = null!;
 
@@ -218,6 +228,16 @@ namespace ediri.Azapi
         [Input("name")]
         public Input<string>? Name { get; set; }
 
+        /// <summary>
+        /// The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created. It supports different kinds of deployment scope for **top level** resources: 
+        /// - resource group scope: `parent_id` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.
+        /// - management group scope: `parent_id` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.
+        /// - extension scope: `parent_id` should be the ID of the resource you're adding the extension to.
+        /// - subscription scope: `parent_id` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`
+        /// - tenant scope: `parent_id` should be `/`
+        /// 
+        /// For child level resources, the `parent_id` should be the ID of its parent resource, for example, subnet resource's `parent_id` is the ID of the vnet.
+        /// </summary>
         [Input("parentId", required: true)]
         public Input<string> ParentId { get; set; } = null!;
 
@@ -337,6 +357,16 @@ namespace ediri.Azapi
         [Input("output")]
         public Input<string>? Output { get; set; }
 
+        /// <summary>
+        /// The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created. It supports different kinds of deployment scope for **top level** resources: 
+        /// - resource group scope: `parent_id` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.
+        /// - management group scope: `parent_id` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.
+        /// - extension scope: `parent_id` should be the ID of the resource you're adding the extension to.
+        /// - subscription scope: `parent_id` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`
+        /// - tenant scope: `parent_id` should be `/`
+        /// 
+        /// For child level resources, the `parent_id` should be the ID of its parent resource, for example, subnet resource's `parent_id` is the ID of the vnet.
+        /// </summary>
         [Input("parentId")]
         public Input<string>? ParentId { get; set; }
 

@@ -48,7 +48,15 @@ type Resource struct {
 	// Specifies the name of the azure resource. Changing this forces a new resource to be created.
 	Name pulumi.StringOutput `pulumi:"name"`
 	// The output json containing the properties specified in `responseExportValues`. Here're some examples to decode json and extract the value.
-	Output   pulumi.StringOutput `pulumi:"output"`
+	Output pulumi.StringOutput `pulumi:"output"`
+	// The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created. It supports different kinds of deployment scope for **top level** resources:
+	// - resource group scope: `parentId` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.
+	// - management group scope: `parentId` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.
+	// - extension scope: `parentId` should be the ID of the resource you're adding the extension to.
+	// - subscription scope: `parentId` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`
+	// - tenant scope: `parentId` should be `/`
+	//
+	// For child level resources, the `parentId` should be the ID of its parent resource, for example, subnet resource's `parentId` is the ID of the vnet.
 	ParentId pulumi.StringOutput `pulumi:"parentId"`
 	// Whether to remove special characters in resource name. Defaults to `false`.
 	RemovingSpecialChars pulumi.BoolPtrOutput `pulumi:"removingSpecialChars"`
@@ -129,7 +137,15 @@ type resourceState struct {
 	// Specifies the name of the azure resource. Changing this forces a new resource to be created.
 	Name *string `pulumi:"name"`
 	// The output json containing the properties specified in `responseExportValues`. Here're some examples to decode json and extract the value.
-	Output   *string `pulumi:"output"`
+	Output *string `pulumi:"output"`
+	// The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created. It supports different kinds of deployment scope for **top level** resources:
+	// - resource group scope: `parentId` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.
+	// - management group scope: `parentId` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.
+	// - extension scope: `parentId` should be the ID of the resource you're adding the extension to.
+	// - subscription scope: `parentId` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`
+	// - tenant scope: `parentId` should be `/`
+	//
+	// For child level resources, the `parentId` should be the ID of its parent resource, for example, subnet resource's `parentId` is the ID of the vnet.
 	ParentId *string `pulumi:"parentId"`
 	// Whether to remove special characters in resource name. Defaults to `false`.
 	RemovingSpecialChars *bool `pulumi:"removingSpecialChars"`
@@ -175,7 +191,15 @@ type ResourceState struct {
 	// Specifies the name of the azure resource. Changing this forces a new resource to be created.
 	Name pulumi.StringPtrInput
 	// The output json containing the properties specified in `responseExportValues`. Here're some examples to decode json and extract the value.
-	Output   pulumi.StringPtrInput
+	Output pulumi.StringPtrInput
+	// The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created. It supports different kinds of deployment scope for **top level** resources:
+	// - resource group scope: `parentId` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.
+	// - management group scope: `parentId` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.
+	// - extension scope: `parentId` should be the ID of the resource you're adding the extension to.
+	// - subscription scope: `parentId` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`
+	// - tenant scope: `parentId` should be `/`
+	//
+	// For child level resources, the `parentId` should be the ID of its parent resource, for example, subnet resource's `parentId` is the ID of the vnet.
 	ParentId pulumi.StringPtrInput
 	// Whether to remove special characters in resource name. Defaults to `false`.
 	RemovingSpecialChars pulumi.BoolPtrInput
@@ -223,8 +247,16 @@ type resourceArgs struct {
 	// A list of ARM resource IDs which are used to avoid create/modify/delete azapi resources at the same time.
 	Locks []string `pulumi:"locks"`
 	// Specifies the name of the azure resource. Changing this forces a new resource to be created.
-	Name     *string `pulumi:"name"`
-	ParentId string  `pulumi:"parentId"`
+	Name *string `pulumi:"name"`
+	// The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created. It supports different kinds of deployment scope for **top level** resources:
+	// - resource group scope: `parentId` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.
+	// - management group scope: `parentId` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.
+	// - extension scope: `parentId` should be the ID of the resource you're adding the extension to.
+	// - subscription scope: `parentId` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`
+	// - tenant scope: `parentId` should be `/`
+	//
+	// For child level resources, the `parentId` should be the ID of its parent resource, for example, subnet resource's `parentId` is the ID of the vnet.
+	ParentId string `pulumi:"parentId"`
 	// Whether to remove special characters in resource name. Defaults to `false`.
 	RemovingSpecialChars *bool `pulumi:"removingSpecialChars"`
 	// A list of path that needs to be exported from response body.
@@ -268,7 +300,15 @@ type ResourceArgs struct {
 	// A list of ARM resource IDs which are used to avoid create/modify/delete azapi resources at the same time.
 	Locks pulumi.StringArrayInput
 	// Specifies the name of the azure resource. Changing this forces a new resource to be created.
-	Name     pulumi.StringPtrInput
+	Name pulumi.StringPtrInput
+	// The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created. It supports different kinds of deployment scope for **top level** resources:
+	// - resource group scope: `parentId` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.
+	// - management group scope: `parentId` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.
+	// - extension scope: `parentId` should be the ID of the resource you're adding the extension to.
+	// - subscription scope: `parentId` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`
+	// - tenant scope: `parentId` should be `/`
+	//
+	// For child level resources, the `parentId` should be the ID of its parent resource, for example, subnet resource's `parentId` is the ID of the vnet.
 	ParentId pulumi.StringInput
 	// Whether to remove special characters in resource name. Defaults to `false`.
 	RemovingSpecialChars pulumi.BoolPtrInput
@@ -425,6 +465,14 @@ func (o ResourceOutput) Output() pulumi.StringOutput {
 	return o.ApplyT(func(v *Resource) pulumi.StringOutput { return v.Output }).(pulumi.StringOutput)
 }
 
+// The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created. It supports different kinds of deployment scope for **top level** resources:
+// - resource group scope: `parentId` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.
+// - management group scope: `parentId` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.
+// - extension scope: `parentId` should be the ID of the resource you're adding the extension to.
+// - subscription scope: `parentId` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`
+// - tenant scope: `parentId` should be `/`
+//
+// For child level resources, the `parentId` should be the ID of its parent resource, for example, subnet resource's `parentId` is the ID of the vnet.
 func (o ResourceOutput) ParentId() pulumi.StringOutput {
 	return o.ApplyT(func(v *Resource) pulumi.StringOutput { return v.ParentId }).(pulumi.StringOutput)
 }
