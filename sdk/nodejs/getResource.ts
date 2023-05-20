@@ -34,9 +34,21 @@ export interface GetResourceArgs {
      * Specifies the name of the azure resource.
      */
     name?: string;
+    /**
+     * The ID of the azure resource in which this resource is created. It supports different kinds of deployment scope for **top level** resources: 
+     * - resource group scope: `parentId` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.
+     * - management group scope: `parentId` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.
+     * - extension scope: `parentId` should be the ID of the resource you're adding the extension to.
+     * - subscription scope: `parentId` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`
+     * - tenant scope: `parentId` should be `/`
+     *
+     * For child level resources, the `parentId` should be the ID of its parent resource, for example, subnet resource's `parentId` is the ID of the vnet.
+     */
     parentId?: string;
     /**
      * The ID of an existing azure source.
+     *
+     * > **Note:** Configuring `name` and `parentId` is an alternative way to configure `resourceId`.
      */
     resourceId?: string;
     /**
@@ -107,9 +119,21 @@ export interface GetResourceOutputArgs {
      * Specifies the name of the azure resource.
      */
     name?: pulumi.Input<string>;
+    /**
+     * The ID of the azure resource in which this resource is created. It supports different kinds of deployment scope for **top level** resources: 
+     * - resource group scope: `parentId` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.
+     * - management group scope: `parentId` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.
+     * - extension scope: `parentId` should be the ID of the resource you're adding the extension to.
+     * - subscription scope: `parentId` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`
+     * - tenant scope: `parentId` should be `/`
+     *
+     * For child level resources, the `parentId` should be the ID of its parent resource, for example, subnet resource's `parentId` is the ID of the vnet.
+     */
     parentId?: pulumi.Input<string>;
     /**
      * The ID of an existing azure source.
+     *
+     * > **Note:** Configuring `name` and `parentId` is an alternative way to configure `resourceId`.
      */
     resourceId?: pulumi.Input<string>;
     /**

@@ -10,41 +10,6 @@ import * as utilities from "./utilities";
  * if user wants to perform readonly action.
  *
  * > **Note** When delete `azapi.ResourceAction`, no operation will be performed.
- *
- * ## Example Usage
- *
- * ```typescript
- * import * as pulumi from "@pulumi/pulumi";
- * import * as azapi from "@ediri/azapi";
- * import * as azure from "@pulumi/azure";
- *
- * const config = new pulumi.Config();
- * const enabled = config.getBoolean("enabled") || false;
- * const example = new azure.core.ResourceGroup("example", {location: "west europe"});
- * const test = new azure.appplatform.SpringCloudService("test", {
- *     resourceGroupName: azurerm_resource_group.test.name,
- *     location: azurerm_resource_group.test.location,
- *     skuName: "S0",
- * });
- * const start: azapi.ResourceAction[] = [];
- * for (const range = {value: 0}; range.value < (enabled ? 1 : 0 == true); range.value++) {
- *     start.push(new azapi.ResourceAction(`start-${range.value}`, {
- *         type: "Microsoft.AppPlatform/Spring@2022-05-01-preview",
- *         resourceId: test.id,
- *         action: "start",
- *         responseExportValues: ["*"],
- *     }));
- * }
- * const stop: azapi.ResourceAction[] = [];
- * for (const range = {value: 0}; range.value < (enabled ? 0 : 1 == true); range.value++) {
- *     stop.push(new azapi.ResourceAction(`stop-${range.value}`, {
- *         type: "Microsoft.AppPlatform/Spring@2022-05-01-preview",
- *         resourceId: test.id,
- *         action: "stop",
- *         responseExportValues: ["*"],
- *     }));
- * }
- * ```
  */
 export class ResourceAction extends pulumi.CustomResource {
     /**

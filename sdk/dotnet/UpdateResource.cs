@@ -16,85 +16,6 @@ namespace ediri.Azapi
     /// &gt; **Note** This resource is used to add or modify properties on an existing resource.
     /// When delete `azapi.UpdateResource`, no operation will be performed, and these properties will stay unchanged.
     /// If you want to restore the modified properties to some values, you must apply the restored properties before deleting.
-    /// 
-    /// ## Example Usage
-    /// 
-    /// ```csharp
-    /// using System.Collections.Generic;
-    /// using System.Linq;
-    /// using System.Text.Json;
-    /// using Pulumi;
-    /// using Azapi = ediri.Azapi;
-    /// using Azure = Pulumi.Azure;
-    /// 
-    /// return await Deployment.RunAsync(() =&gt; 
-    /// {
-    ///     var exampleResourceGroup = new Azure.Core.ResourceGroup("exampleResourceGroup", new()
-    ///     {
-    ///         Location = "west europe",
-    ///     });
-    /// 
-    ///     var examplePublicIp = new Azure.Network.PublicIp("examplePublicIp", new()
-    ///     {
-    ///         Location = exampleResourceGroup.Location,
-    ///         ResourceGroupName = exampleResourceGroup.Name,
-    ///         AllocationMethod = "Static",
-    ///     });
-    /// 
-    ///     var exampleLoadBalancer = new Azure.Lb.LoadBalancer("exampleLoadBalancer", new()
-    ///     {
-    ///         Location = exampleResourceGroup.Location,
-    ///         ResourceGroupName = exampleResourceGroup.Name,
-    ///         FrontendIpConfigurations = new[]
-    ///         {
-    ///             new Azure.Lb.Inputs.LoadBalancerFrontendIpConfigurationArgs
-    ///             {
-    ///                 Name = "PublicIPAddress",
-    ///                 PublicIpAddressId = examplePublicIp.Id,
-    ///             },
-    ///         },
-    ///     });
-    /// 
-    ///     var exampleNatRule = new Azure.Lb.NatRule("exampleNatRule", new()
-    ///     {
-    ///         ResourceGroupName = exampleResourceGroup.Name,
-    ///         LoadbalancerId = exampleLoadBalancer.Id,
-    ///         Protocol = "Tcp",
-    ///         FrontendPort = 3389,
-    ///         BackendPort = 3389,
-    ///         FrontendIpConfigurationName = "PublicIPAddress",
-    ///     });
-    /// 
-    ///     var exampleUpdateResource = new Azapi.UpdateResource("exampleUpdateResource", new()
-    ///     {
-    ///         Type = "Microsoft.Network/loadBalancers@2021-03-01",
-    ///         ResourceId = exampleLoadBalancer.Id,
-    ///         Body = JsonSerializer.Serialize(new Dictionary&lt;string, object?&gt;
-    ///         {
-    ///             ["properties"] = new Dictionary&lt;string, object?&gt;
-    ///             {
-    ///                 ["inboundNatRules"] = new[]
-    ///                 {
-    ///                     new Dictionary&lt;string, object?&gt;
-    ///                     {
-    ///                         ["properties"] = new Dictionary&lt;string, object?&gt;
-    ///                         {
-    ///                             ["idleTimeoutInMinutes"] = 15,
-    ///                         },
-    ///                     },
-    ///                 },
-    ///             },
-    ///         }),
-    ///     }, new CustomResourceOptions
-    ///     {
-    ///         DependsOn = new[]
-    ///         {
-    ///             exampleNatRule,
-    ///         },
-    ///     });
-    /// 
-    /// });
-    /// ```
     /// </summary>
     [AzapiResourceType("azapi:index/updateResource:UpdateResource")]
     public partial class UpdateResource : global::Pulumi.CustomResource
@@ -135,11 +56,23 @@ namespace ediri.Azapi
         [Output("output")]
         public Output<string> Output { get; private set; } = null!;
 
+        /// <summary>
+        /// The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created. It supports different kinds of deployment scope for **top level** resources: 
+        /// - resource group scope: `parent_id` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.
+        /// - management group scope: `parent_id` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.
+        /// - extension scope: `parent_id` should be the ID of the resource you're adding the extension to.
+        /// - subscription scope: `parent_id` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`
+        /// - tenant scope: `parent_id` should be `/`
+        /// 
+        /// For child level resources, the `parent_id` should be the ID of its parent resource, for example, subnet resource's `parent_id` is the ID of the vnet.
+        /// </summary>
         [Output("parentId")]
         public Output<string> ParentId { get; private set; } = null!;
 
         /// <summary>
         /// The ID of an existing azure source. Changing this forces a new azure resource to be created.
+        /// 
+        /// &gt; **Note:** Configuring `name` and `parent_id` is an alternative way to configure `resource_id`.
         /// </summary>
         [Output("resourceId")]
         public Output<string> ResourceId { get; private set; } = null!;
@@ -251,11 +184,23 @@ namespace ediri.Azapi
         [Input("name")]
         public Input<string>? Name { get; set; }
 
+        /// <summary>
+        /// The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created. It supports different kinds of deployment scope for **top level** resources: 
+        /// - resource group scope: `parent_id` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.
+        /// - management group scope: `parent_id` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.
+        /// - extension scope: `parent_id` should be the ID of the resource you're adding the extension to.
+        /// - subscription scope: `parent_id` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`
+        /// - tenant scope: `parent_id` should be `/`
+        /// 
+        /// For child level resources, the `parent_id` should be the ID of its parent resource, for example, subnet resource's `parent_id` is the ID of the vnet.
+        /// </summary>
         [Input("parentId")]
         public Input<string>? ParentId { get; set; }
 
         /// <summary>
         /// The ID of an existing azure source. Changing this forces a new azure resource to be created.
+        /// 
+        /// &gt; **Note:** Configuring `name` and `parent_id` is an alternative way to configure `resource_id`.
         /// </summary>
         [Input("resourceId")]
         public Input<string>? ResourceId { get; set; }
@@ -340,11 +285,23 @@ namespace ediri.Azapi
         [Input("output")]
         public Input<string>? Output { get; set; }
 
+        /// <summary>
+        /// The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created. It supports different kinds of deployment scope for **top level** resources: 
+        /// - resource group scope: `parent_id` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.
+        /// - management group scope: `parent_id` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.
+        /// - extension scope: `parent_id` should be the ID of the resource you're adding the extension to.
+        /// - subscription scope: `parent_id` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`
+        /// - tenant scope: `parent_id` should be `/`
+        /// 
+        /// For child level resources, the `parent_id` should be the ID of its parent resource, for example, subnet resource's `parent_id` is the ID of the vnet.
+        /// </summary>
         [Input("parentId")]
         public Input<string>? ParentId { get; set; }
 
         /// <summary>
         /// The ID of an existing azure source. Changing this forces a new azure resource to be created.
+        /// 
+        /// &gt; **Note:** Configuring `name` and `parent_id` is an alternative way to configure `resource_id`.
         /// </summary>
         [Input("resourceId")]
         public Input<string>? ResourceId { get; set; }

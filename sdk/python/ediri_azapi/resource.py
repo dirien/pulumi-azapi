@@ -31,6 +31,14 @@ class ResourceArgs:
                  tags: Optional[pulumi.Input[Mapping[str, pulumi.Input[str]]]] = None):
         """
         The set of arguments for constructing a Resource resource.
+        :param pulumi.Input[str] parent_id: The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created. It supports different kinds of deployment scope for **top level** resources: 
+               - resource group scope: `parent_id` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.
+               - management group scope: `parent_id` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.
+               - extension scope: `parent_id` should be the ID of the resource you're adding the extension to.
+               - subscription scope: `parent_id` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`
+               - tenant scope: `parent_id` should be `/`
+               
+               For child level resources, the `parent_id` should be the ID of its parent resource, for example, subnet resource's `parent_id` is the ID of the vnet.
         :param pulumi.Input[str] type: It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
                `<api-version>` is version of the API used to manage this azure resource.
         :param pulumi.Input[str] body: A JSON object that contains the request body used to create and update azure resource.
@@ -78,6 +86,16 @@ class ResourceArgs:
     @property
     @pulumi.getter(name="parentId")
     def parent_id(self) -> pulumi.Input[str]:
+        """
+        The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created. It supports different kinds of deployment scope for **top level** resources: 
+        - resource group scope: `parent_id` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.
+        - management group scope: `parent_id` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.
+        - extension scope: `parent_id` should be the ID of the resource you're adding the extension to.
+        - subscription scope: `parent_id` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`
+        - tenant scope: `parent_id` should be `/`
+
+        For child level resources, the `parent_id` should be the ID of its parent resource, for example, subnet resource's `parent_id` is the ID of the vnet.
+        """
         return pulumi.get(self, "parent_id")
 
     @parent_id.setter
@@ -262,6 +280,14 @@ class _ResourceState:
         :param pulumi.Input[Sequence[pulumi.Input[str]]] locks: A list of ARM resource IDs which are used to avoid create/modify/delete azapi resources at the same time.
         :param pulumi.Input[str] name: Specifies the name of the azure resource. Changing this forces a new resource to be created.
         :param pulumi.Input[str] output: The output json containing the properties specified in `response_export_values`. Here're some examples to decode json and extract the value.
+        :param pulumi.Input[str] parent_id: The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created. It supports different kinds of deployment scope for **top level** resources: 
+               - resource group scope: `parent_id` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.
+               - management group scope: `parent_id` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.
+               - extension scope: `parent_id` should be the ID of the resource you're adding the extension to.
+               - subscription scope: `parent_id` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`
+               - tenant scope: `parent_id` should be `/`
+               
+               For child level resources, the `parent_id` should be the ID of its parent resource, for example, subnet resource's `parent_id` is the ID of the vnet.
         :param pulumi.Input[bool] removing_special_chars: Whether to remove special characters in resource name. Defaults to `false`.
         :param pulumi.Input[Sequence[pulumi.Input[str]]] response_export_values: A list of path that needs to be exported from response body.
                Setting it to `["*"]` will export the full response body.
@@ -402,6 +428,16 @@ class _ResourceState:
     @property
     @pulumi.getter(name="parentId")
     def parent_id(self) -> Optional[pulumi.Input[str]]:
+        """
+        The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created. It supports different kinds of deployment scope for **top level** resources: 
+        - resource group scope: `parent_id` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.
+        - management group scope: `parent_id` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.
+        - extension scope: `parent_id` should be the ID of the resource you're adding the extension to.
+        - subscription scope: `parent_id` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`
+        - tenant scope: `parent_id` should be `/`
+
+        For child level resources, the `parent_id` should be the ID of its parent resource, for example, subnet resource's `parent_id` is the ID of the vnet.
+        """
         return pulumi.get(self, "parent_id")
 
     @parent_id.setter
@@ -520,6 +556,14 @@ class Resource(pulumi.CustomResource):
         :param pulumi.Input[str] location: The Azure Region where the azure resource should exist.
         :param pulumi.Input[Sequence[pulumi.Input[str]]] locks: A list of ARM resource IDs which are used to avoid create/modify/delete azapi resources at the same time.
         :param pulumi.Input[str] name: Specifies the name of the azure resource. Changing this forces a new resource to be created.
+        :param pulumi.Input[str] parent_id: The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created. It supports different kinds of deployment scope for **top level** resources: 
+               - resource group scope: `parent_id` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.
+               - management group scope: `parent_id` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.
+               - extension scope: `parent_id` should be the ID of the resource you're adding the extension to.
+               - subscription scope: `parent_id` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`
+               - tenant scope: `parent_id` should be `/`
+               
+               For child level resources, the `parent_id` should be the ID of its parent resource, for example, subnet resource's `parent_id` is the ID of the vnet.
         :param pulumi.Input[bool] removing_special_chars: Whether to remove special characters in resource name. Defaults to `false`.
         :param pulumi.Input[Sequence[pulumi.Input[str]]] response_export_values: A list of path that needs to be exported from response body.
                Setting it to `["*"]` will export the full response body.
@@ -649,6 +693,14 @@ class Resource(pulumi.CustomResource):
         :param pulumi.Input[Sequence[pulumi.Input[str]]] locks: A list of ARM resource IDs which are used to avoid create/modify/delete azapi resources at the same time.
         :param pulumi.Input[str] name: Specifies the name of the azure resource. Changing this forces a new resource to be created.
         :param pulumi.Input[str] output: The output json containing the properties specified in `response_export_values`. Here're some examples to decode json and extract the value.
+        :param pulumi.Input[str] parent_id: The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created. It supports different kinds of deployment scope for **top level** resources: 
+               - resource group scope: `parent_id` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.
+               - management group scope: `parent_id` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.
+               - extension scope: `parent_id` should be the ID of the resource you're adding the extension to.
+               - subscription scope: `parent_id` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`
+               - tenant scope: `parent_id` should be `/`
+               
+               For child level resources, the `parent_id` should be the ID of its parent resource, for example, subnet resource's `parent_id` is the ID of the vnet.
         :param pulumi.Input[bool] removing_special_chars: Whether to remove special characters in resource name. Defaults to `false`.
         :param pulumi.Input[Sequence[pulumi.Input[str]]] response_export_values: A list of path that needs to be exported from response body.
                Setting it to `["*"]` will export the full response body.
@@ -748,6 +800,16 @@ class Resource(pulumi.CustomResource):
     @property
     @pulumi.getter(name="parentId")
     def parent_id(self) -> pulumi.Output[str]:
+        """
+        The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created. It supports different kinds of deployment scope for **top level** resources: 
+        - resource group scope: `parent_id` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.
+        - management group scope: `parent_id` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.
+        - extension scope: `parent_id` should be the ID of the resource you're adding the extension to.
+        - subscription scope: `parent_id` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`
+        - tenant scope: `parent_id` should be `/`
+
+        For child level resources, the `parent_id` should be the ID of its parent resource, for example, subnet resource's `parent_id` is the ID of the vnet.
+        """
         return pulumi.get(self, "parent_id")
 
     @property

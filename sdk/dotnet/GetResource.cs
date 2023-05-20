@@ -40,11 +40,23 @@ namespace ediri.Azapi
         [Input("name")]
         public string? Name { get; set; }
 
+        /// <summary>
+        /// The ID of the azure resource in which this resource is created. It supports different kinds of deployment scope for **top level** resources: 
+        /// - resource group scope: `parent_id` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.
+        /// - management group scope: `parent_id` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.
+        /// - extension scope: `parent_id` should be the ID of the resource you're adding the extension to.
+        /// - subscription scope: `parent_id` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`
+        /// - tenant scope: `parent_id` should be `/`
+        /// 
+        /// For child level resources, the `parent_id` should be the ID of its parent resource, for example, subnet resource's `parent_id` is the ID of the vnet.
+        /// </summary>
         [Input("parentId")]
         public string? ParentId { get; set; }
 
         /// <summary>
         /// The ID of an existing azure source.
+        /// 
+        /// &gt; **Note:** Configuring `name` and `parent_id` is an alternative way to configure `resource_id`.
         /// </summary>
         [Input("resourceId")]
         public string? ResourceId { get; set; }
@@ -99,11 +111,23 @@ namespace ediri.Azapi
         [Input("name")]
         public Input<string>? Name { get; set; }
 
+        /// <summary>
+        /// The ID of the azure resource in which this resource is created. It supports different kinds of deployment scope for **top level** resources: 
+        /// - resource group scope: `parent_id` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.
+        /// - management group scope: `parent_id` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.
+        /// - extension scope: `parent_id` should be the ID of the resource you're adding the extension to.
+        /// - subscription scope: `parent_id` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`
+        /// - tenant scope: `parent_id` should be `/`
+        /// 
+        /// For child level resources, the `parent_id` should be the ID of its parent resource, for example, subnet resource's `parent_id` is the ID of the vnet.
+        /// </summary>
         [Input("parentId")]
         public Input<string>? ParentId { get; set; }
 
         /// <summary>
         /// The ID of an existing azure source.
+        /// 
+        /// &gt; **Note:** Configuring `name` and `parent_id` is an alternative way to configure `resource_id`.
         /// </summary>
         [Input("resourceId")]
         public Input<string>? ResourceId { get; set; }
