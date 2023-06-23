@@ -95,9 +95,10 @@ func Provider() tfbridge.ProviderInfo {
 			// 		"tags": {Type: tfbridge.MakeType(mainPkg, "Tags")},
 			// 	},
 			// },
-			"azapi_resource":        {Tok: tfbridge.MakeResource(mainPkg, mainMod, "Resource")},
-			"azapi_resource_action": {Tok: tfbridge.MakeResource(mainPkg, mainMod, "ResourceAction")},
-			"azapi_update_resource": {Tok: tfbridge.MakeResource(mainPkg, mainMod, "UpdateResource")},
+			"azapi_resource":            {Tok: tfbridge.MakeResource(mainPkg, mainMod, "Resource")},
+			"azapi_resource_action":     {Tok: tfbridge.MakeResource(mainPkg, mainMod, "ResourceAction")},
+			"azapi_update_resource":     {Tok: tfbridge.MakeResource(mainPkg, mainMod, "UpdateResource")},
+			"azapi_data_plane_resource": {Tok: tfbridge.MakeResource(mainPkg, mainMod, "DataPlaneResource")},
 		},
 		DataSources: map[string]*tfbridge.DataSourceInfo{
 			// Map each resource in the Terraform provider to a Pulumi function. An example

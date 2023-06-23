@@ -8,6 +8,10 @@ import (
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi/config"
 )
 
+func GetAuxiliaryTenantIds(ctx *pulumi.Context) string {
+	return config.Get(ctx, "azapi:auxiliaryTenantIds")
+}
+
 // The password associated with the Client Certificate. For use when authenticating as a Service Principal using a Client
 // Certificate
 func GetClientCertificatePassword(ctx *pulumi.Context) string {
@@ -28,6 +32,11 @@ func GetClientId(ctx *pulumi.Context) string {
 // The Client Secret which should be used. For use When authenticating as a Service Principal using a Client Secret.
 func GetClientSecret(ctx *pulumi.Context) string {
 	return config.Get(ctx, "azapi:clientSecret")
+}
+
+// The value of the x-ms-correlation-request-id header (otherwise an auto-generated UUID will be used).
+func GetCustomCorrelationRequestId(ctx *pulumi.Context) string {
+	return config.Get(ctx, "azapi:customCorrelationRequestId")
 }
 func GetDefaultLocation(ctx *pulumi.Context) string {
 	return config.Get(ctx, "azapi:defaultLocation")
@@ -100,6 +109,16 @@ func GetSubscriptionId(ctx *pulumi.Context) string {
 // The Tenant ID which should be used.
 func GetTenantId(ctx *pulumi.Context) string {
 	return config.Get(ctx, "azapi:tenantId")
+}
+
+// Allow Azure CLI to be used for Authentication.
+func GetUseCli(ctx *pulumi.Context) bool {
+	return config.GetBool(ctx, "azapi:useCli")
+}
+
+// Allow Managed Service Identity to be used for Authentication.
+func GetUseMsi(ctx *pulumi.Context) bool {
+	return config.GetBool(ctx, "azapi:useMsi")
 }
 
 // Allow OpenID Connect to be used for authentication

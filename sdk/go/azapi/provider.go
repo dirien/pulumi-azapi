@@ -27,11 +27,13 @@ type Provider struct {
 	// The Client ID which should be used.
 	ClientId pulumi.StringPtrOutput `pulumi:"clientId"`
 	// The Client Secret which should be used. For use When authenticating as a Service Principal using a Client Secret.
-	ClientSecret        pulumi.StringPtrOutput `pulumi:"clientSecret"`
-	DefaultLocation     pulumi.StringPtrOutput `pulumi:"defaultLocation"`
-	DefaultName         pulumi.StringPtrOutput `pulumi:"defaultName"`
-	DefaultNamingPrefix pulumi.StringPtrOutput `pulumi:"defaultNamingPrefix"`
-	DefaultNamingSuffix pulumi.StringPtrOutput `pulumi:"defaultNamingSuffix"`
+	ClientSecret pulumi.StringPtrOutput `pulumi:"clientSecret"`
+	// The value of the x-ms-correlation-request-id header (otherwise an auto-generated UUID will be used).
+	CustomCorrelationRequestId pulumi.StringPtrOutput `pulumi:"customCorrelationRequestId"`
+	DefaultLocation            pulumi.StringPtrOutput `pulumi:"defaultLocation"`
+	DefaultName                pulumi.StringPtrOutput `pulumi:"defaultName"`
+	DefaultNamingPrefix        pulumi.StringPtrOutput `pulumi:"defaultNamingPrefix"`
+	DefaultNamingSuffix        pulumi.StringPtrOutput `pulumi:"defaultNamingSuffix"`
 	// The Cloud Environment which should be used. Possible values are public, usgovernment and china. Defaults to public.
 	Environment pulumi.StringOutput `pulumi:"environment"`
 	// The bearer token for the request to the OIDC provider. For use When authenticating as a Service Principal using OpenID
@@ -72,6 +74,7 @@ func NewProvider(ctx *pulumi.Context,
 }
 
 type providerArgs struct {
+	AuxiliaryTenantIds []string `pulumi:"auxiliaryTenantIds"`
 	// The password associated with the Client Certificate. For use when authenticating as a Service Principal using a Client
 	// Certificate
 	ClientCertificatePassword *string `pulumi:"clientCertificatePassword"`
@@ -81,12 +84,14 @@ type providerArgs struct {
 	// The Client ID which should be used.
 	ClientId *string `pulumi:"clientId"`
 	// The Client Secret which should be used. For use When authenticating as a Service Principal using a Client Secret.
-	ClientSecret        *string           `pulumi:"clientSecret"`
-	DefaultLocation     *string           `pulumi:"defaultLocation"`
-	DefaultName         *string           `pulumi:"defaultName"`
-	DefaultNamingPrefix *string           `pulumi:"defaultNamingPrefix"`
-	DefaultNamingSuffix *string           `pulumi:"defaultNamingSuffix"`
-	DefaultTags         map[string]string `pulumi:"defaultTags"`
+	ClientSecret *string `pulumi:"clientSecret"`
+	// The value of the x-ms-correlation-request-id header (otherwise an auto-generated UUID will be used).
+	CustomCorrelationRequestId *string           `pulumi:"customCorrelationRequestId"`
+	DefaultLocation            *string           `pulumi:"defaultLocation"`
+	DefaultName                *string           `pulumi:"defaultName"`
+	DefaultNamingPrefix        *string           `pulumi:"defaultNamingPrefix"`
+	DefaultNamingSuffix        *string           `pulumi:"defaultNamingSuffix"`
+	DefaultTags                map[string]string `pulumi:"defaultTags"`
 	// This will disable the x-ms-correlation-request-id header.
 	DisableCorrelationRequestId *bool `pulumi:"disableCorrelationRequestId"`
 	// This will disable the Terraform Partner ID which is used if a custom `partner_id` isn't specified.
@@ -111,12 +116,17 @@ type providerArgs struct {
 	SubscriptionId *string `pulumi:"subscriptionId"`
 	// The Tenant ID which should be used.
 	TenantId *string `pulumi:"tenantId"`
+	// Allow Azure CLI to be used for Authentication.
+	UseCli *bool `pulumi:"useCli"`
+	// Allow Managed Service Identity to be used for Authentication.
+	UseMsi *bool `pulumi:"useMsi"`
 	// Allow OpenID Connect to be used for authentication
 	UseOidc *bool `pulumi:"useOidc"`
 }
 
 // The set of arguments for constructing a Provider resource.
 type ProviderArgs struct {
+	AuxiliaryTenantIds pulumi.StringArrayInput
 	// The password associated with the Client Certificate. For use when authenticating as a Service Principal using a Client
 	// Certificate
 	ClientCertificatePassword pulumi.StringPtrInput
@@ -126,12 +136,14 @@ type ProviderArgs struct {
 	// The Client ID which should be used.
 	ClientId pulumi.StringPtrInput
 	// The Client Secret which should be used. For use When authenticating as a Service Principal using a Client Secret.
-	ClientSecret        pulumi.StringPtrInput
-	DefaultLocation     pulumi.StringPtrInput
-	DefaultName         pulumi.StringPtrInput
-	DefaultNamingPrefix pulumi.StringPtrInput
-	DefaultNamingSuffix pulumi.StringPtrInput
-	DefaultTags         pulumi.StringMapInput
+	ClientSecret pulumi.StringPtrInput
+	// The value of the x-ms-correlation-request-id header (otherwise an auto-generated UUID will be used).
+	CustomCorrelationRequestId pulumi.StringPtrInput
+	DefaultLocation            pulumi.StringPtrInput
+	DefaultName                pulumi.StringPtrInput
+	DefaultNamingPrefix        pulumi.StringPtrInput
+	DefaultNamingSuffix        pulumi.StringPtrInput
+	DefaultTags                pulumi.StringMapInput
 	// This will disable the x-ms-correlation-request-id header.
 	DisableCorrelationRequestId pulumi.BoolPtrInput
 	// This will disable the Terraform Partner ID which is used if a custom `partner_id` isn't specified.
@@ -156,6 +168,10 @@ type ProviderArgs struct {
 	SubscriptionId pulumi.StringPtrInput
 	// The Tenant ID which should be used.
 	TenantId pulumi.StringPtrInput
+	// Allow Azure CLI to be used for Authentication.
+	UseCli pulumi.BoolPtrInput
+	// Allow Managed Service Identity to be used for Authentication.
+	UseMsi pulumi.BoolPtrInput
 	// Allow OpenID Connect to be used for authentication
 	UseOidc pulumi.BoolPtrInput
 }
@@ -217,6 +233,11 @@ func (o ProviderOutput) ClientId() pulumi.StringPtrOutput {
 // The Client Secret which should be used. For use When authenticating as a Service Principal using a Client Secret.
 func (o ProviderOutput) ClientSecret() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *Provider) pulumi.StringPtrOutput { return v.ClientSecret }).(pulumi.StringPtrOutput)
+}
+
+// The value of the x-ms-correlation-request-id header (otherwise an auto-generated UUID will be used).
+func (o ProviderOutput) CustomCorrelationRequestId() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *Provider) pulumi.StringPtrOutput { return v.CustomCorrelationRequestId }).(pulumi.StringPtrOutput)
 }
 
 func (o ProviderOutput) DefaultLocation() pulumi.StringPtrOutput {

@@ -61,6 +61,12 @@
     },
     "config": {
         "variables": {
+            "auxiliaryTenantIds": {
+                "type": "array",
+                "items": {
+                    "type": "string"
+                }
+            },
             "clientCertificatePassword": {
                 "type": "string",
                 "description": "The password associated with the Client Certificate. For use when authenticating as a Service Principal using a Client\nCertificate\n"
@@ -76,6 +82,10 @@
             "clientSecret": {
                 "type": "string",
                 "description": "The Client Secret which should be used. For use When authenticating as a Service Principal using a Client Secret.\n"
+            },
+            "customCorrelationRequestId": {
+                "type": "string",
+                "description": "The value of the x-ms-correlation-request-id header (otherwise an auto-generated UUID will be used).\n"
             },
             "defaultLocation": {
                 "type": "string"
@@ -138,6 +148,14 @@
             "tenantId": {
                 "type": "string",
                 "description": "The Tenant ID which should be used.\n"
+            },
+            "useCli": {
+                "type": "boolean",
+                "description": "Allow Azure CLI to be used for Authentication.\n"
+            },
+            "useMsi": {
+                "type": "boolean",
+                "description": "Allow Managed Service Identity to be used for Authentication.\n"
             },
             "useOidc": {
                 "type": "boolean",
@@ -224,6 +242,12 @@
     "provider": {
         "description": "The provider type for the azapi package. By default, resources use package-wide configuration\nsettings, however an explicit `Provider` instance may be created and passed during resource\nconstruction to achieve fine-grained programmatic control over provider settings. See the\n[documentation](https://www.pulumi.com/docs/reference/programming-model/#providers) for more information.\n",
         "properties": {
+            "auxiliaryTenantIds": {
+                "type": "array",
+                "items": {
+                    "type": "string"
+                }
+            },
             "clientCertificatePassword": {
                 "type": "string",
                 "description": "The password associated with the Client Certificate. For use when authenticating as a Service Principal using a Client\nCertificate\n"
@@ -239,6 +263,10 @@
             "clientSecret": {
                 "type": "string",
                 "description": "The Client Secret which should be used. For use When authenticating as a Service Principal using a Client Secret.\n"
+            },
+            "customCorrelationRequestId": {
+                "type": "string",
+                "description": "The value of the x-ms-correlation-request-id header (otherwise an auto-generated UUID will be used).\n"
             },
             "defaultLocation": {
                 "type": "string"
@@ -301,6 +329,14 @@
             "tenantId": {
                 "type": "string",
                 "description": "The Tenant ID which should be used.\n"
+            },
+            "useCli": {
+                "type": "boolean",
+                "description": "Allow Azure CLI to be used for Authentication.\n"
+            },
+            "useMsi": {
+                "type": "boolean",
+                "description": "Allow Managed Service Identity to be used for Authentication.\n"
             },
             "useOidc": {
                 "type": "boolean",
@@ -311,6 +347,12 @@
             "environment"
         ],
         "inputProperties": {
+            "auxiliaryTenantIds": {
+                "type": "array",
+                "items": {
+                    "type": "string"
+                }
+            },
             "clientCertificatePassword": {
                 "type": "string",
                 "description": "The password associated with the Client Certificate. For use when authenticating as a Service Principal using a Client\nCertificate\n"
@@ -326,6 +368,10 @@
             "clientSecret": {
                 "type": "string",
                 "description": "The Client Secret which should be used. For use When authenticating as a Service Principal using a Client Secret.\n"
+            },
+            "customCorrelationRequestId": {
+                "type": "string",
+                "description": "The value of the x-ms-correlation-request-id header (otherwise an auto-generated UUID will be used).\n"
             },
             "defaultLocation": {
                 "type": "string"
@@ -388,6 +434,14 @@
             "tenantId": {
                 "type": "string",
                 "description": "The Tenant ID which should be used.\n"
+            },
+            "useCli": {
+                "type": "boolean",
+                "description": "Allow Azure CLI to be used for Authentication.\n"
+            },
+            "useMsi": {
+                "type": "boolean",
+                "description": "Allow Managed Service Identity to be used for Authentication.\n"
             },
             "useOidc": {
                 "type": "boolean",
@@ -399,6 +453,155 @@
         ]
     },
     "resources": {
+        "azapi:index/dataPlaneResource:DataPlaneResource": {
+            "description": "This resource can manage some Azure data plane resource.\n\n## Available Resources\n\n| Resource Type | URL | Parent ID Example                                                                           |\n| --- | --- |---------------------------------------------------------------------------------------------|\n| Microsoft.AppConfiguration/configurationStores/keyValues | /kv/{key} | {storeName}.azconfig.io                                                                     |\n| Microsoft.DeviceUpdate/accounts/groups | /deviceupdate/{instanceId}/management/groups/{groupId} | {accountName}.api.adu.microsoft.com/deviceupdate/{instanceName}                             |\n| Microsoft.DeviceUpdate/accounts/groups/deployments | /deviceUpdate/{instanceId}/management/groups/{groupId}/deployments/{deploymentId} | {accountName}.api.adu.microsoft.com/deviceupdate/{instanceName}/management/groups/{groupId} |\n| Microsoft.DeviceUpdate/accounts/v2/deployments | /deviceupdate/{instanceId}/v2/management/deployments/{deploymentId} | {accountName}.api.adu.microsoft.com/deviceupdate/{instanceName}                             |\n| Microsoft.DeviceUpdate/accounts/v2/groups | /deviceupdate/{instanceId}/v2/management/groups/{groupId} | {accountName}.api.adu.microsoft.com/deviceupdate/{instanceName}                             |\n| Microsoft.DigitalTwins/digitalTwinsInstances/digitaltwins | /digitaltwins/{id} | {instanceName}.api.weu.digitaltwins.azure.net                                               |\n| Microsoft.DigitalTwins/digitalTwinsInstances/digitaltwins/relationships | /digitaltwins/{id}/relationships/{relationshipId} | {instanceName}.api.weu.digitaltwins.azure.net/digitaltwins/{digitalTwinId}                  |\n| Microsoft.DigitalTwins/digitalTwinsInstances/eventroutes | /eventroutes/{id} | {instanceName}.api.weu.digitaltwins.azure.net                                               |\n| Microsoft.DigitalTwins/digitalTwinsInstances/jobs/imports | /jobs/imports/{id} | {instanceName}.api.weu.digitaltwins.azure.net                                               |\n| Microsoft.IoTCentral/IoTApps/organizations | /organizations/{organizationId} | {appSubdomain}.azureiotcentral.com                                                          |\n| Microsoft.IoTCentral/IoTApps/scheduledJobs | /scheduledJobs/{scheduledJobId} | {appSubdomain}.azureiotcentral.com                                                          |\n| Microsoft.IoTCentral/IoTApps/users | /users/{userId} | {appSubdomain}.azureiotcentral.com                                                          |\n| Microsoft.IoTCentral/iotApps/apiTokens | /apiTokens/{tokenId} | {appSubdomain}.azureiotcentral.com                                                          |\n| Microsoft.IoTCentral/iotApps/continuousDataExports | /continuousDataExports/{exportId} | {appSubdomain}.azureiotcentral.com                                                          |\n| Microsoft.IoTCentral/iotApps/dashboards | /dashboards/{dashboardId} | {appSubdomain}.azureiotcentral.com                                                          |\n| Microsoft.IoTCentral/iotApps/dataExport/destinations | /dataExport/destinations/{destinationId} | {appSubdomain}.azureiotcentral.com                                                          |\n| Microsoft.IoTCentral/iotApps/dataExport/exports | /dataExport/exports/{exportId} | {appSubdomain}.azureiotcentral.com                                                          |\n| Microsoft.IoTCentral/iotApps/deploymentManifests | /deploymentManifests/{deploymentManifestId} | {appSubdomain}.azureiotcentral.com                                                          |\n| Microsoft.IoTCentral/iotApps/deviceGroups | /deviceGroups/{deviceGroupId} | {appSubdomain}.azureiotcentral.com                                                          |\n| Microsoft.IoTCentral/iotApps/deviceTemplates | /deviceTemplates/{deviceTemplateId} | {appSubdomain}.azureiotcentral.com                                                          |\n| Microsoft.IoTCentral/iotApps/devices | /devices/{deviceId} | {appSubdomain}.azureiotcentral.com                                                          |\n| Microsoft.IoTCentral/iotApps/devices/attestation | /devices/{deviceId}/attestation | {appSubdomain}.azureiotcentral.com                                                          |\n| Microsoft.IoTCentral/iotApps/devices/relationships | /devices/{deviceId}/relationships/{relationshipId} | {appSubdomain}.azureiotcentral.com/devices/{deviceId}                                       |\n| Microsoft.IoTCentral/iotApps/enrollmentGroups | /enrollmentGroups/{enrollmentGroupId} | {appSubdomain}.azureiotcentral.com                                                          |\n| Microsoft.IoTCentral/iotApps/enrollmentGroups/certificates | /enrollmentGroups/{enrollmentGroupId}/certificates/{entry} | {appSubdomain}.azureiotcentral.com/enrollmentGroups/{enrollmentGroupId}                     |\n| Microsoft.KeyVault/vaults/certificates/contacts | /certificates/contacts | {vaultName}.vault.azure.net                                                                 |\n| Microsoft.KeyVault/vaults/certificates/issuers | /certificates/issuers/{issuer-name} | {vaultName}.vault.azure.net                                                                 |\n| Microsoft.KeyVault/vaults/storage | /storage/{storage-account-name} | {vaultName}.vault.azure.net                                                                 |\n| Microsoft.KeyVault/vaults/storage/sas | /storage/{storage-account-name}/sas/{sas-definition-name} | {vaultName}.vault.azure.net/storage/{storage-account-name}                                  |\n| Microsoft.Purview/accounts/Account/collections | /collections/{collectionName} | {accountName}.purview.azure.com                                                             |\n| Microsoft.Purview/accounts/Account/resourceSetRuleConfigs | /resourceSetRuleConfigs/defaultResourceSetRuleConfig | {accountName}.purview.azure.com                                                             |\n| Microsoft.Purview/accounts/Scanning/azureKeyVaults | /azureKeyVaults/{azureKeyVaultName} | {accountName}.purview.azure.com/scan                                                        |\n| Microsoft.Purview/accounts/Scanning/classificationrules | /classificationrules/{classificationRuleName} | {accountName}.purview.azure.com/scan                                                        |\n| Microsoft.Purview/accounts/Scanning/credentials | /credentials/{credentialName} | {accountName}.purview.azure.com/scan                                                        |\n| Microsoft.Purview/accounts/Scanning/datasources | /datasources/{dataSourceName} | {accountName}.purview.azure.com/scan                                                        |\n| Microsoft.Purview/accounts/Scanning/datasources/scans | /datasources/{dataSourceName}/scans/{scanName} | {accountName}.purview.azure.com/scan/datasources/{dataSourceName}                           |\n| Microsoft.Purview/accounts/Scanning/datasources/scans/triggers | /datasources/{dataSourceName}/scans/{scanName}/triggers/default | {accountName}.purview.azure.com/scan/datasources/{dataSourceName}/scans/{scanName}          |\n| Microsoft.Purview/accounts/Scanning/integrationruntimes | /integrationruntimes/{integrationRuntimeName} | {accountName}.purview.azure.com/scan                                                        |\n| Microsoft.Purview/accounts/Scanning/managedvirtualnetworks/managedprivateendpoints | /managedvirtualnetworks/{managedVirtualNetworkName}/managedprivateendpoints/{managedPrivateEndpointName} | {accountName}.purview.azure.com/scan/managedvirtualnetworks/{managedVirtualNetworkName}     |\n| Microsoft.Purview/accounts/Workflow/workflows | /workflows/{workflowId} | {accountName}.purview.azure.com                                                             |\n| Microsoft.Synapse/workspaces/dataflows | /dataflows/{dataFlowName} | {workspaceName}.dev.azuresynapse.net                                                        |\n| Microsoft.Synapse/workspaces/datasets | /datasets/{datasetName} | {workspaceName}.dev.azuresynapse.net                                                        |\n| Microsoft.Synapse/workspaces/kqlScripts | /kqlScripts/{kqlScriptName} | {workspaceName}.dev.azuresynapse.net                                                        |\n| Microsoft.Synapse/workspaces/libraries | /libraries/{libraryName} | {workspaceName}.dev.azuresynapse.net                                                        |\n| Microsoft.Synapse/workspaces/linkconnections | /linkconnections/{linkConnectionName} | {workspaceName}.dev.azuresynapse.net                                                        |\n| Microsoft.Synapse/workspaces/linkedservices | /linkedservices/{linkedServiceName} | {workspaceName}.dev.azuresynapse.net                                                        |\n| Microsoft.Synapse/workspaces/managedVirtualNetworks/managedPrivateEndpoints | /managedVirtualNetworks/{managedVirtualNetworkName}/managedPrivateEndpoints/{managedPrivateEndpointName} | {workspaceName}.dev.azuresynapse.net/managedVirtualNetworks/{managedVirtualNetworkName}     |\n| Microsoft.Synapse/workspaces/notebooks | /notebooks/{notebookName} | {workspaceName}.dev.azuresynapse.net                                                        |\n| Microsoft.Synapse/workspaces/pipelines | /pipelines/{pipelineName} | {workspaceName}.dev.azuresynapse.net                                                        |\n| Microsoft.Synapse/workspaces/roleAssignments | /roleAssignments/{roleAssignmentId} | {workspaceName}.dev.azuresynapse.net                                                        |\n| Microsoft.Synapse/workspaces/sparkJobDefinitions | /sparkJobDefinitions/{sparkJobDefinitionName} | {workspaceName}.dev.azuresynapse.net                                                        |\n| Microsoft.Synapse/workspaces/sparkconfigurations | /sparkconfigurations/{sparkConfigurationName} | {workspaceName}.dev.azuresynapse.net                                                        |\n| Microsoft.Synapse/workspaces/sqlScripts | /sqlScripts/{sqlScriptName} | {workspaceName}.dev.azuresynapse.net                                                        |\n| Microsoft.Synapse/workspaces/triggers | /triggers/{triggerName} | {workspaceName}.dev.azuresynapse.net                                                        |\n",
+            "properties": {
+                "body": {
+                    "type": "string",
+                    "description": "A JSON object that contains the request body used to create and update data plane resource.\n"
+                },
+                "ignoreCasing": {
+                    "type": "boolean",
+                    "description": "Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.\n"
+                },
+                "ignoreMissingProperty": {
+                    "type": "boolean",
+                    "description": "Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.\n"
+                },
+                "locks": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "A list of ARM resource IDs which are used to avoid create/modify/delete azapi resources at the same time.\n"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Specifies the name of the azure resource. Changing this forces a new resource to be created.\n"
+                },
+                "output": {
+                    "type": "string",
+                    "description": "The output json containing the properties specified in `response_export_values`. Here're some examples to decode json and extract the value."
+                },
+                "parentId": {
+                    "type": "string",
+                    "description": "The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created.\n"
+                },
+                "responseExportValues": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "A list of path that needs to be exported from response body.\nSetting it to `[\"*\"]` will export the full response body.\nHere's an example. If it sets to `[\"properties.loginServer\", \"properties.policies.quarantinePolicy.status\"]`, it will set the following json to computed property `output`.\n```typescript\nimport * as pulumi from \"@pulumi/pulumi\";\n```\n```python\nimport pulumi\n```\n```csharp\nusing System.Collections.Generic;\nusing System.Linq;\nusing Pulumi;\n\nreturn await Deployment.RunAsync(() =\u003e \n{\n});\n```\n```go\npackage main\n\nimport (\n\t\"github.com/pulumi/pulumi/sdk/v3/go/pulumi\"\n)\n\nfunc main() {\n\tpulumi.Run(func(ctx *pulumi.Context) error {\n\t\treturn nil\n\t})\n}\n```\n```java\npackage generated_program;\n\nimport com.pulumi.Context;\nimport com.pulumi.Pulumi;\nimport com.pulumi.core.Output;\nimport java.util.List;\nimport java.util.ArrayList;\nimport java.util.Map;\nimport java.io.File;\nimport java.nio.file.Files;\nimport java.nio.file.Paths;\n\npublic class App {\n    public static void main(String[] args) {\n        Pulumi.run(App::stack);\n    }\n\n    public static void stack(Context ctx) {\n    }\n}\n```\n```yaml\n{}\n```\n"
+                },
+                "type": {
+                    "type": "string",
+                    "description": "It is in a format like `\u003cresource-type\u003e@\u003capi-version\u003e`. `\u003capi-version\u003e` is version of the API used to manage this azure data plane resource.\n\n\u003e **Note** For the available resource types and parent IDs, please refer to the `Available Resources` section below.\n"
+                }
+            },
+            "required": [
+                "name",
+                "output",
+                "parentId",
+                "type"
+            ],
+            "inputProperties": {
+                "body": {
+                    "type": "string",
+                    "description": "A JSON object that contains the request body used to create and update data plane resource.\n"
+                },
+                "ignoreCasing": {
+                    "type": "boolean",
+                    "description": "Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.\n"
+                },
+                "ignoreMissingProperty": {
+                    "type": "boolean",
+                    "description": "Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.\n"
+                },
+                "locks": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "A list of ARM resource IDs which are used to avoid create/modify/delete azapi resources at the same time.\n"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Specifies the name of the azure resource. Changing this forces a new resource to be created.\n",
+                    "willReplaceOnChanges": true
+                },
+                "parentId": {
+                    "type": "string",
+                    "description": "The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created.\n",
+                    "willReplaceOnChanges": true
+                },
+                "responseExportValues": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "A list of path that needs to be exported from response body.\nSetting it to `[\"*\"]` will export the full response body.\nHere's an example. If it sets to `[\"properties.loginServer\", \"properties.policies.quarantinePolicy.status\"]`, it will set the following json to computed property `output`.\n```typescript\nimport * as pulumi from \"@pulumi/pulumi\";\n```\n```python\nimport pulumi\n```\n```csharp\nusing System.Collections.Generic;\nusing System.Linq;\nusing Pulumi;\n\nreturn await Deployment.RunAsync(() =\u003e \n{\n});\n```\n```go\npackage main\n\nimport (\n\t\"github.com/pulumi/pulumi/sdk/v3/go/pulumi\"\n)\n\nfunc main() {\n\tpulumi.Run(func(ctx *pulumi.Context) error {\n\t\treturn nil\n\t})\n}\n```\n```java\npackage generated_program;\n\nimport com.pulumi.Context;\nimport com.pulumi.Pulumi;\nimport com.pulumi.core.Output;\nimport java.util.List;\nimport java.util.ArrayList;\nimport java.util.Map;\nimport java.io.File;\nimport java.nio.file.Files;\nimport java.nio.file.Paths;\n\npublic class App {\n    public static void main(String[] args) {\n        Pulumi.run(App::stack);\n    }\n\n    public static void stack(Context ctx) {\n    }\n}\n```\n```yaml\n{}\n```\n"
+                },
+                "type": {
+                    "type": "string",
+                    "description": "It is in a format like `\u003cresource-type\u003e@\u003capi-version\u003e`. `\u003capi-version\u003e` is version of the API used to manage this azure data plane resource.\n\n\u003e **Note** For the available resource types and parent IDs, please refer to the `Available Resources` section below.\n"
+                }
+            },
+            "requiredInputs": [
+                "parentId",
+                "type"
+            ],
+            "stateInputs": {
+                "description": "Input properties used for looking up and filtering DataPlaneResource resources.\n",
+                "properties": {
+                    "body": {
+                        "type": "string",
+                        "description": "A JSON object that contains the request body used to create and update data plane resource.\n"
+                    },
+                    "ignoreCasing": {
+                        "type": "boolean",
+                        "description": "Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.\n"
+                    },
+                    "ignoreMissingProperty": {
+                        "type": "boolean",
+                        "description": "Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.\n"
+                    },
+                    "locks": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "A list of ARM resource IDs which are used to avoid create/modify/delete azapi resources at the same time.\n"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "Specifies the name of the azure resource. Changing this forces a new resource to be created.\n",
+                        "willReplaceOnChanges": true
+                    },
+                    "output": {
+                        "type": "string",
+                        "description": "The output json containing the properties specified in `response_export_values`. Here're some examples to decode json and extract the value."
+                    },
+                    "parentId": {
+                        "type": "string",
+                        "description": "The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created.\n",
+                        "willReplaceOnChanges": true
+                    },
+                    "responseExportValues": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "A list of path that needs to be exported from response body.\nSetting it to `[\"*\"]` will export the full response body.\nHere's an example. If it sets to `[\"properties.loginServer\", \"properties.policies.quarantinePolicy.status\"]`, it will set the following json to computed property `output`.\n```typescript\nimport * as pulumi from \"@pulumi/pulumi\";\n```\n```python\nimport pulumi\n```\n```csharp\nusing System.Collections.Generic;\nusing System.Linq;\nusing Pulumi;\n\nreturn await Deployment.RunAsync(() =\u003e \n{\n});\n```\n```go\npackage main\n\nimport (\n\t\"github.com/pulumi/pulumi/sdk/v3/go/pulumi\"\n)\n\nfunc main() {\n\tpulumi.Run(func(ctx *pulumi.Context) error {\n\t\treturn nil\n\t})\n}\n```\n```java\npackage generated_program;\n\nimport com.pulumi.Context;\nimport com.pulumi.Pulumi;\nimport com.pulumi.core.Output;\nimport java.util.List;\nimport java.util.ArrayList;\nimport java.util.Map;\nimport java.io.File;\nimport java.nio.file.Files;\nimport java.nio.file.Paths;\n\npublic class App {\n    public static void main(String[] args) {\n        Pulumi.run(App::stack);\n    }\n\n    public static void stack(Context ctx) {\n    }\n}\n```\n```yaml\n{}\n```\n"
+                    },
+                    "type": {
+                        "type": "string",
+                        "description": "It is in a format like `\u003cresource-type\u003e@\u003capi-version\u003e`. `\u003capi-version\u003e` is version of the API used to manage this azure data plane resource.\n\n\u003e **Note** For the available resource types and parent IDs, please refer to the `Available Resources` section below.\n"
+                    }
+                },
+                "type": "object"
+            }
+        },
         "azapi:index/resource:Resource": {
             "description": "This resource can manage any Azure resource manager resource.\n\n\n## Import\n\nAzure resource can be imported using the `resource id`, e.g.\n\n```sh\n $ pulumi import azapi:index/resource:Resource example /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/resGroup1/providers/Microsoft.MachineLearningServices/workspaces/workspace1/computes/cluster1\n```\n\n It also supports specifying API version by using the `resource id` with `api-version` as a query parameter, e.g.\n\n```sh\n $ pulumi import azapi:index/resource:Resource example /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/resGroup1/providers/Microsoft.MachineLearningServices/workspaces/workspace1/computes/cluster1?api-version=2021-07-01\n```\n\n ",
             "properties": {

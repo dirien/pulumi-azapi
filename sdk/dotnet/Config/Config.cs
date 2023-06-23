@@ -32,6 +32,13 @@ namespace ediri.Azapi
 
         private static readonly global::Pulumi.Config __config = new global::Pulumi.Config("azapi");
 
+        private static readonly __Value<ImmutableArray<string>> _auxiliaryTenantIds = new __Value<ImmutableArray<string>>(() => __config.GetObject<ImmutableArray<string>>("auxiliaryTenantIds"));
+        public static ImmutableArray<string> AuxiliaryTenantIds
+        {
+            get => _auxiliaryTenantIds.Get();
+            set => _auxiliaryTenantIds.Set(value);
+        }
+
         private static readonly __Value<string?> _clientCertificatePassword = new __Value<string?>(() => __config.Get("clientCertificatePassword"));
         /// <summary>
         /// The password associated with the Client Certificate. For use when authenticating as a Service Principal using a Client
@@ -72,6 +79,16 @@ namespace ediri.Azapi
         {
             get => _clientSecret.Get();
             set => _clientSecret.Set(value);
+        }
+
+        private static readonly __Value<string?> _customCorrelationRequestId = new __Value<string?>(() => __config.Get("customCorrelationRequestId"));
+        /// <summary>
+        /// The value of the x-ms-correlation-request-id header (otherwise an auto-generated UUID will be used).
+        /// </summary>
+        public static string? CustomCorrelationRequestId
+        {
+            get => _customCorrelationRequestId.Get();
+            set => _customCorrelationRequestId.Set(value);
         }
 
         private static readonly __Value<string?> _defaultLocation = new __Value<string?>(() => __config.Get("defaultLocation"));
@@ -219,6 +236,26 @@ namespace ediri.Azapi
         {
             get => _tenantId.Get();
             set => _tenantId.Set(value);
+        }
+
+        private static readonly __Value<bool?> _useCli = new __Value<bool?>(() => __config.GetBoolean("useCli"));
+        /// <summary>
+        /// Allow Azure CLI to be used for Authentication.
+        /// </summary>
+        public static bool? UseCli
+        {
+            get => _useCli.Get();
+            set => _useCli.Set(value);
+        }
+
+        private static readonly __Value<bool?> _useMsi = new __Value<bool?>(() => __config.GetBoolean("useMsi"));
+        /// <summary>
+        /// Allow Managed Service Identity to be used for Authentication.
+        /// </summary>
+        public static bool? UseMsi
+        {
+            get => _useMsi.Get();
+            set => _useMsi.Set(value);
         }
 
         private static readonly __Value<bool?> _useOidc = new __Value<bool?>(() => __config.GetBoolean("useOidc"));

@@ -5,6 +5,7 @@
 from . import _utilities
 import typing
 # Export this package's modules as members:
+from .data_plane_resource import *
 from .get_resource import *
 from .get_resource_action import *
 from .provider import *
@@ -24,6 +25,14 @@ else:
 _utilities.register(
     resource_modules="""
 [
+ {
+  "pkg": "azapi",
+  "mod": "index/dataPlaneResource",
+  "fqn": "ediri_azapi",
+  "classes": {
+   "azapi:index/dataPlaneResource:DataPlaneResource": "DataPlaneResource"
+  }
+ },
  {
   "pkg": "azapi",
   "mod": "index/resource",

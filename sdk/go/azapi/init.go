@@ -20,6 +20,8 @@ func (m *module) Version() semver.Version {
 
 func (m *module) Construct(ctx *pulumi.Context, name, typ, urn string) (r pulumi.Resource, err error) {
 	switch typ {
+	case "azapi:index/dataPlaneResource:DataPlaneResource":
+		r = &DataPlaneResource{}
 	case "azapi:index/resource:Resource":
 		r = &Resource{}
 	case "azapi:index/resourceAction:ResourceAction":
@@ -54,6 +56,11 @@ func (p *pkg) ConstructProvider(ctx *pulumi.Context, name, typ, urn string) (pul
 
 func init() {
 	version, _ := PkgVersion()
+	pulumi.RegisterResourceModule(
+		"azapi",
+		"index/dataPlaneResource",
+		&module{version},
+	)
 	pulumi.RegisterResourceModule(
 		"azapi",
 		"index/resource",

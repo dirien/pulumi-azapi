@@ -5,6 +5,11 @@ import * as pulumi from "@pulumi/pulumi";
 import * as utilities from "./utilities";
 
 // Export members:
+export { DataPlaneResourceArgs, DataPlaneResourceState } from "./dataPlaneResource";
+export type DataPlaneResource = import("./dataPlaneResource").DataPlaneResource;
+export const DataPlaneResource: typeof import("./dataPlaneResource").DataPlaneResource = null as any;
+utilities.lazyLoad(exports, ["DataPlaneResource"], () => require("./dataPlaneResource"));
+
 export { GetResourceArgs, GetResourceResult, GetResourceOutputArgs } from "./getResource";
 export const getResource: typeof import("./getResource").getResource = null as any;
 export const getResourceOutput: typeof import("./getResource").getResourceOutput = null as any;
@@ -49,6 +54,8 @@ const _module = {
     version: utilities.getVersion(),
     construct: (name: string, type: string, urn: string): pulumi.Resource => {
         switch (type) {
+            case "azapi:index/dataPlaneResource:DataPlaneResource":
+                return new DataPlaneResource(name, <any>undefined, { urn })
             case "azapi:index/resource:Resource":
                 return new Resource(name, <any>undefined, { urn })
             case "azapi:index/resourceAction:ResourceAction":
@@ -60,6 +67,7 @@ const _module = {
         }
     },
 };
+pulumi.runtime.registerResourceModule("azapi", "index/dataPlaneResource", _module)
 pulumi.runtime.registerResourceModule("azapi", "index/resource", _module)
 pulumi.runtime.registerResourceModule("azapi", "index/resourceAction", _module)
 pulumi.runtime.registerResourceModule("azapi", "index/updateResource", _module)

@@ -45,6 +45,12 @@ namespace ediri.Azapi
         [Output("clientSecret")]
         public Output<string?> ClientSecret { get; private set; } = null!;
 
+        /// <summary>
+        /// The value of the x-ms-correlation-request-id header (otherwise an auto-generated UUID will be used).
+        /// </summary>
+        [Output("customCorrelationRequestId")]
+        public Output<string?> CustomCorrelationRequestId { get; private set; } = null!;
+
         [Output("defaultLocation")]
         public Output<string?> DefaultLocation { get; private set; } = null!;
 
@@ -136,6 +142,14 @@ namespace ediri.Azapi
 
     public sealed class ProviderArgs : global::Pulumi.ResourceArgs
     {
+        [Input("auxiliaryTenantIds", json: true)]
+        private InputList<string>? _auxiliaryTenantIds;
+        public InputList<string> AuxiliaryTenantIds
+        {
+            get => _auxiliaryTenantIds ?? (_auxiliaryTenantIds = new InputList<string>());
+            set => _auxiliaryTenantIds = value;
+        }
+
         /// <summary>
         /// The password associated with the Client Certificate. For use when authenticating as a Service Principal using a Client
         /// Certificate
@@ -161,6 +175,12 @@ namespace ediri.Azapi
         /// </summary>
         [Input("clientSecret")]
         public Input<string>? ClientSecret { get; set; }
+
+        /// <summary>
+        /// The value of the x-ms-correlation-request-id header (otherwise an auto-generated UUID will be used).
+        /// </summary>
+        [Input("customCorrelationRequestId")]
+        public Input<string>? CustomCorrelationRequestId { get; set; }
 
         [Input("defaultLocation")]
         public Input<string>? DefaultLocation { get; set; }
@@ -249,6 +269,18 @@ namespace ediri.Azapi
         /// </summary>
         [Input("tenantId")]
         public Input<string>? TenantId { get; set; }
+
+        /// <summary>
+        /// Allow Azure CLI to be used for Authentication.
+        /// </summary>
+        [Input("useCli", json: true)]
+        public Input<bool>? UseCli { get; set; }
+
+        /// <summary>
+        /// Allow Managed Service Identity to be used for Authentication.
+        /// </summary>
+        [Input("useMsi", json: true)]
+        public Input<bool>? UseMsi { get; set; }
 
         /// <summary>
         /// Allow OpenID Connect to be used for authentication
