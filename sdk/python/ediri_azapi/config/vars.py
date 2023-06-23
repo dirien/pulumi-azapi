@@ -16,6 +16,10 @@ __config__ = pulumi.Config('azapi')
 
 class _ExportableConfig(types.ModuleType):
     @property
+    def auxiliary_tenant_ids(self) -> Optional[str]:
+        return __config__.get('auxiliaryTenantIds')
+
+    @property
     def client_certificate_password(self) -> Optional[str]:
         """
         The password associated with the Client Certificate. For use when authenticating as a Service Principal using a Client
@@ -44,6 +48,13 @@ class _ExportableConfig(types.ModuleType):
         The Client Secret which should be used. For use When authenticating as a Service Principal using a Client Secret.
         """
         return __config__.get('clientSecret')
+
+    @property
+    def custom_correlation_request_id(self) -> Optional[str]:
+        """
+        The value of the x-ms-correlation-request-id header (otherwise an auto-generated UUID will be used).
+        """
+        return __config__.get('customCorrelationRequestId')
 
     @property
     def default_location(self) -> Optional[str]:
@@ -143,6 +154,20 @@ class _ExportableConfig(types.ModuleType):
         The Tenant ID which should be used.
         """
         return __config__.get('tenantId')
+
+    @property
+    def use_cli(self) -> Optional[bool]:
+        """
+        Allow Azure CLI to be used for Authentication.
+        """
+        return __config__.get_bool('useCli')
+
+    @property
+    def use_msi(self) -> Optional[bool]:
+        """
+        Allow Managed Service Identity to be used for Authentication.
+        """
+        return __config__.get_bool('useMsi')
 
     @property
     def use_oidc(self) -> Optional[bool]:

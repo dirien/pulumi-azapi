@@ -7,6 +7,14 @@ import * as utilities from "../utilities";
 declare var exports: any;
 const __config = new pulumi.Config("azapi");
 
+export declare const auxiliaryTenantIds: string[] | undefined;
+Object.defineProperty(exports, "auxiliaryTenantIds", {
+    get() {
+        return __config.getObject<string[]>("auxiliaryTenantIds");
+    },
+    enumerable: true,
+});
+
 /**
  * The password associated with the Client Certificate. For use when authenticating as a Service Principal using a Client
  * Certificate
@@ -49,6 +57,17 @@ export declare const clientSecret: string | undefined;
 Object.defineProperty(exports, "clientSecret", {
     get() {
         return __config.get("clientSecret");
+    },
+    enumerable: true,
+});
+
+/**
+ * The value of the x-ms-correlation-request-id header (otherwise an auto-generated UUID will be used).
+ */
+export declare const customCorrelationRequestId: string | undefined;
+Object.defineProperty(exports, "customCorrelationRequestId", {
+    get() {
+        return __config.get("customCorrelationRequestId");
     },
     enumerable: true,
 });
@@ -212,6 +231,28 @@ export declare const tenantId: string | undefined;
 Object.defineProperty(exports, "tenantId", {
     get() {
         return __config.get("tenantId");
+    },
+    enumerable: true,
+});
+
+/**
+ * Allow Azure CLI to be used for Authentication.
+ */
+export declare const useCli: boolean | undefined;
+Object.defineProperty(exports, "useCli", {
+    get() {
+        return __config.getObject<boolean>("useCli");
+    },
+    enumerable: true,
+});
+
+/**
+ * Allow Managed Service Identity to be used for Authentication.
+ */
+export declare const useMsi: boolean | undefined;
+Object.defineProperty(exports, "useMsi", {
+    get() {
+        return __config.getObject<boolean>("useMsi");
     },
     enumerable: true,
 });

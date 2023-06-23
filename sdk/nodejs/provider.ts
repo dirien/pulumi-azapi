@@ -43,6 +43,10 @@ export class Provider extends pulumi.ProviderResource {
      * The Client Secret which should be used. For use When authenticating as a Service Principal using a Client Secret.
      */
     public readonly clientSecret!: pulumi.Output<string | undefined>;
+    /**
+     * The value of the x-ms-correlation-request-id header (otherwise an auto-generated UUID will be used).
+     */
+    public readonly customCorrelationRequestId!: pulumi.Output<string | undefined>;
     public readonly defaultLocation!: pulumi.Output<string | undefined>;
     public readonly defaultName!: pulumi.Output<string | undefined>;
     public readonly defaultNamingPrefix!: pulumi.Output<string | undefined>;
@@ -96,10 +100,12 @@ export class Provider extends pulumi.ProviderResource {
             if ((!args || args.environment === undefined) && !opts.urn) {
                 throw new Error("Missing required property 'environment'");
             }
+            resourceInputs["auxiliaryTenantIds"] = pulumi.output(args ? args.auxiliaryTenantIds : undefined).apply(JSON.stringify);
             resourceInputs["clientCertificatePassword"] = args ? args.clientCertificatePassword : undefined;
             resourceInputs["clientCertificatePath"] = args ? args.clientCertificatePath : undefined;
             resourceInputs["clientId"] = args ? args.clientId : undefined;
             resourceInputs["clientSecret"] = args ? args.clientSecret : undefined;
+            resourceInputs["customCorrelationRequestId"] = args ? args.customCorrelationRequestId : undefined;
             resourceInputs["defaultLocation"] = args ? args.defaultLocation : undefined;
             resourceInputs["defaultName"] = args ? args.defaultName : undefined;
             resourceInputs["defaultNamingPrefix"] = args ? args.defaultNamingPrefix : undefined;
@@ -116,6 +122,8 @@ export class Provider extends pulumi.ProviderResource {
             resourceInputs["skipProviderRegistration"] = pulumi.output(args ? args.skipProviderRegistration : undefined).apply(JSON.stringify);
             resourceInputs["subscriptionId"] = args ? args.subscriptionId : undefined;
             resourceInputs["tenantId"] = args ? args.tenantId : undefined;
+            resourceInputs["useCli"] = pulumi.output(args ? args.useCli : undefined).apply(JSON.stringify);
+            resourceInputs["useMsi"] = pulumi.output(args ? args.useMsi : undefined).apply(JSON.stringify);
             resourceInputs["useOidc"] = pulumi.output(args ? args.useOidc : undefined).apply(JSON.stringify);
         }
         opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts);
@@ -127,6 +135,7 @@ export class Provider extends pulumi.ProviderResource {
  * The set of arguments for constructing a Provider resource.
  */
 export interface ProviderArgs {
+    auxiliaryTenantIds?: pulumi.Input<pulumi.Input<string>[]>;
     /**
      * The password associated with the Client Certificate. For use when authenticating as a Service Principal using a Client
      * Certificate
@@ -145,6 +154,10 @@ export interface ProviderArgs {
      * The Client Secret which should be used. For use When authenticating as a Service Principal using a Client Secret.
      */
     clientSecret?: pulumi.Input<string>;
+    /**
+     * The value of the x-ms-correlation-request-id header (otherwise an auto-generated UUID will be used).
+     */
+    customCorrelationRequestId?: pulumi.Input<string>;
     defaultLocation?: pulumi.Input<string>;
     defaultName?: pulumi.Input<string>;
     defaultNamingPrefix?: pulumi.Input<string>;
@@ -196,6 +209,14 @@ export interface ProviderArgs {
      * The Tenant ID which should be used.
      */
     tenantId?: pulumi.Input<string>;
+    /**
+     * Allow Azure CLI to be used for Authentication.
+     */
+    useCli?: pulumi.Input<boolean>;
+    /**
+     * Allow Managed Service Identity to be used for Authentication.
+     */
+    useMsi?: pulumi.Input<boolean>;
     /**
      * Allow OpenID Connect to be used for authentication
      */

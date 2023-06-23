@@ -9,6 +9,8 @@ import pulumi.runtime
 from typing import Any, Mapping, Optional, Sequence, Union, overload
 from .. import _utilities
 
+auxiliaryTenantIds: Optional[str]
+
 clientCertificatePassword: Optional[str]
 """
 The password associated with the Client Certificate. For use when authenticating as a Service Principal using a Client
@@ -29,6 +31,11 @@ The Client ID which should be used.
 clientSecret: Optional[str]
 """
 The Client Secret which should be used. For use When authenticating as a Service Principal using a Client Secret.
+"""
+
+customCorrelationRequestId: Optional[str]
+"""
+The value of the x-ms-correlation-request-id header (otherwise an auto-generated UUID will be used).
 """
 
 defaultLocation: Optional[str]
@@ -96,6 +103,16 @@ The Subscription ID which should be used.
 tenantId: Optional[str]
 """
 The Tenant ID which should be used.
+"""
+
+useCli: Optional[bool]
+"""
+Allow Azure CLI to be used for Authentication.
+"""
+
+useMsi: Optional[bool]
+"""
+Allow Managed Service Identity to be used for Authentication.
 """
 
 useOidc: Optional[bool]

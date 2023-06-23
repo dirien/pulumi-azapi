@@ -22,6 +22,7 @@ WORKING_DIR      := $(shell pwd)
 
 ensure::
 	cd provider && go mod tidy
+	cd provider/shim && go mod tidy
 	cd sdk && go mod tidy
 	cd examples && go mod tidy
 

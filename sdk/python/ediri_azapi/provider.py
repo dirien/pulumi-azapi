@@ -15,10 +15,12 @@ __all__ = ['ProviderArgs', 'Provider']
 class ProviderArgs:
     def __init__(__self__, *,
                  environment: pulumi.Input[str],
+                 auxiliary_tenant_ids: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]] = None,
                  client_certificate_password: Optional[pulumi.Input[str]] = None,
                  client_certificate_path: Optional[pulumi.Input[str]] = None,
                  client_id: Optional[pulumi.Input[str]] = None,
                  client_secret: Optional[pulumi.Input[str]] = None,
+                 custom_correlation_request_id: Optional[pulumi.Input[str]] = None,
                  default_location: Optional[pulumi.Input[str]] = None,
                  default_name: Optional[pulumi.Input[str]] = None,
                  default_naming_prefix: Optional[pulumi.Input[str]] = None,
@@ -34,6 +36,8 @@ class ProviderArgs:
                  skip_provider_registration: Optional[pulumi.Input[bool]] = None,
                  subscription_id: Optional[pulumi.Input[str]] = None,
                  tenant_id: Optional[pulumi.Input[str]] = None,
+                 use_cli: Optional[pulumi.Input[bool]] = None,
+                 use_msi: Optional[pulumi.Input[bool]] = None,
                  use_oidc: Optional[pulumi.Input[bool]] = None):
         """
         The set of arguments for constructing a Provider resource.
@@ -44,6 +48,7 @@ class ProviderArgs:
                Principal using a Client Certificate.
         :param pulumi.Input[str] client_id: The Client ID which should be used.
         :param pulumi.Input[str] client_secret: The Client Secret which should be used. For use When authenticating as a Service Principal using a Client Secret.
+        :param pulumi.Input[str] custom_correlation_request_id: The value of the x-ms-correlation-request-id header (otherwise an auto-generated UUID will be used).
         :param pulumi.Input[bool] disable_correlation_request_id: This will disable the x-ms-correlation-request-id header.
         :param pulumi.Input[bool] disable_terraform_partner_id: This will disable the Terraform Partner ID which is used if a custom `partner_id` isn't specified.
         :param pulumi.Input[str] oidc_request_token: The bearer token for the request to the OIDC provider. For use When authenticating as a Service Principal using OpenID
@@ -56,9 +61,13 @@ class ProviderArgs:
         :param pulumi.Input[bool] skip_provider_registration: Should the Provider skip registering all of the Resource Providers that it supports, if they're not already registered?
         :param pulumi.Input[str] subscription_id: The Subscription ID which should be used.
         :param pulumi.Input[str] tenant_id: The Tenant ID which should be used.
+        :param pulumi.Input[bool] use_cli: Allow Azure CLI to be used for Authentication.
+        :param pulumi.Input[bool] use_msi: Allow Managed Service Identity to be used for Authentication.
         :param pulumi.Input[bool] use_oidc: Allow OpenID Connect to be used for authentication
         """
         pulumi.set(__self__, "environment", environment)
+        if auxiliary_tenant_ids is not None:
+            pulumi.set(__self__, "auxiliary_tenant_ids", auxiliary_tenant_ids)
         if client_certificate_password is not None:
             pulumi.set(__self__, "client_certificate_password", client_certificate_password)
         if client_certificate_path is not None:
@@ -67,6 +76,8 @@ class ProviderArgs:
             pulumi.set(__self__, "client_id", client_id)
         if client_secret is not None:
             pulumi.set(__self__, "client_secret", client_secret)
+        if custom_correlation_request_id is not None:
+            pulumi.set(__self__, "custom_correlation_request_id", custom_correlation_request_id)
         if default_location is not None:
             pulumi.set(__self__, "default_location", default_location)
         if default_name is not None:
@@ -97,6 +108,10 @@ class ProviderArgs:
             pulumi.set(__self__, "subscription_id", subscription_id)
         if tenant_id is not None:
             pulumi.set(__self__, "tenant_id", tenant_id)
+        if use_cli is not None:
+            pulumi.set(__self__, "use_cli", use_cli)
+        if use_msi is not None:
+            pulumi.set(__self__, "use_msi", use_msi)
         if use_oidc is not None:
             pulumi.set(__self__, "use_oidc", use_oidc)
 
@@ -111,6 +126,15 @@ class ProviderArgs:
     @environment.setter
     def environment(self, value: pulumi.Input[str]):
         pulumi.set(self, "environment", value)
+
+    @property
+    @pulumi.getter(name="auxiliaryTenantIds")
+    def auxiliary_tenant_ids(self) -> Optional[pulumi.Input[Sequence[pulumi.Input[str]]]]:
+        return pulumi.get(self, "auxiliary_tenant_ids")
+
+    @auxiliary_tenant_ids.setter
+    def auxiliary_tenant_ids(self, value: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]]):
+        pulumi.set(self, "auxiliary_tenant_ids", value)
 
     @property
     @pulumi.getter(name="clientCertificatePassword")
@@ -161,6 +185,18 @@ class ProviderArgs:
     @client_secret.setter
     def client_secret(self, value: Optional[pulumi.Input[str]]):
         pulumi.set(self, "client_secret", value)
+
+    @property
+    @pulumi.getter(name="customCorrelationRequestId")
+    def custom_correlation_request_id(self) -> Optional[pulumi.Input[str]]:
+        """
+        The value of the x-ms-correlation-request-id header (otherwise an auto-generated UUID will be used).
+        """
+        return pulumi.get(self, "custom_correlation_request_id")
+
+    @custom_correlation_request_id.setter
+    def custom_correlation_request_id(self, value: Optional[pulumi.Input[str]]):
+        pulumi.set(self, "custom_correlation_request_id", value)
 
     @property
     @pulumi.getter(name="defaultLocation")
@@ -330,6 +366,30 @@ class ProviderArgs:
         pulumi.set(self, "tenant_id", value)
 
     @property
+    @pulumi.getter(name="useCli")
+    def use_cli(self) -> Optional[pulumi.Input[bool]]:
+        """
+        Allow Azure CLI to be used for Authentication.
+        """
+        return pulumi.get(self, "use_cli")
+
+    @use_cli.setter
+    def use_cli(self, value: Optional[pulumi.Input[bool]]):
+        pulumi.set(self, "use_cli", value)
+
+    @property
+    @pulumi.getter(name="useMsi")
+    def use_msi(self) -> Optional[pulumi.Input[bool]]:
+        """
+        Allow Managed Service Identity to be used for Authentication.
+        """
+        return pulumi.get(self, "use_msi")
+
+    @use_msi.setter
+    def use_msi(self, value: Optional[pulumi.Input[bool]]):
+        pulumi.set(self, "use_msi", value)
+
+    @property
     @pulumi.getter(name="useOidc")
     def use_oidc(self) -> Optional[pulumi.Input[bool]]:
         """
@@ -347,10 +407,12 @@ class Provider(pulumi.ProviderResource):
     def __init__(__self__,
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
+                 auxiliary_tenant_ids: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]] = None,
                  client_certificate_password: Optional[pulumi.Input[str]] = None,
                  client_certificate_path: Optional[pulumi.Input[str]] = None,
                  client_id: Optional[pulumi.Input[str]] = None,
                  client_secret: Optional[pulumi.Input[str]] = None,
+                 custom_correlation_request_id: Optional[pulumi.Input[str]] = None,
                  default_location: Optional[pulumi.Input[str]] = None,
                  default_name: Optional[pulumi.Input[str]] = None,
                  default_naming_prefix: Optional[pulumi.Input[str]] = None,
@@ -367,6 +429,8 @@ class Provider(pulumi.ProviderResource):
                  skip_provider_registration: Optional[pulumi.Input[bool]] = None,
                  subscription_id: Optional[pulumi.Input[str]] = None,
                  tenant_id: Optional[pulumi.Input[str]] = None,
+                 use_cli: Optional[pulumi.Input[bool]] = None,
+                 use_msi: Optional[pulumi.Input[bool]] = None,
                  use_oidc: Optional[pulumi.Input[bool]] = None,
                  __props__=None):
         """
@@ -383,6 +447,7 @@ class Provider(pulumi.ProviderResource):
                Principal using a Client Certificate.
         :param pulumi.Input[str] client_id: The Client ID which should be used.
         :param pulumi.Input[str] client_secret: The Client Secret which should be used. For use When authenticating as a Service Principal using a Client Secret.
+        :param pulumi.Input[str] custom_correlation_request_id: The value of the x-ms-correlation-request-id header (otherwise an auto-generated UUID will be used).
         :param pulumi.Input[bool] disable_correlation_request_id: This will disable the x-ms-correlation-request-id header.
         :param pulumi.Input[bool] disable_terraform_partner_id: This will disable the Terraform Partner ID which is used if a custom `partner_id` isn't specified.
         :param pulumi.Input[str] environment: The Cloud Environment which should be used. Possible values are public, usgovernment and china. Defaults to public.
@@ -396,6 +461,8 @@ class Provider(pulumi.ProviderResource):
         :param pulumi.Input[bool] skip_provider_registration: Should the Provider skip registering all of the Resource Providers that it supports, if they're not already registered?
         :param pulumi.Input[str] subscription_id: The Subscription ID which should be used.
         :param pulumi.Input[str] tenant_id: The Tenant ID which should be used.
+        :param pulumi.Input[bool] use_cli: Allow Azure CLI to be used for Authentication.
+        :param pulumi.Input[bool] use_msi: Allow Managed Service Identity to be used for Authentication.
         :param pulumi.Input[bool] use_oidc: Allow OpenID Connect to be used for authentication
         """
         ...
@@ -425,10 +492,12 @@ class Provider(pulumi.ProviderResource):
     def _internal_init(__self__,
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
+                 auxiliary_tenant_ids: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]] = None,
                  client_certificate_password: Optional[pulumi.Input[str]] = None,
                  client_certificate_path: Optional[pulumi.Input[str]] = None,
                  client_id: Optional[pulumi.Input[str]] = None,
                  client_secret: Optional[pulumi.Input[str]] = None,
+                 custom_correlation_request_id: Optional[pulumi.Input[str]] = None,
                  default_location: Optional[pulumi.Input[str]] = None,
                  default_name: Optional[pulumi.Input[str]] = None,
                  default_naming_prefix: Optional[pulumi.Input[str]] = None,
@@ -445,6 +514,8 @@ class Provider(pulumi.ProviderResource):
                  skip_provider_registration: Optional[pulumi.Input[bool]] = None,
                  subscription_id: Optional[pulumi.Input[str]] = None,
                  tenant_id: Optional[pulumi.Input[str]] = None,
+                 use_cli: Optional[pulumi.Input[bool]] = None,
+                 use_msi: Optional[pulumi.Input[bool]] = None,
                  use_oidc: Optional[pulumi.Input[bool]] = None,
                  __props__=None):
         opts = pulumi.ResourceOptions.merge(_utilities.get_resource_opts_defaults(), opts)
@@ -455,10 +526,12 @@ class Provider(pulumi.ProviderResource):
                 raise TypeError('__props__ is only valid when passed in combination with a valid opts.id to get an existing resource')
             __props__ = ProviderArgs.__new__(ProviderArgs)
 
+            __props__.__dict__["auxiliary_tenant_ids"] = pulumi.Output.from_input(auxiliary_tenant_ids).apply(pulumi.runtime.to_json) if auxiliary_tenant_ids is not None else None
             __props__.__dict__["client_certificate_password"] = client_certificate_password
             __props__.__dict__["client_certificate_path"] = client_certificate_path
             __props__.__dict__["client_id"] = client_id
             __props__.__dict__["client_secret"] = client_secret
+            __props__.__dict__["custom_correlation_request_id"] = custom_correlation_request_id
             __props__.__dict__["default_location"] = default_location
             __props__.__dict__["default_name"] = default_name
             __props__.__dict__["default_naming_prefix"] = default_naming_prefix
@@ -477,6 +550,8 @@ class Provider(pulumi.ProviderResource):
             __props__.__dict__["skip_provider_registration"] = pulumi.Output.from_input(skip_provider_registration).apply(pulumi.runtime.to_json) if skip_provider_registration is not None else None
             __props__.__dict__["subscription_id"] = subscription_id
             __props__.__dict__["tenant_id"] = tenant_id
+            __props__.__dict__["use_cli"] = pulumi.Output.from_input(use_cli).apply(pulumi.runtime.to_json) if use_cli is not None else None
+            __props__.__dict__["use_msi"] = pulumi.Output.from_input(use_msi).apply(pulumi.runtime.to_json) if use_msi is not None else None
             __props__.__dict__["use_oidc"] = pulumi.Output.from_input(use_oidc).apply(pulumi.runtime.to_json) if use_oidc is not None else None
         super(Provider, __self__).__init__(
             'azapi',
@@ -517,6 +592,14 @@ class Provider(pulumi.ProviderResource):
         The Client Secret which should be used. For use When authenticating as a Service Principal using a Client Secret.
         """
         return pulumi.get(self, "client_secret")
+
+    @property
+    @pulumi.getter(name="customCorrelationRequestId")
+    def custom_correlation_request_id(self) -> pulumi.Output[Optional[str]]:
+        """
+        The value of the x-ms-correlation-request-id header (otherwise an auto-generated UUID will be used).
+        """
+        return pulumi.get(self, "custom_correlation_request_id")
 
     @property
     @pulumi.getter(name="defaultLocation")
