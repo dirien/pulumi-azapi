@@ -13,6 +13,54 @@ import (
 // This resource can perform resource action which gets information from an existing resource.
 // It's recommended to use `ResourceAction` data source to perform readonly action, please use `ResourceAction` resource,
 // if user wants to perform actions which change a resource's state.
+//
+// ## Example Usage
+//
+// ```go
+// package main
+//
+// import (
+//
+//	"github.com/pulumi/pulumi-azapi/sdk/go/azapi"
+//	"github.com/pulumi/pulumi-azurerm/sdk/v1/go/azurerm"
+//	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
+//
+// )
+//
+//	func main() {
+//		pulumi.Run(func(ctx *pulumi.Context) error {
+//			exampleazurerm_resource_group, err := index.NewAzurerm_resource_group(ctx, "exampleazurerm_resource_group", &index.Azurerm_resource_groupArgs{
+//				Name:     "example-rg",
+//				Location: "west europe",
+//			})
+//			if err != nil {
+//				return err
+//			}
+//			exampleazurerm_automation_account, err := index.NewAzurerm_automation_account(ctx, "exampleazurerm_automation_account", &index.Azurerm_automation_accountArgs{
+//				Name:              "example-account",
+//				ResourceGroupName: exampleazurerm_resource_group.Name,
+//				Location:          exampleazurerm_resource_group.Location,
+//				SkuName:           "Basic",
+//			})
+//			if err != nil {
+//				return err
+//			}
+//			_, err = azapi.LookupResourceAction(ctx, &azapi.LookupResourceActionArgs{
+//				Type:       "Microsoft.Automation/automationAccounts@2021-06-22",
+//				ResourceId: pulumi.StringRef(exampleazurerm_automation_account.Id),
+//				Action:     pulumi.StringRef("listKeys"),
+//				ResponseExportValues: []string{
+//					"*",
+//				},
+//			}, nil)
+//			if err != nil {
+//				return err
+//			}
+//			return nil
+//		})
+//	}
+//
+// ```
 func LookupResourceAction(ctx *pulumi.Context, args *LookupResourceActionArgs, opts ...pulumi.InvokeOption) (*LookupResourceActionResult, error) {
 	opts = pkgInvokeDefaultOpts(opts)
 	var rv LookupResourceActionResult

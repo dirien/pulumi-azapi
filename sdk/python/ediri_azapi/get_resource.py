@@ -186,16 +186,16 @@ def get_resource(identity: Optional[pulumi.InputType['GetResourceIdentityArgs']]
     __ret__ = pulumi.runtime.invoke('azapi:index/getResource:getResource', __args__, opts=opts, typ=GetResourceResult).value
 
     return AwaitableGetResourceResult(
-        id=__ret__.id,
-        identity=__ret__.identity,
-        location=__ret__.location,
-        name=__ret__.name,
-        output=__ret__.output,
-        parent_id=__ret__.parent_id,
-        resource_id=__ret__.resource_id,
-        response_export_values=__ret__.response_export_values,
-        tags=__ret__.tags,
-        type=__ret__.type)
+        id=pulumi.get(__ret__, 'id'),
+        identity=pulumi.get(__ret__, 'identity'),
+        location=pulumi.get(__ret__, 'location'),
+        name=pulumi.get(__ret__, 'name'),
+        output=pulumi.get(__ret__, 'output'),
+        parent_id=pulumi.get(__ret__, 'parent_id'),
+        resource_id=pulumi.get(__ret__, 'resource_id'),
+        response_export_values=pulumi.get(__ret__, 'response_export_values'),
+        tags=pulumi.get(__ret__, 'tags'),
+        type=pulumi.get(__ret__, 'type'))
 
 
 @_utilities.lift_output_func(get_resource)

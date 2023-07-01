@@ -16,6 +16,96 @@ import (
 // > **Note** This resource is used to add or modify properties on an existing resource.
 // When delete `UpdateResource`, no operation will be performed, and these properties will stay unchanged.
 // If you want to restore the modified properties to some values, you must apply the restored properties before deleting.
+//
+// ## Example Usage
+//
+// ```go
+// package main
+//
+// import (
+//
+//	"encoding/json"
+//
+//	"github.com/pulumi/pulumi-azapi/sdk/go/azapi"
+//	"github.com/pulumi/pulumi-azurerm/sdk/v1/go/azurerm"
+//	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
+//
+// )
+//
+//	func main() {
+//		pulumi.Run(func(ctx *pulumi.Context) error {
+//			exampleazurerm_resource_group, err := index.NewAzurerm_resource_group(ctx, "exampleazurerm_resource_group", &index.Azurerm_resource_groupArgs{
+//				Name:     "example-rg",
+//				Location: "west europe",
+//			})
+//			if err != nil {
+//				return err
+//			}
+//			exampleazurerm_public_ip, err := index.NewAzurerm_public_ip(ctx, "exampleazurerm_public_ip", &index.Azurerm_public_ipArgs{
+//				Name:              "example-ip",
+//				Location:          exampleazurerm_resource_group.Location,
+//				ResourceGroupName: exampleazurerm_resource_group.Name,
+//				AllocationMethod:  "Static",
+//			})
+//			if err != nil {
+//				return err
+//			}
+//			exampleazurerm_lb, err := index.NewAzurerm_lb(ctx, "exampleazurerm_lb", &index.Azurerm_lbArgs{
+//				Name:              "example-lb",
+//				Location:          exampleazurerm_resource_group.Location,
+//				ResourceGroupName: exampleazurerm_resource_group.Name,
+//				FrontendIpConfiguration: []map[string]interface{}{
+//					map[string]interface{}{
+//						"name":              "PublicIPAddress",
+//						"publicIpAddressId": exampleazurerm_public_ip.Id,
+//					},
+//				},
+//			})
+//			if err != nil {
+//				return err
+//			}
+//			exampleazurerm_lb_nat_rule, err := index.NewAzurerm_lb_nat_rule(ctx, "exampleazurerm_lb_nat_rule", &index.Azurerm_lb_nat_ruleArgs{
+//				ResourceGroupName:           exampleazurerm_resource_group.Name,
+//				LoadbalancerId:              exampleazurerm_lb.Id,
+//				Name:                        "RDPAccess",
+//				Protocol:                    "Tcp",
+//				FrontendPort:                3389,
+//				BackendPort:                 3389,
+//				FrontendIpConfigurationName: "PublicIPAddress",
+//			})
+//			if err != nil {
+//				return err
+//			}
+//			tmpJSON0, err := json.Marshal(map[string]interface{}{
+//				"properties": map[string]interface{}{
+//					"inboundNatRules": []map[string]interface{}{
+//						map[string]interface{}{
+//							"properties": map[string]interface{}{
+//								"idleTimeoutInMinutes": 15,
+//							},
+//						},
+//					},
+//				},
+//			})
+//			if err != nil {
+//				return err
+//			}
+//			json0 := string(tmpJSON0)
+//			_, err = azapi.NewUpdateResource(ctx, "exampleUpdateResource", &azapi.UpdateResourceArgs{
+//				Type:       pulumi.String("Microsoft.Network/loadBalancers@2021-03-01"),
+//				ResourceId: exampleazurerm_lb.Id,
+//				Body:       pulumi.String(json0),
+//			}, pulumi.DependsOn([]pulumi.Resource{
+//				exampleazurerm_lb_nat_rule,
+//			}))
+//			if err != nil {
+//				return err
+//			}
+//			return nil
+//		})
+//	}
+//
+// ```
 type UpdateResource struct {
 	pulumi.CustomResourceState
 

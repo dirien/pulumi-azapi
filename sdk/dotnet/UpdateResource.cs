@@ -16,6 +16,89 @@ namespace ediri.Azapi
     /// &gt; **Note** This resource is used to add or modify properties on an existing resource.
     /// When delete `azapi.UpdateResource`, no operation will be performed, and these properties will stay unchanged.
     /// If you want to restore the modified properties to some values, you must apply the restored properties before deleting.
+    /// 
+    /// ## Example Usage
+    /// 
+    /// ```csharp
+    /// using System.Collections.Generic;
+    /// using System.Linq;
+    /// using System.Text.Json;
+    /// using Pulumi;
+    /// using Azapi = ediri.Azapi;
+    /// using Azurerm = Pulumi.Azurerm;
+    /// 
+    /// return await Deployment.RunAsync(() =&gt; 
+    /// {
+    ///     var exampleazurerm_resource_group = new Azurerm.Index.Azurerm_resource_group("exampleazurerm_resource_group", new()
+    ///     {
+    ///         Name = "example-rg",
+    ///         Location = "west europe",
+    ///     });
+    /// 
+    ///     var exampleazurerm_public_ip = new Azurerm.Index.Azurerm_public_ip("exampleazurerm_public_ip", new()
+    ///     {
+    ///         Name = "example-ip",
+    ///         Location = exampleazurerm_resource_group.Location,
+    ///         ResourceGroupName = exampleazurerm_resource_group.Name,
+    ///         AllocationMethod = "Static",
+    ///     });
+    /// 
+    ///     var exampleazurerm_lb = new Azurerm.Index.Azurerm_lb("exampleazurerm_lb", new()
+    ///     {
+    ///         Name = "example-lb",
+    ///         Location = exampleazurerm_resource_group.Location,
+    ///         ResourceGroupName = exampleazurerm_resource_group.Name,
+    ///         FrontendIpConfiguration = new[]
+    ///         {
+    ///             
+    ///             {
+    ///                 { "name", "PublicIPAddress" },
+    ///                 { "publicIpAddressId", exampleazurerm_public_ip.Id },
+    ///             },
+    ///         },
+    ///     });
+    /// 
+    ///     var exampleazurerm_lb_nat_rule = new Azurerm.Index.Azurerm_lb_nat_rule("exampleazurerm_lb_nat_rule", new()
+    ///     {
+    ///         ResourceGroupName = exampleazurerm_resource_group.Name,
+    ///         LoadbalancerId = exampleazurerm_lb.Id,
+    ///         Name = "RDPAccess",
+    ///         Protocol = "Tcp",
+    ///         FrontendPort = 3389,
+    ///         BackendPort = 3389,
+    ///         FrontendIpConfigurationName = "PublicIPAddress",
+    ///     });
+    /// 
+    ///     var exampleUpdateResource = new Azapi.UpdateResource("exampleUpdateResource", new()
+    ///     {
+    ///         Type = "Microsoft.Network/loadBalancers@2021-03-01",
+    ///         ResourceId = exampleazurerm_lb.Id,
+    ///         Body = JsonSerializer.Serialize(new Dictionary&lt;string, object?&gt;
+    ///         {
+    ///             ["properties"] = new Dictionary&lt;string, object?&gt;
+    ///             {
+    ///                 ["inboundNatRules"] = new[]
+    ///                 {
+    ///                     new Dictionary&lt;string, object?&gt;
+    ///                     {
+    ///                         ["properties"] = new Dictionary&lt;string, object?&gt;
+    ///                         {
+    ///                             ["idleTimeoutInMinutes"] = 15,
+    ///                         },
+    ///                     },
+    ///                 },
+    ///             },
+    ///         }),
+    ///     }, new CustomResourceOptions
+    ///     {
+    ///         DependsOn = new[]
+    ///         {
+    ///             exampleazurerm_lb_nat_rule,
+    ///         },
+    ///     });
+    /// 
+    /// });
+    /// ```
     /// </summary>
     [AzapiResourceType("azapi:index/updateResource:UpdateResource")]
     public partial class UpdateResource : global::Pulumi.CustomResource

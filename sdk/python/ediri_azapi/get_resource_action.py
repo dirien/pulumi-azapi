@@ -122,6 +122,27 @@ def get_resource_action(action: Optional[str] = None,
     It's recommended to use `ResourceAction` data source to perform readonly action, please use `ResourceAction` resource,
     if user wants to perform actions which change a resource's state.
 
+    ## Example Usage
+
+    ```python
+    import pulumi
+    import pulumi_azapi as azapi
+    import pulumi_azurerm as azurerm
+
+    exampleazurerm_resource_group = azurerm.index.Azurerm_resource_group("exampleazurerm_resource_group",
+        name=example-rg,
+        location=west europe)
+    exampleazurerm_automation_account = azurerm.index.Azurerm_automation_account("exampleazurerm_automation_account",
+        name=example-account,
+        resource_group_name=exampleazurerm_resource_group.name,
+        location=exampleazurerm_resource_group.location,
+        sku_name=Basic)
+    example_resource_action = azapi.get_resource_action(type="Microsoft.Automation/automationAccounts@2021-06-22",
+        resource_id=exampleazurerm_automation_account["id"],
+        action="listKeys",
+        response_export_values=["*"])
+    ```
+
 
     :param str action: The name of the resource action. It's also possible to make Http requests towards the resource ID if leave this field empty.
     :param str body: A JSON object that contains the request body.
@@ -147,14 +168,14 @@ def get_resource_action(action: Optional[str] = None,
     __ret__ = pulumi.runtime.invoke('azapi:index/getResourceAction:getResourceAction', __args__, opts=opts, typ=GetResourceActionResult).value
 
     return AwaitableGetResourceActionResult(
-        action=__ret__.action,
-        body=__ret__.body,
-        id=__ret__.id,
-        method=__ret__.method,
-        output=__ret__.output,
-        resource_id=__ret__.resource_id,
-        response_export_values=__ret__.response_export_values,
-        type=__ret__.type)
+        action=pulumi.get(__ret__, 'action'),
+        body=pulumi.get(__ret__, 'body'),
+        id=pulumi.get(__ret__, 'id'),
+        method=pulumi.get(__ret__, 'method'),
+        output=pulumi.get(__ret__, 'output'),
+        resource_id=pulumi.get(__ret__, 'resource_id'),
+        response_export_values=pulumi.get(__ret__, 'response_export_values'),
+        type=pulumi.get(__ret__, 'type'))
 
 
 @_utilities.lift_output_func(get_resource_action)
@@ -169,6 +190,27 @@ def get_resource_action_output(action: Optional[pulumi.Input[Optional[str]]] = N
     This resource can perform resource action which gets information from an existing resource.
     It's recommended to use `ResourceAction` data source to perform readonly action, please use `ResourceAction` resource,
     if user wants to perform actions which change a resource's state.
+
+    ## Example Usage
+
+    ```python
+    import pulumi
+    import pulumi_azapi as azapi
+    import pulumi_azurerm as azurerm
+
+    exampleazurerm_resource_group = azurerm.index.Azurerm_resource_group("exampleazurerm_resource_group",
+        name=example-rg,
+        location=west europe)
+    exampleazurerm_automation_account = azurerm.index.Azurerm_automation_account("exampleazurerm_automation_account",
+        name=example-account,
+        resource_group_name=exampleazurerm_resource_group.name,
+        location=exampleazurerm_resource_group.location,
+        sku_name=Basic)
+    example_resource_action = azapi.get_resource_action(type="Microsoft.Automation/automationAccounts@2021-06-22",
+        resource_id=exampleazurerm_automation_account["id"],
+        action="listKeys",
+        response_export_values=["*"])
+    ```
 
 
     :param str action: The name of the resource action. It's also possible to make Http requests towards the resource ID if leave this field empty.

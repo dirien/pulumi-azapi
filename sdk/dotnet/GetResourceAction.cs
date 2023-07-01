@@ -16,6 +16,49 @@ namespace ediri.Azapi
         /// This resource can perform resource action which gets information from an existing resource.
         /// It's recommended to use `azapi.ResourceAction` data source to perform readonly action, please use `azapi.ResourceAction` resource,
         /// if user wants to perform actions which change a resource's state.
+        /// 
+        /// {{% examples %}}
+        /// ## Example Usage
+        /// {{% example %}}
+        /// 
+        /// ```csharp
+        /// using System.Collections.Generic;
+        /// using System.Linq;
+        /// using Pulumi;
+        /// using Azapi = Pulumi.Azapi;
+        /// using Azurerm = Pulumi.Azurerm;
+        /// 
+        /// return await Deployment.RunAsync(() =&gt; 
+        /// {
+        ///     var exampleazurerm_resource_group = new Azurerm.Index.Azurerm_resource_group("exampleazurerm_resource_group", new()
+        ///     {
+        ///         Name = "example-rg",
+        ///         Location = "west europe",
+        ///     });
+        /// 
+        ///     var exampleazurerm_automation_account = new Azurerm.Index.Azurerm_automation_account("exampleazurerm_automation_account", new()
+        ///     {
+        ///         Name = "example-account",
+        ///         ResourceGroupName = exampleazurerm_resource_group.Name,
+        ///         Location = exampleazurerm_resource_group.Location,
+        ///         SkuName = "Basic",
+        ///     });
+        /// 
+        ///     var exampleResourceAction = Azapi.GetResourceAction.Invoke(new()
+        ///     {
+        ///         Type = "Microsoft.Automation/automationAccounts@2021-06-22",
+        ///         ResourceId = exampleazurerm_automation_account.Id,
+        ///         Action = "listKeys",
+        ///         ResponseExportValues = new[]
+        ///         {
+        ///             "*",
+        ///         },
+        ///     });
+        /// 
+        /// });
+        /// ```
+        /// {{% /example %}}
+        /// {{% /examples %}}
         /// </summary>
         public static Task<GetResourceActionResult> InvokeAsync(GetResourceActionArgs args, InvokeOptions? options = null)
             => global::Pulumi.Deployment.Instance.InvokeAsync<GetResourceActionResult>("azapi:index/getResourceAction:getResourceAction", args ?? new GetResourceActionArgs(), options.WithDefaults());
@@ -24,6 +67,49 @@ namespace ediri.Azapi
         /// This resource can perform resource action which gets information from an existing resource.
         /// It's recommended to use `azapi.ResourceAction` data source to perform readonly action, please use `azapi.ResourceAction` resource,
         /// if user wants to perform actions which change a resource's state.
+        /// 
+        /// {{% examples %}}
+        /// ## Example Usage
+        /// {{% example %}}
+        /// 
+        /// ```csharp
+        /// using System.Collections.Generic;
+        /// using System.Linq;
+        /// using Pulumi;
+        /// using Azapi = Pulumi.Azapi;
+        /// using Azurerm = Pulumi.Azurerm;
+        /// 
+        /// return await Deployment.RunAsync(() =&gt; 
+        /// {
+        ///     var exampleazurerm_resource_group = new Azurerm.Index.Azurerm_resource_group("exampleazurerm_resource_group", new()
+        ///     {
+        ///         Name = "example-rg",
+        ///         Location = "west europe",
+        ///     });
+        /// 
+        ///     var exampleazurerm_automation_account = new Azurerm.Index.Azurerm_automation_account("exampleazurerm_automation_account", new()
+        ///     {
+        ///         Name = "example-account",
+        ///         ResourceGroupName = exampleazurerm_resource_group.Name,
+        ///         Location = exampleazurerm_resource_group.Location,
+        ///         SkuName = "Basic",
+        ///     });
+        /// 
+        ///     var exampleResourceAction = Azapi.GetResourceAction.Invoke(new()
+        ///     {
+        ///         Type = "Microsoft.Automation/automationAccounts@2021-06-22",
+        ///         ResourceId = exampleazurerm_automation_account.Id,
+        ///         Action = "listKeys",
+        ///         ResponseExportValues = new[]
+        ///         {
+        ///             "*",
+        ///         },
+        ///     });
+        /// 
+        /// });
+        /// ```
+        /// {{% /example %}}
+        /// {{% /examples %}}
         /// </summary>
         public static Output<GetResourceActionResult> Invoke(GetResourceActionInvokeArgs args, InvokeOptions? options = null)
             => global::Pulumi.Deployment.Instance.Invoke<GetResourceActionResult>("azapi:index/getResourceAction:getResourceAction", args ?? new GetResourceActionInvokeArgs(), options.WithDefaults());

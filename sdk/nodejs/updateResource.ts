@@ -10,6 +10,58 @@ import * as utilities from "./utilities";
  * > **Note** This resource is used to add or modify properties on an existing resource.
  * When delete `azapi.UpdateResource`, no operation will be performed, and these properties will stay unchanged.
  * If you want to restore the modified properties to some values, you must apply the restored properties before deleting.
+ *
+ * ## Example Usage
+ *
+ * ```typescript
+ * import * as pulumi from "@pulumi/pulumi";
+ * import * as azapi from "@ediri/azapi";
+ * import * as azurerm from "@pulumi/azurerm";
+ *
+ * const exampleazurerm_resource_group = new azurerm.index.Azurerm_resource_group("exampleazurerm_resource_group", {
+ *     name: "example-rg",
+ *     location: "west europe",
+ * });
+ * const exampleazurerm_public_ip = new azurerm.index.Azurerm_public_ip("exampleazurerm_public_ip", {
+ *     name: "example-ip",
+ *     location: exampleazurerm_resource_group.location,
+ *     resourceGroupName: exampleazurerm_resource_group.name,
+ *     allocationMethod: "Static",
+ * });
+ * const exampleazurerm_lb = new azurerm.index.Azurerm_lb("exampleazurerm_lb", {
+ *     name: "example-lb",
+ *     location: exampleazurerm_resource_group.location,
+ *     resourceGroupName: exampleazurerm_resource_group.name,
+ *     frontendIpConfiguration: [{
+ *         name: "PublicIPAddress",
+ *         publicIpAddressId: exampleazurerm_public_ip.id,
+ *     }],
+ * });
+ * const exampleazurerm_lb_nat_rule = new azurerm.index.Azurerm_lb_nat_rule("exampleazurerm_lb_nat_rule", {
+ *     resourceGroupName: exampleazurerm_resource_group.name,
+ *     loadbalancerId: exampleazurerm_lb.id,
+ *     name: "RDPAccess",
+ *     protocol: "Tcp",
+ *     frontendPort: 3389,
+ *     backendPort: 3389,
+ *     frontendIpConfigurationName: "PublicIPAddress",
+ * });
+ * const exampleUpdateResource = new azapi.UpdateResource("exampleUpdateResource", {
+ *     type: "Microsoft.Network/loadBalancers@2021-03-01",
+ *     resourceId: exampleazurerm_lb.id,
+ *     body: JSON.stringify({
+ *         properties: {
+ *             inboundNatRules: [{
+ *                 properties: {
+ *                     idleTimeoutInMinutes: 15,
+ *                 },
+ *             }],
+ *         },
+ *     }),
+ * }, {
+ *     dependsOn: [exampleazurerm_lb_nat_rule],
+ * });
+ * ```
  */
 export class UpdateResource extends pulumi.CustomResource {
     /**

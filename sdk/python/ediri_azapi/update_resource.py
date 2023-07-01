@@ -412,6 +412,53 @@ class UpdateResource(pulumi.CustomResource):
         When delete `UpdateResource`, no operation will be performed, and these properties will stay unchanged.
         If you want to restore the modified properties to some values, you must apply the restored properties before deleting.
 
+        ## Example Usage
+
+        ```python
+        import pulumi
+        import ediri_azapi as azapi
+        import json
+        import pulumi_azurerm as azurerm
+
+        exampleazurerm_resource_group = azurerm.index.Azurerm_resource_group("exampleazurerm_resource_group",
+            name=example-rg,
+            location=west europe)
+        exampleazurerm_public_ip = azurerm.index.Azurerm_public_ip("exampleazurerm_public_ip",
+            name=example-ip,
+            location=exampleazurerm_resource_group.location,
+            resource_group_name=exampleazurerm_resource_group.name,
+            allocation_method=Static)
+        exampleazurerm_lb = azurerm.index.Azurerm_lb("exampleazurerm_lb",
+            name=example-lb,
+            location=exampleazurerm_resource_group.location,
+            resource_group_name=exampleazurerm_resource_group.name,
+            frontend_ip_configuration=[{
+                name: PublicIPAddress,
+                publicIpAddressId: exampleazurerm_public_ip.id,
+            }])
+        exampleazurerm_lb_nat_rule = azurerm.index.Azurerm_lb_nat_rule("exampleazurerm_lb_nat_rule",
+            resource_group_name=exampleazurerm_resource_group.name,
+            loadbalancer_id=exampleazurerm_lb.id,
+            name=RDPAccess,
+            protocol=Tcp,
+            frontend_port=3389,
+            backend_port=3389,
+            frontend_ip_configuration_name=PublicIPAddress)
+        example_update_resource = azapi.UpdateResource("exampleUpdateResource",
+            type="Microsoft.Network/loadBalancers@2021-03-01",
+            resource_id=exampleazurerm_lb["id"],
+            body=json.dumps({
+                "properties": {
+                    "inboundNatRules": [{
+                        "properties": {
+                            "idleTimeoutInMinutes": 15,
+                        },
+                    }],
+                },
+            }),
+            opts=pulumi.ResourceOptions(depends_on=[exampleazurerm_lb_nat_rule]))
+        ```
+
         :param str resource_name: The name of the resource.
         :param pulumi.ResourceOptions opts: Options for the resource.
         :param pulumi.Input[str] body: A JSON object that contains the request body used to add on an existing azure resource.
@@ -451,6 +498,53 @@ class UpdateResource(pulumi.CustomResource):
         > **Note** This resource is used to add or modify properties on an existing resource.
         When delete `UpdateResource`, no operation will be performed, and these properties will stay unchanged.
         If you want to restore the modified properties to some values, you must apply the restored properties before deleting.
+
+        ## Example Usage
+
+        ```python
+        import pulumi
+        import ediri_azapi as azapi
+        import json
+        import pulumi_azurerm as azurerm
+
+        exampleazurerm_resource_group = azurerm.index.Azurerm_resource_group("exampleazurerm_resource_group",
+            name=example-rg,
+            location=west europe)
+        exampleazurerm_public_ip = azurerm.index.Azurerm_public_ip("exampleazurerm_public_ip",
+            name=example-ip,
+            location=exampleazurerm_resource_group.location,
+            resource_group_name=exampleazurerm_resource_group.name,
+            allocation_method=Static)
+        exampleazurerm_lb = azurerm.index.Azurerm_lb("exampleazurerm_lb",
+            name=example-lb,
+            location=exampleazurerm_resource_group.location,
+            resource_group_name=exampleazurerm_resource_group.name,
+            frontend_ip_configuration=[{
+                name: PublicIPAddress,
+                publicIpAddressId: exampleazurerm_public_ip.id,
+            }])
+        exampleazurerm_lb_nat_rule = azurerm.index.Azurerm_lb_nat_rule("exampleazurerm_lb_nat_rule",
+            resource_group_name=exampleazurerm_resource_group.name,
+            loadbalancer_id=exampleazurerm_lb.id,
+            name=RDPAccess,
+            protocol=Tcp,
+            frontend_port=3389,
+            backend_port=3389,
+            frontend_ip_configuration_name=PublicIPAddress)
+        example_update_resource = azapi.UpdateResource("exampleUpdateResource",
+            type="Microsoft.Network/loadBalancers@2021-03-01",
+            resource_id=exampleazurerm_lb["id"],
+            body=json.dumps({
+                "properties": {
+                    "inboundNatRules": [{
+                        "properties": {
+                            "idleTimeoutInMinutes": 15,
+                        },
+                    }],
+                },
+            }),
+            opts=pulumi.ResourceOptions(depends_on=[exampleazurerm_lb_nat_rule]))
+        ```
 
         :param str resource_name: The name of the resource.
         :param UpdateResourceArgs args: The arguments to use to populate this resource's properties.
