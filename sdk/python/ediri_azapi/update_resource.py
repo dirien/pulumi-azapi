@@ -46,8 +46,17 @@ class UpdateResourceArgs:
         :param pulumi.Input[Sequence[pulumi.Input[str]]] response_export_values: A list of path that needs to be exported from response body.
                Setting it to `["*"]` will export the full response body.
                Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-               ```python
-               import pulumi
+               ```
+               {
+               "properties" : {
+               "loginServer" : "registry1.azurecr.io"
+               "policies" : {
+               "quarantinePolicy" = {
+               "status" = "disabled"
+               }
+               }
+               }
+               }
                ```
         """
         pulumi.set(__self__, "type", type)
@@ -181,8 +190,17 @@ class UpdateResourceArgs:
         A list of path that needs to be exported from response body.
         Setting it to `["*"]` will export the full response body.
         Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-        ```python
-        import pulumi
+        ```
+        {
+        "properties" : {
+        "loginServer" : "registry1.azurecr.io"
+        "policies" : {
+        "quarantinePolicy" = {
+        "status" = "disabled"
+        }
+        }
+        }
+        }
         ```
         """
         return pulumi.get(self, "response_export_values")
@@ -213,6 +231,11 @@ class _UpdateResourceState:
         :param pulumi.Input[Sequence[pulumi.Input[str]]] locks: A list of ARM resource IDs which are used to avoid create/modify/delete azapi resources at the same time.
         :param pulumi.Input[str] name: Specifies the name of the azure resource. Changing this forces a new resource to be created.
         :param pulumi.Input[str] output: The output json containing the properties specified in `response_export_values`. Here're some examples to decode json and extract the value.
+               ```
+               // it will output "registry1.azurecr.io"
+               output "login_server" {
+               value = jsondecode(azapi_resource.example.output).properties.loginServer
+               }
         :param pulumi.Input[str] parent_id: The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created. It supports different kinds of deployment scope for **top level** resources: 
                - resource group scope: `parent_id` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.
                - management group scope: `parent_id` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.
@@ -227,8 +250,17 @@ class _UpdateResourceState:
         :param pulumi.Input[Sequence[pulumi.Input[str]]] response_export_values: A list of path that needs to be exported from response body.
                Setting it to `["*"]` will export the full response body.
                Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-               ```python
-               import pulumi
+               ```
+               {
+               "properties" : {
+               "loginServer" : "registry1.azurecr.io"
+               "policies" : {
+               "quarantinePolicy" = {
+               "status" = "disabled"
+               }
+               }
+               }
+               }
                ```
         :param pulumi.Input[str] type: It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
                `<api-version>` is version of the API used to manage this azure resource.
@@ -319,6 +351,11 @@ class _UpdateResourceState:
     def output(self) -> Optional[pulumi.Input[str]]:
         """
         The output json containing the properties specified in `response_export_values`. Here're some examples to decode json and extract the value.
+        ```
+        // it will output "registry1.azurecr.io"
+        output "login_server" {
+        value = jsondecode(azapi_resource.example.output).properties.loginServer
+        }
         """
         return pulumi.get(self, "output")
 
@@ -366,8 +403,17 @@ class _UpdateResourceState:
         A list of path that needs to be exported from response body.
         Setting it to `["*"]` will export the full response body.
         Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-        ```python
-        import pulumi
+        ```
+        {
+        "properties" : {
+        "loginServer" : "registry1.azurecr.io"
+        "policies" : {
+        "quarantinePolicy" = {
+        "status" = "disabled"
+        }
+        }
+        }
+        }
         ```
         """
         return pulumi.get(self, "response_export_values")
@@ -414,51 +460,6 @@ class UpdateResource(pulumi.CustomResource):
 
         ## Example Usage
 
-        ```python
-        import pulumi
-        import ediri_azapi as azapi
-        import json
-        import pulumi_azurerm as azurerm
-
-        exampleazurerm_resource_group = azurerm.index.Azurerm_resource_group("exampleazurerm_resource_group",
-            name=example-rg,
-            location=west europe)
-        exampleazurerm_public_ip = azurerm.index.Azurerm_public_ip("exampleazurerm_public_ip",
-            name=example-ip,
-            location=exampleazurerm_resource_group.location,
-            resource_group_name=exampleazurerm_resource_group.name,
-            allocation_method=Static)
-        exampleazurerm_lb = azurerm.index.Azurerm_lb("exampleazurerm_lb",
-            name=example-lb,
-            location=exampleazurerm_resource_group.location,
-            resource_group_name=exampleazurerm_resource_group.name,
-            frontend_ip_configuration=[{
-                name: PublicIPAddress,
-                publicIpAddressId: exampleazurerm_public_ip.id,
-            }])
-        exampleazurerm_lb_nat_rule = azurerm.index.Azurerm_lb_nat_rule("exampleazurerm_lb_nat_rule",
-            resource_group_name=exampleazurerm_resource_group.name,
-            loadbalancer_id=exampleazurerm_lb.id,
-            name=RDPAccess,
-            protocol=Tcp,
-            frontend_port=3389,
-            backend_port=3389,
-            frontend_ip_configuration_name=PublicIPAddress)
-        example_update_resource = azapi.UpdateResource("exampleUpdateResource",
-            type="Microsoft.Network/loadBalancers@2021-03-01",
-            resource_id=exampleazurerm_lb["id"],
-            body=json.dumps({
-                "properties": {
-                    "inboundNatRules": [{
-                        "properties": {
-                            "idleTimeoutInMinutes": 15,
-                        },
-                    }],
-                },
-            }),
-            opts=pulumi.ResourceOptions(depends_on=[exampleazurerm_lb_nat_rule]))
-        ```
-
         :param str resource_name: The name of the resource.
         :param pulumi.ResourceOptions opts: Options for the resource.
         :param pulumi.Input[str] body: A JSON object that contains the request body used to add on an existing azure resource.
@@ -480,8 +481,17 @@ class UpdateResource(pulumi.CustomResource):
         :param pulumi.Input[Sequence[pulumi.Input[str]]] response_export_values: A list of path that needs to be exported from response body.
                Setting it to `["*"]` will export the full response body.
                Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-               ```python
-               import pulumi
+               ```
+               {
+               "properties" : {
+               "loginServer" : "registry1.azurecr.io"
+               "policies" : {
+               "quarantinePolicy" = {
+               "status" = "disabled"
+               }
+               }
+               }
+               }
                ```
         :param pulumi.Input[str] type: It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
                `<api-version>` is version of the API used to manage this azure resource.
@@ -500,51 +510,6 @@ class UpdateResource(pulumi.CustomResource):
         If you want to restore the modified properties to some values, you must apply the restored properties before deleting.
 
         ## Example Usage
-
-        ```python
-        import pulumi
-        import ediri_azapi as azapi
-        import json
-        import pulumi_azurerm as azurerm
-
-        exampleazurerm_resource_group = azurerm.index.Azurerm_resource_group("exampleazurerm_resource_group",
-            name=example-rg,
-            location=west europe)
-        exampleazurerm_public_ip = azurerm.index.Azurerm_public_ip("exampleazurerm_public_ip",
-            name=example-ip,
-            location=exampleazurerm_resource_group.location,
-            resource_group_name=exampleazurerm_resource_group.name,
-            allocation_method=Static)
-        exampleazurerm_lb = azurerm.index.Azurerm_lb("exampleazurerm_lb",
-            name=example-lb,
-            location=exampleazurerm_resource_group.location,
-            resource_group_name=exampleazurerm_resource_group.name,
-            frontend_ip_configuration=[{
-                name: PublicIPAddress,
-                publicIpAddressId: exampleazurerm_public_ip.id,
-            }])
-        exampleazurerm_lb_nat_rule = azurerm.index.Azurerm_lb_nat_rule("exampleazurerm_lb_nat_rule",
-            resource_group_name=exampleazurerm_resource_group.name,
-            loadbalancer_id=exampleazurerm_lb.id,
-            name=RDPAccess,
-            protocol=Tcp,
-            frontend_port=3389,
-            backend_port=3389,
-            frontend_ip_configuration_name=PublicIPAddress)
-        example_update_resource = azapi.UpdateResource("exampleUpdateResource",
-            type="Microsoft.Network/loadBalancers@2021-03-01",
-            resource_id=exampleazurerm_lb["id"],
-            body=json.dumps({
-                "properties": {
-                    "inboundNatRules": [{
-                        "properties": {
-                            "idleTimeoutInMinutes": 15,
-                        },
-                    }],
-                },
-            }),
-            opts=pulumi.ResourceOptions(depends_on=[exampleazurerm_lb_nat_rule]))
-        ```
 
         :param str resource_name: The name of the resource.
         :param UpdateResourceArgs args: The arguments to use to populate this resource's properties.
@@ -624,6 +589,11 @@ class UpdateResource(pulumi.CustomResource):
         :param pulumi.Input[Sequence[pulumi.Input[str]]] locks: A list of ARM resource IDs which are used to avoid create/modify/delete azapi resources at the same time.
         :param pulumi.Input[str] name: Specifies the name of the azure resource. Changing this forces a new resource to be created.
         :param pulumi.Input[str] output: The output json containing the properties specified in `response_export_values`. Here're some examples to decode json and extract the value.
+               ```
+               // it will output "registry1.azurecr.io"
+               output "login_server" {
+               value = jsondecode(azapi_resource.example.output).properties.loginServer
+               }
         :param pulumi.Input[str] parent_id: The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created. It supports different kinds of deployment scope for **top level** resources: 
                - resource group scope: `parent_id` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.
                - management group scope: `parent_id` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.
@@ -638,8 +608,17 @@ class UpdateResource(pulumi.CustomResource):
         :param pulumi.Input[Sequence[pulumi.Input[str]]] response_export_values: A list of path that needs to be exported from response body.
                Setting it to `["*"]` will export the full response body.
                Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-               ```python
-               import pulumi
+               ```
+               {
+               "properties" : {
+               "loginServer" : "registry1.azurecr.io"
+               "policies" : {
+               "quarantinePolicy" = {
+               "status" = "disabled"
+               }
+               }
+               }
+               }
                ```
         :param pulumi.Input[str] type: It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
                `<api-version>` is version of the API used to manage this azure resource.
@@ -705,6 +684,11 @@ class UpdateResource(pulumi.CustomResource):
     def output(self) -> pulumi.Output[str]:
         """
         The output json containing the properties specified in `response_export_values`. Here're some examples to decode json and extract the value.
+        ```
+        // it will output "registry1.azurecr.io"
+        output "login_server" {
+        value = jsondecode(azapi_resource.example.output).properties.loginServer
+        }
         """
         return pulumi.get(self, "output")
 
@@ -740,8 +724,17 @@ class UpdateResource(pulumi.CustomResource):
         A list of path that needs to be exported from response body.
         Setting it to `["*"]` will export the full response body.
         Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-        ```python
-        import pulumi
+        ```
+        {
+        "properties" : {
+        "loginServer" : "registry1.azurecr.io"
+        "policies" : {
+        "quarantinePolicy" = {
+        "status" = "disabled"
+        }
+        }
+        }
+        }
         ```
         """
         return pulumi.get(self, "response_export_values")

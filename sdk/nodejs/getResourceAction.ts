@@ -10,29 +10,6 @@ import * as utilities from "./utilities";
  * if user wants to perform actions which change a resource's state.
  *
  * ## Example Usage
- *
- * ```typescript
- * import * as pulumi from "@pulumi/pulumi";
- * import * as azapi from "@pulumi/azapi";
- * import * as azurerm from "@pulumi/azurerm";
- *
- * const exampleazurerm_resource_group = new azurerm.index.Azurerm_resource_group("exampleazurerm_resource_group", {
- *     name: "example-rg",
- *     location: "west europe",
- * });
- * const exampleazurerm_automation_account = new azurerm.index.Azurerm_automation_account("exampleazurerm_automation_account", {
- *     name: "example-account",
- *     resourceGroupName: exampleazurerm_resource_group.name,
- *     location: exampleazurerm_resource_group.location,
- *     skuName: "Basic",
- * });
- * const exampleResourceAction = azapi.getResourceAction({
- *     type: "Microsoft.Automation/automationAccounts@2021-06-22",
- *     resourceId: exampleazurerm_automation_account.id,
- *     action: "listKeys",
- *     responseExportValues: ["*"],
- * });
- * ```
  */
 export function getResourceAction(args: GetResourceActionArgs, opts?: pulumi.InvokeOptions): Promise<GetResourceActionResult> {
 
@@ -71,8 +48,21 @@ export interface GetResourceActionArgs {
      * A list of path that needs to be exported from response body.
      * Setting it to `["*"]` will export the full response body.
      * Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
-     * ```typescript
-     * import * as pulumi from "@pulumi/pulumi";
+     * ```
+     * {
+     * "keys": [
+     * {
+     * "KeyName": "Primary",
+     * "Permissions": "Full",
+     * "Value": "nHGYNd******i4wdug=="
+     * },
+     * {
+     * "KeyName": "Secondary",
+     * "Permissions": "Full",
+     * "Value": "6yoCad******SLzKzg=="
+     * }
+     * ]
+     * }
      * ```
      */
     responseExportValues?: string[];
@@ -96,6 +86,11 @@ export interface GetResourceActionResult {
     readonly method?: string;
     /**
      * The output json containing the properties specified in `responseExportValues`. Here are some examples to decode json and extract the value.
+     * ```hcl
+     * // it will output "nHGYNd******i4wdug=="
+     * output "primaryKey" {
+     * value = jsondecode(azapi_resource_action.test.output).keys.0.Value
+     * }
      */
     readonly output: string;
     readonly resourceId?: string;
@@ -108,29 +103,6 @@ export interface GetResourceActionResult {
  * if user wants to perform actions which change a resource's state.
  *
  * ## Example Usage
- *
- * ```typescript
- * import * as pulumi from "@pulumi/pulumi";
- * import * as azapi from "@pulumi/azapi";
- * import * as azurerm from "@pulumi/azurerm";
- *
- * const exampleazurerm_resource_group = new azurerm.index.Azurerm_resource_group("exampleazurerm_resource_group", {
- *     name: "example-rg",
- *     location: "west europe",
- * });
- * const exampleazurerm_automation_account = new azurerm.index.Azurerm_automation_account("exampleazurerm_automation_account", {
- *     name: "example-account",
- *     resourceGroupName: exampleazurerm_resource_group.name,
- *     location: exampleazurerm_resource_group.location,
- *     skuName: "Basic",
- * });
- * const exampleResourceAction = azapi.getResourceAction({
- *     type: "Microsoft.Automation/automationAccounts@2021-06-22",
- *     resourceId: exampleazurerm_automation_account.id,
- *     action: "listKeys",
- *     responseExportValues: ["*"],
- * });
- * ```
  */
 export function getResourceActionOutput(args: GetResourceActionOutputArgs, opts?: pulumi.InvokeOptions): pulumi.Output<GetResourceActionResult> {
     return pulumi.output(args).apply((a: any) => getResourceAction(a, opts))
@@ -160,8 +132,21 @@ export interface GetResourceActionOutputArgs {
      * A list of path that needs to be exported from response body.
      * Setting it to `["*"]` will export the full response body.
      * Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
-     * ```typescript
-     * import * as pulumi from "@pulumi/pulumi";
+     * ```
+     * {
+     * "keys": [
+     * {
+     * "KeyName": "Primary",
+     * "Permissions": "Full",
+     * "Value": "nHGYNd******i4wdug=="
+     * },
+     * {
+     * "KeyName": "Secondary",
+     * "Permissions": "Full",
+     * "Value": "6yoCad******SLzKzg=="
+     * }
+     * ]
+     * }
      * ```
      */
     responseExportValues?: pulumi.Input<pulumi.Input<string>[]>;

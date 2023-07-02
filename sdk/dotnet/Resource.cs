@@ -13,19 +13,11 @@ namespace ediri.Azapi
     /// <summary>
     /// This resource can manage any Azure resource manager resource.
     /// 
+    /// ## Example Usage
+    /// 
     /// ## Import
     /// 
-    /// Azure resource can be imported using the `resource id`, e.g.
-    /// 
-    /// ```sh
-    ///  $ pulumi import azapi:index/resource:Resource example /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/resGroup1/providers/Microsoft.MachineLearningServices/workspaces/workspace1/computes/cluster1
-    /// ```
-    /// 
-    ///  It also supports specifying API version by using the `resource id` with `api-version` as a query parameter, e.g.
-    /// 
-    /// ```sh
-    ///  $ pulumi import azapi:index/resource:Resource example /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/resGroup1/providers/Microsoft.MachineLearningServices/workspaces/workspace1/computes/cluster1?api-version=2021-07-01
-    /// ```
+    /// Azure resource can be imported using the `resource id`, e.g. &lt;break&gt;&lt;break&gt;```sh&lt;break&gt; $ pulumi import azapi:index/resource:Resource example /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/resGroup1/providers/Microsoft.MachineLearningServices/workspaces/workspace1/computes/cluster1 &lt;break&gt;```&lt;break&gt;&lt;break&gt; It also supports specifying API version by using the `resource id` with `api-version` as a query parameter, e.g. &lt;break&gt;&lt;break&gt;```sh&lt;break&gt; $ pulumi import azapi:index/resource:Resource example /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/resGroup1/providers/Microsoft.MachineLearningServices/workspaces/workspace1/computes/cluster1?api-version=2021-07-01 &lt;break&gt;```&lt;break&gt;&lt;break&gt;
     /// </summary>
     [AzapiResourceType("azapi:index/resource:Resource")]
     public partial class Resource : global::Pulumi.CustomResource
@@ -74,6 +66,11 @@ namespace ediri.Azapi
 
         /// <summary>
         /// The output json containing the properties specified in `response_export_values`. Here're some examples to decode json and extract the value.
+        /// ```
+        /// // it will output "registry1.azurecr.io"
+        /// output "login_server" {
+        /// value = jsondecode(azapi_resource.example.output).properties.loginServer
+        /// }
         /// </summary>
         [Output("output")]
         public Output<string> Output { get; private set; } = null!;
@@ -101,14 +98,17 @@ namespace ediri.Azapi
         /// A list of path that needs to be exported from response body.
         /// Setting it to `["*"]` will export the full response body.
         /// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-        /// ```csharp
-        /// using System.Collections.Generic;
-        /// using System.Linq;
-        /// using Pulumi;
-        /// 
-        /// return await Deployment.RunAsync(() =&gt; 
+        /// ```
         /// {
-        /// });
+        /// "properties" : {
+        /// "loginServer" : "registry1.azurecr.io"
+        /// "policies" : {
+        /// "quarantinePolicy" = {
+        /// "status" = "disabled"
+        /// }
+        /// }
+        /// }
+        /// }
         /// ```
         /// </summary>
         [Output("responseExportValues")]
@@ -254,14 +254,17 @@ namespace ediri.Azapi
         /// A list of path that needs to be exported from response body.
         /// Setting it to `["*"]` will export the full response body.
         /// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-        /// ```csharp
-        /// using System.Collections.Generic;
-        /// using System.Linq;
-        /// using Pulumi;
-        /// 
-        /// return await Deployment.RunAsync(() =&gt; 
+        /// ```
         /// {
-        /// });
+        /// "properties" : {
+        /// "loginServer" : "registry1.azurecr.io"
+        /// "policies" : {
+        /// "quarantinePolicy" = {
+        /// "status" = "disabled"
+        /// }
+        /// }
+        /// }
+        /// }
         /// ```
         /// </summary>
         public InputList<string> ResponseExportValues
@@ -353,6 +356,11 @@ namespace ediri.Azapi
 
         /// <summary>
         /// The output json containing the properties specified in `response_export_values`. Here're some examples to decode json and extract the value.
+        /// ```
+        /// // it will output "registry1.azurecr.io"
+        /// output "login_server" {
+        /// value = jsondecode(azapi_resource.example.output).properties.loginServer
+        /// }
         /// </summary>
         [Input("output")]
         public Input<string>? Output { get; set; }
@@ -383,14 +391,17 @@ namespace ediri.Azapi
         /// A list of path that needs to be exported from response body.
         /// Setting it to `["*"]` will export the full response body.
         /// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-        /// ```csharp
-        /// using System.Collections.Generic;
-        /// using System.Linq;
-        /// using Pulumi;
-        /// 
-        /// return await Deployment.RunAsync(() =&gt; 
+        /// ```
         /// {
-        /// });
+        /// "properties" : {
+        /// "loginServer" : "registry1.azurecr.io"
+        /// "policies" : {
+        /// "quarantinePolicy" = {
+        /// "status" = "disabled"
+        /// }
+        /// }
+        /// }
+        /// }
         /// ```
         /// </summary>
         public InputList<string> ResponseExportValues

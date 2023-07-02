@@ -18,94 +18,6 @@ import (
 // If you want to restore the modified properties to some values, you must apply the restored properties before deleting.
 //
 // ## Example Usage
-//
-// ```go
-// package main
-//
-// import (
-//
-//	"encoding/json"
-//
-//	"github.com/pulumi/pulumi-azapi/sdk/go/azapi"
-//	"github.com/pulumi/pulumi-azurerm/sdk/v1/go/azurerm"
-//	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
-//
-// )
-//
-//	func main() {
-//		pulumi.Run(func(ctx *pulumi.Context) error {
-//			exampleazurerm_resource_group, err := index.NewAzurerm_resource_group(ctx, "exampleazurerm_resource_group", &index.Azurerm_resource_groupArgs{
-//				Name:     "example-rg",
-//				Location: "west europe",
-//			})
-//			if err != nil {
-//				return err
-//			}
-//			exampleazurerm_public_ip, err := index.NewAzurerm_public_ip(ctx, "exampleazurerm_public_ip", &index.Azurerm_public_ipArgs{
-//				Name:              "example-ip",
-//				Location:          exampleazurerm_resource_group.Location,
-//				ResourceGroupName: exampleazurerm_resource_group.Name,
-//				AllocationMethod:  "Static",
-//			})
-//			if err != nil {
-//				return err
-//			}
-//			exampleazurerm_lb, err := index.NewAzurerm_lb(ctx, "exampleazurerm_lb", &index.Azurerm_lbArgs{
-//				Name:              "example-lb",
-//				Location:          exampleazurerm_resource_group.Location,
-//				ResourceGroupName: exampleazurerm_resource_group.Name,
-//				FrontendIpConfiguration: []map[string]interface{}{
-//					map[string]interface{}{
-//						"name":              "PublicIPAddress",
-//						"publicIpAddressId": exampleazurerm_public_ip.Id,
-//					},
-//				},
-//			})
-//			if err != nil {
-//				return err
-//			}
-//			exampleazurerm_lb_nat_rule, err := index.NewAzurerm_lb_nat_rule(ctx, "exampleazurerm_lb_nat_rule", &index.Azurerm_lb_nat_ruleArgs{
-//				ResourceGroupName:           exampleazurerm_resource_group.Name,
-//				LoadbalancerId:              exampleazurerm_lb.Id,
-//				Name:                        "RDPAccess",
-//				Protocol:                    "Tcp",
-//				FrontendPort:                3389,
-//				BackendPort:                 3389,
-//				FrontendIpConfigurationName: "PublicIPAddress",
-//			})
-//			if err != nil {
-//				return err
-//			}
-//			tmpJSON0, err := json.Marshal(map[string]interface{}{
-//				"properties": map[string]interface{}{
-//					"inboundNatRules": []map[string]interface{}{
-//						map[string]interface{}{
-//							"properties": map[string]interface{}{
-//								"idleTimeoutInMinutes": 15,
-//							},
-//						},
-//					},
-//				},
-//			})
-//			if err != nil {
-//				return err
-//			}
-//			json0 := string(tmpJSON0)
-//			_, err = azapi.NewUpdateResource(ctx, "exampleUpdateResource", &azapi.UpdateResourceArgs{
-//				Type:       pulumi.String("Microsoft.Network/loadBalancers@2021-03-01"),
-//				ResourceId: exampleazurerm_lb.Id,
-//				Body:       pulumi.String(json0),
-//			}, pulumi.DependsOn([]pulumi.Resource{
-//				exampleazurerm_lb_nat_rule,
-//			}))
-//			if err != nil {
-//				return err
-//			}
-//			return nil
-//		})
-//	}
-//
-// ```
 type UpdateResource struct {
 	pulumi.CustomResourceState
 
@@ -137,19 +49,6 @@ type UpdateResource struct {
 	// A list of path that needs to be exported from response body.
 	// Setting it to `["*"]` will export the full response body.
 	// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-	// ```go
-	// package main
-	//
-	// import (
-	// 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
-	// )
-	//
-	// func main() {
-	// 	pulumi.Run(func(ctx *pulumi.Context) error {
-	// 		return nil
-	// 	})
-	// }
-	// ```
 	ResponseExportValues pulumi.StringArrayOutput `pulumi:"responseExportValues"`
 	// It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
 	// `<api-version>` is version of the API used to manage this azure resource.
@@ -217,19 +116,6 @@ type updateResourceState struct {
 	// A list of path that needs to be exported from response body.
 	// Setting it to `["*"]` will export the full response body.
 	// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-	// ```go
-	// package main
-	//
-	// import (
-	// 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
-	// )
-	//
-	// func main() {
-	// 	pulumi.Run(func(ctx *pulumi.Context) error {
-	// 		return nil
-	// 	})
-	// }
-	// ```
 	ResponseExportValues []string `pulumi:"responseExportValues"`
 	// It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
 	// `<api-version>` is version of the API used to manage this azure resource.
@@ -265,19 +151,6 @@ type UpdateResourceState struct {
 	// A list of path that needs to be exported from response body.
 	// Setting it to `["*"]` will export the full response body.
 	// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-	// ```go
-	// package main
-	//
-	// import (
-	// 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
-	// )
-	//
-	// func main() {
-	// 	pulumi.Run(func(ctx *pulumi.Context) error {
-	// 		return nil
-	// 	})
-	// }
-	// ```
 	ResponseExportValues pulumi.StringArrayInput
 	// It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
 	// `<api-version>` is version of the API used to manage this azure resource.
@@ -315,19 +188,6 @@ type updateResourceArgs struct {
 	// A list of path that needs to be exported from response body.
 	// Setting it to `["*"]` will export the full response body.
 	// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-	// ```go
-	// package main
-	//
-	// import (
-	// 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
-	// )
-	//
-	// func main() {
-	// 	pulumi.Run(func(ctx *pulumi.Context) error {
-	// 		return nil
-	// 	})
-	// }
-	// ```
 	ResponseExportValues []string `pulumi:"responseExportValues"`
 	// It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
 	// `<api-version>` is version of the API used to manage this azure resource.
@@ -362,19 +222,6 @@ type UpdateResourceArgs struct {
 	// A list of path that needs to be exported from response body.
 	// Setting it to `["*"]` will export the full response body.
 	// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-	// ```go
-	// package main
-	//
-	// import (
-	// 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
-	// )
-	//
-	// func main() {
-	// 	pulumi.Run(func(ctx *pulumi.Context) error {
-	// 		return nil
-	// 	})
-	// }
-	// ```
 	ResponseExportValues pulumi.StringArrayInput
 	// It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
 	// `<api-version>` is version of the API used to manage this azure resource.
@@ -520,22 +367,6 @@ func (o UpdateResourceOutput) ResourceId() pulumi.StringOutput {
 // A list of path that needs to be exported from response body.
 // Setting it to `["*"]` will export the full response body.
 // Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-// ```go
-// package main
-//
-// import (
-//
-//	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
-//
-// )
-//
-//	func main() {
-//		pulumi.Run(func(ctx *pulumi.Context) error {
-//			return nil
-//		})
-//	}
-//
-// ```
 func (o UpdateResourceOutput) ResponseExportValues() pulumi.StringArrayOutput {
 	return o.ApplyT(func(v *UpdateResource) pulumi.StringArrayOutput { return v.ResponseExportValues }).(pulumi.StringArrayOutput)
 }

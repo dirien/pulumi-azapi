@@ -36,8 +36,17 @@ class DataPlaneResourceArgs:
         :param pulumi.Input[Sequence[pulumi.Input[str]]] response_export_values: A list of path that needs to be exported from response body.
                Setting it to `["*"]` will export the full response body.
                Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-               ```python
-               import pulumi
+               ```
+               {
+               "properties" : {
+               "loginServer" : "registry1.azurecr.io"
+               "policies" : {
+               "quarantinePolicy" = {
+               "status" = "disabled"
+               }
+               }
+               }
+               }
                ```
         """
         pulumi.set(__self__, "parent_id", parent_id)
@@ -148,8 +157,17 @@ class DataPlaneResourceArgs:
         A list of path that needs to be exported from response body.
         Setting it to `["*"]` will export the full response body.
         Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-        ```python
-        import pulumi
+        ```
+        {
+        "properties" : {
+        "loginServer" : "registry1.azurecr.io"
+        "policies" : {
+        "quarantinePolicy" = {
+        "status" = "disabled"
+        }
+        }
+        }
+        }
         ```
         """
         return pulumi.get(self, "response_export_values")
@@ -179,12 +197,26 @@ class _DataPlaneResourceState:
         :param pulumi.Input[Sequence[pulumi.Input[str]]] locks: A list of ARM resource IDs which are used to avoid create/modify/delete azapi resources at the same time.
         :param pulumi.Input[str] name: Specifies the name of the azure resource. Changing this forces a new resource to be created.
         :param pulumi.Input[str] output: The output json containing the properties specified in `response_export_values`. Here're some examples to decode json and extract the value.
+               ```
+               // it will output "registry1.azurecr.io"
+               output "login_server" {
+               value = jsondecode(azapi_data_plane_resource.example.output).properties.loginServer
+               }
         :param pulumi.Input[str] parent_id: The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created.
         :param pulumi.Input[Sequence[pulumi.Input[str]]] response_export_values: A list of path that needs to be exported from response body.
                Setting it to `["*"]` will export the full response body.
                Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-               ```python
-               import pulumi
+               ```
+               {
+               "properties" : {
+               "loginServer" : "registry1.azurecr.io"
+               "policies" : {
+               "quarantinePolicy" = {
+               "status" = "disabled"
+               }
+               }
+               }
+               }
                ```
         :param pulumi.Input[str] type: It is in a format like `<resource-type>@<api-version>`. `<api-version>` is version of the API used to manage this azure data plane resource.
                
@@ -274,6 +306,11 @@ class _DataPlaneResourceState:
     def output(self) -> Optional[pulumi.Input[str]]:
         """
         The output json containing the properties specified in `response_export_values`. Here're some examples to decode json and extract the value.
+        ```
+        // it will output "registry1.azurecr.io"
+        output "login_server" {
+        value = jsondecode(azapi_data_plane_resource.example.output).properties.loginServer
+        }
         """
         return pulumi.get(self, "output")
 
@@ -300,8 +337,17 @@ class _DataPlaneResourceState:
         A list of path that needs to be exported from response body.
         Setting it to `["*"]` will export the full response body.
         Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-        ```python
-        import pulumi
+        ```
+        {
+        "properties" : {
+        "loginServer" : "registry1.azurecr.io"
+        "policies" : {
+        "quarantinePolicy" = {
+        "status" = "disabled"
+        }
+        }
+        }
+        }
         ```
         """
         return pulumi.get(self, "response_export_values")
@@ -341,6 +387,8 @@ class DataPlaneResource(pulumi.CustomResource):
                  __props__=None):
         """
         This resource can manage some Azure data plane resource.
+
+        ## Example Usage
 
         ## Available Resources
 
@@ -412,8 +460,17 @@ class DataPlaneResource(pulumi.CustomResource):
         :param pulumi.Input[Sequence[pulumi.Input[str]]] response_export_values: A list of path that needs to be exported from response body.
                Setting it to `["*"]` will export the full response body.
                Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-               ```python
-               import pulumi
+               ```
+               {
+               "properties" : {
+               "loginServer" : "registry1.azurecr.io"
+               "policies" : {
+               "quarantinePolicy" = {
+               "status" = "disabled"
+               }
+               }
+               }
+               }
                ```
         :param pulumi.Input[str] type: It is in a format like `<resource-type>@<api-version>`. `<api-version>` is version of the API used to manage this azure data plane resource.
                
@@ -427,6 +484,8 @@ class DataPlaneResource(pulumi.CustomResource):
                  opts: Optional[pulumi.ResourceOptions] = None):
         """
         This resource can manage some Azure data plane resource.
+
+        ## Example Usage
 
         ## Available Resources
 
@@ -564,12 +623,26 @@ class DataPlaneResource(pulumi.CustomResource):
         :param pulumi.Input[Sequence[pulumi.Input[str]]] locks: A list of ARM resource IDs which are used to avoid create/modify/delete azapi resources at the same time.
         :param pulumi.Input[str] name: Specifies the name of the azure resource. Changing this forces a new resource to be created.
         :param pulumi.Input[str] output: The output json containing the properties specified in `response_export_values`. Here're some examples to decode json and extract the value.
+               ```
+               // it will output "registry1.azurecr.io"
+               output "login_server" {
+               value = jsondecode(azapi_data_plane_resource.example.output).properties.loginServer
+               }
         :param pulumi.Input[str] parent_id: The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created.
         :param pulumi.Input[Sequence[pulumi.Input[str]]] response_export_values: A list of path that needs to be exported from response body.
                Setting it to `["*"]` will export the full response body.
                Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-               ```python
-               import pulumi
+               ```
+               {
+               "properties" : {
+               "loginServer" : "registry1.azurecr.io"
+               "policies" : {
+               "quarantinePolicy" = {
+               "status" = "disabled"
+               }
+               }
+               }
+               }
                ```
         :param pulumi.Input[str] type: It is in a format like `<resource-type>@<api-version>`. `<api-version>` is version of the API used to manage this azure data plane resource.
                
@@ -635,6 +708,11 @@ class DataPlaneResource(pulumi.CustomResource):
     def output(self) -> pulumi.Output[str]:
         """
         The output json containing the properties specified in `response_export_values`. Here're some examples to decode json and extract the value.
+        ```
+        // it will output "registry1.azurecr.io"
+        output "login_server" {
+        value = jsondecode(azapi_data_plane_resource.example.output).properties.loginServer
+        }
         """
         return pulumi.get(self, "output")
 
@@ -653,8 +731,17 @@ class DataPlaneResource(pulumi.CustomResource):
         A list of path that needs to be exported from response body.
         Setting it to `["*"]` will export the full response body.
         Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-        ```python
-        import pulumi
+        ```
+        {
+        "properties" : {
+        "loginServer" : "registry1.azurecr.io"
+        "policies" : {
+        "quarantinePolicy" = {
+        "status" = "disabled"
+        }
+        }
+        }
+        }
         ```
         """
         return pulumi.get(self, "response_export_values")

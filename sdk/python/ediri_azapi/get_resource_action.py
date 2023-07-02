@@ -75,6 +75,11 @@ class GetResourceActionResult:
     def output(self) -> str:
         """
         The output json containing the properties specified in `response_export_values`. Here are some examples to decode json and extract the value.
+        ```hcl
+        // it will output "nHGYNd******i4wdug=="
+        output "primary_key" {
+        value = jsondecode(azapi_resource_action.test.output).keys.0.Value
+        }
         """
         return pulumi.get(self, "output")
 
@@ -124,25 +129,6 @@ def get_resource_action(action: Optional[str] = None,
 
     ## Example Usage
 
-    ```python
-    import pulumi
-    import pulumi_azapi as azapi
-    import pulumi_azurerm as azurerm
-
-    exampleazurerm_resource_group = azurerm.index.Azurerm_resource_group("exampleazurerm_resource_group",
-        name=example-rg,
-        location=west europe)
-    exampleazurerm_automation_account = azurerm.index.Azurerm_automation_account("exampleazurerm_automation_account",
-        name=example-account,
-        resource_group_name=exampleazurerm_resource_group.name,
-        location=exampleazurerm_resource_group.location,
-        sku_name=Basic)
-    example_resource_action = azapi.get_resource_action(type="Microsoft.Automation/automationAccounts@2021-06-22",
-        resource_id=exampleazurerm_automation_account["id"],
-        action="listKeys",
-        response_export_values=["*"])
-    ```
-
 
     :param str action: The name of the resource action. It's also possible to make Http requests towards the resource ID if leave this field empty.
     :param str body: A JSON object that contains the request body.
@@ -151,8 +137,21 @@ def get_resource_action(action: Optional[str] = None,
     :param Sequence[str] response_export_values: A list of path that needs to be exported from response body.
            Setting it to `["*"]` will export the full response body.
            Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
-           ```python
-           import pulumi
+           ```
+           {
+           "keys": [
+           {
+           "KeyName": "Primary",
+           "Permissions": "Full",
+           "Value": "nHGYNd******i4wdug=="
+           },
+           {
+           "KeyName": "Secondary",
+           "Permissions": "Full",
+           "Value": "6yoCad******SLzKzg=="
+           }
+           ]
+           }
            ```
     :param str type: It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
            `<api-version>` is version of the API used to manage this azure resource.
@@ -193,25 +192,6 @@ def get_resource_action_output(action: Optional[pulumi.Input[Optional[str]]] = N
 
     ## Example Usage
 
-    ```python
-    import pulumi
-    import pulumi_azapi as azapi
-    import pulumi_azurerm as azurerm
-
-    exampleazurerm_resource_group = azurerm.index.Azurerm_resource_group("exampleazurerm_resource_group",
-        name=example-rg,
-        location=west europe)
-    exampleazurerm_automation_account = azurerm.index.Azurerm_automation_account("exampleazurerm_automation_account",
-        name=example-account,
-        resource_group_name=exampleazurerm_resource_group.name,
-        location=exampleazurerm_resource_group.location,
-        sku_name=Basic)
-    example_resource_action = azapi.get_resource_action(type="Microsoft.Automation/automationAccounts@2021-06-22",
-        resource_id=exampleazurerm_automation_account["id"],
-        action="listKeys",
-        response_export_values=["*"])
-    ```
-
 
     :param str action: The name of the resource action. It's also possible to make Http requests towards the resource ID if leave this field empty.
     :param str body: A JSON object that contains the request body.
@@ -220,8 +200,21 @@ def get_resource_action_output(action: Optional[pulumi.Input[Optional[str]]] = N
     :param Sequence[str] response_export_values: A list of path that needs to be exported from response body.
            Setting it to `["*"]` will export the full response body.
            Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
-           ```python
-           import pulumi
+           ```
+           {
+           "keys": [
+           {
+           "KeyName": "Primary",
+           "Permissions": "Full",
+           "Value": "nHGYNd******i4wdug=="
+           },
+           {
+           "KeyName": "Secondary",
+           "Permissions": "Full",
+           "Value": "6yoCad******SLzKzg=="
+           }
+           ]
+           }
            ```
     :param str type: It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
            `<api-version>` is version of the API used to manage this azure resource.

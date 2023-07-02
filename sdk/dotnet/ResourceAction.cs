@@ -16,6 +16,8 @@ namespace ediri.Azapi
     /// if user wants to perform readonly action.
     /// 
     /// &gt; **Note** When delete `azapi.ResourceAction`, no operation will be performed.
+    /// 
+    /// ## Example Usage
     /// </summary>
     [AzapiResourceType("azapi:index/resourceAction:ResourceAction")]
     public partial class ResourceAction : global::Pulumi.CustomResource
@@ -60,14 +62,21 @@ namespace ediri.Azapi
         /// A list of path that needs to be exported from response body.
         /// Setting it to `["*"]` will export the full response body.
         /// Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
-        /// ```csharp
-        /// using System.Collections.Generic;
-        /// using System.Linq;
-        /// using Pulumi;
-        /// 
-        /// return await Deployment.RunAsync(() =&gt; 
+        /// ```
         /// {
-        /// });
+        /// "keys": [
+        /// {
+        /// "KeyName": "Primary",
+        /// "Permissions": "Full",
+        /// "Value": "nHGYNd******i4wdug=="
+        /// },
+        /// {
+        /// "KeyName": "Secondary",
+        /// "Permissions": "Full",
+        /// "Value": "6yoCad******SLzKzg=="
+        /// }
+        /// ]
+        /// }
         /// ```
         /// </summary>
         [Output("responseExportValues")]
@@ -170,14 +179,21 @@ namespace ediri.Azapi
         /// A list of path that needs to be exported from response body.
         /// Setting it to `["*"]` will export the full response body.
         /// Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
-        /// ```csharp
-        /// using System.Collections.Generic;
-        /// using System.Linq;
-        /// using Pulumi;
-        /// 
-        /// return await Deployment.RunAsync(() =&gt; 
+        /// ```
         /// {
-        /// });
+        /// "keys": [
+        /// {
+        /// "KeyName": "Primary",
+        /// "Permissions": "Full",
+        /// "Value": "nHGYNd******i4wdug=="
+        /// },
+        /// {
+        /// "KeyName": "Secondary",
+        /// "Permissions": "Full",
+        /// "Value": "6yoCad******SLzKzg=="
+        /// }
+        /// ]
+        /// }
         /// ```
         /// </summary>
         public InputList<string> ResponseExportValues
@@ -250,14 +266,21 @@ namespace ediri.Azapi
         /// A list of path that needs to be exported from response body.
         /// Setting it to `["*"]` will export the full response body.
         /// Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
-        /// ```csharp
-        /// using System.Collections.Generic;
-        /// using System.Linq;
-        /// using Pulumi;
-        /// 
-        /// return await Deployment.RunAsync(() =&gt; 
+        /// ```
         /// {
-        /// });
+        /// "keys": [
+        /// {
+        /// "KeyName": "Primary",
+        /// "Permissions": "Full",
+        /// "Value": "nHGYNd******i4wdug=="
+        /// },
+        /// {
+        /// "KeyName": "Secondary",
+        /// "Permissions": "Full",
+        /// "Value": "6yoCad******SLzKzg=="
+        /// }
+        /// ]
+        /// }
         /// ```
         /// </summary>
         public InputList<string> ResponseExportValues

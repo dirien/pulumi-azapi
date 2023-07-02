@@ -18,87 +18,6 @@ namespace ediri.Azapi
     /// If you want to restore the modified properties to some values, you must apply the restored properties before deleting.
     /// 
     /// ## Example Usage
-    /// 
-    /// ```csharp
-    /// using System.Collections.Generic;
-    /// using System.Linq;
-    /// using System.Text.Json;
-    /// using Pulumi;
-    /// using Azapi = ediri.Azapi;
-    /// using Azurerm = Pulumi.Azurerm;
-    /// 
-    /// return await Deployment.RunAsync(() =&gt; 
-    /// {
-    ///     var exampleazurerm_resource_group = new Azurerm.Index.Azurerm_resource_group("exampleazurerm_resource_group", new()
-    ///     {
-    ///         Name = "example-rg",
-    ///         Location = "west europe",
-    ///     });
-    /// 
-    ///     var exampleazurerm_public_ip = new Azurerm.Index.Azurerm_public_ip("exampleazurerm_public_ip", new()
-    ///     {
-    ///         Name = "example-ip",
-    ///         Location = exampleazurerm_resource_group.Location,
-    ///         ResourceGroupName = exampleazurerm_resource_group.Name,
-    ///         AllocationMethod = "Static",
-    ///     });
-    /// 
-    ///     var exampleazurerm_lb = new Azurerm.Index.Azurerm_lb("exampleazurerm_lb", new()
-    ///     {
-    ///         Name = "example-lb",
-    ///         Location = exampleazurerm_resource_group.Location,
-    ///         ResourceGroupName = exampleazurerm_resource_group.Name,
-    ///         FrontendIpConfiguration = new[]
-    ///         {
-    ///             
-    ///             {
-    ///                 { "name", "PublicIPAddress" },
-    ///                 { "publicIpAddressId", exampleazurerm_public_ip.Id },
-    ///             },
-    ///         },
-    ///     });
-    /// 
-    ///     var exampleazurerm_lb_nat_rule = new Azurerm.Index.Azurerm_lb_nat_rule("exampleazurerm_lb_nat_rule", new()
-    ///     {
-    ///         ResourceGroupName = exampleazurerm_resource_group.Name,
-    ///         LoadbalancerId = exampleazurerm_lb.Id,
-    ///         Name = "RDPAccess",
-    ///         Protocol = "Tcp",
-    ///         FrontendPort = 3389,
-    ///         BackendPort = 3389,
-    ///         FrontendIpConfigurationName = "PublicIPAddress",
-    ///     });
-    /// 
-    ///     var exampleUpdateResource = new Azapi.UpdateResource("exampleUpdateResource", new()
-    ///     {
-    ///         Type = "Microsoft.Network/loadBalancers@2021-03-01",
-    ///         ResourceId = exampleazurerm_lb.Id,
-    ///         Body = JsonSerializer.Serialize(new Dictionary&lt;string, object?&gt;
-    ///         {
-    ///             ["properties"] = new Dictionary&lt;string, object?&gt;
-    ///             {
-    ///                 ["inboundNatRules"] = new[]
-    ///                 {
-    ///                     new Dictionary&lt;string, object?&gt;
-    ///                     {
-    ///                         ["properties"] = new Dictionary&lt;string, object?&gt;
-    ///                         {
-    ///                             ["idleTimeoutInMinutes"] = 15,
-    ///                         },
-    ///                     },
-    ///                 },
-    ///             },
-    ///         }),
-    ///     }, new CustomResourceOptions
-    ///     {
-    ///         DependsOn = new[]
-    ///         {
-    ///             exampleazurerm_lb_nat_rule,
-    ///         },
-    ///     });
-    /// 
-    /// });
-    /// ```
     /// </summary>
     [AzapiResourceType("azapi:index/updateResource:UpdateResource")]
     public partial class UpdateResource : global::Pulumi.CustomResource
@@ -135,6 +54,11 @@ namespace ediri.Azapi
 
         /// <summary>
         /// The output json containing the properties specified in `response_export_values`. Here're some examples to decode json and extract the value.
+        /// ```
+        /// // it will output "registry1.azurecr.io"
+        /// output "login_server" {
+        /// value = jsondecode(azapi_resource.example.output).properties.loginServer
+        /// }
         /// </summary>
         [Output("output")]
         public Output<string> Output { get; private set; } = null!;
@@ -164,14 +88,17 @@ namespace ediri.Azapi
         /// A list of path that needs to be exported from response body.
         /// Setting it to `["*"]` will export the full response body.
         /// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-        /// ```csharp
-        /// using System.Collections.Generic;
-        /// using System.Linq;
-        /// using Pulumi;
-        /// 
-        /// return await Deployment.RunAsync(() =&gt; 
+        /// ```
         /// {
-        /// });
+        /// "properties" : {
+        /// "loginServer" : "registry1.azurecr.io"
+        /// "policies" : {
+        /// "quarantinePolicy" = {
+        /// "status" = "disabled"
+        /// }
+        /// }
+        /// }
+        /// }
         /// ```
         /// </summary>
         [Output("responseExportValues")]
@@ -295,14 +222,17 @@ namespace ediri.Azapi
         /// A list of path that needs to be exported from response body.
         /// Setting it to `["*"]` will export the full response body.
         /// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-        /// ```csharp
-        /// using System.Collections.Generic;
-        /// using System.Linq;
-        /// using Pulumi;
-        /// 
-        /// return await Deployment.RunAsync(() =&gt; 
+        /// ```
         /// {
-        /// });
+        /// "properties" : {
+        /// "loginServer" : "registry1.azurecr.io"
+        /// "policies" : {
+        /// "quarantinePolicy" = {
+        /// "status" = "disabled"
+        /// }
+        /// }
+        /// }
+        /// }
         /// ```
         /// </summary>
         public InputList<string> ResponseExportValues
@@ -364,6 +294,11 @@ namespace ediri.Azapi
 
         /// <summary>
         /// The output json containing the properties specified in `response_export_values`. Here're some examples to decode json and extract the value.
+        /// ```
+        /// // it will output "registry1.azurecr.io"
+        /// output "login_server" {
+        /// value = jsondecode(azapi_resource.example.output).properties.loginServer
+        /// }
         /// </summary>
         [Input("output")]
         public Input<string>? Output { get; set; }
@@ -396,14 +331,17 @@ namespace ediri.Azapi
         /// A list of path that needs to be exported from response body.
         /// Setting it to `["*"]` will export the full response body.
         /// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-        /// ```csharp
-        /// using System.Collections.Generic;
-        /// using System.Linq;
-        /// using Pulumi;
-        /// 
-        /// return await Deployment.RunAsync(() =&gt; 
+        /// ```
         /// {
-        /// });
+        /// "properties" : {
+        /// "loginServer" : "registry1.azurecr.io"
+        /// "policies" : {
+        /// "quarantinePolicy" = {
+        /// "status" = "disabled"
+        /// }
+        /// }
+        /// }
+        /// }
         /// ```
         /// </summary>
         public InputList<string> ResponseExportValues

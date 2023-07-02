@@ -12,56 +12,6 @@ import * as utilities from "./utilities";
  * If you want to restore the modified properties to some values, you must apply the restored properties before deleting.
  *
  * ## Example Usage
- *
- * ```typescript
- * import * as pulumi from "@pulumi/pulumi";
- * import * as azapi from "@ediri/azapi";
- * import * as azurerm from "@pulumi/azurerm";
- *
- * const exampleazurerm_resource_group = new azurerm.index.Azurerm_resource_group("exampleazurerm_resource_group", {
- *     name: "example-rg",
- *     location: "west europe",
- * });
- * const exampleazurerm_public_ip = new azurerm.index.Azurerm_public_ip("exampleazurerm_public_ip", {
- *     name: "example-ip",
- *     location: exampleazurerm_resource_group.location,
- *     resourceGroupName: exampleazurerm_resource_group.name,
- *     allocationMethod: "Static",
- * });
- * const exampleazurerm_lb = new azurerm.index.Azurerm_lb("exampleazurerm_lb", {
- *     name: "example-lb",
- *     location: exampleazurerm_resource_group.location,
- *     resourceGroupName: exampleazurerm_resource_group.name,
- *     frontendIpConfiguration: [{
- *         name: "PublicIPAddress",
- *         publicIpAddressId: exampleazurerm_public_ip.id,
- *     }],
- * });
- * const exampleazurerm_lb_nat_rule = new azurerm.index.Azurerm_lb_nat_rule("exampleazurerm_lb_nat_rule", {
- *     resourceGroupName: exampleazurerm_resource_group.name,
- *     loadbalancerId: exampleazurerm_lb.id,
- *     name: "RDPAccess",
- *     protocol: "Tcp",
- *     frontendPort: 3389,
- *     backendPort: 3389,
- *     frontendIpConfigurationName: "PublicIPAddress",
- * });
- * const exampleUpdateResource = new azapi.UpdateResource("exampleUpdateResource", {
- *     type: "Microsoft.Network/loadBalancers@2021-03-01",
- *     resourceId: exampleazurerm_lb.id,
- *     body: JSON.stringify({
- *         properties: {
- *             inboundNatRules: [{
- *                 properties: {
- *                     idleTimeoutInMinutes: 15,
- *                 },
- *             }],
- *         },
- *     }),
- * }, {
- *     dependsOn: [exampleazurerm_lb_nat_rule],
- * });
- * ```
  */
 export class UpdateResource extends pulumi.CustomResource {
     /**
@@ -113,6 +63,11 @@ export class UpdateResource extends pulumi.CustomResource {
     public readonly name!: pulumi.Output<string>;
     /**
      * The output json containing the properties specified in `responseExportValues`. Here're some examples to decode json and extract the value.
+     * ```
+     * // it will output "registry1.azurecr.io"
+     * output "loginServer" {
+     * value = jsondecode(azapi_resource.example.output).properties.loginServer
+     * }
      */
     public /*out*/ readonly output!: pulumi.Output<string>;
     /**
@@ -136,8 +91,17 @@ export class UpdateResource extends pulumi.CustomResource {
      * A list of path that needs to be exported from response body.
      * Setting it to `["*"]` will export the full response body.
      * Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-     * ```typescript
-     * import * as pulumi from "@pulumi/pulumi";
+     * ```
+     * {
+     * "properties" : {
+     * "loginServer" : "registry1.azurecr.io"
+     * "policies" : {
+     * "quarantinePolicy" = {
+     * "status" = "disabled"
+     * }
+     * }
+     * }
+     * }
      * ```
      */
     public readonly responseExportValues!: pulumi.Output<string[] | undefined>;
@@ -217,6 +181,11 @@ export interface UpdateResourceState {
     name?: pulumi.Input<string>;
     /**
      * The output json containing the properties specified in `responseExportValues`. Here're some examples to decode json and extract the value.
+     * ```
+     * // it will output "registry1.azurecr.io"
+     * output "loginServer" {
+     * value = jsondecode(azapi_resource.example.output).properties.loginServer
+     * }
      */
     output?: pulumi.Input<string>;
     /**
@@ -240,8 +209,17 @@ export interface UpdateResourceState {
      * A list of path that needs to be exported from response body.
      * Setting it to `["*"]` will export the full response body.
      * Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-     * ```typescript
-     * import * as pulumi from "@pulumi/pulumi";
+     * ```
+     * {
+     * "properties" : {
+     * "loginServer" : "registry1.azurecr.io"
+     * "policies" : {
+     * "quarantinePolicy" = {
+     * "status" = "disabled"
+     * }
+     * }
+     * }
+     * }
      * ```
      */
     responseExportValues?: pulumi.Input<pulumi.Input<string>[]>;
@@ -297,8 +275,17 @@ export interface UpdateResourceArgs {
      * A list of path that needs to be exported from response body.
      * Setting it to `["*"]` will export the full response body.
      * Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-     * ```typescript
-     * import * as pulumi from "@pulumi/pulumi";
+     * ```
+     * {
+     * "properties" : {
+     * "loginServer" : "registry1.azurecr.io"
+     * "policies" : {
+     * "quarantinePolicy" = {
+     * "status" = "disabled"
+     * }
+     * }
+     * }
+     * }
      * ```
      */
     responseExportValues?: pulumi.Input<pulumi.Input<string>[]>;

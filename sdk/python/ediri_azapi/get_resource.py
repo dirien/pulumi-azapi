@@ -89,6 +89,11 @@ class GetResourceResult:
     def output(self) -> str:
         """
         The output json containing the properties specified in `response_export_values`. Here're some examples to decode json and extract the value.
+        ```
+        // it will output "registry1.azurecr.io"
+        output "login_server" {
+        value = jsondecode(azapi_resource.example.output).properties.loginServer
+        }
         """
         return pulumi.get(self, "output")
 
@@ -152,6 +157,8 @@ def get_resource(identity: Optional[pulumi.InputType['GetResourceIdentityArgs']]
     """
     This resource can access any existing Azure resource manager resource.
 
+    ## Example Usage
+
 
     :param pulumi.InputType['GetResourceIdentityArgs'] identity: An `identity` block as defined below, which contains the Managed Service Identity information for this azure resource.
     :param str name: Specifies the name of the azure resource.
@@ -169,8 +176,17 @@ def get_resource(identity: Optional[pulumi.InputType['GetResourceIdentityArgs']]
     :param Sequence[str] response_export_values: A list of path that needs to be exported from response body.
            Setting it to `["*"]` will export the full response body.
            Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-           ```python
-           import pulumi
+           ```
+           {
+           "properties" : {
+           "loginServer" : "registry1.azurecr.io"
+           "policies" : {
+           "quarantinePolicy" = {
+           "status" = "disabled"
+           }
+           }
+           }
+           }
            ```
     :param str type: It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
            `<api-version>` is version of the API used to manage this azure resource.
@@ -209,6 +225,8 @@ def get_resource_output(identity: Optional[pulumi.Input[Optional[pulumi.InputTyp
     """
     This resource can access any existing Azure resource manager resource.
 
+    ## Example Usage
+
 
     :param pulumi.InputType['GetResourceIdentityArgs'] identity: An `identity` block as defined below, which contains the Managed Service Identity information for this azure resource.
     :param str name: Specifies the name of the azure resource.
@@ -226,8 +244,17 @@ def get_resource_output(identity: Optional[pulumi.Input[Optional[pulumi.InputTyp
     :param Sequence[str] response_export_values: A list of path that needs to be exported from response body.
            Setting it to `["*"]` will export the full response body.
            Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-           ```python
-           import pulumi
+           ```
+           {
+           "properties" : {
+           "loginServer" : "registry1.azurecr.io"
+           "policies" : {
+           "quarantinePolicy" = {
+           "status" = "disabled"
+           }
+           }
+           }
+           }
            ```
     :param str type: It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
            `<api-version>` is version of the API used to manage this azure resource.

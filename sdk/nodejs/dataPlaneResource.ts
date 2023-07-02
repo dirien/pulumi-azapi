@@ -7,6 +7,8 @@ import * as utilities from "./utilities";
 /**
  * This resource can manage some Azure data plane resource.
  *
+ * ## Example Usage
+ *
  * ## Available Resources
  *
  * | Resource Type | URL | Parent ID Example                                                                           |
@@ -116,6 +118,11 @@ export class DataPlaneResource extends pulumi.CustomResource {
     public readonly name!: pulumi.Output<string>;
     /**
      * The output json containing the properties specified in `responseExportValues`. Here're some examples to decode json and extract the value.
+     * ```
+     * // it will output "registry1.azurecr.io"
+     * output "loginServer" {
+     * value = jsondecode(azapi_data_plane_resource.example.output).properties.loginServer
+     * }
      */
     public /*out*/ readonly output!: pulumi.Output<string>;
     /**
@@ -126,8 +133,17 @@ export class DataPlaneResource extends pulumi.CustomResource {
      * A list of path that needs to be exported from response body.
      * Setting it to `["*"]` will export the full response body.
      * Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-     * ```typescript
-     * import * as pulumi from "@pulumi/pulumi";
+     * ```
+     * {
+     * "properties" : {
+     * "loginServer" : "registry1.azurecr.io"
+     * "policies" : {
+     * "quarantinePolicy" = {
+     * "status" = "disabled"
+     * }
+     * }
+     * }
+     * }
      * ```
      */
     public readonly responseExportValues!: pulumi.Output<string[] | undefined>;
@@ -209,6 +225,11 @@ export interface DataPlaneResourceState {
     name?: pulumi.Input<string>;
     /**
      * The output json containing the properties specified in `responseExportValues`. Here're some examples to decode json and extract the value.
+     * ```
+     * // it will output "registry1.azurecr.io"
+     * output "loginServer" {
+     * value = jsondecode(azapi_data_plane_resource.example.output).properties.loginServer
+     * }
      */
     output?: pulumi.Input<string>;
     /**
@@ -219,8 +240,17 @@ export interface DataPlaneResourceState {
      * A list of path that needs to be exported from response body.
      * Setting it to `["*"]` will export the full response body.
      * Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-     * ```typescript
-     * import * as pulumi from "@pulumi/pulumi";
+     * ```
+     * {
+     * "properties" : {
+     * "loginServer" : "registry1.azurecr.io"
+     * "policies" : {
+     * "quarantinePolicy" = {
+     * "status" = "disabled"
+     * }
+     * }
+     * }
+     * }
      * ```
      */
     responseExportValues?: pulumi.Input<pulumi.Input<string>[]>;
@@ -264,8 +294,17 @@ export interface DataPlaneResourceArgs {
      * A list of path that needs to be exported from response body.
      * Setting it to `["*"]` will export the full response body.
      * Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-     * ```typescript
-     * import * as pulumi from "@pulumi/pulumi";
+     * ```
+     * {
+     * "properties" : {
+     * "loginServer" : "registry1.azurecr.io"
+     * "policies" : {
+     * "quarantinePolicy" = {
+     * "status" = "disabled"
+     * }
+     * }
+     * }
+     * }
      * ```
      */
     responseExportValues?: pulumi.Input<pulumi.Input<string>[]>;
