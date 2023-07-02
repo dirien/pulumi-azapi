@@ -8,6 +8,8 @@ import * as utilities from "./utilities";
 
 /**
  * This resource can access any existing Azure resource manager resource.
+ *
+ * ## Example Usage
  */
 export function getResource(args: GetResourceArgs, opts?: pulumi.InvokeOptions): Promise<GetResourceResult> {
 
@@ -55,8 +57,17 @@ export interface GetResourceArgs {
      * A list of path that needs to be exported from response body.
      * Setting it to `["*"]` will export the full response body.
      * Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-     * ```typescript
-     * import * as pulumi from "@pulumi/pulumi";
+     * ```
+     * {
+     * "properties" : {
+     * "loginServer" : "registry1.azurecr.io"
+     * "policies" : {
+     * "quarantinePolicy" = {
+     * "status" = "disabled"
+     * }
+     * }
+     * }
+     * }
      * ```
      */
     responseExportValues?: string[];
@@ -86,6 +97,11 @@ export interface GetResourceResult {
     readonly name?: string;
     /**
      * The output json containing the properties specified in `responseExportValues`. Here're some examples to decode json and extract the value.
+     * ```
+     * // it will output "registry1.azurecr.io"
+     * output "loginServer" {
+     * value = jsondecode(azapi_resource.example.output).properties.loginServer
+     * }
      */
     readonly output: string;
     readonly parentId?: string;
@@ -102,6 +118,8 @@ export interface GetResourceResult {
 }
 /**
  * This resource can access any existing Azure resource manager resource.
+ *
+ * ## Example Usage
  */
 export function getResourceOutput(args: GetResourceOutputArgs, opts?: pulumi.InvokeOptions): pulumi.Output<GetResourceResult> {
     return pulumi.output(args).apply((a: any) => getResource(a, opts))
@@ -140,8 +158,17 @@ export interface GetResourceOutputArgs {
      * A list of path that needs to be exported from response body.
      * Setting it to `["*"]` will export the full response body.
      * Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-     * ```typescript
-     * import * as pulumi from "@pulumi/pulumi";
+     * ```
+     * {
+     * "properties" : {
+     * "loginServer" : "registry1.azurecr.io"
+     * "policies" : {
+     * "quarantinePolicy" = {
+     * "status" = "disabled"
+     * }
+     * }
+     * }
+     * }
      * ```
      */
     responseExportValues?: pulumi.Input<pulumi.Input<string>[]>;

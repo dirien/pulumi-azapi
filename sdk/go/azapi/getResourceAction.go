@@ -13,6 +13,8 @@ import (
 // This resource can perform resource action which gets information from an existing resource.
 // It's recommended to use `ResourceAction` data source to perform readonly action, please use `ResourceAction` resource,
 // if user wants to perform actions which change a resource's state.
+//
+// ## Example Usage
 func LookupResourceAction(ctx *pulumi.Context, args *LookupResourceActionArgs, opts ...pulumi.InvokeOption) (*LookupResourceActionResult, error) {
 	opts = pkgInvokeDefaultOpts(opts)
 	var rv LookupResourceActionResult
@@ -36,19 +38,6 @@ type LookupResourceActionArgs struct {
 	// A list of path that needs to be exported from response body.
 	// Setting it to `["*"]` will export the full response body.
 	// Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
-	// ```go
-	// package main
-	//
-	// import (
-	// 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
-	// )
-	//
-	// func main() {
-	// 	pulumi.Run(func(ctx *pulumi.Context) error {
-	// 		return nil
-	// 	})
-	// }
-	// ```
 	ResponseExportValues []string `pulumi:"responseExportValues"`
 	// It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
 	// `<api-version>` is version of the API used to manage this azure resource.
@@ -95,19 +84,6 @@ type LookupResourceActionOutputArgs struct {
 	// A list of path that needs to be exported from response body.
 	// Setting it to `["*"]` will export the full response body.
 	// Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
-	// ```go
-	// package main
-	//
-	// import (
-	// 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
-	// )
-	//
-	// func main() {
-	// 	pulumi.Run(func(ctx *pulumi.Context) error {
-	// 		return nil
-	// 	})
-	// }
-	// ```
 	ResponseExportValues pulumi.StringArrayInput `pulumi:"responseExportValues"`
 	// It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
 	// `<api-version>` is version of the API used to manage this azure resource.

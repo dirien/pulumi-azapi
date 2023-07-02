@@ -33,8 +33,21 @@ class ResourceActionArgs:
         :param pulumi.Input[Sequence[pulumi.Input[str]]] response_export_values: A list of path that needs to be exported from response body.
                Setting it to `["*"]` will export the full response body.
                Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
-               ```python
-               import pulumi
+               ```
+               {
+               "keys": [
+               {
+               "KeyName": "Primary",
+               "Permissions": "Full",
+               "Value": "nHGYNd******i4wdug=="
+               },
+               {
+               "KeyName": "Secondary",
+               "Permissions": "Full",
+               "Value": "6yoCad******SLzKzg=="
+               }
+               ]
+               }
                ```
         """
         pulumi.set(__self__, "resource_id", resource_id)
@@ -130,8 +143,21 @@ class ResourceActionArgs:
         A list of path that needs to be exported from response body.
         Setting it to `["*"]` will export the full response body.
         Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
-        ```python
-        import pulumi
+        ```
+        {
+        "keys": [
+        {
+        "KeyName": "Primary",
+        "Permissions": "Full",
+        "Value": "nHGYNd******i4wdug=="
+        },
+        {
+        "KeyName": "Secondary",
+        "Permissions": "Full",
+        "Value": "6yoCad******SLzKzg=="
+        }
+        ]
+        }
         ```
         """
         return pulumi.get(self, "response_export_values")
@@ -163,8 +189,21 @@ class _ResourceActionState:
         :param pulumi.Input[Sequence[pulumi.Input[str]]] response_export_values: A list of path that needs to be exported from response body.
                Setting it to `["*"]` will export the full response body.
                Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
-               ```python
-               import pulumi
+               ```
+               {
+               "keys": [
+               {
+               "KeyName": "Primary",
+               "Permissions": "Full",
+               "Value": "nHGYNd******i4wdug=="
+               },
+               {
+               "KeyName": "Secondary",
+               "Permissions": "Full",
+               "Value": "6yoCad******SLzKzg=="
+               }
+               ]
+               }
                ```
         :param pulumi.Input[str] type: It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
                `<api-version>` is version of the API used to manage this azure resource.
@@ -265,8 +304,21 @@ class _ResourceActionState:
         A list of path that needs to be exported from response body.
         Setting it to `["*"]` will export the full response body.
         Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
-        ```python
-        import pulumi
+        ```
+        {
+        "keys": [
+        {
+        "KeyName": "Primary",
+        "Permissions": "Full",
+        "Value": "nHGYNd******i4wdug=="
+        },
+        {
+        "KeyName": "Secondary",
+        "Permissions": "Full",
+        "Value": "6yoCad******SLzKzg=="
+        }
+        ]
+        }
         ```
         """
         return pulumi.get(self, "response_export_values")
@@ -309,6 +361,8 @@ class ResourceAction(pulumi.CustomResource):
 
         > **Note** When delete `ResourceAction`, no operation will be performed.
 
+        ## Example Usage
+
         :param str resource_name: The name of the resource.
         :param pulumi.ResourceOptions opts: Options for the resource.
         :param pulumi.Input[str] action: The name of the resource action. It's also possible to make Http requests towards the resource ID if leave this field empty.
@@ -319,8 +373,21 @@ class ResourceAction(pulumi.CustomResource):
         :param pulumi.Input[Sequence[pulumi.Input[str]]] response_export_values: A list of path that needs to be exported from response body.
                Setting it to `["*"]` will export the full response body.
                Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
-               ```python
-               import pulumi
+               ```
+               {
+               "keys": [
+               {
+               "KeyName": "Primary",
+               "Permissions": "Full",
+               "Value": "nHGYNd******i4wdug=="
+               },
+               {
+               "KeyName": "Secondary",
+               "Permissions": "Full",
+               "Value": "6yoCad******SLzKzg=="
+               }
+               ]
+               }
                ```
         :param pulumi.Input[str] type: It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
                `<api-version>` is version of the API used to manage this azure resource.
@@ -337,6 +404,8 @@ class ResourceAction(pulumi.CustomResource):
         if user wants to perform readonly action.
 
         > **Note** When delete `ResourceAction`, no operation will be performed.
+
+        ## Example Usage
 
         :param str resource_name: The name of the resource.
         :param ResourceActionArgs args: The arguments to use to populate this resource's properties.
@@ -415,8 +484,21 @@ class ResourceAction(pulumi.CustomResource):
         :param pulumi.Input[Sequence[pulumi.Input[str]]] response_export_values: A list of path that needs to be exported from response body.
                Setting it to `["*"]` will export the full response body.
                Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
-               ```python
-               import pulumi
+               ```
+               {
+               "keys": [
+               {
+               "KeyName": "Primary",
+               "Permissions": "Full",
+               "Value": "nHGYNd******i4wdug=="
+               },
+               {
+               "KeyName": "Secondary",
+               "Permissions": "Full",
+               "Value": "6yoCad******SLzKzg=="
+               }
+               ]
+               }
                ```
         :param pulumi.Input[str] type: It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
                `<api-version>` is version of the API used to manage this azure resource.
@@ -490,8 +572,21 @@ class ResourceAction(pulumi.CustomResource):
         A list of path that needs to be exported from response body.
         Setting it to `["*"]` will export the full response body.
         Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
-        ```python
-        import pulumi
+        ```
+        {
+        "keys": [
+        {
+        "KeyName": "Primary",
+        "Permissions": "Full",
+        "Value": "nHGYNd******i4wdug=="
+        },
+        {
+        "KeyName": "Secondary",
+        "Permissions": "Full",
+        "Value": "6yoCad******SLzKzg=="
+        }
+        ]
+        }
         ```
         """
         return pulumi.get(self, "response_export_values")

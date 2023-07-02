@@ -10,6 +10,8 @@ import * as utilities from "./utilities";
  * > **Note** This resource is used to add or modify properties on an existing resource.
  * When delete `azapi.UpdateResource`, no operation will be performed, and these properties will stay unchanged.
  * If you want to restore the modified properties to some values, you must apply the restored properties before deleting.
+ *
+ * ## Example Usage
  */
 export class UpdateResource extends pulumi.CustomResource {
     /**
@@ -61,6 +63,11 @@ export class UpdateResource extends pulumi.CustomResource {
     public readonly name!: pulumi.Output<string>;
     /**
      * The output json containing the properties specified in `responseExportValues`. Here're some examples to decode json and extract the value.
+     * ```
+     * // it will output "registry1.azurecr.io"
+     * output "loginServer" {
+     * value = jsondecode(azapi_resource.example.output).properties.loginServer
+     * }
      */
     public /*out*/ readonly output!: pulumi.Output<string>;
     /**
@@ -84,8 +91,17 @@ export class UpdateResource extends pulumi.CustomResource {
      * A list of path that needs to be exported from response body.
      * Setting it to `["*"]` will export the full response body.
      * Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-     * ```typescript
-     * import * as pulumi from "@pulumi/pulumi";
+     * ```
+     * {
+     * "properties" : {
+     * "loginServer" : "registry1.azurecr.io"
+     * "policies" : {
+     * "quarantinePolicy" = {
+     * "status" = "disabled"
+     * }
+     * }
+     * }
+     * }
      * ```
      */
     public readonly responseExportValues!: pulumi.Output<string[] | undefined>;
@@ -165,6 +181,11 @@ export interface UpdateResourceState {
     name?: pulumi.Input<string>;
     /**
      * The output json containing the properties specified in `responseExportValues`. Here're some examples to decode json and extract the value.
+     * ```
+     * // it will output "registry1.azurecr.io"
+     * output "loginServer" {
+     * value = jsondecode(azapi_resource.example.output).properties.loginServer
+     * }
      */
     output?: pulumi.Input<string>;
     /**
@@ -188,8 +209,17 @@ export interface UpdateResourceState {
      * A list of path that needs to be exported from response body.
      * Setting it to `["*"]` will export the full response body.
      * Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-     * ```typescript
-     * import * as pulumi from "@pulumi/pulumi";
+     * ```
+     * {
+     * "properties" : {
+     * "loginServer" : "registry1.azurecr.io"
+     * "policies" : {
+     * "quarantinePolicy" = {
+     * "status" = "disabled"
+     * }
+     * }
+     * }
+     * }
      * ```
      */
     responseExportValues?: pulumi.Input<pulumi.Input<string>[]>;
@@ -245,8 +275,17 @@ export interface UpdateResourceArgs {
      * A list of path that needs to be exported from response body.
      * Setting it to `["*"]` will export the full response body.
      * Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-     * ```typescript
-     * import * as pulumi from "@pulumi/pulumi";
+     * ```
+     * {
+     * "properties" : {
+     * "loginServer" : "registry1.azurecr.io"
+     * "policies" : {
+     * "quarantinePolicy" = {
+     * "status" = "disabled"
+     * }
+     * }
+     * }
+     * }
      * ```
      */
     responseExportValues?: pulumi.Input<pulumi.Input<string>[]>;

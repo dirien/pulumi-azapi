@@ -75,6 +75,11 @@ class GetResourceActionResult:
     def output(self) -> str:
         """
         The output json containing the properties specified in `response_export_values`. Here are some examples to decode json and extract the value.
+        ```hcl
+        // it will output "nHGYNd******i4wdug=="
+        output "primary_key" {
+        value = jsondecode(azapi_resource_action.test.output).keys.0.Value
+        }
         """
         return pulumi.get(self, "output")
 
@@ -122,6 +127,8 @@ def get_resource_action(action: Optional[str] = None,
     It's recommended to use `ResourceAction` data source to perform readonly action, please use `ResourceAction` resource,
     if user wants to perform actions which change a resource's state.
 
+    ## Example Usage
+
 
     :param str action: The name of the resource action. It's also possible to make Http requests towards the resource ID if leave this field empty.
     :param str body: A JSON object that contains the request body.
@@ -130,8 +137,21 @@ def get_resource_action(action: Optional[str] = None,
     :param Sequence[str] response_export_values: A list of path that needs to be exported from response body.
            Setting it to `["*"]` will export the full response body.
            Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
-           ```python
-           import pulumi
+           ```
+           {
+           "keys": [
+           {
+           "KeyName": "Primary",
+           "Permissions": "Full",
+           "Value": "nHGYNd******i4wdug=="
+           },
+           {
+           "KeyName": "Secondary",
+           "Permissions": "Full",
+           "Value": "6yoCad******SLzKzg=="
+           }
+           ]
+           }
            ```
     :param str type: It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
            `<api-version>` is version of the API used to manage this azure resource.
@@ -147,14 +167,14 @@ def get_resource_action(action: Optional[str] = None,
     __ret__ = pulumi.runtime.invoke('azapi:index/getResourceAction:getResourceAction', __args__, opts=opts, typ=GetResourceActionResult).value
 
     return AwaitableGetResourceActionResult(
-        action=__ret__.action,
-        body=__ret__.body,
-        id=__ret__.id,
-        method=__ret__.method,
-        output=__ret__.output,
-        resource_id=__ret__.resource_id,
-        response_export_values=__ret__.response_export_values,
-        type=__ret__.type)
+        action=pulumi.get(__ret__, 'action'),
+        body=pulumi.get(__ret__, 'body'),
+        id=pulumi.get(__ret__, 'id'),
+        method=pulumi.get(__ret__, 'method'),
+        output=pulumi.get(__ret__, 'output'),
+        resource_id=pulumi.get(__ret__, 'resource_id'),
+        response_export_values=pulumi.get(__ret__, 'response_export_values'),
+        type=pulumi.get(__ret__, 'type'))
 
 
 @_utilities.lift_output_func(get_resource_action)
@@ -170,6 +190,8 @@ def get_resource_action_output(action: Optional[pulumi.Input[Optional[str]]] = N
     It's recommended to use `ResourceAction` data source to perform readonly action, please use `ResourceAction` resource,
     if user wants to perform actions which change a resource's state.
 
+    ## Example Usage
+
 
     :param str action: The name of the resource action. It's also possible to make Http requests towards the resource ID if leave this field empty.
     :param str body: A JSON object that contains the request body.
@@ -178,8 +200,21 @@ def get_resource_action_output(action: Optional[pulumi.Input[Optional[str]]] = N
     :param Sequence[str] response_export_values: A list of path that needs to be exported from response body.
            Setting it to `["*"]` will export the full response body.
            Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
-           ```python
-           import pulumi
+           ```
+           {
+           "keys": [
+           {
+           "KeyName": "Primary",
+           "Permissions": "Full",
+           "Value": "nHGYNd******i4wdug=="
+           },
+           {
+           "KeyName": "Secondary",
+           "Permissions": "Full",
+           "Value": "6yoCad******SLzKzg=="
+           }
+           ]
+           }
            ```
     :param str type: It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
            `<api-version>` is version of the API used to manage this azure resource.

@@ -13,6 +13,8 @@ import (
 
 // This resource can manage some Azure data plane resource.
 //
+// ## Example Usage
+//
 // ## Available Resources
 //
 // | Resource Type | URL | Parent ID Example                                                                           |
@@ -91,19 +93,6 @@ type DataPlaneResource struct {
 	// A list of path that needs to be exported from response body.
 	// Setting it to `["*"]` will export the full response body.
 	// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-	// ```go
-	// package main
-	//
-	// import (
-	// 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
-	// )
-	//
-	// func main() {
-	// 	pulumi.Run(func(ctx *pulumi.Context) error {
-	// 		return nil
-	// 	})
-	// }
-	// ```
 	ResponseExportValues pulumi.StringArrayOutput `pulumi:"responseExportValues"`
 	// It is in a format like `<resource-type>@<api-version>`. `<api-version>` is version of the API used to manage this azure data plane resource.
 	//
@@ -164,19 +153,6 @@ type dataPlaneResourceState struct {
 	// A list of path that needs to be exported from response body.
 	// Setting it to `["*"]` will export the full response body.
 	// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-	// ```go
-	// package main
-	//
-	// import (
-	// 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
-	// )
-	//
-	// func main() {
-	// 	pulumi.Run(func(ctx *pulumi.Context) error {
-	// 		return nil
-	// 	})
-	// }
-	// ```
 	ResponseExportValues []string `pulumi:"responseExportValues"`
 	// It is in a format like `<resource-type>@<api-version>`. `<api-version>` is version of the API used to manage this azure data plane resource.
 	//
@@ -202,19 +178,6 @@ type DataPlaneResourceState struct {
 	// A list of path that needs to be exported from response body.
 	// Setting it to `["*"]` will export the full response body.
 	// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-	// ```go
-	// package main
-	//
-	// import (
-	// 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
-	// )
-	//
-	// func main() {
-	// 	pulumi.Run(func(ctx *pulumi.Context) error {
-	// 		return nil
-	// 	})
-	// }
-	// ```
 	ResponseExportValues pulumi.StringArrayInput
 	// It is in a format like `<resource-type>@<api-version>`. `<api-version>` is version of the API used to manage this azure data plane resource.
 	//
@@ -242,19 +205,6 @@ type dataPlaneResourceArgs struct {
 	// A list of path that needs to be exported from response body.
 	// Setting it to `["*"]` will export the full response body.
 	// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-	// ```go
-	// package main
-	//
-	// import (
-	// 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
-	// )
-	//
-	// func main() {
-	// 	pulumi.Run(func(ctx *pulumi.Context) error {
-	// 		return nil
-	// 	})
-	// }
-	// ```
 	ResponseExportValues []string `pulumi:"responseExportValues"`
 	// It is in a format like `<resource-type>@<api-version>`. `<api-version>` is version of the API used to manage this azure data plane resource.
 	//
@@ -279,19 +229,6 @@ type DataPlaneResourceArgs struct {
 	// A list of path that needs to be exported from response body.
 	// Setting it to `["*"]` will export the full response body.
 	// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-	// ```go
-	// package main
-	//
-	// import (
-	// 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
-	// )
-	//
-	// func main() {
-	// 	pulumi.Run(func(ctx *pulumi.Context) error {
-	// 		return nil
-	// 	})
-	// }
-	// ```
 	ResponseExportValues pulumi.StringArrayInput
 	// It is in a format like `<resource-type>@<api-version>`. `<api-version>` is version of the API used to manage this azure data plane resource.
 	//
@@ -424,22 +361,6 @@ func (o DataPlaneResourceOutput) ParentId() pulumi.StringOutput {
 // A list of path that needs to be exported from response body.
 // Setting it to `["*"]` will export the full response body.
 // Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-// ```go
-// package main
-//
-// import (
-//
-//	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
-//
-// )
-//
-//	func main() {
-//		pulumi.Run(func(ctx *pulumi.Context) error {
-//			return nil
-//		})
-//	}
-//
-// ```
 func (o DataPlaneResourceOutput) ResponseExportValues() pulumi.StringArrayOutput {
 	return o.ApplyT(func(v *DataPlaneResource) pulumi.StringArrayOutput { return v.ResponseExportValues }).(pulumi.StringArrayOutput)
 }

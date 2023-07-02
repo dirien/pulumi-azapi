@@ -13,23 +13,11 @@ import (
 
 // This resource can manage any Azure resource manager resource.
 //
+// ## Example Usage
+//
 // ## Import
 //
-// Azure resource can be imported using the `resource id`, e.g.
-//
-// ```sh
-//
-//	$ pulumi import azapi:index/resource:Resource example /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/resGroup1/providers/Microsoft.MachineLearningServices/workspaces/workspace1/computes/cluster1
-//
-// ```
-//
-//	It also supports specifying API version by using the `resource id` with `api-version` as a query parameter, e.g.
-//
-// ```sh
-//
-//	$ pulumi import azapi:index/resource:Resource example /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/resGroup1/providers/Microsoft.MachineLearningServices/workspaces/workspace1/computes/cluster1?api-version=2021-07-01
-//
-// ```
+// Azure resource can be imported using the `resource id`, e.g. <break><break>```sh<break> $ pulumi import azapi:index/resource:Resource example /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/resGroup1/providers/Microsoft.MachineLearningServices/workspaces/workspace1/computes/cluster1 <break>```<break><break> It also supports specifying API version by using the `resource id` with `api-version` as a query parameter, e.g. <break><break>```sh<break> $ pulumi import azapi:index/resource:Resource example /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/resGroup1/providers/Microsoft.MachineLearningServices/workspaces/workspace1/computes/cluster1?api-version=2021-07-01 <break>```<break><break>
 type Resource struct {
 	pulumi.CustomResourceState
 
@@ -63,19 +51,6 @@ type Resource struct {
 	// A list of path that needs to be exported from response body.
 	// Setting it to `["*"]` will export the full response body.
 	// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-	// ```go
-	// package main
-	//
-	// import (
-	// 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
-	// )
-	//
-	// func main() {
-	// 	pulumi.Run(func(ctx *pulumi.Context) error {
-	// 		return nil
-	// 	})
-	// }
-	// ```
 	ResponseExportValues pulumi.StringArrayOutput `pulumi:"responseExportValues"`
 	// Whether enabled the validation on `type` and `body` with embedded schema. Defaults to `true`.
 	SchemaValidationEnabled pulumi.BoolPtrOutput `pulumi:"schemaValidationEnabled"`
@@ -152,19 +127,6 @@ type resourceState struct {
 	// A list of path that needs to be exported from response body.
 	// Setting it to `["*"]` will export the full response body.
 	// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-	// ```go
-	// package main
-	//
-	// import (
-	// 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
-	// )
-	//
-	// func main() {
-	// 	pulumi.Run(func(ctx *pulumi.Context) error {
-	// 		return nil
-	// 	})
-	// }
-	// ```
 	ResponseExportValues []string `pulumi:"responseExportValues"`
 	// Whether enabled the validation on `type` and `body` with embedded schema. Defaults to `true`.
 	SchemaValidationEnabled *bool `pulumi:"schemaValidationEnabled"`
@@ -206,19 +168,6 @@ type ResourceState struct {
 	// A list of path that needs to be exported from response body.
 	// Setting it to `["*"]` will export the full response body.
 	// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-	// ```go
-	// package main
-	//
-	// import (
-	// 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
-	// )
-	//
-	// func main() {
-	// 	pulumi.Run(func(ctx *pulumi.Context) error {
-	// 		return nil
-	// 	})
-	// }
-	// ```
 	ResponseExportValues pulumi.StringArrayInput
 	// Whether enabled the validation on `type` and `body` with embedded schema. Defaults to `true`.
 	SchemaValidationEnabled pulumi.BoolPtrInput
@@ -262,19 +211,6 @@ type resourceArgs struct {
 	// A list of path that needs to be exported from response body.
 	// Setting it to `["*"]` will export the full response body.
 	// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-	// ```go
-	// package main
-	//
-	// import (
-	// 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
-	// )
-	//
-	// func main() {
-	// 	pulumi.Run(func(ctx *pulumi.Context) error {
-	// 		return nil
-	// 	})
-	// }
-	// ```
 	ResponseExportValues []string `pulumi:"responseExportValues"`
 	// Whether enabled the validation on `type` and `body` with embedded schema. Defaults to `true`.
 	SchemaValidationEnabled *bool `pulumi:"schemaValidationEnabled"`
@@ -315,19 +251,6 @@ type ResourceArgs struct {
 	// A list of path that needs to be exported from response body.
 	// Setting it to `["*"]` will export the full response body.
 	// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-	// ```go
-	// package main
-	//
-	// import (
-	// 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
-	// )
-	//
-	// func main() {
-	// 	pulumi.Run(func(ctx *pulumi.Context) error {
-	// 		return nil
-	// 	})
-	// }
-	// ```
 	ResponseExportValues pulumi.StringArrayInput
 	// Whether enabled the validation on `type` and `body` with embedded schema. Defaults to `true`.
 	SchemaValidationEnabled pulumi.BoolPtrInput
@@ -485,22 +408,6 @@ func (o ResourceOutput) RemovingSpecialChars() pulumi.BoolPtrOutput {
 // A list of path that needs to be exported from response body.
 // Setting it to `["*"]` will export the full response body.
 // Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-// ```go
-// package main
-//
-// import (
-//
-//	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
-//
-// )
-//
-//	func main() {
-//		pulumi.Run(func(ctx *pulumi.Context) error {
-//			return nil
-//		})
-//	}
-//
-// ```
 func (o ResourceOutput) ResponseExportValues() pulumi.StringArrayOutput {
 	return o.ApplyT(func(v *Resource) pulumi.StringArrayOutput { return v.ResponseExportValues }).(pulumi.StringArrayOutput)
 }

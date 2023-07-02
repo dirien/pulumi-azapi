@@ -52,8 +52,17 @@ class ResourceArgs:
         :param pulumi.Input[Sequence[pulumi.Input[str]]] response_export_values: A list of path that needs to be exported from response body.
                Setting it to `["*"]` will export the full response body.
                Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-               ```python
-               import pulumi
+               ```
+               {
+               "properties" : {
+               "loginServer" : "registry1.azurecr.io"
+               "policies" : {
+               "quarantinePolicy" = {
+               "status" = "disabled"
+               }
+               }
+               }
+               }
                ```
         :param pulumi.Input[bool] schema_validation_enabled: Whether enabled the validation on `type` and `body` with embedded schema. Defaults to `true`.
         :param pulumi.Input[Mapping[str, pulumi.Input[str]]] tags: A mapping of tags which should be assigned to the azure resource.
@@ -218,8 +227,17 @@ class ResourceArgs:
         A list of path that needs to be exported from response body.
         Setting it to `["*"]` will export the full response body.
         Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-        ```python
-        import pulumi
+        ```
+        {
+        "properties" : {
+        "loginServer" : "registry1.azurecr.io"
+        "policies" : {
+        "quarantinePolicy" = {
+        "status" = "disabled"
+        }
+        }
+        }
+        }
         ```
         """
         return pulumi.get(self, "response_export_values")
@@ -280,6 +298,11 @@ class _ResourceState:
         :param pulumi.Input[Sequence[pulumi.Input[str]]] locks: A list of ARM resource IDs which are used to avoid create/modify/delete azapi resources at the same time.
         :param pulumi.Input[str] name: Specifies the name of the azure resource. Changing this forces a new resource to be created.
         :param pulumi.Input[str] output: The output json containing the properties specified in `response_export_values`. Here're some examples to decode json and extract the value.
+               ```
+               // it will output "registry1.azurecr.io"
+               output "login_server" {
+               value = jsondecode(azapi_resource.example.output).properties.loginServer
+               }
         :param pulumi.Input[str] parent_id: The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created. It supports different kinds of deployment scope for **top level** resources: 
                - resource group scope: `parent_id` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.
                - management group scope: `parent_id` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.
@@ -292,8 +315,17 @@ class _ResourceState:
         :param pulumi.Input[Sequence[pulumi.Input[str]]] response_export_values: A list of path that needs to be exported from response body.
                Setting it to `["*"]` will export the full response body.
                Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-               ```python
-               import pulumi
+               ```
+               {
+               "properties" : {
+               "loginServer" : "registry1.azurecr.io"
+               "policies" : {
+               "quarantinePolicy" = {
+               "status" = "disabled"
+               }
+               }
+               }
+               }
                ```
         :param pulumi.Input[bool] schema_validation_enabled: Whether enabled the validation on `type` and `body` with embedded schema. Defaults to `true`.
         :param pulumi.Input[Mapping[str, pulumi.Input[str]]] tags: A mapping of tags which should be assigned to the azure resource.
@@ -418,6 +450,11 @@ class _ResourceState:
     def output(self) -> Optional[pulumi.Input[str]]:
         """
         The output json containing the properties specified in `response_export_values`. Here're some examples to decode json and extract the value.
+        ```
+        // it will output "registry1.azurecr.io"
+        output "login_server" {
+        value = jsondecode(azapi_resource.example.output).properties.loginServer
+        }
         """
         return pulumi.get(self, "output")
 
@@ -463,8 +500,17 @@ class _ResourceState:
         A list of path that needs to be exported from response body.
         Setting it to `["*"]` will export the full response body.
         Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-        ```python
-        import pulumi
+        ```
+        {
+        "properties" : {
+        "loginServer" : "registry1.azurecr.io"
+        "policies" : {
+        "quarantinePolicy" = {
+        "status" = "disabled"
+        }
+        }
+        }
+        }
         ```
         """
         return pulumi.get(self, "response_export_values")
@@ -533,19 +579,11 @@ class Resource(pulumi.CustomResource):
         """
         This resource can manage any Azure resource manager resource.
 
+        ## Example Usage
+
         ## Import
 
-        Azure resource can be imported using the `resource id`, e.g.
-
-        ```sh
-         $ pulumi import azapi:index/resource:Resource example /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/resGroup1/providers/Microsoft.MachineLearningServices/workspaces/workspace1/computes/cluster1
-        ```
-
-         It also supports specifying API version by using the `resource id` with `api-version` as a query parameter, e.g.
-
-        ```sh
-         $ pulumi import azapi:index/resource:Resource example /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/resGroup1/providers/Microsoft.MachineLearningServices/workspaces/workspace1/computes/cluster1?api-version=2021-07-01
-        ```
+        Azure resource can be imported using the `resource id`, e.g. <break><break>```sh<break> $ pulumi import azapi:index/resource:Resource example /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/resGroup1/providers/Microsoft.MachineLearningServices/workspaces/workspace1/computes/cluster1 <break>```<break><break> It also supports specifying API version by using the `resource id` with `api-version` as a query parameter, e.g. <break><break>```sh<break> $ pulumi import azapi:index/resource:Resource example /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/resGroup1/providers/Microsoft.MachineLearningServices/workspaces/workspace1/computes/cluster1?api-version=2021-07-01 <break>```<break><break>
 
         :param str resource_name: The name of the resource.
         :param pulumi.ResourceOptions opts: Options for the resource.
@@ -568,8 +606,17 @@ class Resource(pulumi.CustomResource):
         :param pulumi.Input[Sequence[pulumi.Input[str]]] response_export_values: A list of path that needs to be exported from response body.
                Setting it to `["*"]` will export the full response body.
                Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-               ```python
-               import pulumi
+               ```
+               {
+               "properties" : {
+               "loginServer" : "registry1.azurecr.io"
+               "policies" : {
+               "quarantinePolicy" = {
+               "status" = "disabled"
+               }
+               }
+               }
+               }
                ```
         :param pulumi.Input[bool] schema_validation_enabled: Whether enabled the validation on `type` and `body` with embedded schema. Defaults to `true`.
         :param pulumi.Input[Mapping[str, pulumi.Input[str]]] tags: A mapping of tags which should be assigned to the azure resource.
@@ -585,19 +632,11 @@ class Resource(pulumi.CustomResource):
         """
         This resource can manage any Azure resource manager resource.
 
+        ## Example Usage
+
         ## Import
 
-        Azure resource can be imported using the `resource id`, e.g.
-
-        ```sh
-         $ pulumi import azapi:index/resource:Resource example /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/resGroup1/providers/Microsoft.MachineLearningServices/workspaces/workspace1/computes/cluster1
-        ```
-
-         It also supports specifying API version by using the `resource id` with `api-version` as a query parameter, e.g.
-
-        ```sh
-         $ pulumi import azapi:index/resource:Resource example /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/resGroup1/providers/Microsoft.MachineLearningServices/workspaces/workspace1/computes/cluster1?api-version=2021-07-01
-        ```
+        Azure resource can be imported using the `resource id`, e.g. <break><break>```sh<break> $ pulumi import azapi:index/resource:Resource example /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/resGroup1/providers/Microsoft.MachineLearningServices/workspaces/workspace1/computes/cluster1 <break>```<break><break> It also supports specifying API version by using the `resource id` with `api-version` as a query parameter, e.g. <break><break>```sh<break> $ pulumi import azapi:index/resource:Resource example /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/resGroup1/providers/Microsoft.MachineLearningServices/workspaces/workspace1/computes/cluster1?api-version=2021-07-01 <break>```<break><break>
 
         :param str resource_name: The name of the resource.
         :param ResourceArgs args: The arguments to use to populate this resource's properties.
@@ -693,6 +732,11 @@ class Resource(pulumi.CustomResource):
         :param pulumi.Input[Sequence[pulumi.Input[str]]] locks: A list of ARM resource IDs which are used to avoid create/modify/delete azapi resources at the same time.
         :param pulumi.Input[str] name: Specifies the name of the azure resource. Changing this forces a new resource to be created.
         :param pulumi.Input[str] output: The output json containing the properties specified in `response_export_values`. Here're some examples to decode json and extract the value.
+               ```
+               // it will output "registry1.azurecr.io"
+               output "login_server" {
+               value = jsondecode(azapi_resource.example.output).properties.loginServer
+               }
         :param pulumi.Input[str] parent_id: The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created. It supports different kinds of deployment scope for **top level** resources: 
                - resource group scope: `parent_id` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.
                - management group scope: `parent_id` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.
@@ -705,8 +749,17 @@ class Resource(pulumi.CustomResource):
         :param pulumi.Input[Sequence[pulumi.Input[str]]] response_export_values: A list of path that needs to be exported from response body.
                Setting it to `["*"]` will export the full response body.
                Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-               ```python
-               import pulumi
+               ```
+               {
+               "properties" : {
+               "loginServer" : "registry1.azurecr.io"
+               "policies" : {
+               "quarantinePolicy" = {
+               "status" = "disabled"
+               }
+               }
+               }
+               }
                ```
         :param pulumi.Input[bool] schema_validation_enabled: Whether enabled the validation on `type` and `body` with embedded schema. Defaults to `true`.
         :param pulumi.Input[Mapping[str, pulumi.Input[str]]] tags: A mapping of tags which should be assigned to the azure resource.
@@ -794,6 +847,11 @@ class Resource(pulumi.CustomResource):
     def output(self) -> pulumi.Output[str]:
         """
         The output json containing the properties specified in `response_export_values`. Here're some examples to decode json and extract the value.
+        ```
+        // it will output "registry1.azurecr.io"
+        output "login_server" {
+        value = jsondecode(azapi_resource.example.output).properties.loginServer
+        }
         """
         return pulumi.get(self, "output")
 
@@ -827,8 +885,17 @@ class Resource(pulumi.CustomResource):
         A list of path that needs to be exported from response body.
         Setting it to `["*"]` will export the full response body.
         Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-        ```python
-        import pulumi
+        ```
+        {
+        "properties" : {
+        "loginServer" : "registry1.azurecr.io"
+        "policies" : {
+        "quarantinePolicy" = {
+        "status" = "disabled"
+        }
+        }
+        }
+        }
         ```
         """
         return pulumi.get(self, "response_export_values")

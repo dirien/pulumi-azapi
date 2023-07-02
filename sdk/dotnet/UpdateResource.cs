@@ -16,6 +16,8 @@ namespace ediri.Azapi
     /// &gt; **Note** This resource is used to add or modify properties on an existing resource.
     /// When delete `azapi.UpdateResource`, no operation will be performed, and these properties will stay unchanged.
     /// If you want to restore the modified properties to some values, you must apply the restored properties before deleting.
+    /// 
+    /// ## Example Usage
     /// </summary>
     [AzapiResourceType("azapi:index/updateResource:UpdateResource")]
     public partial class UpdateResource : global::Pulumi.CustomResource
@@ -52,6 +54,11 @@ namespace ediri.Azapi
 
         /// <summary>
         /// The output json containing the properties specified in `response_export_values`. Here're some examples to decode json and extract the value.
+        /// ```
+        /// // it will output "registry1.azurecr.io"
+        /// output "login_server" {
+        /// value = jsondecode(azapi_resource.example.output).properties.loginServer
+        /// }
         /// </summary>
         [Output("output")]
         public Output<string> Output { get; private set; } = null!;
@@ -81,14 +88,17 @@ namespace ediri.Azapi
         /// A list of path that needs to be exported from response body.
         /// Setting it to `["*"]` will export the full response body.
         /// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-        /// ```csharp
-        /// using System.Collections.Generic;
-        /// using System.Linq;
-        /// using Pulumi;
-        /// 
-        /// return await Deployment.RunAsync(() =&gt; 
+        /// ```
         /// {
-        /// });
+        /// "properties" : {
+        /// "loginServer" : "registry1.azurecr.io"
+        /// "policies" : {
+        /// "quarantinePolicy" = {
+        /// "status" = "disabled"
+        /// }
+        /// }
+        /// }
+        /// }
         /// ```
         /// </summary>
         [Output("responseExportValues")]
@@ -212,14 +222,17 @@ namespace ediri.Azapi
         /// A list of path that needs to be exported from response body.
         /// Setting it to `["*"]` will export the full response body.
         /// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-        /// ```csharp
-        /// using System.Collections.Generic;
-        /// using System.Linq;
-        /// using Pulumi;
-        /// 
-        /// return await Deployment.RunAsync(() =&gt; 
+        /// ```
         /// {
-        /// });
+        /// "properties" : {
+        /// "loginServer" : "registry1.azurecr.io"
+        /// "policies" : {
+        /// "quarantinePolicy" = {
+        /// "status" = "disabled"
+        /// }
+        /// }
+        /// }
+        /// }
         /// ```
         /// </summary>
         public InputList<string> ResponseExportValues
@@ -281,6 +294,11 @@ namespace ediri.Azapi
 
         /// <summary>
         /// The output json containing the properties specified in `response_export_values`. Here're some examples to decode json and extract the value.
+        /// ```
+        /// // it will output "registry1.azurecr.io"
+        /// output "login_server" {
+        /// value = jsondecode(azapi_resource.example.output).properties.loginServer
+        /// }
         /// </summary>
         [Input("output")]
         public Input<string>? Output { get; set; }
@@ -313,14 +331,17 @@ namespace ediri.Azapi
         /// A list of path that needs to be exported from response body.
         /// Setting it to `["*"]` will export the full response body.
         /// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-        /// ```csharp
-        /// using System.Collections.Generic;
-        /// using System.Linq;
-        /// using Pulumi;
-        /// 
-        /// return await Deployment.RunAsync(() =&gt; 
+        /// ```
         /// {
-        /// });
+        /// "properties" : {
+        /// "loginServer" : "registry1.azurecr.io"
+        /// "policies" : {
+        /// "quarantinePolicy" = {
+        /// "status" = "disabled"
+        /// }
+        /// }
+        /// }
+        /// }
         /// ```
         /// </summary>
         public InputList<string> ResponseExportValues

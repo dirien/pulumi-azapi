@@ -10,6 +10,8 @@ import * as utilities from "./utilities";
  * if user wants to perform readonly action.
  *
  * > **Note** When delete `azapi.ResourceAction`, no operation will be performed.
+ *
+ * ## Example Usage
  */
 export class ResourceAction extends pulumi.CustomResource {
     /**
@@ -67,8 +69,21 @@ export class ResourceAction extends pulumi.CustomResource {
      * A list of path that needs to be exported from response body.
      * Setting it to `["*"]` will export the full response body.
      * Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
-     * ```typescript
-     * import * as pulumi from "@pulumi/pulumi";
+     * ```
+     * {
+     * "keys": [
+     * {
+     * "KeyName": "Primary",
+     * "Permissions": "Full",
+     * "Value": "nHGYNd******i4wdug=="
+     * },
+     * {
+     * "KeyName": "Secondary",
+     * "Permissions": "Full",
+     * "Value": "6yoCad******SLzKzg=="
+     * }
+     * ]
+     * }
      * ```
      */
     public readonly responseExportValues!: pulumi.Output<string[] | undefined>;
@@ -153,8 +168,21 @@ export interface ResourceActionState {
      * A list of path that needs to be exported from response body.
      * Setting it to `["*"]` will export the full response body.
      * Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
-     * ```typescript
-     * import * as pulumi from "@pulumi/pulumi";
+     * ```
+     * {
+     * "keys": [
+     * {
+     * "KeyName": "Primary",
+     * "Permissions": "Full",
+     * "Value": "nHGYNd******i4wdug=="
+     * },
+     * {
+     * "KeyName": "Secondary",
+     * "Permissions": "Full",
+     * "Value": "6yoCad******SLzKzg=="
+     * }
+     * ]
+     * }
      * ```
      */
     responseExportValues?: pulumi.Input<pulumi.Input<string>[]>;
@@ -193,8 +221,21 @@ export interface ResourceActionArgs {
      * A list of path that needs to be exported from response body.
      * Setting it to `["*"]` will export the full response body.
      * Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
-     * ```typescript
-     * import * as pulumi from "@pulumi/pulumi";
+     * ```
+     * {
+     * "keys": [
+     * {
+     * "KeyName": "Primary",
+     * "Permissions": "Full",
+     * "Value": "nHGYNd******i4wdug=="
+     * },
+     * {
+     * "KeyName": "Secondary",
+     * "Permissions": "Full",
+     * "Value": "6yoCad******SLzKzg=="
+     * }
+     * ]
+     * }
      * ```
      */
     responseExportValues?: pulumi.Input<pulumi.Input<string>[]>;

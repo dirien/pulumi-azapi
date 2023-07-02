@@ -14,12 +14,112 @@ namespace ediri.Azapi
     {
         /// <summary>
         /// This resource can access any existing Azure resource manager resource.
+        /// 
+        /// ## Example Usage
+        /// 
+        /// ```hcl
+        /// terraform {
+        ///   required_providers {
+        ///     azapi = {
+        ///       source = "Azure/azapi"
+        ///     }
+        ///   }
+        /// }
+        /// 
+        /// provider "azapi" {
+        /// }
+        /// 
+        /// provider "azurerm" {
+        ///   features {}
+        /// }
+        /// 
+        /// resource "azurerm_resource_group" "example" {
+        ///   name     = "example-rg"
+        ///   location = "west europe"
+        /// }
+        /// 
+        /// resource "azurerm_container_registry" "example" {
+        ///   name                = "example"
+        ///   resource_group_name = azurerm_resource_group.example.name
+        ///   location            = azurerm_resource_group.example.location
+        ///   sku                 = "Premium"
+        ///   admin_enabled       = false
+        /// }
+        /// 
+        /// data "azapi_resource" "example" {
+        ///   name      = "example"
+        ///   parent_id = azurerm_resource_group.example.id
+        ///   type      = "Microsoft.ContainerRegistry/registries@2020-11-01-preview"
+        /// 
+        ///   response_export_values = ["properties.loginServer", "properties.policies.quarantinePolicy.status"]
+        /// }
+        /// 
+        /// // it will output "registry1.azurecr.io"
+        /// output "login_server" {
+        ///   value = jsondecode(data.azapi_resource.example.output).properties.loginServer
+        /// }
+        /// 
+        /// // it will output "disabled"
+        /// output "quarantine_policy" {
+        ///   value = jsondecode(data.azapi_resource.example.output).properties.policies.quarantinePolicy.status
+        /// }
+        /// ```
         /// </summary>
         public static Task<GetResourceResult> InvokeAsync(GetResourceArgs args, InvokeOptions? options = null)
             => global::Pulumi.Deployment.Instance.InvokeAsync<GetResourceResult>("azapi:index/getResource:getResource", args ?? new GetResourceArgs(), options.WithDefaults());
 
         /// <summary>
         /// This resource can access any existing Azure resource manager resource.
+        /// 
+        /// ## Example Usage
+        /// 
+        /// ```hcl
+        /// terraform {
+        ///   required_providers {
+        ///     azapi = {
+        ///       source = "Azure/azapi"
+        ///     }
+        ///   }
+        /// }
+        /// 
+        /// provider "azapi" {
+        /// }
+        /// 
+        /// provider "azurerm" {
+        ///   features {}
+        /// }
+        /// 
+        /// resource "azurerm_resource_group" "example" {
+        ///   name     = "example-rg"
+        ///   location = "west europe"
+        /// }
+        /// 
+        /// resource "azurerm_container_registry" "example" {
+        ///   name                = "example"
+        ///   resource_group_name = azurerm_resource_group.example.name
+        ///   location            = azurerm_resource_group.example.location
+        ///   sku                 = "Premium"
+        ///   admin_enabled       = false
+        /// }
+        /// 
+        /// data "azapi_resource" "example" {
+        ///   name      = "example"
+        ///   parent_id = azurerm_resource_group.example.id
+        ///   type      = "Microsoft.ContainerRegistry/registries@2020-11-01-preview"
+        /// 
+        ///   response_export_values = ["properties.loginServer", "properties.policies.quarantinePolicy.status"]
+        /// }
+        /// 
+        /// // it will output "registry1.azurecr.io"
+        /// output "login_server" {
+        ///   value = jsondecode(data.azapi_resource.example.output).properties.loginServer
+        /// }
+        /// 
+        /// // it will output "disabled"
+        /// output "quarantine_policy" {
+        ///   value = jsondecode(data.azapi_resource.example.output).properties.policies.quarantinePolicy.status
+        /// }
+        /// ```
         /// </summary>
         public static Output<GetResourceResult> Invoke(GetResourceInvokeArgs args, InvokeOptions? options = null)
             => global::Pulumi.Deployment.Instance.Invoke<GetResourceResult>("azapi:index/getResource:getResource", args ?? new GetResourceInvokeArgs(), options.WithDefaults());
@@ -68,14 +168,17 @@ namespace ediri.Azapi
         /// A list of path that needs to be exported from response body.
         /// Setting it to `["*"]` will export the full response body.
         /// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-        /// ```csharp
-        /// using System.Collections.Generic;
-        /// using System.Linq;
-        /// using Pulumi;
-        /// 
-        /// return await Deployment.RunAsync(() =&gt; 
+        /// ```
         /// {
-        /// });
+        /// "properties" : {
+        /// "loginServer" : "registry1.azurecr.io"
+        /// "policies" : {
+        /// "quarantinePolicy" = {
+        /// "status" = "disabled"
+        /// }
+        /// }
+        /// }
+        /// }
         /// ```
         /// </summary>
         public List<string> ResponseExportValues
@@ -139,14 +242,17 @@ namespace ediri.Azapi
         /// A list of path that needs to be exported from response body.
         /// Setting it to `["*"]` will export the full response body.
         /// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-        /// ```csharp
-        /// using System.Collections.Generic;
-        /// using System.Linq;
-        /// using Pulumi;
-        /// 
-        /// return await Deployment.RunAsync(() =&gt; 
+        /// ```
         /// {
-        /// });
+        /// "properties" : {
+        /// "loginServer" : "registry1.azurecr.io"
+        /// "policies" : {
+        /// "quarantinePolicy" = {
+        /// "status" = "disabled"
+        /// }
+        /// }
+        /// }
+        /// }
         /// ```
         /// </summary>
         public InputList<string> ResponseExportValues
@@ -187,6 +293,11 @@ namespace ediri.Azapi
         public readonly string? Name;
         /// <summary>
         /// The output json containing the properties specified in `response_export_values`. Here're some examples to decode json and extract the value.
+        /// ```
+        /// // it will output "registry1.azurecr.io"
+        /// output "login_server" {
+        /// value = jsondecode(azapi_resource.example.output).properties.loginServer
+        /// }
         /// </summary>
         public readonly string Output;
         public readonly string? ParentId;
