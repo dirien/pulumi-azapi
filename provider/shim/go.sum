@@ -4,8 +4,8 @@ github.com/Azure/azure-sdk-for-go/sdk/azidentity v1.3.0 h1:vcYCAze6p19qBW7MhZybI
 github.com/Azure/azure-sdk-for-go/sdk/azidentity v1.3.0/go.mod h1:OQeznEEkTZ9OrhHJoDD8ZDq51FHgXjqtP9z6bEwBq9U=
 github.com/Azure/azure-sdk-for-go/sdk/internal v1.3.0 h1:sXr+ck84g/ZlZUOZiNELInmMgOsuGwdjjVkEIde0OtY=
 github.com/Azure/azure-sdk-for-go/sdk/internal v1.3.0/go.mod h1:okt5dMMTOFjX/aovMlrjvvXoPMBVSPzk9185BT0+eZM=
-github.com/Azure/terraform-provider-azapi v1.7.0 h1:FOZ4n9aB7fxAwAVDSHJt+zHdCiAFo8vFpBWuFixkPAw=
-github.com/Azure/terraform-provider-azapi v1.7.0/go.mod h1:SHtWlfjQvFNvqzeSxJKb5b1xOuUesdNyPb+8xVl77ac=
+github.com/Azure/terraform-provider-azapi v1.8.0 h1:alxcJG+hmqrzlVmGnLN6GQhC6Pigrok1BmN32iaoO88=
+github.com/Azure/terraform-provider-azapi v1.8.0/go.mod h1:SHtWlfjQvFNvqzeSxJKb5b1xOuUesdNyPb+8xVl77ac=
 github.com/AzureAD/microsoft-authentication-library-for-go v1.0.0 h1:OBhqkivkhkMqLPymWEppkm7vgPQY2XsHoEkaMQ0AdZY=
 github.com/AzureAD/microsoft-authentication-library-for-go v1.0.0/go.mod h1:kgDmCTgBzIEPFElEF+FK0SdjAor06dRq2Go927dnQ6o=
 github.com/ProtonMail/go-crypto v0.0.0-20230217124315-7d5c6f04bbb8 h1:wPbRQzjjwFc0ih8puEVAOFGELsn1zoIIYdxvML7mDxA=
