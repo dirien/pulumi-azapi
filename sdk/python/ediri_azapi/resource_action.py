@@ -363,6 +363,10 @@ class ResourceAction(pulumi.CustomResource):
 
         ## Example Usage
 
+        Here's an example to use the `ResourceAction` resource to register a provider.
+
+        Here's an example to use the `ResourceAction` resource to perform a provider action.
+
         :param str resource_name: The name of the resource.
         :param pulumi.ResourceOptions opts: Options for the resource.
         :param pulumi.Input[str] action: The name of the resource action. It's also possible to make Http requests towards the resource ID if leave this field empty.
@@ -406,6 +410,10 @@ class ResourceAction(pulumi.CustomResource):
         > **Note** When delete `ResourceAction`, no operation will be performed.
 
         ## Example Usage
+
+        Here's an example to use the `ResourceAction` resource to register a provider.
+
+        Here's an example to use the `ResourceAction` resource to perform a provider action.
 
         :param str resource_name: The name of the resource.
         :param ResourceActionArgs args: The arguments to use to populate this resource's properties.

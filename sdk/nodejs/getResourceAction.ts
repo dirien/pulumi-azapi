@@ -10,6 +10,10 @@ import * as utilities from "./utilities";
  * if user wants to perform actions which change a resource's state.
  *
  * ## Example Usage
+ *
+ * Here's an example to use the `azapi.ResourceAction` data source to get a provider's permissions.
+ *
+ * Here's an example to use the `azapi.ResourceAction` data source to perform a provider action.
  */
 export function getResourceAction(args: GetResourceActionArgs, opts?: pulumi.InvokeOptions): Promise<GetResourceActionResult> {
 
@@ -103,6 +107,10 @@ export interface GetResourceActionResult {
  * if user wants to perform actions which change a resource's state.
  *
  * ## Example Usage
+ *
+ * Here's an example to use the `azapi.ResourceAction` data source to get a provider's permissions.
+ *
+ * Here's an example to use the `azapi.ResourceAction` data source to perform a provider action.
  */
 export function getResourceActionOutput(args: GetResourceActionOutputArgs, opts?: pulumi.InvokeOptions): pulumi.Output<GetResourceActionResult> {
     return pulumi.output(args).apply((a: any) => getResourceAction(a, opts))

@@ -18,6 +18,10 @@ namespace ediri.Azapi
     /// &gt; **Note** When delete `azapi.ResourceAction`, no operation will be performed.
     /// 
     /// ## Example Usage
+    /// 
+    /// Here's an example to use the `azapi.ResourceAction` resource to register a provider.
+    /// 
+    /// Here's an example to use the `azapi.ResourceAction` resource to perform a provider action.
     /// </summary>
     [AzapiResourceType("azapi:index/resourceAction:ResourceAction")]
     public partial class ResourceAction : global::Pulumi.CustomResource

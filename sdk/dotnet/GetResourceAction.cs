@@ -54,6 +54,45 @@ namespace ediri.Azapi
         ///   response_export_values = ["*"]
         /// }
         /// ```
+        /// 
+        /// Here's an example to use the `azapi.ResourceAction` data source to get a provider's permissions.
+        /// 
+        /// ```hcl
+        /// provider "azurerm" {
+        ///   features {}
+        /// }
+        /// 
+        /// data "azurerm_client_config" "current" {}
+        /// 
+        /// data "azapi_resource_action" "test" {
+        ///   type        = "Microsoft.Resources/providers@2021-04-01"
+        ///   resource_id = "/subscriptions/${data.azurerm_client_config.current.subscription_id}/providers/Microsoft.Network"
+        ///   action      = "providerPermissions"
+        ///   method      = "GET"
+        /// }
+        /// ```
+        /// 
+        /// Here's an example to use the `azapi.ResourceAction` data source to perform a provider action.
+        /// 
+        /// ```hcl
+        /// terraform {
+        ///   required_providers {
+        ///     azapi = {
+        ///       source = "Azure/azapi"
+        ///     }
+        ///   }
+        /// }
+        /// 
+        /// resource "azapi_resource_action" "test" {
+        ///   type        = "Microsoft.Cache@2023-04-01"
+        ///   resource_id = "/subscriptions/85b3dbca-5974-4067-9669-67a141095a76/providers/Microsoft.Cache"
+        ///   action      = "CheckNameAvailability"
+        ///   body = jsonencode({
+        ///     type = "Microsoft.Cache/Redis"
+        ///     name = "cacheName"
+        ///   })
+        /// }
+        /// ```
         /// </summary>
         public static Task<GetResourceActionResult> InvokeAsync(GetResourceActionArgs args, InvokeOptions? options = null)
             => global::Pulumi.Deployment.Instance.InvokeAsync<GetResourceActionResult>("azapi:index/getResourceAction:getResourceAction", args ?? new GetResourceActionArgs(), options.WithDefaults());
@@ -98,6 +137,45 @@ namespace ediri.Azapi
         ///   resource_id            = azurerm_automation_account.example.id
         ///   action                 = "listKeys"
         ///   response_export_values = ["*"]
+        /// }
+        /// ```
+        /// 
+        /// Here's an example to use the `azapi.ResourceAction` data source to get a provider's permissions.
+        /// 
+        /// ```hcl
+        /// provider "azurerm" {
+        ///   features {}
+        /// }
+        /// 
+        /// data "azurerm_client_config" "current" {}
+        /// 
+        /// data "azapi_resource_action" "test" {
+        ///   type        = "Microsoft.Resources/providers@2021-04-01"
+        ///   resource_id = "/subscriptions/${data.azurerm_client_config.current.subscription_id}/providers/Microsoft.Network"
+        ///   action      = "providerPermissions"
+        ///   method      = "GET"
+        /// }
+        /// ```
+        /// 
+        /// Here's an example to use the `azapi.ResourceAction` data source to perform a provider action.
+        /// 
+        /// ```hcl
+        /// terraform {
+        ///   required_providers {
+        ///     azapi = {
+        ///       source = "Azure/azapi"
+        ///     }
+        ///   }
+        /// }
+        /// 
+        /// resource "azapi_resource_action" "test" {
+        ///   type        = "Microsoft.Cache@2023-04-01"
+        ///   resource_id = "/subscriptions/85b3dbca-5974-4067-9669-67a141095a76/providers/Microsoft.Cache"
+        ///   action      = "CheckNameAvailability"
+        ///   body = jsonencode({
+        ///     type = "Microsoft.Cache/Redis"
+        ///     name = "cacheName"
+        ///   })
         /// }
         /// ```
         /// </summary>

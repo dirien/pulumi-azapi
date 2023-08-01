@@ -7,6 +7,7 @@ import (
 	"context"
 	"reflect"
 
+	"github.com/pulumi/pulumi-azapi/sdk/go/azapi/internal"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
@@ -15,8 +16,12 @@ import (
 // if user wants to perform actions which change a resource's state.
 //
 // ## Example Usage
+//
+// Here's an example to use the `ResourceAction` data source to get a provider's permissions.
+//
+// Here's an example to use the `ResourceAction` data source to perform a provider action.
 func LookupResourceAction(ctx *pulumi.Context, args *LookupResourceActionArgs, opts ...pulumi.InvokeOption) (*LookupResourceActionResult, error) {
-	opts = pkgInvokeDefaultOpts(opts)
+	opts = internal.PkgInvokeDefaultOpts(opts)
 	var rv LookupResourceActionResult
 	err := ctx.Invoke("azapi:index/getResourceAction:getResourceAction", args, &rv, opts...)
 	if err != nil {
