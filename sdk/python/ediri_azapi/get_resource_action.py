@@ -129,6 +129,10 @@ def get_resource_action(action: Optional[str] = None,
 
     ## Example Usage
 
+    Here's an example to use the `ResourceAction` data source to get a provider's permissions.
+
+    Here's an example to use the `ResourceAction` data source to perform a provider action.
+
 
     :param str action: The name of the resource action. It's also possible to make Http requests towards the resource ID if leave this field empty.
     :param str body: A JSON object that contains the request body.
@@ -191,6 +195,10 @@ def get_resource_action_output(action: Optional[pulumi.Input[Optional[str]]] = N
     if user wants to perform actions which change a resource's state.
 
     ## Example Usage
+
+    Here's an example to use the `ResourceAction` data source to get a provider's permissions.
+
+    Here's an example to use the `ResourceAction` data source to perform a provider action.
 
 
     :param str action: The name of the resource action. It's also possible to make Http requests towards the resource ID if leave this field empty.

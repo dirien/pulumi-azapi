@@ -12,6 +12,10 @@ import * as utilities from "./utilities";
  * > **Note** When delete `azapi.ResourceAction`, no operation will be performed.
  *
  * ## Example Usage
+ *
+ * Here's an example to use the `azapi.ResourceAction` resource to register a provider.
+ *
+ * Here's an example to use the `azapi.ResourceAction` resource to perform a provider action.
  */
 export class ResourceAction extends pulumi.CustomResource {
     /**

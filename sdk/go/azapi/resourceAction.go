@@ -8,6 +8,7 @@ import (
 	"reflect"
 
 	"errors"
+	"github.com/pulumi/pulumi-azapi/sdk/go/azapi/internal"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
@@ -18,6 +19,10 @@ import (
 // > **Note** When delete `ResourceAction`, no operation will be performed.
 //
 // ## Example Usage
+//
+// Here's an example to use the `ResourceAction` resource to register a provider.
+//
+// Here's an example to use the `ResourceAction` resource to perform a provider action.
 type ResourceAction struct {
 	pulumi.CustomResourceState
 
@@ -55,7 +60,7 @@ func NewResourceAction(ctx *pulumi.Context,
 	if args.Type == nil {
 		return nil, errors.New("invalid value for required argument 'Type'")
 	}
-	opts = pkgResourceDefaultOpts(opts)
+	opts = internal.PkgResourceDefaultOpts(opts)
 	var resource ResourceAction
 	err := ctx.RegisterResource("azapi:index/resourceAction:ResourceAction", name, args, &resource, opts...)
 	if err != nil {
