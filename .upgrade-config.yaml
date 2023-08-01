@@ -1,0 +1,2 @@
+upstream-provider-name: terraform-provider-azapi
+allow-missing-docs: true
