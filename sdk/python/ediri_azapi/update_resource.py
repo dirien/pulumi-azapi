@@ -16,6 +16,7 @@ class UpdateResourceArgs:
     def __init__(__self__, *,
                  type: pulumi.Input[str],
                  body: Optional[pulumi.Input[str]] = None,
+                 ignore_body_changes: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]] = None,
                  ignore_casing: Optional[pulumi.Input[bool]] = None,
                  ignore_missing_property: Optional[pulumi.Input[bool]] = None,
                  locks: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]] = None,
@@ -28,6 +29,7 @@ class UpdateResourceArgs:
         :param pulumi.Input[str] type: It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
                `<api-version>` is version of the API used to manage this azure resource.
         :param pulumi.Input[str] body: A JSON object that contains the request body used to add on an existing azure resource.
+        :param pulumi.Input[Sequence[pulumi.Input[str]]] ignore_body_changes: A list of properties that should be ignored when comparing the `body` with its current state.
         :param pulumi.Input[bool] ignore_casing: Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.
         :param pulumi.Input[bool] ignore_missing_property: Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.
         :param pulumi.Input[Sequence[pulumi.Input[str]]] locks: A list of ARM resource IDs which are used to avoid create/modify/delete azapi resources at the same time.
@@ -62,6 +64,8 @@ class UpdateResourceArgs:
         pulumi.set(__self__, "type", type)
         if body is not None:
             pulumi.set(__self__, "body", body)
+        if ignore_body_changes is not None:
+            pulumi.set(__self__, "ignore_body_changes", ignore_body_changes)
         if ignore_casing is not None:
             pulumi.set(__self__, "ignore_casing", ignore_casing)
         if ignore_missing_property is not None:
@@ -101,6 +105,18 @@ class UpdateResourceArgs:
     @body.setter
     def body(self, value: Optional[pulumi.Input[str]]):
         pulumi.set(self, "body", value)
+
+    @property
+    @pulumi.getter(name="ignoreBodyChanges")
+    def ignore_body_changes(self) -> Optional[pulumi.Input[Sequence[pulumi.Input[str]]]]:
+        """
+        A list of properties that should be ignored when comparing the `body` with its current state.
+        """
+        return pulumi.get(self, "ignore_body_changes")
+
+    @ignore_body_changes.setter
+    def ignore_body_changes(self, value: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]]):
+        pulumi.set(self, "ignore_body_changes", value)
 
     @property
     @pulumi.getter(name="ignoreCasing")
@@ -214,6 +230,7 @@ class UpdateResourceArgs:
 class _UpdateResourceState:
     def __init__(__self__, *,
                  body: Optional[pulumi.Input[str]] = None,
+                 ignore_body_changes: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]] = None,
                  ignore_casing: Optional[pulumi.Input[bool]] = None,
                  ignore_missing_property: Optional[pulumi.Input[bool]] = None,
                  locks: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]] = None,
@@ -226,6 +243,7 @@ class _UpdateResourceState:
         """
         Input properties used for looking up and filtering UpdateResource resources.
         :param pulumi.Input[str] body: A JSON object that contains the request body used to add on an existing azure resource.
+        :param pulumi.Input[Sequence[pulumi.Input[str]]] ignore_body_changes: A list of properties that should be ignored when comparing the `body` with its current state.
         :param pulumi.Input[bool] ignore_casing: Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.
         :param pulumi.Input[bool] ignore_missing_property: Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.
         :param pulumi.Input[Sequence[pulumi.Input[str]]] locks: A list of ARM resource IDs which are used to avoid create/modify/delete azapi resources at the same time.
@@ -267,6 +285,8 @@ class _UpdateResourceState:
         """
         if body is not None:
             pulumi.set(__self__, "body", body)
+        if ignore_body_changes is not None:
+            pulumi.set(__self__, "ignore_body_changes", ignore_body_changes)
         if ignore_casing is not None:
             pulumi.set(__self__, "ignore_casing", ignore_casing)
         if ignore_missing_property is not None:
@@ -297,6 +317,18 @@ class _UpdateResourceState:
     @body.setter
     def body(self, value: Optional[pulumi.Input[str]]):
         pulumi.set(self, "body", value)
+
+    @property
+    @pulumi.getter(name="ignoreBodyChanges")
+    def ignore_body_changes(self) -> Optional[pulumi.Input[Sequence[pulumi.Input[str]]]]:
+        """
+        A list of properties that should be ignored when comparing the `body` with its current state.
+        """
+        return pulumi.get(self, "ignore_body_changes")
+
+    @ignore_body_changes.setter
+    def ignore_body_changes(self, value: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]]):
+        pulumi.set(self, "ignore_body_changes", value)
 
     @property
     @pulumi.getter(name="ignoreCasing")
@@ -442,6 +474,7 @@ class UpdateResource(pulumi.CustomResource):
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
                  body: Optional[pulumi.Input[str]] = None,
+                 ignore_body_changes: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]] = None,
                  ignore_casing: Optional[pulumi.Input[bool]] = None,
                  ignore_missing_property: Optional[pulumi.Input[bool]] = None,
                  locks: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]] = None,
@@ -463,6 +496,7 @@ class UpdateResource(pulumi.CustomResource):
         :param str resource_name: The name of the resource.
         :param pulumi.ResourceOptions opts: Options for the resource.
         :param pulumi.Input[str] body: A JSON object that contains the request body used to add on an existing azure resource.
+        :param pulumi.Input[Sequence[pulumi.Input[str]]] ignore_body_changes: A list of properties that should be ignored when comparing the `body` with its current state.
         :param pulumi.Input[bool] ignore_casing: Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.
         :param pulumi.Input[bool] ignore_missing_property: Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.
         :param pulumi.Input[Sequence[pulumi.Input[str]]] locks: A list of ARM resource IDs which are used to avoid create/modify/delete azapi resources at the same time.
@@ -527,6 +561,7 @@ class UpdateResource(pulumi.CustomResource):
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
                  body: Optional[pulumi.Input[str]] = None,
+                 ignore_body_changes: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]] = None,
                  ignore_casing: Optional[pulumi.Input[bool]] = None,
                  ignore_missing_property: Optional[pulumi.Input[bool]] = None,
                  locks: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]] = None,
@@ -545,6 +580,7 @@ class UpdateResource(pulumi.CustomResource):
             __props__ = UpdateResourceArgs.__new__(UpdateResourceArgs)
 
             __props__.__dict__["body"] = body
+            __props__.__dict__["ignore_body_changes"] = ignore_body_changes
             __props__.__dict__["ignore_casing"] = ignore_casing
             __props__.__dict__["ignore_missing_property"] = ignore_missing_property
             __props__.__dict__["locks"] = locks
@@ -567,6 +603,7 @@ class UpdateResource(pulumi.CustomResource):
             id: pulumi.Input[str],
             opts: Optional[pulumi.ResourceOptions] = None,
             body: Optional[pulumi.Input[str]] = None,
+            ignore_body_changes: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]] = None,
             ignore_casing: Optional[pulumi.Input[bool]] = None,
             ignore_missing_property: Optional[pulumi.Input[bool]] = None,
             locks: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]] = None,
@@ -584,6 +621,7 @@ class UpdateResource(pulumi.CustomResource):
         :param pulumi.Input[str] id: The unique provider ID of the resource to lookup.
         :param pulumi.ResourceOptions opts: Options for the resource.
         :param pulumi.Input[str] body: A JSON object that contains the request body used to add on an existing azure resource.
+        :param pulumi.Input[Sequence[pulumi.Input[str]]] ignore_body_changes: A list of properties that should be ignored when comparing the `body` with its current state.
         :param pulumi.Input[bool] ignore_casing: Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.
         :param pulumi.Input[bool] ignore_missing_property: Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.
         :param pulumi.Input[Sequence[pulumi.Input[str]]] locks: A list of ARM resource IDs which are used to avoid create/modify/delete azapi resources at the same time.
@@ -628,6 +666,7 @@ class UpdateResource(pulumi.CustomResource):
         __props__ = _UpdateResourceState.__new__(_UpdateResourceState)
 
         __props__.__dict__["body"] = body
+        __props__.__dict__["ignore_body_changes"] = ignore_body_changes
         __props__.__dict__["ignore_casing"] = ignore_casing
         __props__.__dict__["ignore_missing_property"] = ignore_missing_property
         __props__.__dict__["locks"] = locks
@@ -646,6 +685,14 @@ class UpdateResource(pulumi.CustomResource):
         A JSON object that contains the request body used to add on an existing azure resource.
         """
         return pulumi.get(self, "body")
+
+    @property
+    @pulumi.getter(name="ignoreBodyChanges")
+    def ignore_body_changes(self) -> pulumi.Output[Optional[Sequence[str]]]:
+        """
+        A list of properties that should be ignored when comparing the `body` with its current state.
+        """
+        return pulumi.get(self, "ignore_body_changes")
 
     @property
     @pulumi.getter(name="ignoreCasing")

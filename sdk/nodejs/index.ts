@@ -20,6 +20,16 @@ export const getResourceAction: typeof import("./getResourceAction").getResource
 export const getResourceActionOutput: typeof import("./getResourceAction").getResourceActionOutput = null as any;
 utilities.lazyLoad(exports, ["getResourceAction","getResourceActionOutput"], () => require("./getResourceAction"));
 
+export { GetResourceIdArgs, GetResourceIdResult, GetResourceIdOutputArgs } from "./getResourceId";
+export const getResourceId: typeof import("./getResourceId").getResourceId = null as any;
+export const getResourceIdOutput: typeof import("./getResourceId").getResourceIdOutput = null as any;
+utilities.lazyLoad(exports, ["getResourceId","getResourceIdOutput"], () => require("./getResourceId"));
+
+export { GetResourceListArgs, GetResourceListResult, GetResourceListOutputArgs } from "./getResourceList";
+export const getResourceList: typeof import("./getResourceList").getResourceList = null as any;
+export const getResourceListOutput: typeof import("./getResourceList").getResourceListOutput = null as any;
+utilities.lazyLoad(exports, ["getResourceList","getResourceListOutput"], () => require("./getResourceList"));
+
 export { ProviderArgs } from "./provider";
 export type Provider = import("./provider").Provider;
 export const Provider: typeof import("./provider").Provider = null as any;

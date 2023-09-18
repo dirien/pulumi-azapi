@@ -18,6 +18,8 @@
         "dataPlaneResource.ts",
         "getResource.ts",
         "getResourceAction.ts",
+        "getResourceId.ts",
+        "getResourceList.ts",
         "index.ts",
         "provider.ts",
         "resource.ts",

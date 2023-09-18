@@ -9,6 +9,7 @@ import (
 
 	"github.com/pulumi/pulumi-azapi/sdk/go/azapi/internal"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
+	"github.com/pulumi/pulumi/sdk/v3/go/pulumix"
 )
 
 // This resource can access any existing Azure resource manager resource.
@@ -38,6 +39,8 @@ type LookupResourceArgs struct {
 	// - tenant scope: `parentId` should be `/`
 	//
 	// For child level resources, the `parentId` should be the ID of its parent resource, for example, subnet resource's `parentId` is the ID of the vnet.
+	//
+	// For type `Microsoft.Resources/resourceGroups`, the `parentId` could be omitted, it defaults to subscription ID specified in provider or the default subscription(You could check the default subscription by azure cli command: `az account show`).
 	ParentId *string `pulumi:"parentId"`
 	// The ID of an existing azure source.
 	//
@@ -63,7 +66,7 @@ type LookupResourceResult struct {
 	Name     *string `pulumi:"name"`
 	// The output json containing the properties specified in `responseExportValues`. Here're some examples to decode json and extract the value.
 	Output               string   `pulumi:"output"`
-	ParentId             *string  `pulumi:"parentId"`
+	ParentId             string   `pulumi:"parentId"`
 	ResourceId           *string  `pulumi:"resourceId"`
 	ResponseExportValues []string `pulumi:"responseExportValues"`
 	// A mapping of tags which should be assigned to the azure resource.
@@ -99,6 +102,8 @@ type LookupResourceOutputArgs struct {
 	// - tenant scope: `parentId` should be `/`
 	//
 	// For child level resources, the `parentId` should be the ID of its parent resource, for example, subnet resource's `parentId` is the ID of the vnet.
+	//
+	// For type `Microsoft.Resources/resourceGroups`, the `parentId` could be omitted, it defaults to subscription ID specified in provider or the default subscription(You could check the default subscription by azure cli command: `az account show`).
 	ParentId pulumi.StringPtrInput `pulumi:"parentId"`
 	// The ID of an existing azure source.
 	//
@@ -132,6 +137,12 @@ func (o LookupResourceResultOutput) ToLookupResourceResultOutputWithContext(ctx 
 	return o
 }
 
+func (o LookupResourceResultOutput) ToOutput(ctx context.Context) pulumix.Output[LookupResourceResult] {
+	return pulumix.Output[LookupResourceResult]{
+		OutputState: o.OutputState,
+	}
+}
+
 // The provider-assigned unique ID for this managed resource.
 func (o LookupResourceResultOutput) Id() pulumi.StringOutput {
 	return o.ApplyT(func(v LookupResourceResult) string { return v.Id }).(pulumi.StringOutput)
@@ -156,8 +167,8 @@ func (o LookupResourceResultOutput) Output() pulumi.StringOutput {
 	return o.ApplyT(func(v LookupResourceResult) string { return v.Output }).(pulumi.StringOutput)
 }
 
-func (o LookupResourceResultOutput) ParentId() pulumi.StringPtrOutput {
-	return o.ApplyT(func(v LookupResourceResult) *string { return v.ParentId }).(pulumi.StringPtrOutput)
+func (o LookupResourceResultOutput) ParentId() pulumi.StringOutput {
+	return o.ApplyT(func(v LookupResourceResult) string { return v.ParentId }).(pulumi.StringOutput)
 }
 
 func (o LookupResourceResultOutput) ResourceId() pulumi.StringPtrOutput {

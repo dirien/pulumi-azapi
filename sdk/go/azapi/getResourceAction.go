@@ -9,6 +9,7 @@ import (
 
 	"github.com/pulumi/pulumi-azapi/sdk/go/azapi/internal"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
+	"github.com/pulumi/pulumi/sdk/v3/go/pulumix"
 )
 
 // This resource can perform resource action which gets information from an existing resource.
@@ -112,6 +113,12 @@ func (o LookupResourceActionResultOutput) ToLookupResourceActionResultOutput() L
 
 func (o LookupResourceActionResultOutput) ToLookupResourceActionResultOutputWithContext(ctx context.Context) LookupResourceActionResultOutput {
 	return o
+}
+
+func (o LookupResourceActionResultOutput) ToOutput(ctx context.Context) pulumix.Output[LookupResourceActionResult] {
+	return pulumix.Output[LookupResourceActionResult]{
+		OutputState: o.OutputState,
+	}
 }
 
 func (o LookupResourceActionResultOutput) Action() pulumi.StringPtrOutput {

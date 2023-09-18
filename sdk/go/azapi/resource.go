@@ -10,6 +10,7 @@ import (
 	"errors"
 	"github.com/pulumi/pulumi-azapi/sdk/go/azapi/internal"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
+	"github.com/pulumi/pulumi/sdk/v3/go/pulumix"
 )
 
 // This resource can manage any Azure resource manager resource.
@@ -26,6 +27,8 @@ type Resource struct {
 	Body pulumi.StringPtrOutput `pulumi:"body"`
 	// A `identity` block as defined below.
 	Identity ResourceIdentityOutput `pulumi:"identity"`
+	// A list of properties that should be ignored when comparing the `body` with its current state.
+	IgnoreBodyChanges pulumi.StringArrayOutput `pulumi:"ignoreBodyChanges"`
 	// Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.
 	IgnoreCasing pulumi.BoolPtrOutput `pulumi:"ignoreCasing"`
 	// Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.
@@ -46,6 +49,8 @@ type Resource struct {
 	// - tenant scope: `parentId` should be `/`
 	//
 	// For child level resources, the `parentId` should be the ID of its parent resource, for example, subnet resource's `parentId` is the ID of the vnet.
+	//
+	// For type `Microsoft.Resources/resourceGroups`, the `parentId` could be omitted, it defaults to subscription ID specified in provider or the default subscription(You could check the default subscription by azure cli command: `az account show`).
 	ParentId pulumi.StringOutput `pulumi:"parentId"`
 	// Whether to remove special characters in resource name. Defaults to `false`.
 	RemovingSpecialChars pulumi.BoolPtrOutput `pulumi:"removingSpecialChars"`
@@ -69,9 +74,6 @@ func NewResource(ctx *pulumi.Context,
 		return nil, errors.New("missing one or more required arguments")
 	}
 
-	if args.ParentId == nil {
-		return nil, errors.New("invalid value for required argument 'ParentId'")
-	}
 	if args.Type == nil {
 		return nil, errors.New("invalid value for required argument 'Type'")
 	}
@@ -102,6 +104,8 @@ type resourceState struct {
 	Body *string `pulumi:"body"`
 	// A `identity` block as defined below.
 	Identity *ResourceIdentity `pulumi:"identity"`
+	// A list of properties that should be ignored when comparing the `body` with its current state.
+	IgnoreBodyChanges []string `pulumi:"ignoreBodyChanges"`
 	// Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.
 	IgnoreCasing *bool `pulumi:"ignoreCasing"`
 	// Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.
@@ -122,6 +126,8 @@ type resourceState struct {
 	// - tenant scope: `parentId` should be `/`
 	//
 	// For child level resources, the `parentId` should be the ID of its parent resource, for example, subnet resource's `parentId` is the ID of the vnet.
+	//
+	// For type `Microsoft.Resources/resourceGroups`, the `parentId` could be omitted, it defaults to subscription ID specified in provider or the default subscription(You could check the default subscription by azure cli command: `az account show`).
 	ParentId *string `pulumi:"parentId"`
 	// Whether to remove special characters in resource name. Defaults to `false`.
 	RemovingSpecialChars *bool `pulumi:"removingSpecialChars"`
@@ -143,6 +149,8 @@ type ResourceState struct {
 	Body pulumi.StringPtrInput
 	// A `identity` block as defined below.
 	Identity ResourceIdentityPtrInput
+	// A list of properties that should be ignored when comparing the `body` with its current state.
+	IgnoreBodyChanges pulumi.StringArrayInput
 	// Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.
 	IgnoreCasing pulumi.BoolPtrInput
 	// Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.
@@ -163,6 +171,8 @@ type ResourceState struct {
 	// - tenant scope: `parentId` should be `/`
 	//
 	// For child level resources, the `parentId` should be the ID of its parent resource, for example, subnet resource's `parentId` is the ID of the vnet.
+	//
+	// For type `Microsoft.Resources/resourceGroups`, the `parentId` could be omitted, it defaults to subscription ID specified in provider or the default subscription(You could check the default subscription by azure cli command: `az account show`).
 	ParentId pulumi.StringPtrInput
 	// Whether to remove special characters in resource name. Defaults to `false`.
 	RemovingSpecialChars pulumi.BoolPtrInput
@@ -188,6 +198,8 @@ type resourceArgs struct {
 	Body *string `pulumi:"body"`
 	// A `identity` block as defined below.
 	Identity *ResourceIdentity `pulumi:"identity"`
+	// A list of properties that should be ignored when comparing the `body` with its current state.
+	IgnoreBodyChanges []string `pulumi:"ignoreBodyChanges"`
 	// Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.
 	IgnoreCasing *bool `pulumi:"ignoreCasing"`
 	// Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.
@@ -206,7 +218,9 @@ type resourceArgs struct {
 	// - tenant scope: `parentId` should be `/`
 	//
 	// For child level resources, the `parentId` should be the ID of its parent resource, for example, subnet resource's `parentId` is the ID of the vnet.
-	ParentId string `pulumi:"parentId"`
+	//
+	// For type `Microsoft.Resources/resourceGroups`, the `parentId` could be omitted, it defaults to subscription ID specified in provider or the default subscription(You could check the default subscription by azure cli command: `az account show`).
+	ParentId *string `pulumi:"parentId"`
 	// Whether to remove special characters in resource name. Defaults to `false`.
 	RemovingSpecialChars *bool `pulumi:"removingSpecialChars"`
 	// A list of path that needs to be exported from response body.
@@ -228,6 +242,8 @@ type ResourceArgs struct {
 	Body pulumi.StringPtrInput
 	// A `identity` block as defined below.
 	Identity ResourceIdentityPtrInput
+	// A list of properties that should be ignored when comparing the `body` with its current state.
+	IgnoreBodyChanges pulumi.StringArrayInput
 	// Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.
 	IgnoreCasing pulumi.BoolPtrInput
 	// Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.
@@ -246,7 +262,9 @@ type ResourceArgs struct {
 	// - tenant scope: `parentId` should be `/`
 	//
 	// For child level resources, the `parentId` should be the ID of its parent resource, for example, subnet resource's `parentId` is the ID of the vnet.
-	ParentId pulumi.StringInput
+	//
+	// For type `Microsoft.Resources/resourceGroups`, the `parentId` could be omitted, it defaults to subscription ID specified in provider or the default subscription(You could check the default subscription by azure cli command: `az account show`).
+	ParentId pulumi.StringPtrInput
 	// Whether to remove special characters in resource name. Defaults to `false`.
 	RemovingSpecialChars pulumi.BoolPtrInput
 	// A list of path that needs to be exported from response body.
@@ -285,6 +303,12 @@ func (i *Resource) ToResourceOutputWithContext(ctx context.Context) ResourceOutp
 	return pulumi.ToOutputWithContext(ctx, i).(ResourceOutput)
 }
 
+func (i *Resource) ToOutput(ctx context.Context) pulumix.Output[*Resource] {
+	return pulumix.Output[*Resource]{
+		OutputState: i.ToResourceOutputWithContext(ctx).OutputState,
+	}
+}
+
 // ResourceArrayInput is an input type that accepts ResourceArray and ResourceArrayOutput values.
 // You can construct a concrete instance of `ResourceArrayInput` via:
 //
@@ -308,6 +332,12 @@ func (i ResourceArray) ToResourceArrayOutput() ResourceArrayOutput {
 
 func (i ResourceArray) ToResourceArrayOutputWithContext(ctx context.Context) ResourceArrayOutput {
 	return pulumi.ToOutputWithContext(ctx, i).(ResourceArrayOutput)
+}
+
+func (i ResourceArray) ToOutput(ctx context.Context) pulumix.Output[[]*Resource] {
+	return pulumix.Output[[]*Resource]{
+		OutputState: i.ToResourceArrayOutputWithContext(ctx).OutputState,
+	}
 }
 
 // ResourceMapInput is an input type that accepts ResourceMap and ResourceMapOutput values.
@@ -335,6 +365,12 @@ func (i ResourceMap) ToResourceMapOutputWithContext(ctx context.Context) Resourc
 	return pulumi.ToOutputWithContext(ctx, i).(ResourceMapOutput)
 }
 
+func (i ResourceMap) ToOutput(ctx context.Context) pulumix.Output[map[string]*Resource] {
+	return pulumix.Output[map[string]*Resource]{
+		OutputState: i.ToResourceMapOutputWithContext(ctx).OutputState,
+	}
+}
+
 type ResourceOutput struct{ *pulumi.OutputState }
 
 func (ResourceOutput) ElementType() reflect.Type {
@@ -349,6 +385,12 @@ func (o ResourceOutput) ToResourceOutputWithContext(ctx context.Context) Resourc
 	return o
 }
 
+func (o ResourceOutput) ToOutput(ctx context.Context) pulumix.Output[*Resource] {
+	return pulumix.Output[*Resource]{
+		OutputState: o.OutputState,
+	}
+}
+
 // A JSON object that contains the request body used to create and update azure resource.
 func (o ResourceOutput) Body() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *Resource) pulumi.StringPtrOutput { return v.Body }).(pulumi.StringPtrOutput)
@@ -357,6 +399,11 @@ func (o ResourceOutput) Body() pulumi.StringPtrOutput {
 // A `identity` block as defined below.
 func (o ResourceOutput) Identity() ResourceIdentityOutput {
 	return o.ApplyT(func(v *Resource) ResourceIdentityOutput { return v.Identity }).(ResourceIdentityOutput)
+}
+
+// A list of properties that should be ignored when comparing the `body` with its current state.
+func (o ResourceOutput) IgnoreBodyChanges() pulumi.StringArrayOutput {
+	return o.ApplyT(func(v *Resource) pulumi.StringArrayOutput { return v.IgnoreBodyChanges }).(pulumi.StringArrayOutput)
 }
 
 // Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.
@@ -397,6 +444,8 @@ func (o ResourceOutput) Output() pulumi.StringOutput {
 // - tenant scope: `parentId` should be `/`
 //
 // For child level resources, the `parentId` should be the ID of its parent resource, for example, subnet resource's `parentId` is the ID of the vnet.
+//
+// For type `Microsoft.Resources/resourceGroups`, the `parentId` could be omitted, it defaults to subscription ID specified in provider or the default subscription(You could check the default subscription by azure cli command: `az account show`).
 func (o ResourceOutput) ParentId() pulumi.StringOutput {
 	return o.ApplyT(func(v *Resource) pulumi.StringOutput { return v.ParentId }).(pulumi.StringOutput)
 }
@@ -443,6 +492,12 @@ func (o ResourceArrayOutput) ToResourceArrayOutputWithContext(ctx context.Contex
 	return o
 }
 
+func (o ResourceArrayOutput) ToOutput(ctx context.Context) pulumix.Output[[]*Resource] {
+	return pulumix.Output[[]*Resource]{
+		OutputState: o.OutputState,
+	}
+}
+
 func (o ResourceArrayOutput) Index(i pulumi.IntInput) ResourceOutput {
 	return pulumi.All(o, i).ApplyT(func(vs []interface{}) *Resource {
 		return vs[0].([]*Resource)[vs[1].(int)]
@@ -461,6 +516,12 @@ func (o ResourceMapOutput) ToResourceMapOutput() ResourceMapOutput {
 
 func (o ResourceMapOutput) ToResourceMapOutputWithContext(ctx context.Context) ResourceMapOutput {
 	return o
+}
+
+func (o ResourceMapOutput) ToOutput(ctx context.Context) pulumix.Output[map[string]*Resource] {
+	return pulumix.Output[map[string]*Resource]{
+		OutputState: o.OutputState,
+	}
 }
 
 func (o ResourceMapOutput) MapIndex(k pulumi.StringInput) ResourceOutput {

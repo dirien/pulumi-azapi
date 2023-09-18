@@ -52,6 +52,10 @@ export class Resource extends pulumi.CustomResource {
      */
     public readonly identity!: pulumi.Output<outputs.ResourceIdentity>;
     /**
+     * A list of properties that should be ignored when comparing the `body` with its current state.
+     */
+    public readonly ignoreBodyChanges!: pulumi.Output<string[] | undefined>;
+    /**
      * Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.
      */
     public readonly ignoreCasing!: pulumi.Output<boolean | undefined>;
@@ -89,6 +93,8 @@ export class Resource extends pulumi.CustomResource {
      * - tenant scope: `parentId` should be `/`
      *
      * For child level resources, the `parentId` should be the ID of its parent resource, for example, subnet resource's `parentId` is the ID of the vnet.
+     *
+     * For type `Microsoft.Resources/resourceGroups`, the `parentId` could be omitted, it defaults to subscription ID specified in provider or the default subscription(You could check the default subscription by azure cli command: `az account show`).
      */
     public readonly parentId!: pulumi.Output<string>;
     /**
@@ -142,6 +148,7 @@ export class Resource extends pulumi.CustomResource {
             const state = argsOrState as ResourceState | undefined;
             resourceInputs["body"] = state ? state.body : undefined;
             resourceInputs["identity"] = state ? state.identity : undefined;
+            resourceInputs["ignoreBodyChanges"] = state ? state.ignoreBodyChanges : undefined;
             resourceInputs["ignoreCasing"] = state ? state.ignoreCasing : undefined;
             resourceInputs["ignoreMissingProperty"] = state ? state.ignoreMissingProperty : undefined;
             resourceInputs["location"] = state ? state.location : undefined;
@@ -156,14 +163,12 @@ export class Resource extends pulumi.CustomResource {
             resourceInputs["type"] = state ? state.type : undefined;
         } else {
             const args = argsOrState as ResourceArgs | undefined;
-            if ((!args || args.parentId === undefined) && !opts.urn) {
-                throw new Error("Missing required property 'parentId'");
-            }
             if ((!args || args.type === undefined) && !opts.urn) {
                 throw new Error("Missing required property 'type'");
             }
             resourceInputs["body"] = args ? args.body : undefined;
             resourceInputs["identity"] = args ? args.identity : undefined;
+            resourceInputs["ignoreBodyChanges"] = args ? args.ignoreBodyChanges : undefined;
             resourceInputs["ignoreCasing"] = args ? args.ignoreCasing : undefined;
             resourceInputs["ignoreMissingProperty"] = args ? args.ignoreMissingProperty : undefined;
             resourceInputs["location"] = args ? args.location : undefined;
@@ -194,6 +199,10 @@ export interface ResourceState {
      * A `identity` block as defined below.
      */
     identity?: pulumi.Input<inputs.ResourceIdentity>;
+    /**
+     * A list of properties that should be ignored when comparing the `body` with its current state.
+     */
+    ignoreBodyChanges?: pulumi.Input<pulumi.Input<string>[]>;
     /**
      * Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.
      */
@@ -232,6 +241,8 @@ export interface ResourceState {
      * - tenant scope: `parentId` should be `/`
      *
      * For child level resources, the `parentId` should be the ID of its parent resource, for example, subnet resource's `parentId` is the ID of the vnet.
+     *
+     * For type `Microsoft.Resources/resourceGroups`, the `parentId` could be omitted, it defaults to subscription ID specified in provider or the default subscription(You could check the default subscription by azure cli command: `az account show`).
      */
     parentId?: pulumi.Input<string>;
     /**
@@ -284,6 +295,10 @@ export interface ResourceArgs {
      */
     identity?: pulumi.Input<inputs.ResourceIdentity>;
     /**
+     * A list of properties that should be ignored when comparing the `body` with its current state.
+     */
+    ignoreBodyChanges?: pulumi.Input<pulumi.Input<string>[]>;
+    /**
      * Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.
      */
     ignoreCasing?: pulumi.Input<boolean>;
@@ -312,8 +327,10 @@ export interface ResourceArgs {
      * - tenant scope: `parentId` should be `/`
      *
      * For child level resources, the `parentId` should be the ID of its parent resource, for example, subnet resource's `parentId` is the ID of the vnet.
+     *
+     * For type `Microsoft.Resources/resourceGroups`, the `parentId` could be omitted, it defaults to subscription ID specified in provider or the default subscription(You could check the default subscription by azure cli command: `az account show`).
      */
-    parentId: pulumi.Input<string>;
+    parentId?: pulumi.Input<string>;
     /**
      * Whether to remove special characters in resource name. Defaults to `false`.
      */

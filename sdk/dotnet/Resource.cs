@@ -35,6 +35,12 @@ namespace ediri.Azapi
         public Output<Outputs.ResourceIdentity> Identity { get; private set; } = null!;
 
         /// <summary>
+        /// A list of properties that should be ignored when comparing the `body` with its current state.
+        /// </summary>
+        [Output("ignoreBodyChanges")]
+        public Output<ImmutableArray<string>> IgnoreBodyChanges { get; private set; } = null!;
+
+        /// <summary>
         /// Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.
         /// </summary>
         [Output("ignoreCasing")]
@@ -84,6 +90,8 @@ namespace ediri.Azapi
         /// - tenant scope: `parent_id` should be `/`
         /// 
         /// For child level resources, the `parent_id` should be the ID of its parent resource, for example, subnet resource's `parent_id` is the ID of the vnet.
+        /// 
+        /// For type `Microsoft.Resources/resourceGroups`, the `parent_id` could be omitted, it defaults to subscription ID specified in provider or the default subscription(You could check the default subscription by azure cli command: `az account show`).
         /// </summary>
         [Output("parentId")]
         public Output<string> ParentId { get; private set; } = null!;
@@ -192,6 +200,18 @@ namespace ediri.Azapi
         [Input("identity")]
         public Input<Inputs.ResourceIdentityArgs>? Identity { get; set; }
 
+        [Input("ignoreBodyChanges")]
+        private InputList<string>? _ignoreBodyChanges;
+
+        /// <summary>
+        /// A list of properties that should be ignored when comparing the `body` with its current state.
+        /// </summary>
+        public InputList<string> IgnoreBodyChanges
+        {
+            get => _ignoreBodyChanges ?? (_ignoreBodyChanges = new InputList<string>());
+            set => _ignoreBodyChanges = value;
+        }
+
         /// <summary>
         /// Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.
         /// </summary>
@@ -237,9 +257,11 @@ namespace ediri.Azapi
         /// - tenant scope: `parent_id` should be `/`
         /// 
         /// For child level resources, the `parent_id` should be the ID of its parent resource, for example, subnet resource's `parent_id` is the ID of the vnet.
+        /// 
+        /// For type `Microsoft.Resources/resourceGroups`, the `parent_id` could be omitted, it defaults to subscription ID specified in provider or the default subscription(You could check the default subscription by azure cli command: `az account show`).
         /// </summary>
-        [Input("parentId", required: true)]
-        public Input<string> ParentId { get; set; } = null!;
+        [Input("parentId")]
+        public Input<string>? ParentId { get; set; }
 
         /// <summary>
         /// Whether to remove special characters in resource name. Defaults to `false`.
@@ -318,6 +340,18 @@ namespace ediri.Azapi
         [Input("identity")]
         public Input<Inputs.ResourceIdentityGetArgs>? Identity { get; set; }
 
+        [Input("ignoreBodyChanges")]
+        private InputList<string>? _ignoreBodyChanges;
+
+        /// <summary>
+        /// A list of properties that should be ignored when comparing the `body` with its current state.
+        /// </summary>
+        public InputList<string> IgnoreBodyChanges
+        {
+            get => _ignoreBodyChanges ?? (_ignoreBodyChanges = new InputList<string>());
+            set => _ignoreBodyChanges = value;
+        }
+
         /// <summary>
         /// Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.
         /// </summary>
@@ -374,6 +408,8 @@ namespace ediri.Azapi
         /// - tenant scope: `parent_id` should be `/`
         /// 
         /// For child level resources, the `parent_id` should be the ID of its parent resource, for example, subnet resource's `parent_id` is the ID of the vnet.
+        /// 
+        /// For type `Microsoft.Resources/resourceGroups`, the `parent_id` could be omitted, it defaults to subscription ID specified in provider or the default subscription(You could check the default subscription by azure cli command: `az account show`).
         /// </summary>
         [Input("parentId")]
         public Input<string>? ParentId { get; set; }
