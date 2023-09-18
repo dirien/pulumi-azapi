@@ -106,6 +106,8 @@ func Provider() tfbridge.ProviderInfo {
 			// "aws_ami": {Tok: tfbridge.MakeDataSource(mainPkg, mainMod, "getAmi")},
 			"azapi_resource":        {Tok: tfbridge.MakeDataSource(mainPkg, mainMod, "getResource")},
 			"azapi_resource_action": {Tok: tfbridge.MakeDataSource(mainPkg, mainMod, "getResourceAction")},
+			"azapi_resource_id":     {Tok: tfbridge.MakeDataSource(mainPkg, mainMod, "getResourceId")},
+			"azapi_resource_list":   {Tok: tfbridge.MakeDataSource(mainPkg, mainMod, "getResourceList")},
 		},
 		JavaScript: &tfbridge.JavaScriptInfo{
 			PackageName: "@ediri/azapi",
