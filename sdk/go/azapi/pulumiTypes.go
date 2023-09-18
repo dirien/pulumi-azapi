@@ -9,6 +9,7 @@ import (
 
 	"github.com/pulumi/pulumi-azapi/sdk/go/azapi/internal"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
+	"github.com/pulumi/pulumi/sdk/v3/go/pulumix"
 )
 
 var _ = internal.GetEnvOrDefault
@@ -58,6 +59,12 @@ func (i ResourceIdentityArgs) ToResourceIdentityOutputWithContext(ctx context.Co
 	return pulumi.ToOutputWithContext(ctx, i).(ResourceIdentityOutput)
 }
 
+func (i ResourceIdentityArgs) ToOutput(ctx context.Context) pulumix.Output[ResourceIdentity] {
+	return pulumix.Output[ResourceIdentity]{
+		OutputState: i.ToResourceIdentityOutputWithContext(ctx).OutputState,
+	}
+}
+
 func (i ResourceIdentityArgs) ToResourceIdentityPtrOutput() ResourceIdentityPtrOutput {
 	return i.ToResourceIdentityPtrOutputWithContext(context.Background())
 }
@@ -99,6 +106,12 @@ func (i *resourceIdentityPtrType) ToResourceIdentityPtrOutputWithContext(ctx con
 	return pulumi.ToOutputWithContext(ctx, i).(ResourceIdentityPtrOutput)
 }
 
+func (i *resourceIdentityPtrType) ToOutput(ctx context.Context) pulumix.Output[*ResourceIdentity] {
+	return pulumix.Output[*ResourceIdentity]{
+		OutputState: i.ToResourceIdentityPtrOutputWithContext(ctx).OutputState,
+	}
+}
+
 type ResourceIdentityOutput struct{ *pulumi.OutputState }
 
 func (ResourceIdentityOutput) ElementType() reflect.Type {
@@ -121,6 +134,12 @@ func (o ResourceIdentityOutput) ToResourceIdentityPtrOutputWithContext(ctx conte
 	return o.ApplyTWithContext(ctx, func(_ context.Context, v ResourceIdentity) *ResourceIdentity {
 		return &v
 	}).(ResourceIdentityPtrOutput)
+}
+
+func (o ResourceIdentityOutput) ToOutput(ctx context.Context) pulumix.Output[ResourceIdentity] {
+	return pulumix.Output[ResourceIdentity]{
+		OutputState: o.OutputState,
+	}
 }
 
 // A list of User Managed Identity ID's which should be assigned to the azure resource.
@@ -155,6 +174,12 @@ func (o ResourceIdentityPtrOutput) ToResourceIdentityPtrOutput() ResourceIdentit
 
 func (o ResourceIdentityPtrOutput) ToResourceIdentityPtrOutputWithContext(ctx context.Context) ResourceIdentityPtrOutput {
 	return o
+}
+
+func (o ResourceIdentityPtrOutput) ToOutput(ctx context.Context) pulumix.Output[*ResourceIdentity] {
+	return pulumix.Output[*ResourceIdentity]{
+		OutputState: o.OutputState,
+	}
 }
 
 func (o ResourceIdentityPtrOutput) Elem() ResourceIdentityOutput {
@@ -254,6 +279,12 @@ func (i GetResourceIdentityArgs) ToGetResourceIdentityOutputWithContext(ctx cont
 	return pulumi.ToOutputWithContext(ctx, i).(GetResourceIdentityOutput)
 }
 
+func (i GetResourceIdentityArgs) ToOutput(ctx context.Context) pulumix.Output[GetResourceIdentity] {
+	return pulumix.Output[GetResourceIdentity]{
+		OutputState: i.ToGetResourceIdentityOutputWithContext(ctx).OutputState,
+	}
+}
+
 func (i GetResourceIdentityArgs) ToGetResourceIdentityPtrOutput() GetResourceIdentityPtrOutput {
 	return i.ToGetResourceIdentityPtrOutputWithContext(context.Background())
 }
@@ -295,6 +326,12 @@ func (i *getResourceIdentityPtrType) ToGetResourceIdentityPtrOutputWithContext(c
 	return pulumi.ToOutputWithContext(ctx, i).(GetResourceIdentityPtrOutput)
 }
 
+func (i *getResourceIdentityPtrType) ToOutput(ctx context.Context) pulumix.Output[*GetResourceIdentity] {
+	return pulumix.Output[*GetResourceIdentity]{
+		OutputState: i.ToGetResourceIdentityPtrOutputWithContext(ctx).OutputState,
+	}
+}
+
 type GetResourceIdentityOutput struct{ *pulumi.OutputState }
 
 func (GetResourceIdentityOutput) ElementType() reflect.Type {
@@ -317,6 +354,12 @@ func (o GetResourceIdentityOutput) ToGetResourceIdentityPtrOutputWithContext(ctx
 	return o.ApplyTWithContext(ctx, func(_ context.Context, v GetResourceIdentity) *GetResourceIdentity {
 		return &v
 	}).(GetResourceIdentityPtrOutput)
+}
+
+func (o GetResourceIdentityOutput) ToOutput(ctx context.Context) pulumix.Output[GetResourceIdentity] {
+	return pulumix.Output[GetResourceIdentity]{
+		OutputState: o.OutputState,
+	}
 }
 
 // A list of User Managed Identity ID's which should be assigned to the azure resource.
@@ -352,6 +395,12 @@ func (o GetResourceIdentityPtrOutput) ToGetResourceIdentityPtrOutput() GetResour
 
 func (o GetResourceIdentityPtrOutput) ToGetResourceIdentityPtrOutputWithContext(ctx context.Context) GetResourceIdentityPtrOutput {
 	return o
+}
+
+func (o GetResourceIdentityPtrOutput) ToOutput(ctx context.Context) pulumix.Output[*GetResourceIdentity] {
+	return pulumix.Output[*GetResourceIdentity]{
+		OutputState: o.OutputState,
+	}
 }
 
 func (o GetResourceIdentityPtrOutput) Elem() GetResourceIdentityOutput {

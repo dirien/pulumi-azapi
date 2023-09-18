@@ -10,6 +10,7 @@ import (
 	"errors"
 	"github.com/pulumi/pulumi-azapi/sdk/go/azapi/internal"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
+	"github.com/pulumi/pulumi/sdk/v3/go/pulumix"
 )
 
 // This resource can manage a subset of any existing Azure resource manager resource's properties.
@@ -24,6 +25,8 @@ type UpdateResource struct {
 
 	// A JSON object that contains the request body used to add on an existing azure resource.
 	Body pulumi.StringPtrOutput `pulumi:"body"`
+	// A list of properties that should be ignored when comparing the `body` with its current state.
+	IgnoreBodyChanges pulumi.StringArrayOutput `pulumi:"ignoreBodyChanges"`
 	// Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.
 	IgnoreCasing pulumi.BoolPtrOutput `pulumi:"ignoreCasing"`
 	// Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.
@@ -91,6 +94,8 @@ func GetUpdateResource(ctx *pulumi.Context,
 type updateResourceState struct {
 	// A JSON object that contains the request body used to add on an existing azure resource.
 	Body *string `pulumi:"body"`
+	// A list of properties that should be ignored when comparing the `body` with its current state.
+	IgnoreBodyChanges []string `pulumi:"ignoreBodyChanges"`
 	// Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.
 	IgnoreCasing *bool `pulumi:"ignoreCasing"`
 	// Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.
@@ -126,6 +131,8 @@ type updateResourceState struct {
 type UpdateResourceState struct {
 	// A JSON object that contains the request body used to add on an existing azure resource.
 	Body pulumi.StringPtrInput
+	// A list of properties that should be ignored when comparing the `body` with its current state.
+	IgnoreBodyChanges pulumi.StringArrayInput
 	// Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.
 	IgnoreCasing pulumi.BoolPtrInput
 	// Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.
@@ -165,6 +172,8 @@ func (UpdateResourceState) ElementType() reflect.Type {
 type updateResourceArgs struct {
 	// A JSON object that contains the request body used to add on an existing azure resource.
 	Body *string `pulumi:"body"`
+	// A list of properties that should be ignored when comparing the `body` with its current state.
+	IgnoreBodyChanges []string `pulumi:"ignoreBodyChanges"`
 	// Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.
 	IgnoreCasing *bool `pulumi:"ignoreCasing"`
 	// Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.
@@ -199,6 +208,8 @@ type updateResourceArgs struct {
 type UpdateResourceArgs struct {
 	// A JSON object that contains the request body used to add on an existing azure resource.
 	Body pulumi.StringPtrInput
+	// A list of properties that should be ignored when comparing the `body` with its current state.
+	IgnoreBodyChanges pulumi.StringArrayInput
 	// Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.
 	IgnoreCasing pulumi.BoolPtrInput
 	// Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.
@@ -252,6 +263,12 @@ func (i *UpdateResource) ToUpdateResourceOutputWithContext(ctx context.Context) 
 	return pulumi.ToOutputWithContext(ctx, i).(UpdateResourceOutput)
 }
 
+func (i *UpdateResource) ToOutput(ctx context.Context) pulumix.Output[*UpdateResource] {
+	return pulumix.Output[*UpdateResource]{
+		OutputState: i.ToUpdateResourceOutputWithContext(ctx).OutputState,
+	}
+}
+
 // UpdateResourceArrayInput is an input type that accepts UpdateResourceArray and UpdateResourceArrayOutput values.
 // You can construct a concrete instance of `UpdateResourceArrayInput` via:
 //
@@ -275,6 +292,12 @@ func (i UpdateResourceArray) ToUpdateResourceArrayOutput() UpdateResourceArrayOu
 
 func (i UpdateResourceArray) ToUpdateResourceArrayOutputWithContext(ctx context.Context) UpdateResourceArrayOutput {
 	return pulumi.ToOutputWithContext(ctx, i).(UpdateResourceArrayOutput)
+}
+
+func (i UpdateResourceArray) ToOutput(ctx context.Context) pulumix.Output[[]*UpdateResource] {
+	return pulumix.Output[[]*UpdateResource]{
+		OutputState: i.ToUpdateResourceArrayOutputWithContext(ctx).OutputState,
+	}
 }
 
 // UpdateResourceMapInput is an input type that accepts UpdateResourceMap and UpdateResourceMapOutput values.
@@ -302,6 +325,12 @@ func (i UpdateResourceMap) ToUpdateResourceMapOutputWithContext(ctx context.Cont
 	return pulumi.ToOutputWithContext(ctx, i).(UpdateResourceMapOutput)
 }
 
+func (i UpdateResourceMap) ToOutput(ctx context.Context) pulumix.Output[map[string]*UpdateResource] {
+	return pulumix.Output[map[string]*UpdateResource]{
+		OutputState: i.ToUpdateResourceMapOutputWithContext(ctx).OutputState,
+	}
+}
+
 type UpdateResourceOutput struct{ *pulumi.OutputState }
 
 func (UpdateResourceOutput) ElementType() reflect.Type {
@@ -316,9 +345,20 @@ func (o UpdateResourceOutput) ToUpdateResourceOutputWithContext(ctx context.Cont
 	return o
 }
 
+func (o UpdateResourceOutput) ToOutput(ctx context.Context) pulumix.Output[*UpdateResource] {
+	return pulumix.Output[*UpdateResource]{
+		OutputState: o.OutputState,
+	}
+}
+
 // A JSON object that contains the request body used to add on an existing azure resource.
 func (o UpdateResourceOutput) Body() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *UpdateResource) pulumi.StringPtrOutput { return v.Body }).(pulumi.StringPtrOutput)
+}
+
+// A list of properties that should be ignored when comparing the `body` with its current state.
+func (o UpdateResourceOutput) IgnoreBodyChanges() pulumi.StringArrayOutput {
+	return o.ApplyT(func(v *UpdateResource) pulumi.StringArrayOutput { return v.IgnoreBodyChanges }).(pulumi.StringArrayOutput)
 }
 
 // Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.
@@ -392,6 +432,12 @@ func (o UpdateResourceArrayOutput) ToUpdateResourceArrayOutputWithContext(ctx co
 	return o
 }
 
+func (o UpdateResourceArrayOutput) ToOutput(ctx context.Context) pulumix.Output[[]*UpdateResource] {
+	return pulumix.Output[[]*UpdateResource]{
+		OutputState: o.OutputState,
+	}
+}
+
 func (o UpdateResourceArrayOutput) Index(i pulumi.IntInput) UpdateResourceOutput {
 	return pulumi.All(o, i).ApplyT(func(vs []interface{}) *UpdateResource {
 		return vs[0].([]*UpdateResource)[vs[1].(int)]
@@ -410,6 +456,12 @@ func (o UpdateResourceMapOutput) ToUpdateResourceMapOutput() UpdateResourceMapOu
 
 func (o UpdateResourceMapOutput) ToUpdateResourceMapOutputWithContext(ctx context.Context) UpdateResourceMapOutput {
 	return o
+}
+
+func (o UpdateResourceMapOutput) ToOutput(ctx context.Context) pulumix.Output[map[string]*UpdateResource] {
+	return pulumix.Output[map[string]*UpdateResource]{
+		OutputState: o.OutputState,
+	}
 }
 
 func (o UpdateResourceMapOutput) MapIndex(k pulumi.StringInput) UpdateResourceOutput {

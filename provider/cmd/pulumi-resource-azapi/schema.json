@@ -613,6 +613,13 @@
                     "$ref": "#/types/azapi:index/ResourceIdentity:ResourceIdentity",
                     "description": "A `identity` block as defined below.\n"
                 },
+                "ignoreBodyChanges": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "A list of properties that should be ignored when comparing the `body` with its current state.\n"
+                },
                 "ignoreCasing": {
                     "type": "boolean",
                     "description": "Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.\n"
@@ -642,7 +649,7 @@
                 },
                 "parentId": {
                     "type": "string",
-                    "description": "The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created. It supports different kinds of deployment scope for **top level** resources: \n- resource group scope: `parent_id` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.\n- management group scope: `parent_id` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.\n- extension scope: `parent_id` should be the ID of the resource you're adding the extension to.\n- subscription scope: `parent_id` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`\n- tenant scope: `parent_id` should be `/`\n\nFor child level resources, the `parent_id` should be the ID of its parent resource, for example, subnet resource's `parent_id` is the ID of the vnet.\n"
+                    "description": "The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created. It supports different kinds of deployment scope for **top level** resources: \n- resource group scope: `parent_id` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.\n- management group scope: `parent_id` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.\n- extension scope: `parent_id` should be the ID of the resource you're adding the extension to.\n- subscription scope: `parent_id` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`\n- tenant scope: `parent_id` should be `/`\n\nFor child level resources, the `parent_id` should be the ID of its parent resource, for example, subnet resource's `parent_id` is the ID of the vnet.\n\nFor type `Microsoft.Resources/resourceGroups`, the `parent_id` could be omitted, it defaults to subscription ID specified in provider or the default subscription(You could check the default subscription by azure cli command: `az account show`).\n"
                 },
                 "removingSpecialChars": {
                     "type": "boolean",
@@ -689,6 +696,13 @@
                     "$ref": "#/types/azapi:index/ResourceIdentity:ResourceIdentity",
                     "description": "A `identity` block as defined below.\n"
                 },
+                "ignoreBodyChanges": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "A list of properties that should be ignored when comparing the `body` with its current state.\n"
+                },
                 "ignoreCasing": {
                     "type": "boolean",
                     "description": "Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.\n"
@@ -716,7 +730,7 @@
                 },
                 "parentId": {
                     "type": "string",
-                    "description": "The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created. It supports different kinds of deployment scope for **top level** resources: \n- resource group scope: `parent_id` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.\n- management group scope: `parent_id` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.\n- extension scope: `parent_id` should be the ID of the resource you're adding the extension to.\n- subscription scope: `parent_id` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`\n- tenant scope: `parent_id` should be `/`\n\nFor child level resources, the `parent_id` should be the ID of its parent resource, for example, subnet resource's `parent_id` is the ID of the vnet.\n",
+                    "description": "The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created. It supports different kinds of deployment scope for **top level** resources: \n- resource group scope: `parent_id` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.\n- management group scope: `parent_id` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.\n- extension scope: `parent_id` should be the ID of the resource you're adding the extension to.\n- subscription scope: `parent_id` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`\n- tenant scope: `parent_id` should be `/`\n\nFor child level resources, the `parent_id` should be the ID of its parent resource, for example, subnet resource's `parent_id` is the ID of the vnet.\n\nFor type `Microsoft.Resources/resourceGroups`, the `parent_id` could be omitted, it defaults to subscription ID specified in provider or the default subscription(You could check the default subscription by azure cli command: `az account show`).\n",
                     "willReplaceOnChanges": true
                 },
                 "removingSpecialChars": {
@@ -747,7 +761,6 @@
                 }
             },
             "requiredInputs": [
-                "parentId",
                 "type"
             ],
             "stateInputs": {
@@ -760,6 +773,13 @@
                     "identity": {
                         "$ref": "#/types/azapi:index/ResourceIdentity:ResourceIdentity",
                         "description": "A `identity` block as defined below.\n"
+                    },
+                    "ignoreBodyChanges": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "A list of properties that should be ignored when comparing the `body` with its current state.\n"
                     },
                     "ignoreCasing": {
                         "type": "boolean",
@@ -792,7 +812,7 @@
                     },
                     "parentId": {
                         "type": "string",
-                        "description": "The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created. It supports different kinds of deployment scope for **top level** resources: \n- resource group scope: `parent_id` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.\n- management group scope: `parent_id` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.\n- extension scope: `parent_id` should be the ID of the resource you're adding the extension to.\n- subscription scope: `parent_id` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`\n- tenant scope: `parent_id` should be `/`\n\nFor child level resources, the `parent_id` should be the ID of its parent resource, for example, subnet resource's `parent_id` is the ID of the vnet.\n",
+                        "description": "The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created. It supports different kinds of deployment scope for **top level** resources: \n- resource group scope: `parent_id` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.\n- management group scope: `parent_id` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.\n- extension scope: `parent_id` should be the ID of the resource you're adding the extension to.\n- subscription scope: `parent_id` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`\n- tenant scope: `parent_id` should be `/`\n\nFor child level resources, the `parent_id` should be the ID of its parent resource, for example, subnet resource's `parent_id` is the ID of the vnet.\n\nFor type `Microsoft.Resources/resourceGroups`, the `parent_id` could be omitted, it defaults to subscription ID specified in provider or the default subscription(You could check the default subscription by azure cli command: `az account show`).\n",
                         "willReplaceOnChanges": true
                     },
                     "removingSpecialChars": {
@@ -970,6 +990,13 @@
                     "type": "string",
                     "description": "A JSON object that contains the request body used to add on an existing azure resource.\n"
                 },
+                "ignoreBodyChanges": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "A list of properties that should be ignored when comparing the `body` with its current state.\n"
+                },
                 "ignoreCasing": {
                     "type": "boolean",
                     "description": "Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.\n"
@@ -1025,6 +1052,13 @@
                     "type": "string",
                     "description": "A JSON object that contains the request body used to add on an existing azure resource.\n"
                 },
+                "ignoreBodyChanges": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "A list of properties that should be ignored when comparing the `body` with its current state.\n"
+                },
                 "ignoreCasing": {
                     "type": "boolean",
                     "description": "Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.\n"
@@ -1076,6 +1110,13 @@
                     "body": {
                         "type": "string",
                         "description": "A JSON object that contains the request body used to add on an existing azure resource.\n"
+                    },
+                    "ignoreBodyChanges": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "A list of properties that should be ignored when comparing the `body` with its current state.\n"
                     },
                     "ignoreCasing": {
                         "type": "boolean",
@@ -1143,7 +1184,7 @@
                     },
                     "parentId": {
                         "type": "string",
-                        "description": "The ID of the azure resource in which this resource is created. It supports different kinds of deployment scope for **top level** resources: \n- resource group scope: `parent_id` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.\n- management group scope: `parent_id` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.\n- extension scope: `parent_id` should be the ID of the resource you're adding the extension to.\n- subscription scope: `parent_id` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`\n- tenant scope: `parent_id` should be `/`\n\nFor child level resources, the `parent_id` should be the ID of its parent resource, for example, subnet resource's `parent_id` is the ID of the vnet.\n"
+                        "description": "The ID of the azure resource in which this resource is created. It supports different kinds of deployment scope for **top level** resources: \n- resource group scope: `parent_id` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.\n- management group scope: `parent_id` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.\n- extension scope: `parent_id` should be the ID of the resource you're adding the extension to.\n- subscription scope: `parent_id` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`\n- tenant scope: `parent_id` should be `/`\n\nFor child level resources, the `parent_id` should be the ID of its parent resource, for example, subnet resource's `parent_id` is the ID of the vnet.\n\nFor type `Microsoft.Resources/resourceGroups`, the `parent_id` could be omitted, it defaults to subscription ID specified in provider or the default subscription(You could check the default subscription by azure cli command: `az account show`).\n"
                     },
                     "resourceId": {
                         "type": "string",
@@ -1217,6 +1258,7 @@
                     "identity",
                     "location",
                     "output",
+                    "parentId",
                     "tags",
                     "type",
                     "id"
@@ -1224,14 +1266,13 @@
             }
         },
         "azapi:index/getResourceAction:getResourceAction": {
-            "description": "This resource can perform resource action which gets information from an existing resource.\nIt's recommended to use `azapi.ResourceAction` data source to perform readonly action, please use `azapi.ResourceAction` resource,\nif user wants to perform actions which change a resource's state.\n\n## Example Usage\n\n```hcl\nterraform {\n  required_providers {\n    azapi = {\n      source = \"Azure/azapi\"\n    }\n  }\n}\n\nprovider \"azapi\" {\n}\n\nprovider \"azurerm\" {\n  features {}\n}\n\nresource \"azurerm_resource_group\" \"example\" {\n  name     = \"example-rg\"\n  location = \"west europe\"\n}\n\nresource \"azurerm_automation_account\" \"example\" {\n  name                = \"example-account\"\n  resource_group_name = azurerm_resource_group.example.name\n  location            = azurerm_resource_group.example.location\n  sku_name            = \"Basic\"\n}\n\ndata \"azapi_resource_action\" \"example\" {\n  type                   = \"Microsoft.Automation/automationAccounts@2021-06-22\"\n  resource_id            = azurerm_automation_account.example.id\n  action                 = \"listKeys\"\n  response_export_values = [\"*\"]\n}\n```\n\nHere's an example to use the `azapi.ResourceAction` data source to get a provider's permissions.\n\n```hcl\nprovider \"azurerm\" {\n  features {}\n}\n\ndata \"azurerm_client_config\" \"current\" {}\n\ndata \"azapi_resource_action\" \"test\" {\n  type        = \"Microsoft.Resources/providers@2021-04-01\"\n  resource_id = \"/subscriptions/${data.azurerm_client_config.current.subscription_id}/providers/Microsoft.Network\"\n  action      = \"providerPermissions\"\n  method      = \"GET\"\n}\n```\n\nHere's an example to use the `azapi.ResourceAction` data source to perform a provider action.\n\n```hcl\nterraform {\n  required_providers {\n    azapi = {\n      source = \"Azure/azapi\"\n    }\n  }\n}\n\nresource \"azapi_resource_action\" \"test\" {\n  type        = \"Microsoft.Cache@2023-04-01\"\n  resource_id = \"/subscriptions/85b3dbca-5974-4067-9669-67a141095a76/providers/Microsoft.Cache\"\n  action      = \"CheckNameAvailability\"\n  body = jsonencode({\n    type = \"Microsoft.Cache/Redis\"\n    name = \"cacheName\"\n  })\n}\n```\n",
+            "description": "This resource can perform resource action which gets information from an existing resource.\nIt's recommended to use `azapi.ResourceAction` data source to perform readonly action, please use `azapi.ResourceAction` resource,\nif user wants to perform actions which change a resource's state.\n\n## Example Usage\n\n```hcl\nterraform {\n  required_providers {\n    azapi = {\n      source = \"Azure/azapi\"\n    }\n  }\n}\n\nprovider \"azapi\" {\n}\n\nprovider \"azurerm\" {\n  features {}\n}\n\nresource \"azurerm_resource_group\" \"example\" {\n  name     = \"example-rg\"\n  location = \"west europe\"\n}\n\nresource \"azurerm_automation_account\" \"example\" {\n  name                = \"example-account\"\n  resource_group_name = azurerm_resource_group.example.name\n  location            = azurerm_resource_group.example.location\n  sku_name            = \"Basic\"\n}\n\ndata \"azapi_resource_action\" \"example\" {\n  type                   = \"Microsoft.Automation/automationAccounts@2021-06-22\"\n  resource_id            = azurerm_automation_account.example.id\n  action                 = \"listKeys\"\n  response_export_values = [\"*\"]\n}\n```\n\nHere's an example to use the `azapi.ResourceAction` data source to get a provider's permissions.\n\n```hcl\nprovider \"azurerm\" {\n  features {}\n}\n\ndata \"azurerm_client_config\" \"current\" {}\n\ndata \"azapi_resource_action\" \"test\" {\n  type        = \"Microsoft.Resources/providers@2021-04-01\"\n  resource_id = \"/subscriptions/${data.azurerm_client_config.current.subscription_id}/providers/Microsoft.Network\"\n  action      = \"providerPermissions\"\n  method      = \"GET\"\n}\n```\n\nHere's an example to use the `azapi.ResourceAction` data source to perform a provider action.\n\n```hcl\nterraform {\n  required_providers {\n    azapi = {\n      source = \"Azure/azapi\"\n    }\n  }\n}\n\nresource \"azapi_resource_action\" \"test\" {\n  type        = \"Microsoft.Cache@2023-04-01\"\n  resource_id = \"/subscriptions/00000000-0000-0000-0000-000000000000/providers/Microsoft.Cache\"\n  action      = \"CheckNameAvailability\"\n  body = jsonencode({\n    type = \"Microsoft.Cache/Redis\"\n    name = \"cacheName\"\n  })\n}\n```\n",
             "inputs": {
                 "description": "A collection of arguments for invoking getResourceAction.\n",
                 "properties": {
                     "action": {
                         "type": "string",
-                        "description": "The name of the resource action. It's also possible to make Http requests towards the resource ID if leave this field empty.\n",
-                        "willReplaceOnChanges": true
+                        "description": "The name of the resource action. It's also possible to make Http requests towards the resource ID if leave this field empty.\n"
                     },
                     "body": {
                         "type": "string",
@@ -1243,8 +1284,7 @@
                     },
                     "resourceId": {
                         "type": "string",
-                        "description": "The ID of an existing azure source.\n",
-                        "willReplaceOnChanges": true
+                        "description": "The ID of an existing azure source.\n"
                     },
                     "responseExportValues": {
                         "type": "array",
@@ -1255,8 +1295,7 @@
                     },
                     "type": {
                         "type": "string",
-                        "description": "It is in a format like `\u003cresource-type\u003e@\u003capi-version\u003e`. `\u003cresource-type\u003e` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.\n`\u003capi-version\u003e` is version of the API used to manage this azure resource.\n",
-                        "willReplaceOnChanges": true
+                        "description": "It is in a format like `\u003cresource-type\u003e@\u003capi-version\u003e`. `\u003cresource-type\u003e` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.\n`\u003capi-version\u003e` is version of the API used to manage this azure resource.\n"
                     }
                 },
                 "type": "object",
@@ -1300,6 +1339,148 @@
                 "type": "object",
                 "required": [
                     "output",
+                    "type",
+                    "id"
+                ]
+            }
+        },
+        "azapi:index/getResourceId:getResourceId": {
+            "description": "This resource can parse an Azure resource ID into its separate fields.\n\n## Example Usage\n\n```hcl\nterraform {\n  required_providers {\n    azapi = {\n      source = \"Azure/azapi\"\n    }\n  }\n}\n\nprovider \"azapi\" {\n}\n\ndata \"azapi_resource_id\" \"account\" {\n  type        = \"Microsoft.Automation/automationAccounts@2021-06-22\"\n  resource_id = \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg1/providers/Microsoft.Automation/automationAccounts/automationAccount1\"\n}\n\noutput \"account_name\" {\n  value = data.azapi_resource_id.account.name\n}\n\noutput \"account_resource_group\" {\n  value = data.azapi_resource_id.account.resource_group_name\n}\n\noutput \"account_subscription\" {\n  value = data.azapi_resource_id.account.subscription_id\n}\n\noutput \"account_parent_id\" {\n  value = data.azapi_resource_id.account.parent_id\n}\n\ndata \"azapi_resource_id\" \"vnet\" {\n  type      = \"Microsoft.Network/virtualNetworks@2021-02-01\"\n  parent_id = \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg1\"\n  name      = \"vnet1\"\n}\n\noutput \"vnet_id\" {\n  value = data.azapi_resource_id.vnet.id\n}\n\noutput \"vnet_resource_group\" {\n  value = data.azapi_resource_id.vnet.resource_group_name\n}\n\noutput \"vnet_subscription\" {\n  value = data.azapi_resource_id.vnet.subscription_id\n}\n```\n",
+            "inputs": {
+                "description": "A collection of arguments for invoking getResourceId.\n",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "Specifies the name of the azure resource.\n"
+                    },
+                    "parentId": {
+                        "type": "string",
+                        "description": "The ID of the azure resource in which this resource is created. It supports different kinds of deployment scope for **top level** resources:\n- resource group scope: `parent_id` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.\n- management group scope: `parent_id` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.\n- extension scope: `parent_id` should be the ID of the resource you're adding the extension to.\n- subscription scope: `parent_id` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`\n- tenant scope: `parent_id` should be `/`\n\nFor child level resources, the `parent_id` should be the ID of its parent resource, for example, subnet resource's `parent_id` is the ID of the vnet.\n"
+                    },
+                    "resourceId": {
+                        "type": "string",
+                        "description": "The ID of an existing azure source.\n\n\u003e **Note:** Configuring `name` and `parent_id` is an alternative way to configure `resource_id`.\n"
+                    },
+                    "type": {
+                        "type": "string",
+                        "description": "It is in a format like `\u003cresource-type\u003e@\u003capi-version\u003e`. `\u003cresource-type\u003e` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.\n`\u003capi-version\u003e` is version of the API used to manage this azure resource.\n"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "type"
+                ]
+            },
+            "outputs": {
+                "description": "A collection of values returned by getResourceId.\n",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "The provider-assigned unique ID for this managed resource.\n"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "The name of the azure resource.\n"
+                    },
+                    "parentId": {
+                        "type": "string",
+                        "description": "The ID of the azure resource in which this resource is created.\n"
+                    },
+                    "parts": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "string"
+                        },
+                        "description": "The map of the resource ID parts, where the key is the part name and the value is the part value. e.g. `virtualNetworks=myVnet`.\n"
+                    },
+                    "providerNamespace": {
+                        "type": "string",
+                        "description": "The azure resource provider namespace of the azure resource.\n"
+                    },
+                    "resourceGroupName": {
+                        "type": "string",
+                        "description": "The resource group name of the azure resource.\n"
+                    },
+                    "resourceId": {
+                        "type": "string"
+                    },
+                    "subscriptionId": {
+                        "type": "string",
+                        "description": "The subscription ID of the azure resource.\n"
+                    },
+                    "type": {
+                        "type": "string"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "name",
+                    "parentId",
+                    "parts",
+                    "providerNamespace",
+                    "resourceGroupName",
+                    "resourceId",
+                    "subscriptionId",
+                    "type",
+                    "id"
+                ]
+            }
+        },
+        "azapi:index/getResourceList:getResourceList": {
+            "description": "This resource can list all resources of a specific type under a scope. If the API supports paging, it will automatically fetch all pages and return the full list.\n\n## Example Usage\n\n```hcl\nterraform {\n  required_providers {\n    azapi = {\n      source = \"Azure/azapi\"\n    }\n  }\n}\n\nprovider \"azapi\" {\n}\n\ndata \"azapi_resource_list\" \"listBySubscription\" {\n  type                   = \"Microsoft.Automation/automationAccounts@2021-06-22\"\n  parent_id              = \"/subscriptions/00000000-0000-0000-0000-000000000000\"\n  response_export_values = [\"*\"]\n}\n\ndata \"azapi_resource_list\" \"listByResourceGroup\" {\n  type                   = \"Microsoft.Automation/automationAccounts@2021-06-22\"\n  parent_id              = \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg1\"\n  response_export_values = [\"*\"]\n}\n\ndata \"azapi_resource_list\" \"listSubnetsByVnet\" {\n  type                   = \"Microsoft.Network/virtualNetworks/subnets@2021-02-01\"\n  parent_id              = \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg1/providers/Microsoft.Network/virtualNetworks/vnet1\"\n  response_export_values = [\"*\"]\n}\n\n```\n",
+            "inputs": {
+                "description": "A collection of arguments for invoking getResourceList.\n",
+                "properties": {
+                    "parentId": {
+                        "type": "string",
+                        "description": "The parent resource ID to list resources under. e.g. `/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/myResourceGroup`.\n"
+                    },
+                    "responseExportValues": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "A list of path that needs to be exported from response body.\nSetting it to `[\"*\"]` will export the full response body.\nHere's an example. If it sets to `[\"value\"]`, it will set the following json to computed property `output`.\n```\n{\n\"value\": [\n{\n\"id\": \"id1\",\n\"Permissions\": \"Full\"\n},\n{\n\"id\": \"id2\",\n\"Permissions\": \"Full\"\n}\n]\n}\n```\n"
+                    },
+                    "type": {
+                        "type": "string",
+                        "description": "It is in a format like `\u003cresource-type\u003e@\u003capi-version\u003e`. `\u003cresource-type\u003e` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.\n`\u003capi-version\u003e` is version of the API used to manage this azure resource.\n"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "parentId",
+                    "type"
+                ]
+            },
+            "outputs": {
+                "description": "A collection of values returned by getResourceList.\n",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "The provider-assigned unique ID for this managed resource.\n"
+                    },
+                    "output": {
+                        "type": "string",
+                        "description": "The output json containing the properties specified in `response_export_values`. Here are some examples to decode json and extract the value.\n"
+                    },
+                    "parentId": {
+                        "type": "string"
+                    },
+                    "responseExportValues": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "type": {
+                        "type": "string"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "output",
+                    "parentId",
                     "type",
                     "id"
                 ]

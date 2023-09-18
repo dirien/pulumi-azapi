@@ -99,7 +99,7 @@ class GetResourceResult:
 
     @property
     @pulumi.getter(name="parentId")
-    def parent_id(self) -> Optional[str]:
+    def parent_id(self) -> str:
         return pulumi.get(self, "parent_id")
 
     @property
@@ -170,6 +170,8 @@ def get_resource(identity: Optional[pulumi.InputType['GetResourceIdentityArgs']]
            - tenant scope: `parent_id` should be `/`
            
            For child level resources, the `parent_id` should be the ID of its parent resource, for example, subnet resource's `parent_id` is the ID of the vnet.
+           
+           For type `Microsoft.Resources/resourceGroups`, the `parent_id` could be omitted, it defaults to subscription ID specified in provider or the default subscription(You could check the default subscription by azure cli command: `az account show`).
     :param str resource_id: The ID of an existing azure source.
            
            > **Note:** Configuring `name` and `parent_id` is an alternative way to configure `resource_id`.
@@ -238,6 +240,8 @@ def get_resource_output(identity: Optional[pulumi.Input[Optional[pulumi.InputTyp
            - tenant scope: `parent_id` should be `/`
            
            For child level resources, the `parent_id` should be the ID of its parent resource, for example, subnet resource's `parent_id` is the ID of the vnet.
+           
+           For type `Microsoft.Resources/resourceGroups`, the `parent_id` could be omitted, it defaults to subscription ID specified in provider or the default subscription(You could check the default subscription by azure cli command: `az account show`).
     :param str resource_id: The ID of an existing azure source.
            
            > **Note:** Configuring `name` and `parent_id` is an alternative way to configure `resource_id`.

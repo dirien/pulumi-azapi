@@ -149,6 +149,8 @@ namespace ediri.Azapi
         /// - tenant scope: `parent_id` should be `/`
         /// 
         /// For child level resources, the `parent_id` should be the ID of its parent resource, for example, subnet resource's `parent_id` is the ID of the vnet.
+        /// 
+        /// For type `Microsoft.Resources/resourceGroups`, the `parent_id` could be omitted, it defaults to subscription ID specified in provider or the default subscription(You could check the default subscription by azure cli command: `az account show`).
         /// </summary>
         [Input("parentId")]
         public string? ParentId { get; set; }
@@ -223,6 +225,8 @@ namespace ediri.Azapi
         /// - tenant scope: `parent_id` should be `/`
         /// 
         /// For child level resources, the `parent_id` should be the ID of its parent resource, for example, subnet resource's `parent_id` is the ID of the vnet.
+        /// 
+        /// For type `Microsoft.Resources/resourceGroups`, the `parent_id` could be omitted, it defaults to subscription ID specified in provider or the default subscription(You could check the default subscription by azure cli command: `az account show`).
         /// </summary>
         [Input("parentId")]
         public Input<string>? ParentId { get; set; }
@@ -300,7 +304,7 @@ namespace ediri.Azapi
         /// }
         /// </summary>
         public readonly string Output;
-        public readonly string? ParentId;
+        public readonly string ParentId;
         public readonly string? ResourceId;
         public readonly ImmutableArray<string> ResponseExportValues;
         /// <summary>
@@ -324,7 +328,7 @@ namespace ediri.Azapi
 
             string output,
 
-            string? parentId,
+            string parentId,
 
             string? resourceId,
 

@@ -46,6 +46,10 @@ export class UpdateResource extends pulumi.CustomResource {
      */
     public readonly body!: pulumi.Output<string | undefined>;
     /**
+     * A list of properties that should be ignored when comparing the `body` with its current state.
+     */
+    public readonly ignoreBodyChanges!: pulumi.Output<string[] | undefined>;
+    /**
      * Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.
      */
     public readonly ignoreCasing!: pulumi.Output<boolean | undefined>;
@@ -125,6 +129,7 @@ export class UpdateResource extends pulumi.CustomResource {
         if (opts.id) {
             const state = argsOrState as UpdateResourceState | undefined;
             resourceInputs["body"] = state ? state.body : undefined;
+            resourceInputs["ignoreBodyChanges"] = state ? state.ignoreBodyChanges : undefined;
             resourceInputs["ignoreCasing"] = state ? state.ignoreCasing : undefined;
             resourceInputs["ignoreMissingProperty"] = state ? state.ignoreMissingProperty : undefined;
             resourceInputs["locks"] = state ? state.locks : undefined;
@@ -140,6 +145,7 @@ export class UpdateResource extends pulumi.CustomResource {
                 throw new Error("Missing required property 'type'");
             }
             resourceInputs["body"] = args ? args.body : undefined;
+            resourceInputs["ignoreBodyChanges"] = args ? args.ignoreBodyChanges : undefined;
             resourceInputs["ignoreCasing"] = args ? args.ignoreCasing : undefined;
             resourceInputs["ignoreMissingProperty"] = args ? args.ignoreMissingProperty : undefined;
             resourceInputs["locks"] = args ? args.locks : undefined;
@@ -163,6 +169,10 @@ export interface UpdateResourceState {
      * A JSON object that contains the request body used to add on an existing azure resource.
      */
     body?: pulumi.Input<string>;
+    /**
+     * A list of properties that should be ignored when comparing the `body` with its current state.
+     */
+    ignoreBodyChanges?: pulumi.Input<pulumi.Input<string>[]>;
     /**
      * Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.
      */
@@ -238,6 +248,10 @@ export interface UpdateResourceArgs {
      * A JSON object that contains the request body used to add on an existing azure resource.
      */
     body?: pulumi.Input<string>;
+    /**
+     * A list of properties that should be ignored when comparing the `body` with its current state.
+     */
+    ignoreBodyChanges?: pulumi.Input<pulumi.Input<string>[]>;
     /**
      * Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.
      */

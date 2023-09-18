@@ -16,21 +16,32 @@ __all__ = ['ResourceArgs', 'Resource']
 @pulumi.input_type
 class ResourceArgs:
     def __init__(__self__, *,
-                 parent_id: pulumi.Input[str],
                  type: pulumi.Input[str],
                  body: Optional[pulumi.Input[str]] = None,
                  identity: Optional[pulumi.Input['ResourceIdentityArgs']] = None,
+                 ignore_body_changes: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]] = None,
                  ignore_casing: Optional[pulumi.Input[bool]] = None,
                  ignore_missing_property: Optional[pulumi.Input[bool]] = None,
                  location: Optional[pulumi.Input[str]] = None,
                  locks: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]] = None,
                  name: Optional[pulumi.Input[str]] = None,
+                 parent_id: Optional[pulumi.Input[str]] = None,
                  removing_special_chars: Optional[pulumi.Input[bool]] = None,
                  response_export_values: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]] = None,
                  schema_validation_enabled: Optional[pulumi.Input[bool]] = None,
                  tags: Optional[pulumi.Input[Mapping[str, pulumi.Input[str]]]] = None):
         """
         The set of arguments for constructing a Resource resource.
+        :param pulumi.Input[str] type: It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
+               `<api-version>` is version of the API used to manage this azure resource.
+        :param pulumi.Input[str] body: A JSON object that contains the request body used to create and update azure resource.
+        :param pulumi.Input['ResourceIdentityArgs'] identity: A `identity` block as defined below.
+        :param pulumi.Input[Sequence[pulumi.Input[str]]] ignore_body_changes: A list of properties that should be ignored when comparing the `body` with its current state.
+        :param pulumi.Input[bool] ignore_casing: Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.
+        :param pulumi.Input[bool] ignore_missing_property: Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.
+        :param pulumi.Input[str] location: The Azure Region where the azure resource should exist.
+        :param pulumi.Input[Sequence[pulumi.Input[str]]] locks: A list of ARM resource IDs which are used to avoid create/modify/delete azapi resources at the same time.
+        :param pulumi.Input[str] name: Specifies the name of the azure resource. Changing this forces a new resource to be created.
         :param pulumi.Input[str] parent_id: The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created. It supports different kinds of deployment scope for **top level** resources: 
                - resource group scope: `parent_id` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.
                - management group scope: `parent_id` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.
@@ -39,15 +50,8 @@ class ResourceArgs:
                - tenant scope: `parent_id` should be `/`
                
                For child level resources, the `parent_id` should be the ID of its parent resource, for example, subnet resource's `parent_id` is the ID of the vnet.
-        :param pulumi.Input[str] type: It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
-               `<api-version>` is version of the API used to manage this azure resource.
-        :param pulumi.Input[str] body: A JSON object that contains the request body used to create and update azure resource.
-        :param pulumi.Input['ResourceIdentityArgs'] identity: A `identity` block as defined below.
-        :param pulumi.Input[bool] ignore_casing: Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.
-        :param pulumi.Input[bool] ignore_missing_property: Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.
-        :param pulumi.Input[str] location: The Azure Region where the azure resource should exist.
-        :param pulumi.Input[Sequence[pulumi.Input[str]]] locks: A list of ARM resource IDs which are used to avoid create/modify/delete azapi resources at the same time.
-        :param pulumi.Input[str] name: Specifies the name of the azure resource. Changing this forces a new resource to be created.
+               
+               For type `Microsoft.Resources/resourceGroups`, the `parent_id` could be omitted, it defaults to subscription ID specified in provider or the default subscription(You could check the default subscription by azure cli command: `az account show`).
         :param pulumi.Input[bool] removing_special_chars: Whether to remove special characters in resource name. Defaults to `false`.
         :param pulumi.Input[Sequence[pulumi.Input[str]]] response_export_values: A list of path that needs to be exported from response body.
                Setting it to `["*"]` will export the full response body.
@@ -67,12 +71,13 @@ class ResourceArgs:
         :param pulumi.Input[bool] schema_validation_enabled: Whether enabled the validation on `type` and `body` with embedded schema. Defaults to `true`.
         :param pulumi.Input[Mapping[str, pulumi.Input[str]]] tags: A mapping of tags which should be assigned to the azure resource.
         """
-        pulumi.set(__self__, "parent_id", parent_id)
         pulumi.set(__self__, "type", type)
         if body is not None:
             pulumi.set(__self__, "body", body)
         if identity is not None:
             pulumi.set(__self__, "identity", identity)
+        if ignore_body_changes is not None:
+            pulumi.set(__self__, "ignore_body_changes", ignore_body_changes)
         if ignore_casing is not None:
             pulumi.set(__self__, "ignore_casing", ignore_casing)
         if ignore_missing_property is not None:
@@ -83,6 +88,8 @@ class ResourceArgs:
             pulumi.set(__self__, "locks", locks)
         if name is not None:
             pulumi.set(__self__, "name", name)
+        if parent_id is not None:
+            pulumi.set(__self__, "parent_id", parent_id)
         if removing_special_chars is not None:
             pulumi.set(__self__, "removing_special_chars", removing_special_chars)
         if response_export_values is not None:
@@ -91,25 +98,6 @@ class ResourceArgs:
             pulumi.set(__self__, "schema_validation_enabled", schema_validation_enabled)
         if tags is not None:
             pulumi.set(__self__, "tags", tags)
-
-    @property
-    @pulumi.getter(name="parentId")
-    def parent_id(self) -> pulumi.Input[str]:
-        """
-        The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created. It supports different kinds of deployment scope for **top level** resources: 
-        - resource group scope: `parent_id` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.
-        - management group scope: `parent_id` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.
-        - extension scope: `parent_id` should be the ID of the resource you're adding the extension to.
-        - subscription scope: `parent_id` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`
-        - tenant scope: `parent_id` should be `/`
-
-        For child level resources, the `parent_id` should be the ID of its parent resource, for example, subnet resource's `parent_id` is the ID of the vnet.
-        """
-        return pulumi.get(self, "parent_id")
-
-    @parent_id.setter
-    def parent_id(self, value: pulumi.Input[str]):
-        pulumi.set(self, "parent_id", value)
 
     @property
     @pulumi.getter
@@ -147,6 +135,18 @@ class ResourceArgs:
     @identity.setter
     def identity(self, value: Optional[pulumi.Input['ResourceIdentityArgs']]):
         pulumi.set(self, "identity", value)
+
+    @property
+    @pulumi.getter(name="ignoreBodyChanges")
+    def ignore_body_changes(self) -> Optional[pulumi.Input[Sequence[pulumi.Input[str]]]]:
+        """
+        A list of properties that should be ignored when comparing the `body` with its current state.
+        """
+        return pulumi.get(self, "ignore_body_changes")
+
+    @ignore_body_changes.setter
+    def ignore_body_changes(self, value: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]]):
+        pulumi.set(self, "ignore_body_changes", value)
 
     @property
     @pulumi.getter(name="ignoreCasing")
@@ -207,6 +207,27 @@ class ResourceArgs:
     @name.setter
     def name(self, value: Optional[pulumi.Input[str]]):
         pulumi.set(self, "name", value)
+
+    @property
+    @pulumi.getter(name="parentId")
+    def parent_id(self) -> Optional[pulumi.Input[str]]:
+        """
+        The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created. It supports different kinds of deployment scope for **top level** resources: 
+        - resource group scope: `parent_id` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.
+        - management group scope: `parent_id` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.
+        - extension scope: `parent_id` should be the ID of the resource you're adding the extension to.
+        - subscription scope: `parent_id` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`
+        - tenant scope: `parent_id` should be `/`
+
+        For child level resources, the `parent_id` should be the ID of its parent resource, for example, subnet resource's `parent_id` is the ID of the vnet.
+
+        For type `Microsoft.Resources/resourceGroups`, the `parent_id` could be omitted, it defaults to subscription ID specified in provider or the default subscription(You could check the default subscription by azure cli command: `az account show`).
+        """
+        return pulumi.get(self, "parent_id")
+
+    @parent_id.setter
+    def parent_id(self, value: Optional[pulumi.Input[str]]):
+        pulumi.set(self, "parent_id", value)
 
     @property
     @pulumi.getter(name="removingSpecialChars")
@@ -276,6 +297,7 @@ class _ResourceState:
     def __init__(__self__, *,
                  body: Optional[pulumi.Input[str]] = None,
                  identity: Optional[pulumi.Input['ResourceIdentityArgs']] = None,
+                 ignore_body_changes: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]] = None,
                  ignore_casing: Optional[pulumi.Input[bool]] = None,
                  ignore_missing_property: Optional[pulumi.Input[bool]] = None,
                  location: Optional[pulumi.Input[str]] = None,
@@ -292,6 +314,7 @@ class _ResourceState:
         Input properties used for looking up and filtering Resource resources.
         :param pulumi.Input[str] body: A JSON object that contains the request body used to create and update azure resource.
         :param pulumi.Input['ResourceIdentityArgs'] identity: A `identity` block as defined below.
+        :param pulumi.Input[Sequence[pulumi.Input[str]]] ignore_body_changes: A list of properties that should be ignored when comparing the `body` with its current state.
         :param pulumi.Input[bool] ignore_casing: Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.
         :param pulumi.Input[bool] ignore_missing_property: Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.
         :param pulumi.Input[str] location: The Azure Region where the azure resource should exist.
@@ -311,6 +334,8 @@ class _ResourceState:
                - tenant scope: `parent_id` should be `/`
                
                For child level resources, the `parent_id` should be the ID of its parent resource, for example, subnet resource's `parent_id` is the ID of the vnet.
+               
+               For type `Microsoft.Resources/resourceGroups`, the `parent_id` could be omitted, it defaults to subscription ID specified in provider or the default subscription(You could check the default subscription by azure cli command: `az account show`).
         :param pulumi.Input[bool] removing_special_chars: Whether to remove special characters in resource name. Defaults to `false`.
         :param pulumi.Input[Sequence[pulumi.Input[str]]] response_export_values: A list of path that needs to be exported from response body.
                Setting it to `["*"]` will export the full response body.
@@ -336,6 +361,8 @@ class _ResourceState:
             pulumi.set(__self__, "body", body)
         if identity is not None:
             pulumi.set(__self__, "identity", identity)
+        if ignore_body_changes is not None:
+            pulumi.set(__self__, "ignore_body_changes", ignore_body_changes)
         if ignore_casing is not None:
             pulumi.set(__self__, "ignore_casing", ignore_casing)
         if ignore_missing_property is not None:
@@ -384,6 +411,18 @@ class _ResourceState:
     @identity.setter
     def identity(self, value: Optional[pulumi.Input['ResourceIdentityArgs']]):
         pulumi.set(self, "identity", value)
+
+    @property
+    @pulumi.getter(name="ignoreBodyChanges")
+    def ignore_body_changes(self) -> Optional[pulumi.Input[Sequence[pulumi.Input[str]]]]:
+        """
+        A list of properties that should be ignored when comparing the `body` with its current state.
+        """
+        return pulumi.get(self, "ignore_body_changes")
+
+    @ignore_body_changes.setter
+    def ignore_body_changes(self, value: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]]):
+        pulumi.set(self, "ignore_body_changes", value)
 
     @property
     @pulumi.getter(name="ignoreCasing")
@@ -474,6 +513,8 @@ class _ResourceState:
         - tenant scope: `parent_id` should be `/`
 
         For child level resources, the `parent_id` should be the ID of its parent resource, for example, subnet resource's `parent_id` is the ID of the vnet.
+
+        For type `Microsoft.Resources/resourceGroups`, the `parent_id` could be omitted, it defaults to subscription ID specified in provider or the default subscription(You could check the default subscription by azure cli command: `az account show`).
         """
         return pulumi.get(self, "parent_id")
 
@@ -564,6 +605,7 @@ class Resource(pulumi.CustomResource):
                  opts: Optional[pulumi.ResourceOptions] = None,
                  body: Optional[pulumi.Input[str]] = None,
                  identity: Optional[pulumi.Input[pulumi.InputType['ResourceIdentityArgs']]] = None,
+                 ignore_body_changes: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]] = None,
                  ignore_casing: Optional[pulumi.Input[bool]] = None,
                  ignore_missing_property: Optional[pulumi.Input[bool]] = None,
                  location: Optional[pulumi.Input[str]] = None,
@@ -589,6 +631,7 @@ class Resource(pulumi.CustomResource):
         :param pulumi.ResourceOptions opts: Options for the resource.
         :param pulumi.Input[str] body: A JSON object that contains the request body used to create and update azure resource.
         :param pulumi.Input[pulumi.InputType['ResourceIdentityArgs']] identity: A `identity` block as defined below.
+        :param pulumi.Input[Sequence[pulumi.Input[str]]] ignore_body_changes: A list of properties that should be ignored when comparing the `body` with its current state.
         :param pulumi.Input[bool] ignore_casing: Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.
         :param pulumi.Input[bool] ignore_missing_property: Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.
         :param pulumi.Input[str] location: The Azure Region where the azure resource should exist.
@@ -602,6 +645,8 @@ class Resource(pulumi.CustomResource):
                - tenant scope: `parent_id` should be `/`
                
                For child level resources, the `parent_id` should be the ID of its parent resource, for example, subnet resource's `parent_id` is the ID of the vnet.
+               
+               For type `Microsoft.Resources/resourceGroups`, the `parent_id` could be omitted, it defaults to subscription ID specified in provider or the default subscription(You could check the default subscription by azure cli command: `az account show`).
         :param pulumi.Input[bool] removing_special_chars: Whether to remove special characters in resource name. Defaults to `false`.
         :param pulumi.Input[Sequence[pulumi.Input[str]]] response_export_values: A list of path that needs to be exported from response body.
                Setting it to `["*"]` will export the full response body.
@@ -655,6 +700,7 @@ class Resource(pulumi.CustomResource):
                  opts: Optional[pulumi.ResourceOptions] = None,
                  body: Optional[pulumi.Input[str]] = None,
                  identity: Optional[pulumi.Input[pulumi.InputType['ResourceIdentityArgs']]] = None,
+                 ignore_body_changes: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]] = None,
                  ignore_casing: Optional[pulumi.Input[bool]] = None,
                  ignore_missing_property: Optional[pulumi.Input[bool]] = None,
                  location: Optional[pulumi.Input[str]] = None,
@@ -677,13 +723,12 @@ class Resource(pulumi.CustomResource):
 
             __props__.__dict__["body"] = body
             __props__.__dict__["identity"] = identity
+            __props__.__dict__["ignore_body_changes"] = ignore_body_changes
             __props__.__dict__["ignore_casing"] = ignore_casing
             __props__.__dict__["ignore_missing_property"] = ignore_missing_property
             __props__.__dict__["location"] = location
             __props__.__dict__["locks"] = locks
             __props__.__dict__["name"] = name
-            if parent_id is None and not opts.urn:
-                raise TypeError("Missing required property 'parent_id'")
             __props__.__dict__["parent_id"] = parent_id
             __props__.__dict__["removing_special_chars"] = removing_special_chars
             __props__.__dict__["response_export_values"] = response_export_values
@@ -705,6 +750,7 @@ class Resource(pulumi.CustomResource):
             opts: Optional[pulumi.ResourceOptions] = None,
             body: Optional[pulumi.Input[str]] = None,
             identity: Optional[pulumi.Input[pulumi.InputType['ResourceIdentityArgs']]] = None,
+            ignore_body_changes: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]] = None,
             ignore_casing: Optional[pulumi.Input[bool]] = None,
             ignore_missing_property: Optional[pulumi.Input[bool]] = None,
             location: Optional[pulumi.Input[str]] = None,
@@ -726,6 +772,7 @@ class Resource(pulumi.CustomResource):
         :param pulumi.ResourceOptions opts: Options for the resource.
         :param pulumi.Input[str] body: A JSON object that contains the request body used to create and update azure resource.
         :param pulumi.Input[pulumi.InputType['ResourceIdentityArgs']] identity: A `identity` block as defined below.
+        :param pulumi.Input[Sequence[pulumi.Input[str]]] ignore_body_changes: A list of properties that should be ignored when comparing the `body` with its current state.
         :param pulumi.Input[bool] ignore_casing: Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.
         :param pulumi.Input[bool] ignore_missing_property: Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.
         :param pulumi.Input[str] location: The Azure Region where the azure resource should exist.
@@ -745,6 +792,8 @@ class Resource(pulumi.CustomResource):
                - tenant scope: `parent_id` should be `/`
                
                For child level resources, the `parent_id` should be the ID of its parent resource, for example, subnet resource's `parent_id` is the ID of the vnet.
+               
+               For type `Microsoft.Resources/resourceGroups`, the `parent_id` could be omitted, it defaults to subscription ID specified in provider or the default subscription(You could check the default subscription by azure cli command: `az account show`).
         :param pulumi.Input[bool] removing_special_chars: Whether to remove special characters in resource name. Defaults to `false`.
         :param pulumi.Input[Sequence[pulumi.Input[str]]] response_export_values: A list of path that needs to be exported from response body.
                Setting it to `["*"]` will export the full response body.
@@ -772,6 +821,7 @@ class Resource(pulumi.CustomResource):
 
         __props__.__dict__["body"] = body
         __props__.__dict__["identity"] = identity
+        __props__.__dict__["ignore_body_changes"] = ignore_body_changes
         __props__.__dict__["ignore_casing"] = ignore_casing
         __props__.__dict__["ignore_missing_property"] = ignore_missing_property
         __props__.__dict__["location"] = location
@@ -801,6 +851,14 @@ class Resource(pulumi.CustomResource):
         A `identity` block as defined below.
         """
         return pulumi.get(self, "identity")
+
+    @property
+    @pulumi.getter(name="ignoreBodyChanges")
+    def ignore_body_changes(self) -> pulumi.Output[Optional[Sequence[str]]]:
+        """
+        A list of properties that should be ignored when comparing the `body` with its current state.
+        """
+        return pulumi.get(self, "ignore_body_changes")
 
     @property
     @pulumi.getter(name="ignoreCasing")
@@ -867,6 +925,8 @@ class Resource(pulumi.CustomResource):
         - tenant scope: `parent_id` should be `/`
 
         For child level resources, the `parent_id` should be the ID of its parent resource, for example, subnet resource's `parent_id` is the ID of the vnet.
+
+        For type `Microsoft.Resources/resourceGroups`, the `parent_id` could be omitted, it defaults to subscription ID specified in provider or the default subscription(You could check the default subscription by azure cli command: `az account show`).
         """
         return pulumi.get(self, "parent_id")
 

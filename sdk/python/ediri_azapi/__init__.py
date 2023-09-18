@@ -8,6 +8,8 @@ import typing
 from .data_plane_resource import *
 from .get_resource import *
 from .get_resource_action import *
+from .get_resource_id import *
+from .get_resource_list import *
 from .provider import *
 from .resource import *
 from .resource_action import *

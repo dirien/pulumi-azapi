@@ -45,6 +45,8 @@ export interface GetResourceArgs {
      * - tenant scope: `parentId` should be `/`
      *
      * For child level resources, the `parentId` should be the ID of its parent resource, for example, subnet resource's `parentId` is the ID of the vnet.
+     *
+     * For type `Microsoft.Resources/resourceGroups`, the `parentId` could be omitted, it defaults to subscription ID specified in provider or the default subscription(You could check the default subscription by azure cli command: `az account show`).
      */
     parentId?: string;
     /**
@@ -104,7 +106,7 @@ export interface GetResourceResult {
      * }
      */
     readonly output: string;
-    readonly parentId?: string;
+    readonly parentId: string;
     readonly resourceId?: string;
     readonly responseExportValues?: string[];
     /**
@@ -146,6 +148,8 @@ export interface GetResourceOutputArgs {
      * - tenant scope: `parentId` should be `/`
      *
      * For child level resources, the `parentId` should be the ID of its parent resource, for example, subnet resource's `parentId` is the ID of the vnet.
+     *
+     * For type `Microsoft.Resources/resourceGroups`, the `parentId` could be omitted, it defaults to subscription ID specified in provider or the default subscription(You could check the default subscription by azure cli command: `az account show`).
      */
     parentId?: pulumi.Input<string>;
     /**

@@ -29,6 +29,12 @@ namespace ediri.Azapi
         public Output<string?> Body { get; private set; } = null!;
 
         /// <summary>
+        /// A list of properties that should be ignored when comparing the `body` with its current state.
+        /// </summary>
+        [Output("ignoreBodyChanges")]
+        public Output<ImmutableArray<string>> IgnoreBodyChanges { get; private set; } = null!;
+
+        /// <summary>
         /// Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.
         /// </summary>
         [Output("ignoreCasing")]
@@ -164,6 +170,18 @@ namespace ediri.Azapi
         [Input("body")]
         public Input<string>? Body { get; set; }
 
+        [Input("ignoreBodyChanges")]
+        private InputList<string>? _ignoreBodyChanges;
+
+        /// <summary>
+        /// A list of properties that should be ignored when comparing the `body` with its current state.
+        /// </summary>
+        public InputList<string> IgnoreBodyChanges
+        {
+            get => _ignoreBodyChanges ?? (_ignoreBodyChanges = new InputList<string>());
+            set => _ignoreBodyChanges = value;
+        }
+
         /// <summary>
         /// Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.
         /// </summary>
@@ -261,6 +279,18 @@ namespace ediri.Azapi
         /// </summary>
         [Input("body")]
         public Input<string>? Body { get; set; }
+
+        [Input("ignoreBodyChanges")]
+        private InputList<string>? _ignoreBodyChanges;
+
+        /// <summary>
+        /// A list of properties that should be ignored when comparing the `body` with its current state.
+        /// </summary>
+        public InputList<string> IgnoreBodyChanges
+        {
+            get => _ignoreBodyChanges ?? (_ignoreBodyChanges = new InputList<string>());
+            set => _ignoreBodyChanges = value;
+        }
 
         /// <summary>
         /// Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.
