@@ -8,7 +8,7 @@ namespace ediri.Azapi
 {
     public static class Config
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "IDE1006", Justification = 
+        [global::System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "IDE1006", Justification = 
         "Double underscore prefix used to avoid conflicts with variable names.")]
         private sealed class __Value<T>
         {
@@ -146,6 +146,13 @@ namespace ediri.Azapi
             set => _disableTerraformPartnerId.Set(value);
         }
 
+        private static readonly __Value<ediri.Azapi.Config.Types.Endpoint?> _endpoint = new __Value<ediri.Azapi.Config.Types.Endpoint?>(() => __config.GetObject<ediri.Azapi.Config.Types.Endpoint>("endpoint"));
+        public static ediri.Azapi.Config.Types.Endpoint? Endpoint
+        {
+            get => _endpoint.Get();
+            set => _endpoint.Set(value);
+        }
+
         private static readonly __Value<string?> _environment = new __Value<string?>(() => __config.Get("environment"));
         /// <summary>
         /// The Cloud Environment which should be used. Possible values are public, usgovernment and china. Defaults to public.
@@ -268,5 +275,15 @@ namespace ediri.Azapi
             set => _useOidc.Set(value);
         }
 
+        public static class Types
+        {
+
+             public class Endpoint
+             {
+                public string? ActiveDirectoryAuthorityHost { get; set; } = null!;
+                public string? ResourceManagerAudience { get; set; } = null!;
+                public string? ResourceManagerEndpoint { get; set; } = null!;
+            }
+        }
     }
 }

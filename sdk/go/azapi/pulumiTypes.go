@@ -9,10 +9,172 @@ import (
 
 	"github.com/pulumi/pulumi-azapi/sdk/go/azapi/internal"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
-	"github.com/pulumi/pulumi/sdk/v3/go/pulumix"
 )
 
 var _ = internal.GetEnvOrDefault
+
+type ProviderEndpoint struct {
+	ActiveDirectoryAuthorityHost *string `pulumi:"activeDirectoryAuthorityHost"`
+	ResourceManagerAudience      *string `pulumi:"resourceManagerAudience"`
+	ResourceManagerEndpoint      *string `pulumi:"resourceManagerEndpoint"`
+}
+
+// ProviderEndpointInput is an input type that accepts ProviderEndpointArgs and ProviderEndpointOutput values.
+// You can construct a concrete instance of `ProviderEndpointInput` via:
+//
+//	ProviderEndpointArgs{...}
+type ProviderEndpointInput interface {
+	pulumi.Input
+
+	ToProviderEndpointOutput() ProviderEndpointOutput
+	ToProviderEndpointOutputWithContext(context.Context) ProviderEndpointOutput
+}
+
+type ProviderEndpointArgs struct {
+	ActiveDirectoryAuthorityHost pulumi.StringPtrInput `pulumi:"activeDirectoryAuthorityHost"`
+	ResourceManagerAudience      pulumi.StringPtrInput `pulumi:"resourceManagerAudience"`
+	ResourceManagerEndpoint      pulumi.StringPtrInput `pulumi:"resourceManagerEndpoint"`
+}
+
+func (ProviderEndpointArgs) ElementType() reflect.Type {
+	return reflect.TypeOf((*ProviderEndpoint)(nil)).Elem()
+}
+
+func (i ProviderEndpointArgs) ToProviderEndpointOutput() ProviderEndpointOutput {
+	return i.ToProviderEndpointOutputWithContext(context.Background())
+}
+
+func (i ProviderEndpointArgs) ToProviderEndpointOutputWithContext(ctx context.Context) ProviderEndpointOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(ProviderEndpointOutput)
+}
+
+func (i ProviderEndpointArgs) ToProviderEndpointPtrOutput() ProviderEndpointPtrOutput {
+	return i.ToProviderEndpointPtrOutputWithContext(context.Background())
+}
+
+func (i ProviderEndpointArgs) ToProviderEndpointPtrOutputWithContext(ctx context.Context) ProviderEndpointPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(ProviderEndpointOutput).ToProviderEndpointPtrOutputWithContext(ctx)
+}
+
+// ProviderEndpointPtrInput is an input type that accepts ProviderEndpointArgs, ProviderEndpointPtr and ProviderEndpointPtrOutput values.
+// You can construct a concrete instance of `ProviderEndpointPtrInput` via:
+//
+//	        ProviderEndpointArgs{...}
+//
+//	or:
+//
+//	        nil
+type ProviderEndpointPtrInput interface {
+	pulumi.Input
+
+	ToProviderEndpointPtrOutput() ProviderEndpointPtrOutput
+	ToProviderEndpointPtrOutputWithContext(context.Context) ProviderEndpointPtrOutput
+}
+
+type providerEndpointPtrType ProviderEndpointArgs
+
+func ProviderEndpointPtr(v *ProviderEndpointArgs) ProviderEndpointPtrInput {
+	return (*providerEndpointPtrType)(v)
+}
+
+func (*providerEndpointPtrType) ElementType() reflect.Type {
+	return reflect.TypeOf((**ProviderEndpoint)(nil)).Elem()
+}
+
+func (i *providerEndpointPtrType) ToProviderEndpointPtrOutput() ProviderEndpointPtrOutput {
+	return i.ToProviderEndpointPtrOutputWithContext(context.Background())
+}
+
+func (i *providerEndpointPtrType) ToProviderEndpointPtrOutputWithContext(ctx context.Context) ProviderEndpointPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(ProviderEndpointPtrOutput)
+}
+
+type ProviderEndpointOutput struct{ *pulumi.OutputState }
+
+func (ProviderEndpointOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*ProviderEndpoint)(nil)).Elem()
+}
+
+func (o ProviderEndpointOutput) ToProviderEndpointOutput() ProviderEndpointOutput {
+	return o
+}
+
+func (o ProviderEndpointOutput) ToProviderEndpointOutputWithContext(ctx context.Context) ProviderEndpointOutput {
+	return o
+}
+
+func (o ProviderEndpointOutput) ToProviderEndpointPtrOutput() ProviderEndpointPtrOutput {
+	return o.ToProviderEndpointPtrOutputWithContext(context.Background())
+}
+
+func (o ProviderEndpointOutput) ToProviderEndpointPtrOutputWithContext(ctx context.Context) ProviderEndpointPtrOutput {
+	return o.ApplyTWithContext(ctx, func(_ context.Context, v ProviderEndpoint) *ProviderEndpoint {
+		return &v
+	}).(ProviderEndpointPtrOutput)
+}
+
+func (o ProviderEndpointOutput) ActiveDirectoryAuthorityHost() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v ProviderEndpoint) *string { return v.ActiveDirectoryAuthorityHost }).(pulumi.StringPtrOutput)
+}
+
+func (o ProviderEndpointOutput) ResourceManagerAudience() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v ProviderEndpoint) *string { return v.ResourceManagerAudience }).(pulumi.StringPtrOutput)
+}
+
+func (o ProviderEndpointOutput) ResourceManagerEndpoint() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v ProviderEndpoint) *string { return v.ResourceManagerEndpoint }).(pulumi.StringPtrOutput)
+}
+
+type ProviderEndpointPtrOutput struct{ *pulumi.OutputState }
+
+func (ProviderEndpointPtrOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((**ProviderEndpoint)(nil)).Elem()
+}
+
+func (o ProviderEndpointPtrOutput) ToProviderEndpointPtrOutput() ProviderEndpointPtrOutput {
+	return o
+}
+
+func (o ProviderEndpointPtrOutput) ToProviderEndpointPtrOutputWithContext(ctx context.Context) ProviderEndpointPtrOutput {
+	return o
+}
+
+func (o ProviderEndpointPtrOutput) Elem() ProviderEndpointOutput {
+	return o.ApplyT(func(v *ProviderEndpoint) ProviderEndpoint {
+		if v != nil {
+			return *v
+		}
+		var ret ProviderEndpoint
+		return ret
+	}).(ProviderEndpointOutput)
+}
+
+func (o ProviderEndpointPtrOutput) ActiveDirectoryAuthorityHost() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *ProviderEndpoint) *string {
+		if v == nil {
+			return nil
+		}
+		return v.ActiveDirectoryAuthorityHost
+	}).(pulumi.StringPtrOutput)
+}
+
+func (o ProviderEndpointPtrOutput) ResourceManagerAudience() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *ProviderEndpoint) *string {
+		if v == nil {
+			return nil
+		}
+		return v.ResourceManagerAudience
+	}).(pulumi.StringPtrOutput)
+}
+
+func (o ProviderEndpointPtrOutput) ResourceManagerEndpoint() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *ProviderEndpoint) *string {
+		if v == nil {
+			return nil
+		}
+		return v.ResourceManagerEndpoint
+	}).(pulumi.StringPtrOutput)
+}
 
 type ResourceIdentity struct {
 	// A list of User Managed Identity ID's which should be assigned to the azure resource.
@@ -59,12 +221,6 @@ func (i ResourceIdentityArgs) ToResourceIdentityOutputWithContext(ctx context.Co
 	return pulumi.ToOutputWithContext(ctx, i).(ResourceIdentityOutput)
 }
 
-func (i ResourceIdentityArgs) ToOutput(ctx context.Context) pulumix.Output[ResourceIdentity] {
-	return pulumix.Output[ResourceIdentity]{
-		OutputState: i.ToResourceIdentityOutputWithContext(ctx).OutputState,
-	}
-}
-
 func (i ResourceIdentityArgs) ToResourceIdentityPtrOutput() ResourceIdentityPtrOutput {
 	return i.ToResourceIdentityPtrOutputWithContext(context.Background())
 }
@@ -106,12 +262,6 @@ func (i *resourceIdentityPtrType) ToResourceIdentityPtrOutputWithContext(ctx con
 	return pulumi.ToOutputWithContext(ctx, i).(ResourceIdentityPtrOutput)
 }
 
-func (i *resourceIdentityPtrType) ToOutput(ctx context.Context) pulumix.Output[*ResourceIdentity] {
-	return pulumix.Output[*ResourceIdentity]{
-		OutputState: i.ToResourceIdentityPtrOutputWithContext(ctx).OutputState,
-	}
-}
-
 type ResourceIdentityOutput struct{ *pulumi.OutputState }
 
 func (ResourceIdentityOutput) ElementType() reflect.Type {
@@ -134,12 +284,6 @@ func (o ResourceIdentityOutput) ToResourceIdentityPtrOutputWithContext(ctx conte
 	return o.ApplyTWithContext(ctx, func(_ context.Context, v ResourceIdentity) *ResourceIdentity {
 		return &v
 	}).(ResourceIdentityPtrOutput)
-}
-
-func (o ResourceIdentityOutput) ToOutput(ctx context.Context) pulumix.Output[ResourceIdentity] {
-	return pulumix.Output[ResourceIdentity]{
-		OutputState: o.OutputState,
-	}
 }
 
 // A list of User Managed Identity ID's which should be assigned to the azure resource.
@@ -174,12 +318,6 @@ func (o ResourceIdentityPtrOutput) ToResourceIdentityPtrOutput() ResourceIdentit
 
 func (o ResourceIdentityPtrOutput) ToResourceIdentityPtrOutputWithContext(ctx context.Context) ResourceIdentityPtrOutput {
 	return o
-}
-
-func (o ResourceIdentityPtrOutput) ToOutput(ctx context.Context) pulumix.Output[*ResourceIdentity] {
-	return pulumix.Output[*ResourceIdentity]{
-		OutputState: o.OutputState,
-	}
 }
 
 func (o ResourceIdentityPtrOutput) Elem() ResourceIdentityOutput {
@@ -279,12 +417,6 @@ func (i GetResourceIdentityArgs) ToGetResourceIdentityOutputWithContext(ctx cont
 	return pulumi.ToOutputWithContext(ctx, i).(GetResourceIdentityOutput)
 }
 
-func (i GetResourceIdentityArgs) ToOutput(ctx context.Context) pulumix.Output[GetResourceIdentity] {
-	return pulumix.Output[GetResourceIdentity]{
-		OutputState: i.ToGetResourceIdentityOutputWithContext(ctx).OutputState,
-	}
-}
-
 func (i GetResourceIdentityArgs) ToGetResourceIdentityPtrOutput() GetResourceIdentityPtrOutput {
 	return i.ToGetResourceIdentityPtrOutputWithContext(context.Background())
 }
@@ -326,12 +458,6 @@ func (i *getResourceIdentityPtrType) ToGetResourceIdentityPtrOutputWithContext(c
 	return pulumi.ToOutputWithContext(ctx, i).(GetResourceIdentityPtrOutput)
 }
 
-func (i *getResourceIdentityPtrType) ToOutput(ctx context.Context) pulumix.Output[*GetResourceIdentity] {
-	return pulumix.Output[*GetResourceIdentity]{
-		OutputState: i.ToGetResourceIdentityPtrOutputWithContext(ctx).OutputState,
-	}
-}
-
 type GetResourceIdentityOutput struct{ *pulumi.OutputState }
 
 func (GetResourceIdentityOutput) ElementType() reflect.Type {
@@ -354,12 +480,6 @@ func (o GetResourceIdentityOutput) ToGetResourceIdentityPtrOutputWithContext(ctx
 	return o.ApplyTWithContext(ctx, func(_ context.Context, v GetResourceIdentity) *GetResourceIdentity {
 		return &v
 	}).(GetResourceIdentityPtrOutput)
-}
-
-func (o GetResourceIdentityOutput) ToOutput(ctx context.Context) pulumix.Output[GetResourceIdentity] {
-	return pulumix.Output[GetResourceIdentity]{
-		OutputState: o.OutputState,
-	}
 }
 
 // A list of User Managed Identity ID's which should be assigned to the azure resource.
@@ -395,12 +515,6 @@ func (o GetResourceIdentityPtrOutput) ToGetResourceIdentityPtrOutput() GetResour
 
 func (o GetResourceIdentityPtrOutput) ToGetResourceIdentityPtrOutputWithContext(ctx context.Context) GetResourceIdentityPtrOutput {
 	return o
-}
-
-func (o GetResourceIdentityPtrOutput) ToOutput(ctx context.Context) pulumix.Output[*GetResourceIdentity] {
-	return pulumix.Output[*GetResourceIdentity]{
-		OutputState: o.OutputState,
-	}
 }
 
 func (o GetResourceIdentityPtrOutput) Elem() GetResourceIdentityOutput {
@@ -455,10 +569,14 @@ func (o GetResourceIdentityPtrOutput) Type() pulumi.StringPtrOutput {
 }
 
 func init() {
+	pulumi.RegisterInputType(reflect.TypeOf((*ProviderEndpointInput)(nil)).Elem(), ProviderEndpointArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*ProviderEndpointPtrInput)(nil)).Elem(), ProviderEndpointArgs{})
 	pulumi.RegisterInputType(reflect.TypeOf((*ResourceIdentityInput)(nil)).Elem(), ResourceIdentityArgs{})
 	pulumi.RegisterInputType(reflect.TypeOf((*ResourceIdentityPtrInput)(nil)).Elem(), ResourceIdentityArgs{})
 	pulumi.RegisterInputType(reflect.TypeOf((*GetResourceIdentityInput)(nil)).Elem(), GetResourceIdentityArgs{})
 	pulumi.RegisterInputType(reflect.TypeOf((*GetResourceIdentityPtrInput)(nil)).Elem(), GetResourceIdentityArgs{})
+	pulumi.RegisterOutputType(ProviderEndpointOutput{})
+	pulumi.RegisterOutputType(ProviderEndpointPtrOutput{})
 	pulumi.RegisterOutputType(ResourceIdentityOutput{})
 	pulumi.RegisterOutputType(ResourceIdentityPtrOutput{})
 	pulumi.RegisterOutputType(GetResourceIdentityOutput{})

@@ -8,6 +8,7 @@ import pulumi
 import pulumi.runtime
 from typing import Any, Mapping, Optional, Sequence, Union, overload
 from .. import _utilities
+from . import outputs
 
 import types
 
@@ -89,6 +90,10 @@ class _ExportableConfig(types.ModuleType):
         This will disable the Terraform Partner ID which is used if a custom `partner_id` isn't specified.
         """
         return __config__.get_bool('disableTerraformPartnerId')
+
+    @property
+    def endpoint(self) -> Optional[str]:
+        return __config__.get('endpoint')
 
     @property
     def environment(self) -> Optional[str]:

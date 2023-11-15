@@ -2,6 +2,8 @@
 // *** Do not edit by hand unless you're certain you know what you are doing! ***
 
 import * as pulumi from "@pulumi/pulumi";
+import * as inputs from "../types/input";
+import * as outputs from "../types/output";
 import * as utilities from "../utilities";
 
 declare var exports: any;
@@ -130,6 +132,14 @@ export declare const disableTerraformPartnerId: boolean | undefined;
 Object.defineProperty(exports, "disableTerraformPartnerId", {
     get() {
         return __config.getObject<boolean>("disableTerraformPartnerId");
+    },
+    enumerable: true,
+});
+
+export declare const endpoint: outputs.config.Endpoint | undefined;
+Object.defineProperty(exports, "endpoint", {
+    get() {
+        return __config.getObject<outputs.config.Endpoint>("endpoint");
     },
     enumerable: true,
 });

@@ -10,7 +10,6 @@ import (
 	"errors"
 	"github.com/pulumi/pulumi-azapi/sdk/go/azapi/internal"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
-	"github.com/pulumi/pulumi/sdk/v3/go/pulumix"
 )
 
 // The provider type for the azapi package. By default, resources use package-wide configuration
@@ -97,7 +96,8 @@ type providerArgs struct {
 	// This will disable the x-ms-correlation-request-id header.
 	DisableCorrelationRequestId *bool `pulumi:"disableCorrelationRequestId"`
 	// This will disable the Terraform Partner ID which is used if a custom `partner_id` isn't specified.
-	DisableTerraformPartnerId *bool `pulumi:"disableTerraformPartnerId"`
+	DisableTerraformPartnerId *bool             `pulumi:"disableTerraformPartnerId"`
+	Endpoint                  *ProviderEndpoint `pulumi:"endpoint"`
 	// The Cloud Environment which should be used. Possible values are public, usgovernment and china. Defaults to public.
 	Environment string `pulumi:"environment"`
 	// The bearer token for the request to the OIDC provider. For use When authenticating as a Service Principal using OpenID
@@ -150,6 +150,7 @@ type ProviderArgs struct {
 	DisableCorrelationRequestId pulumi.BoolPtrInput
 	// This will disable the Terraform Partner ID which is used if a custom `partner_id` isn't specified.
 	DisableTerraformPartnerId pulumi.BoolPtrInput
+	Endpoint                  ProviderEndpointPtrInput
 	// The Cloud Environment which should be used. Possible values are public, usgovernment and china. Defaults to public.
 	Environment pulumi.StringInput
 	// The bearer token for the request to the OIDC provider. For use When authenticating as a Service Principal using OpenID
@@ -201,12 +202,6 @@ func (i *Provider) ToProviderOutputWithContext(ctx context.Context) ProviderOutp
 	return pulumi.ToOutputWithContext(ctx, i).(ProviderOutput)
 }
 
-func (i *Provider) ToOutput(ctx context.Context) pulumix.Output[*Provider] {
-	return pulumix.Output[*Provider]{
-		OutputState: i.ToProviderOutputWithContext(ctx).OutputState,
-	}
-}
-
 type ProviderOutput struct{ *pulumi.OutputState }
 
 func (ProviderOutput) ElementType() reflect.Type {
@@ -219,12 +214,6 @@ func (o ProviderOutput) ToProviderOutput() ProviderOutput {
 
 func (o ProviderOutput) ToProviderOutputWithContext(ctx context.Context) ProviderOutput {
 	return o
-}
-
-func (o ProviderOutput) ToOutput(ctx context.Context) pulumix.Output[*Provider] {
-	return pulumix.Output[*Provider]{
-		OutputState: o.OutputState,
-	}
 }
 
 // The password associated with the Client Certificate. For use when authenticating as a Service Principal using a Client

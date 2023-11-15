@@ -2,6 +2,8 @@
 // *** Do not edit by hand unless you're certain you know what you are doing! ***
 
 import * as pulumi from "@pulumi/pulumi";
+import * as inputs from "./types/input";
+import * as outputs from "./types/output";
 import * as utilities from "./utilities";
 
 /**
@@ -113,6 +115,7 @@ export class Provider extends pulumi.ProviderResource {
             resourceInputs["defaultTags"] = pulumi.output(args ? args.defaultTags : undefined).apply(JSON.stringify);
             resourceInputs["disableCorrelationRequestId"] = pulumi.output(args ? args.disableCorrelationRequestId : undefined).apply(JSON.stringify);
             resourceInputs["disableTerraformPartnerId"] = pulumi.output(args ? args.disableTerraformPartnerId : undefined).apply(JSON.stringify);
+            resourceInputs["endpoint"] = pulumi.output(args ? args.endpoint : undefined).apply(JSON.stringify);
             resourceInputs["environment"] = args ? args.environment : undefined;
             resourceInputs["oidcRequestToken"] = args ? args.oidcRequestToken : undefined;
             resourceInputs["oidcRequestUrl"] = args ? args.oidcRequestUrl : undefined;
@@ -171,6 +174,7 @@ export interface ProviderArgs {
      * This will disable the Terraform Partner ID which is used if a custom `partner_id` isn't specified.
      */
     disableTerraformPartnerId?: pulumi.Input<boolean>;
+    endpoint?: pulumi.Input<inputs.ProviderEndpoint>;
     /**
      * The Cloud Environment which should be used. Possible values are public, usgovernment and china. Defaults to public.
      */

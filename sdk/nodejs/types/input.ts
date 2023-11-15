@@ -45,6 +45,12 @@ export interface GetResourceIdentityArgs {
     type?: pulumi.Input<string>;
 }
 
+export interface ProviderEndpoint {
+    activeDirectoryAuthorityHost?: pulumi.Input<string>;
+    resourceManagerAudience?: pulumi.Input<string>;
+    resourceManagerEndpoint?: pulumi.Input<string>;
+}
+
 export interface ResourceIdentity {
     /**
      * A list of User Managed Identity ID's which should be assigned to the azure resource.
@@ -62,4 +68,6 @@ export interface ResourceIdentity {
      * The Type of Identity which should be used for this azure resource. Possible values are `SystemAssigned`, `UserAssigned` and `SystemAssigned,UserAssigned`.
      */
     type: pulumi.Input<string>;
+}
+export namespace config {
 }

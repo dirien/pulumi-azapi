@@ -9,7 +9,6 @@ import (
 
 	"github.com/pulumi/pulumi-azapi/sdk/go/azapi/internal"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
-	"github.com/pulumi/pulumi/sdk/v3/go/pulumix"
 )
 
 // This resource can access any existing Azure resource manager resource.
@@ -135,12 +134,6 @@ func (o LookupResourceResultOutput) ToLookupResourceResultOutput() LookupResourc
 
 func (o LookupResourceResultOutput) ToLookupResourceResultOutputWithContext(ctx context.Context) LookupResourceResultOutput {
 	return o
-}
-
-func (o LookupResourceResultOutput) ToOutput(ctx context.Context) pulumix.Output[LookupResourceResult] {
-	return pulumix.Output[LookupResourceResult]{
-		OutputState: o.OutputState,
-	}
 }
 
 // The provider-assigned unique ID for this managed resource.

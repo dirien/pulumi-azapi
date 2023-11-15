@@ -9,7 +9,6 @@ import (
 
 	"github.com/pulumi/pulumi-azapi/sdk/go/azapi/internal"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
-	"github.com/pulumi/pulumi/sdk/v3/go/pulumix"
 )
 
 // This resource can parse an Azure resource ID into its separate fields.
@@ -119,12 +118,6 @@ func (o GetResourceIdResultOutput) ToGetResourceIdResultOutput() GetResourceIdRe
 
 func (o GetResourceIdResultOutput) ToGetResourceIdResultOutputWithContext(ctx context.Context) GetResourceIdResultOutput {
 	return o
-}
-
-func (o GetResourceIdResultOutput) ToOutput(ctx context.Context) pulumix.Output[GetResourceIdResult] {
-	return pulumix.Output[GetResourceIdResult]{
-		OutputState: o.OutputState,
-	}
 }
 
 // The provider-assigned unique ID for this managed resource.

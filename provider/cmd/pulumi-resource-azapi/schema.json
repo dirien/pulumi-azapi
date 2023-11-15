@@ -113,6 +113,9 @@
                 "type": "boolean",
                 "description": "This will disable the Terraform Partner ID which is used if a custom `partner_id` isn't specified.\n"
             },
+            "endpoint": {
+                "$ref": "#/types/azapi:config/endpoint:endpoint"
+            },
             "environment": {
                 "type": "string",
                 "description": "The Cloud Environment which should be used. Possible values are public, usgovernment and china. Defaults to public.\n"
@@ -167,6 +170,34 @@
         ]
     },
     "types": {
+        "azapi:config/endpoint:endpoint": {
+            "properties": {
+                "activeDirectoryAuthorityHost": {
+                    "type": "string"
+                },
+                "resourceManagerAudience": {
+                    "type": "string"
+                },
+                "resourceManagerEndpoint": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "azapi:index/ProviderEndpoint:ProviderEndpoint": {
+            "properties": {
+                "activeDirectoryAuthorityHost": {
+                    "type": "string"
+                },
+                "resourceManagerAudience": {
+                    "type": "string"
+                },
+                "resourceManagerEndpoint": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
         "azapi:index/ResourceIdentity:ResourceIdentity": {
             "properties": {
                 "identityIds": {
@@ -294,6 +325,9 @@
                 "type": "boolean",
                 "description": "This will disable the Terraform Partner ID which is used if a custom `partner_id` isn't specified.\n"
             },
+            "endpoint": {
+                "$ref": "#/types/azapi:index/ProviderEndpoint:ProviderEndpoint"
+            },
             "environment": {
                 "type": "string",
                 "description": "The Cloud Environment which should be used. Possible values are public, usgovernment and china. Defaults to public.\n"
@@ -398,6 +432,9 @@
             "disableTerraformPartnerId": {
                 "type": "boolean",
                 "description": "This will disable the Terraform Partner ID which is used if a custom `partner_id` isn't specified.\n"
+            },
+            "endpoint": {
+                "$ref": "#/types/azapi:index/ProviderEndpoint:ProviderEndpoint"
             },
             "environment": {
                 "type": "string",

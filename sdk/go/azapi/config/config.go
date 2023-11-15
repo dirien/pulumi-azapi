@@ -66,6 +66,9 @@ func GetDisableCorrelationRequestId(ctx *pulumi.Context) bool {
 func GetDisableTerraformPartnerId(ctx *pulumi.Context) bool {
 	return config.GetBool(ctx, "azapi:disableTerraformPartnerId")
 }
+func GetEndpoint(ctx *pulumi.Context) string {
+	return config.Get(ctx, "azapi:endpoint")
+}
 
 // The Cloud Environment which should be used. Possible values are public, usgovernment and china. Defaults to public.
 func GetEnvironment(ctx *pulumi.Context) string {

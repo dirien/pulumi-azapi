@@ -8,6 +8,7 @@ import pulumi
 import pulumi.runtime
 from typing import Any, Mapping, Optional, Sequence, Union, overload
 from .. import _utilities
+from . import outputs
 
 auxiliaryTenantIds: Optional[str]
 
@@ -57,6 +58,8 @@ disableTerraformPartnerId: Optional[bool]
 """
 This will disable the Terraform Partner ID which is used if a custom `partner_id` isn't specified.
 """
+
+endpoint: Optional[str]
 
 environment: Optional[str]
 """
