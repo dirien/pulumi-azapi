@@ -10,7 +10,6 @@ import (
 	"errors"
 	"github.com/pulumi/pulumi-azapi/sdk/go/azapi/internal"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
-	"github.com/pulumi/pulumi/sdk/v3/go/pulumix"
 )
 
 // This resource can manage some Azure data plane resource.
@@ -261,12 +260,6 @@ func (i *DataPlaneResource) ToDataPlaneResourceOutputWithContext(ctx context.Con
 	return pulumi.ToOutputWithContext(ctx, i).(DataPlaneResourceOutput)
 }
 
-func (i *DataPlaneResource) ToOutput(ctx context.Context) pulumix.Output[*DataPlaneResource] {
-	return pulumix.Output[*DataPlaneResource]{
-		OutputState: i.ToDataPlaneResourceOutputWithContext(ctx).OutputState,
-	}
-}
-
 // DataPlaneResourceArrayInput is an input type that accepts DataPlaneResourceArray and DataPlaneResourceArrayOutput values.
 // You can construct a concrete instance of `DataPlaneResourceArrayInput` via:
 //
@@ -290,12 +283,6 @@ func (i DataPlaneResourceArray) ToDataPlaneResourceArrayOutput() DataPlaneResour
 
 func (i DataPlaneResourceArray) ToDataPlaneResourceArrayOutputWithContext(ctx context.Context) DataPlaneResourceArrayOutput {
 	return pulumi.ToOutputWithContext(ctx, i).(DataPlaneResourceArrayOutput)
-}
-
-func (i DataPlaneResourceArray) ToOutput(ctx context.Context) pulumix.Output[[]*DataPlaneResource] {
-	return pulumix.Output[[]*DataPlaneResource]{
-		OutputState: i.ToDataPlaneResourceArrayOutputWithContext(ctx).OutputState,
-	}
 }
 
 // DataPlaneResourceMapInput is an input type that accepts DataPlaneResourceMap and DataPlaneResourceMapOutput values.
@@ -323,12 +310,6 @@ func (i DataPlaneResourceMap) ToDataPlaneResourceMapOutputWithContext(ctx contex
 	return pulumi.ToOutputWithContext(ctx, i).(DataPlaneResourceMapOutput)
 }
 
-func (i DataPlaneResourceMap) ToOutput(ctx context.Context) pulumix.Output[map[string]*DataPlaneResource] {
-	return pulumix.Output[map[string]*DataPlaneResource]{
-		OutputState: i.ToDataPlaneResourceMapOutputWithContext(ctx).OutputState,
-	}
-}
-
 type DataPlaneResourceOutput struct{ *pulumi.OutputState }
 
 func (DataPlaneResourceOutput) ElementType() reflect.Type {
@@ -341,12 +322,6 @@ func (o DataPlaneResourceOutput) ToDataPlaneResourceOutput() DataPlaneResourceOu
 
 func (o DataPlaneResourceOutput) ToDataPlaneResourceOutputWithContext(ctx context.Context) DataPlaneResourceOutput {
 	return o
-}
-
-func (o DataPlaneResourceOutput) ToOutput(ctx context.Context) pulumix.Output[*DataPlaneResource] {
-	return pulumix.Output[*DataPlaneResource]{
-		OutputState: o.OutputState,
-	}
 }
 
 // A JSON object that contains the request body used to create and update data plane resource.
@@ -412,12 +387,6 @@ func (o DataPlaneResourceArrayOutput) ToDataPlaneResourceArrayOutputWithContext(
 	return o
 }
 
-func (o DataPlaneResourceArrayOutput) ToOutput(ctx context.Context) pulumix.Output[[]*DataPlaneResource] {
-	return pulumix.Output[[]*DataPlaneResource]{
-		OutputState: o.OutputState,
-	}
-}
-
 func (o DataPlaneResourceArrayOutput) Index(i pulumi.IntInput) DataPlaneResourceOutput {
 	return pulumi.All(o, i).ApplyT(func(vs []interface{}) *DataPlaneResource {
 		return vs[0].([]*DataPlaneResource)[vs[1].(int)]
@@ -436,12 +405,6 @@ func (o DataPlaneResourceMapOutput) ToDataPlaneResourceMapOutput() DataPlaneReso
 
 func (o DataPlaneResourceMapOutput) ToDataPlaneResourceMapOutputWithContext(ctx context.Context) DataPlaneResourceMapOutput {
 	return o
-}
-
-func (o DataPlaneResourceMapOutput) ToOutput(ctx context.Context) pulumix.Output[map[string]*DataPlaneResource] {
-	return pulumix.Output[map[string]*DataPlaneResource]{
-		OutputState: o.OutputState,
-	}
 }
 
 func (o DataPlaneResourceMapOutput) MapIndex(k pulumi.StringInput) DataPlaneResourceOutput {

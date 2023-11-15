@@ -214,6 +214,9 @@ namespace ediri.Azapi
         [Input("disableTerraformPartnerId", json: true)]
         public Input<bool>? DisableTerraformPartnerId { get; set; }
 
+        [Input("endpoint", json: true)]
+        public Input<Inputs.ProviderEndpointArgs>? Endpoint { get; set; }
+
         /// <summary>
         /// The Cloud Environment which should be used. Possible values are public, usgovernment and china. Defaults to public.
         /// </summary>

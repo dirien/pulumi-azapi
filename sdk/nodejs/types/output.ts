@@ -44,3 +44,11 @@ export interface ResourceIdentity {
     type: string;
 }
 
+export namespace config {
+    export interface Endpoint {
+        activeDirectoryAuthorityHost?: string;
+        resourceManagerAudience?: string;
+        resourceManagerEndpoint?: string;
+    }
+
+}

@@ -8,6 +8,7 @@ import pulumi
 import pulumi.runtime
 from typing import Any, Mapping, Optional, Sequence, Union, overload
 from . import _utilities
+from ._inputs import *
 
 __all__ = ['ProviderArgs', 'Provider']
 
@@ -28,6 +29,7 @@ class ProviderArgs:
                  default_tags: Optional[pulumi.Input[Mapping[str, pulumi.Input[str]]]] = None,
                  disable_correlation_request_id: Optional[pulumi.Input[bool]] = None,
                  disable_terraform_partner_id: Optional[pulumi.Input[bool]] = None,
+                 endpoint: Optional[pulumi.Input['ProviderEndpointArgs']] = None,
                  oidc_request_token: Optional[pulumi.Input[str]] = None,
                  oidc_request_url: Optional[pulumi.Input[str]] = None,
                  oidc_token: Optional[pulumi.Input[str]] = None,
@@ -92,6 +94,8 @@ class ProviderArgs:
             pulumi.set(__self__, "disable_correlation_request_id", disable_correlation_request_id)
         if disable_terraform_partner_id is not None:
             pulumi.set(__self__, "disable_terraform_partner_id", disable_terraform_partner_id)
+        if endpoint is not None:
+            pulumi.set(__self__, "endpoint", endpoint)
         if oidc_request_token is not None:
             pulumi.set(__self__, "oidc_request_token", oidc_request_token)
         if oidc_request_url is not None:
@@ -268,6 +272,15 @@ class ProviderArgs:
         pulumi.set(self, "disable_terraform_partner_id", value)
 
     @property
+    @pulumi.getter
+    def endpoint(self) -> Optional[pulumi.Input['ProviderEndpointArgs']]:
+        return pulumi.get(self, "endpoint")
+
+    @endpoint.setter
+    def endpoint(self, value: Optional[pulumi.Input['ProviderEndpointArgs']]):
+        pulumi.set(self, "endpoint", value)
+
+    @property
     @pulumi.getter(name="oidcRequestToken")
     def oidc_request_token(self) -> Optional[pulumi.Input[str]]:
         """
@@ -420,6 +433,7 @@ class Provider(pulumi.ProviderResource):
                  default_tags: Optional[pulumi.Input[Mapping[str, pulumi.Input[str]]]] = None,
                  disable_correlation_request_id: Optional[pulumi.Input[bool]] = None,
                  disable_terraform_partner_id: Optional[pulumi.Input[bool]] = None,
+                 endpoint: Optional[pulumi.Input[pulumi.InputType['ProviderEndpointArgs']]] = None,
                  environment: Optional[pulumi.Input[str]] = None,
                  oidc_request_token: Optional[pulumi.Input[str]] = None,
                  oidc_request_url: Optional[pulumi.Input[str]] = None,
@@ -505,6 +519,7 @@ class Provider(pulumi.ProviderResource):
                  default_tags: Optional[pulumi.Input[Mapping[str, pulumi.Input[str]]]] = None,
                  disable_correlation_request_id: Optional[pulumi.Input[bool]] = None,
                  disable_terraform_partner_id: Optional[pulumi.Input[bool]] = None,
+                 endpoint: Optional[pulumi.Input[pulumi.InputType['ProviderEndpointArgs']]] = None,
                  environment: Optional[pulumi.Input[str]] = None,
                  oidc_request_token: Optional[pulumi.Input[str]] = None,
                  oidc_request_url: Optional[pulumi.Input[str]] = None,
@@ -539,6 +554,7 @@ class Provider(pulumi.ProviderResource):
             __props__.__dict__["default_tags"] = pulumi.Output.from_input(default_tags).apply(pulumi.runtime.to_json) if default_tags is not None else None
             __props__.__dict__["disable_correlation_request_id"] = pulumi.Output.from_input(disable_correlation_request_id).apply(pulumi.runtime.to_json) if disable_correlation_request_id is not None else None
             __props__.__dict__["disable_terraform_partner_id"] = pulumi.Output.from_input(disable_terraform_partner_id).apply(pulumi.runtime.to_json) if disable_terraform_partner_id is not None else None
+            __props__.__dict__["endpoint"] = pulumi.Output.from_input(endpoint).apply(pulumi.runtime.to_json) if endpoint is not None else None
             if environment is None and not opts.urn:
                 raise TypeError("Missing required property 'environment'")
             __props__.__dict__["environment"] = environment

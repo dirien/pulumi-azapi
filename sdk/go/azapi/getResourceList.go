@@ -9,7 +9,6 @@ import (
 
 	"github.com/pulumi/pulumi-azapi/sdk/go/azapi/internal"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
-	"github.com/pulumi/pulumi/sdk/v3/go/pulumix"
 )
 
 // This resource can list all resources of a specific type under a scope. If the API supports paging, it will automatically fetch all pages and return the full list.
@@ -92,12 +91,6 @@ func (o GetResourceListResultOutput) ToGetResourceListResultOutput() GetResource
 
 func (o GetResourceListResultOutput) ToGetResourceListResultOutputWithContext(ctx context.Context) GetResourceListResultOutput {
 	return o
-}
-
-func (o GetResourceListResultOutput) ToOutput(ctx context.Context) pulumix.Output[GetResourceListResult] {
-	return pulumix.Output[GetResourceListResult]{
-		OutputState: o.OutputState,
-	}
 }
 
 // The provider-assigned unique ID for this managed resource.

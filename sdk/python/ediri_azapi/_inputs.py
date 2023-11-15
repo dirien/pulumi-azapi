@@ -10,9 +10,51 @@ from typing import Any, Mapping, Optional, Sequence, Union, overload
 from . import _utilities
 
 __all__ = [
+    'ProviderEndpointArgs',
     'ResourceIdentityArgs',
     'GetResourceIdentityArgs',
 ]
+
+@pulumi.input_type
+class ProviderEndpointArgs:
+    def __init__(__self__, *,
+                 active_directory_authority_host: Optional[pulumi.Input[str]] = None,
+                 resource_manager_audience: Optional[pulumi.Input[str]] = None,
+                 resource_manager_endpoint: Optional[pulumi.Input[str]] = None):
+        if active_directory_authority_host is not None:
+            pulumi.set(__self__, "active_directory_authority_host", active_directory_authority_host)
+        if resource_manager_audience is not None:
+            pulumi.set(__self__, "resource_manager_audience", resource_manager_audience)
+        if resource_manager_endpoint is not None:
+            pulumi.set(__self__, "resource_manager_endpoint", resource_manager_endpoint)
+
+    @property
+    @pulumi.getter(name="activeDirectoryAuthorityHost")
+    def active_directory_authority_host(self) -> Optional[pulumi.Input[str]]:
+        return pulumi.get(self, "active_directory_authority_host")
+
+    @active_directory_authority_host.setter
+    def active_directory_authority_host(self, value: Optional[pulumi.Input[str]]):
+        pulumi.set(self, "active_directory_authority_host", value)
+
+    @property
+    @pulumi.getter(name="resourceManagerAudience")
+    def resource_manager_audience(self) -> Optional[pulumi.Input[str]]:
+        return pulumi.get(self, "resource_manager_audience")
+
+    @resource_manager_audience.setter
+    def resource_manager_audience(self, value: Optional[pulumi.Input[str]]):
+        pulumi.set(self, "resource_manager_audience", value)
+
+    @property
+    @pulumi.getter(name="resourceManagerEndpoint")
+    def resource_manager_endpoint(self) -> Optional[pulumi.Input[str]]:
+        return pulumi.get(self, "resource_manager_endpoint")
+
+    @resource_manager_endpoint.setter
+    def resource_manager_endpoint(self, value: Optional[pulumi.Input[str]]):
+        pulumi.set(self, "resource_manager_endpoint", value)
+
 
 @pulumi.input_type
 class ResourceIdentityArgs:
