@@ -15,7 +15,7 @@ namespace ediri.Azapi
     /// It's recommended to use `azapi.ResourceAction` resource to perform actions which change a resource's state, please use `azapi.ResourceAction` data source,
     /// if user wants to perform readonly action.
     /// 
-    /// &gt; **Note** When delete `azapi.ResourceAction`, no operation will be performed.
+    /// &gt; **Note** The action can be performed on either apply or destroy. The default is apply, see `when` argument for more details.
     /// 
     /// ## Example Usage
     /// 
@@ -66,6 +66,7 @@ namespace ediri.Azapi
         /// A list of path that needs to be exported from response body.
         /// Setting it to `["*"]` will export the full response body.
         /// Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
+        /// 
         /// ```
         /// {
         /// "keys": [
@@ -92,6 +93,12 @@ namespace ediri.Azapi
         /// </summary>
         [Output("type")]
         public Output<string> Type { get; private set; } = null!;
+
+        /// <summary>
+        /// When to perform the action, value must be one of: `apply`, `destroy`. Default is `apply`.
+        /// </summary>
+        [Output("when")]
+        public Output<string?> When { get; private set; } = null!;
 
 
         /// <summary>
@@ -183,6 +190,7 @@ namespace ediri.Azapi
         /// A list of path that needs to be exported from response body.
         /// Setting it to `["*"]` will export the full response body.
         /// Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
+        /// 
         /// ```
         /// {
         /// "keys": [
@@ -212,6 +220,12 @@ namespace ediri.Azapi
         /// </summary>
         [Input("type", required: true)]
         public Input<string> Type { get; set; } = null!;
+
+        /// <summary>
+        /// When to perform the action, value must be one of: `apply`, `destroy`. Default is `apply`.
+        /// </summary>
+        [Input("when")]
+        public Input<string>? When { get; set; }
 
         public ResourceActionArgs()
         {
@@ -270,6 +284,7 @@ namespace ediri.Azapi
         /// A list of path that needs to be exported from response body.
         /// Setting it to `["*"]` will export the full response body.
         /// Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
+        /// 
         /// ```
         /// {
         /// "keys": [
@@ -299,6 +314,12 @@ namespace ediri.Azapi
         /// </summary>
         [Input("type")]
         public Input<string>? Type { get; set; }
+
+        /// <summary>
+        /// When to perform the action, value must be one of: `apply`, `destroy`. Default is `apply`.
+        /// </summary>
+        [Input("when")]
+        public Input<string>? When { get; set; }
 
         public ResourceActionState()
         {

@@ -20,7 +20,8 @@ class ResourceActionArgs:
                  body: Optional[pulumi.Input[str]] = None,
                  locks: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]] = None,
                  method: Optional[pulumi.Input[str]] = None,
-                 response_export_values: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]] = None):
+                 response_export_values: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]] = None,
+                 when: Optional[pulumi.Input[str]] = None):
         """
         The set of arguments for constructing a ResourceAction resource.
         :param pulumi.Input[str] resource_id: The ID of an existing azure source.
@@ -33,6 +34,7 @@ class ResourceActionArgs:
         :param pulumi.Input[Sequence[pulumi.Input[str]]] response_export_values: A list of path that needs to be exported from response body.
                Setting it to `["*"]` will export the full response body.
                Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
+               
                ```
                {
                "keys": [
@@ -49,6 +51,7 @@ class ResourceActionArgs:
                ]
                }
                ```
+        :param pulumi.Input[str] when: When to perform the action, value must be one of: `apply`, `destroy`. Default is `apply`.
         """
         pulumi.set(__self__, "resource_id", resource_id)
         pulumi.set(__self__, "type", type)
@@ -62,6 +65,8 @@ class ResourceActionArgs:
             pulumi.set(__self__, "method", method)
         if response_export_values is not None:
             pulumi.set(__self__, "response_export_values", response_export_values)
+        if when is not None:
+            pulumi.set(__self__, "when", when)
 
     @property
     @pulumi.getter(name="resourceId")
@@ -143,6 +148,7 @@ class ResourceActionArgs:
         A list of path that needs to be exported from response body.
         Setting it to `["*"]` will export the full response body.
         Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
+
         ```
         {
         "keys": [
@@ -166,6 +172,18 @@ class ResourceActionArgs:
     def response_export_values(self, value: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]]):
         pulumi.set(self, "response_export_values", value)
 
+    @property
+    @pulumi.getter
+    def when(self) -> Optional[pulumi.Input[str]]:
+        """
+        When to perform the action, value must be one of: `apply`, `destroy`. Default is `apply`.
+        """
+        return pulumi.get(self, "when")
+
+    @when.setter
+    def when(self, value: Optional[pulumi.Input[str]]):
+        pulumi.set(self, "when", value)
+
 
 @pulumi.input_type
 class _ResourceActionState:
@@ -177,7 +195,8 @@ class _ResourceActionState:
                  output: Optional[pulumi.Input[str]] = None,
                  resource_id: Optional[pulumi.Input[str]] = None,
                  response_export_values: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]] = None,
-                 type: Optional[pulumi.Input[str]] = None):
+                 type: Optional[pulumi.Input[str]] = None,
+                 when: Optional[pulumi.Input[str]] = None):
         """
         Input properties used for looking up and filtering ResourceAction resources.
         :param pulumi.Input[str] action: The name of the resource action. It's also possible to make Http requests towards the resource ID if leave this field empty.
@@ -189,6 +208,7 @@ class _ResourceActionState:
         :param pulumi.Input[Sequence[pulumi.Input[str]]] response_export_values: A list of path that needs to be exported from response body.
                Setting it to `["*"]` will export the full response body.
                Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
+               
                ```
                {
                "keys": [
@@ -207,6 +227,7 @@ class _ResourceActionState:
                ```
         :param pulumi.Input[str] type: It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
                `<api-version>` is version of the API used to manage this azure resource.
+        :param pulumi.Input[str] when: When to perform the action, value must be one of: `apply`, `destroy`. Default is `apply`.
         """
         if action is not None:
             pulumi.set(__self__, "action", action)
@@ -224,6 +245,8 @@ class _ResourceActionState:
             pulumi.set(__self__, "response_export_values", response_export_values)
         if type is not None:
             pulumi.set(__self__, "type", type)
+        if when is not None:
+            pulumi.set(__self__, "when", when)
 
     @property
     @pulumi.getter
@@ -304,6 +327,7 @@ class _ResourceActionState:
         A list of path that needs to be exported from response body.
         Setting it to `["*"]` will export the full response body.
         Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
+
         ```
         {
         "keys": [
@@ -340,6 +364,18 @@ class _ResourceActionState:
     def type(self, value: Optional[pulumi.Input[str]]):
         pulumi.set(self, "type", value)
 
+    @property
+    @pulumi.getter
+    def when(self) -> Optional[pulumi.Input[str]]:
+        """
+        When to perform the action, value must be one of: `apply`, `destroy`. Default is `apply`.
+        """
+        return pulumi.get(self, "when")
+
+    @when.setter
+    def when(self, value: Optional[pulumi.Input[str]]):
+        pulumi.set(self, "when", value)
+
 
 class ResourceAction(pulumi.CustomResource):
     @overload
@@ -353,13 +389,14 @@ class ResourceAction(pulumi.CustomResource):
                  resource_id: Optional[pulumi.Input[str]] = None,
                  response_export_values: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]] = None,
                  type: Optional[pulumi.Input[str]] = None,
+                 when: Optional[pulumi.Input[str]] = None,
                  __props__=None):
         """
         This resource can perform any Azure resource manager resource action.
         It's recommended to use `ResourceAction` resource to perform actions which change a resource's state, please use `ResourceAction` data source,
         if user wants to perform readonly action.
 
-        > **Note** When delete `ResourceAction`, no operation will be performed.
+        > **Note** The action can be performed on either apply or destroy. The default is apply, see `when` argument for more details.
 
         ## Example Usage
 
@@ -377,6 +414,7 @@ class ResourceAction(pulumi.CustomResource):
         :param pulumi.Input[Sequence[pulumi.Input[str]]] response_export_values: A list of path that needs to be exported from response body.
                Setting it to `["*"]` will export the full response body.
                Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
+               
                ```
                {
                "keys": [
@@ -395,6 +433,7 @@ class ResourceAction(pulumi.CustomResource):
                ```
         :param pulumi.Input[str] type: It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
                `<api-version>` is version of the API used to manage this azure resource.
+        :param pulumi.Input[str] when: When to perform the action, value must be one of: `apply`, `destroy`. Default is `apply`.
         """
         ...
     @overload
@@ -407,7 +446,7 @@ class ResourceAction(pulumi.CustomResource):
         It's recommended to use `ResourceAction` resource to perform actions which change a resource's state, please use `ResourceAction` data source,
         if user wants to perform readonly action.
 
-        > **Note** When delete `ResourceAction`, no operation will be performed.
+        > **Note** The action can be performed on either apply or destroy. The default is apply, see `when` argument for more details.
 
         ## Example Usage
 
@@ -437,6 +476,7 @@ class ResourceAction(pulumi.CustomResource):
                  resource_id: Optional[pulumi.Input[str]] = None,
                  response_export_values: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]] = None,
                  type: Optional[pulumi.Input[str]] = None,
+                 when: Optional[pulumi.Input[str]] = None,
                  __props__=None):
         opts = pulumi.ResourceOptions.merge(_utilities.get_resource_opts_defaults(), opts)
         if not isinstance(opts, pulumi.ResourceOptions):
@@ -457,6 +497,7 @@ class ResourceAction(pulumi.CustomResource):
             if type is None and not opts.urn:
                 raise TypeError("Missing required property 'type'")
             __props__.__dict__["type"] = type
+            __props__.__dict__["when"] = when
             __props__.__dict__["output"] = None
         super(ResourceAction, __self__).__init__(
             'azapi:index/resourceAction:ResourceAction',
@@ -475,7 +516,8 @@ class ResourceAction(pulumi.CustomResource):
             output: Optional[pulumi.Input[str]] = None,
             resource_id: Optional[pulumi.Input[str]] = None,
             response_export_values: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]] = None,
-            type: Optional[pulumi.Input[str]] = None) -> 'ResourceAction':
+            type: Optional[pulumi.Input[str]] = None,
+            when: Optional[pulumi.Input[str]] = None) -> 'ResourceAction':
         """
         Get an existing ResourceAction resource's state with the given name, id, and optional extra
         properties used to qualify the lookup.
@@ -492,6 +534,7 @@ class ResourceAction(pulumi.CustomResource):
         :param pulumi.Input[Sequence[pulumi.Input[str]]] response_export_values: A list of path that needs to be exported from response body.
                Setting it to `["*"]` will export the full response body.
                Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
+               
                ```
                {
                "keys": [
@@ -510,6 +553,7 @@ class ResourceAction(pulumi.CustomResource):
                ```
         :param pulumi.Input[str] type: It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
                `<api-version>` is version of the API used to manage this azure resource.
+        :param pulumi.Input[str] when: When to perform the action, value must be one of: `apply`, `destroy`. Default is `apply`.
         """
         opts = pulumi.ResourceOptions.merge(opts, pulumi.ResourceOptions(id=id))
 
@@ -523,6 +567,7 @@ class ResourceAction(pulumi.CustomResource):
         __props__.__dict__["resource_id"] = resource_id
         __props__.__dict__["response_export_values"] = response_export_values
         __props__.__dict__["type"] = type
+        __props__.__dict__["when"] = when
         return ResourceAction(resource_name, opts=opts, __props__=__props__)
 
     @property
@@ -580,6 +625,7 @@ class ResourceAction(pulumi.CustomResource):
         A list of path that needs to be exported from response body.
         Setting it to `["*"]` will export the full response body.
         Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
+
         ```
         {
         "keys": [
@@ -607,4 +653,12 @@ class ResourceAction(pulumi.CustomResource):
         `<api-version>` is version of the API used to manage this azure resource.
         """
         return pulumi.get(self, "type")
+
+    @property
+    @pulumi.getter
+    def when(self) -> pulumi.Output[Optional[str]]:
+        """
+        When to perform the action, value must be one of: `apply`, `destroy`. Default is `apply`.
+        """
+        return pulumi.get(self, "when")
 

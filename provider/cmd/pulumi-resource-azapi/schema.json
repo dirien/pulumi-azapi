@@ -25,7 +25,7 @@
             "rootNamespace": "ediri"
         },
         "go": {
-            "importBasePath": "github.com/pulumi/pulumi-azapi/sdk/go/azapi",
+            "importBasePath": "github.com/dirien/pulumi-azapi/sdk/go/azapi",
             "generateResourceContainerTypes": true,
             "generateExtraInputTypes": true
         },
@@ -883,7 +883,7 @@
             }
         },
         "azapi:index/resourceAction:ResourceAction": {
-            "description": "This resource can perform any Azure resource manager resource action. \nIt's recommended to use `azapi.ResourceAction` resource to perform actions which change a resource's state, please use `azapi.ResourceAction` data source,\nif user wants to perform readonly action.\n\n\u003e **Note** When delete `azapi.ResourceAction`, no operation will be performed.\n\n## Example Usage\n\n```hcl\nterraform {\n  required_providers {\n    azapi = {\n      source = \"Azure/azapi\"\n    }\n  }\n}\n\nprovider \"azapi\" {\n}\n\nprovider \"azurerm\" {\n  features {}\n}\n\nvariable \"enabled\" {\n  type        = bool\n  default     = false\n  description = \"whether start the spring service\"\n}\n\nresource \"azurerm_resource_group\" \"example\" {\n  name     = \"example-rg\"\n  location = \"west europe\"\n}\n\nresource \"azurerm_spring_cloud_service\" \"test\" {\n  name                = \"example-spring\"\n  resource_group_name = azurerm_resource_group.test.name\n  location            = azurerm_resource_group.test.location\n  sku_name            = \"S0\"\n}\n\nresource \"azapi_resource_action\" \"start\" {\n  type                   = \"Microsoft.AppPlatform/Spring@2022-05-01-preview\"\n  resource_id            = azurerm_spring_cloud_service.test.id\n  action                 = \"start\"\n  response_export_values = [\"*\"]\n\n  count = var.enabled ? 1 : 0\n}\n\nresource \"azapi_resource_action\" \"stop\" {\n  type                   = \"Microsoft.AppPlatform/Spring@2022-05-01-preview\"\n  resource_id            = azurerm_spring_cloud_service.test.id\n  action                 = \"stop\"\n  response_export_values = [\"*\"]\n\n  count = var.enabled ? 0 : 1\n}\n```\n\nHere's an example to use the `azapi.ResourceAction` resource to register a provider.\n\n```hcl\nprovider \"azurerm\" {\n  features {}\n}\n\ndata \"azurerm_client_config\" \"current\" {}\n\nresource \"azapi_resource_action\" \"test\" {\n  type        = \"Microsoft.Resources/providers@2021-04-01\"\n  resource_id = \"/subscriptions/${data.azurerm_client_config.current.subscription_id}/providers/Microsoft.Compute\"\n  action      = \"register\"\n  method      = \"POST\"\n}\n```\n\nHere's an example to use the `azapi.ResourceAction` resource to perform a provider action.\n\n```hcl\nterraform {\n  required_providers {\n    azapi = {\n      source = \"Azure/azapi\"\n    }\n  }\n}\n\ndata \"azapi_resource_action\" \"test\" {\n  type        = \"Microsoft.ResourceGraph@2020-04-01-preview\"\n  resource_id = \"/providers/Microsoft.ResourceGraph\"\n  action      = \"resources\"\n  body = jsonencode({\n    query = \"resources| where name contains \\\"test\\\"\"\n  })\n  response_export_values = [\"*\"]\n}\n```\n",
+            "description": "This resource can perform any Azure resource manager resource action.\nIt's recommended to use `azapi.ResourceAction` resource to perform actions which change a resource's state, please use `azapi.ResourceAction` data source,\nif user wants to perform readonly action.\n\n\u003e **Note** The action can be performed on either apply or destroy. The default is apply, see `when` argument for more details.\n\n## Example Usage\n\n```hcl\nterraform {\n  required_providers {\n    azapi = {\n      source = \"Azure/azapi\"\n    }\n  }\n}\n\nprovider \"azapi\" {\n}\n\nprovider \"azurerm\" {\n  features {}\n}\n\nvariable \"enabled\" {\n  type        = bool\n  default     = false\n  description = \"whether start the spring service\"\n}\n\nresource \"azurerm_resource_group\" \"example\" {\n  name     = \"example-rg\"\n  location = \"west europe\"\n}\n\nresource \"azurerm_spring_cloud_service\" \"test\" {\n  name                = \"example-spring\"\n  resource_group_name = azurerm_resource_group.test.name\n  location            = azurerm_resource_group.test.location\n  sku_name            = \"S0\"\n}\n\nresource \"azapi_resource_action\" \"start\" {\n  type                   = \"Microsoft.AppPlatform/Spring@2022-05-01-preview\"\n  resource_id            = azurerm_spring_cloud_service.test.id\n  action                 = \"start\"\n  response_export_values = [\"*\"]\n\n  count = var.enabled ? 1 : 0\n}\n\nresource \"azapi_resource_action\" \"stop\" {\n  type                   = \"Microsoft.AppPlatform/Spring@2022-05-01-preview\"\n  resource_id            = azurerm_spring_cloud_service.test.id\n  action                 = \"stop\"\n  response_export_values = [\"*\"]\n\n  count = var.enabled ? 0 : 1\n}\n```\n\nHere's an example to use the `azapi.ResourceAction` resource to register a provider.\n\n```hcl\nprovider \"azurerm\" {\n  features {}\n}\n\ndata \"azurerm_client_config\" \"current\" {}\n\nresource \"azapi_resource_action\" \"test\" {\n  type        = \"Microsoft.Resources/providers@2021-04-01\"\n  resource_id = \"/subscriptions/${data.azurerm_client_config.current.subscription_id}/providers/Microsoft.Compute\"\n  action      = \"register\"\n  method      = \"POST\"\n}\n```\n\nHere's an example to use the `azapi.ResourceAction` resource to perform a provider action.\n\n```hcl\nterraform {\n  required_providers {\n    azapi = {\n      source = \"Azure/azapi\"\n    }\n  }\n}\n\ndata \"azapi_resource_action\" \"test\" {\n  type        = \"Microsoft.ResourceGraph@2020-04-01-preview\"\n  resource_id = \"/providers/Microsoft.ResourceGraph\"\n  action      = \"resources\"\n  body = jsonencode({\n    query = \"resources| where name contains \\\"test\\\"\"\n  })\n  response_export_values = [\"*\"]\n}\n```\n",
             "properties": {
                 "action": {
                     "type": "string",
@@ -917,11 +917,15 @@
                     "items": {
                         "type": "string"
                     },
-                    "description": "A list of path that needs to be exported from response body.\nSetting it to `[\"*\"]` will export the full response body.\nHere's an example. If it sets to `[\"keys\"]`, it will set the following json to computed property `output`.\n```\n{\n\"keys\": [\n{\n\"KeyName\": \"Primary\",\n\"Permissions\": \"Full\",\n\"Value\": \"nHGYNd******i4wdug==\"\n},\n{\n\"KeyName\": \"Secondary\",\n\"Permissions\": \"Full\",\n\"Value\": \"6yoCad******SLzKzg==\"\n}\n]\n}\n```\n"
+                    "description": "A list of path that needs to be exported from response body.\nSetting it to `[\"*\"]` will export the full response body.\nHere's an example. If it sets to `[\"keys\"]`, it will set the following json to computed property `output`.\n\n```\n{\n\"keys\": [\n{\n\"KeyName\": \"Primary\",\n\"Permissions\": \"Full\",\n\"Value\": \"nHGYNd******i4wdug==\"\n},\n{\n\"KeyName\": \"Secondary\",\n\"Permissions\": \"Full\",\n\"Value\": \"6yoCad******SLzKzg==\"\n}\n]\n}\n```\n"
                 },
                 "type": {
                     "type": "string",
                     "description": "It is in a format like `\u003cresource-type\u003e@\u003capi-version\u003e`. `\u003cresource-type\u003e` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.\n`\u003capi-version\u003e` is version of the API used to manage this azure resource.\n"
+                },
+                "when": {
+                    "type": "string",
+                    "description": "When to perform the action, value must be one of: `apply`, `destroy`. Default is `apply`.\n"
                 }
             },
             "required": [
@@ -960,12 +964,16 @@
                     "items": {
                         "type": "string"
                     },
-                    "description": "A list of path that needs to be exported from response body.\nSetting it to `[\"*\"]` will export the full response body.\nHere's an example. If it sets to `[\"keys\"]`, it will set the following json to computed property `output`.\n```\n{\n\"keys\": [\n{\n\"KeyName\": \"Primary\",\n\"Permissions\": \"Full\",\n\"Value\": \"nHGYNd******i4wdug==\"\n},\n{\n\"KeyName\": \"Secondary\",\n\"Permissions\": \"Full\",\n\"Value\": \"6yoCad******SLzKzg==\"\n}\n]\n}\n```\n"
+                    "description": "A list of path that needs to be exported from response body.\nSetting it to `[\"*\"]` will export the full response body.\nHere's an example. If it sets to `[\"keys\"]`, it will set the following json to computed property `output`.\n\n```\n{\n\"keys\": [\n{\n\"KeyName\": \"Primary\",\n\"Permissions\": \"Full\",\n\"Value\": \"nHGYNd******i4wdug==\"\n},\n{\n\"KeyName\": \"Secondary\",\n\"Permissions\": \"Full\",\n\"Value\": \"6yoCad******SLzKzg==\"\n}\n]\n}\n```\n"
                 },
                 "type": {
                     "type": "string",
                     "description": "It is in a format like `\u003cresource-type\u003e@\u003capi-version\u003e`. `\u003cresource-type\u003e` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.\n`\u003capi-version\u003e` is version of the API used to manage this azure resource.\n",
                     "willReplaceOnChanges": true
+                },
+                "when": {
+                    "type": "string",
+                    "description": "When to perform the action, value must be one of: `apply`, `destroy`. Default is `apply`.\n"
                 }
             },
             "requiredInputs": [
@@ -1009,12 +1017,16 @@
                         "items": {
                             "type": "string"
                         },
-                        "description": "A list of path that needs to be exported from response body.\nSetting it to `[\"*\"]` will export the full response body.\nHere's an example. If it sets to `[\"keys\"]`, it will set the following json to computed property `output`.\n```\n{\n\"keys\": [\n{\n\"KeyName\": \"Primary\",\n\"Permissions\": \"Full\",\n\"Value\": \"nHGYNd******i4wdug==\"\n},\n{\n\"KeyName\": \"Secondary\",\n\"Permissions\": \"Full\",\n\"Value\": \"6yoCad******SLzKzg==\"\n}\n]\n}\n```\n"
+                        "description": "A list of path that needs to be exported from response body.\nSetting it to `[\"*\"]` will export the full response body.\nHere's an example. If it sets to `[\"keys\"]`, it will set the following json to computed property `output`.\n\n```\n{\n\"keys\": [\n{\n\"KeyName\": \"Primary\",\n\"Permissions\": \"Full\",\n\"Value\": \"nHGYNd******i4wdug==\"\n},\n{\n\"KeyName\": \"Secondary\",\n\"Permissions\": \"Full\",\n\"Value\": \"6yoCad******SLzKzg==\"\n}\n]\n}\n```\n"
                     },
                     "type": {
                         "type": "string",
                         "description": "It is in a format like `\u003cresource-type\u003e@\u003capi-version\u003e`. `\u003cresource-type\u003e` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.\n`\u003capi-version\u003e` is version of the API used to manage this azure resource.\n",
                         "willReplaceOnChanges": true
+                    },
+                    "when": {
+                        "type": "string",
+                        "description": "When to perform the action, value must be one of: `apply`, `destroy`. Default is `apply`.\n"
                     }
                 },
                 "type": "object"

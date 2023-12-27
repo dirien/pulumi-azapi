@@ -4,7 +4,7 @@
 package config
 
 import (
-	"github.com/pulumi/pulumi-azapi/sdk/go/azapi/internal"
+	"github.com/dirien/pulumi-azapi/sdk/go/azapi/internal"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi/config"
 )

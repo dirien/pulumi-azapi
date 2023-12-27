@@ -8,7 +8,7 @@ import (
 	"reflect"
 
 	"errors"
-	"github.com/pulumi/pulumi-azapi/sdk/go/azapi/internal"
+	"github.com/dirien/pulumi-azapi/sdk/go/azapi/internal"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
@@ -16,7 +16,7 @@ import (
 // It's recommended to use `ResourceAction` resource to perform actions which change a resource's state, please use `ResourceAction` data source,
 // if user wants to perform readonly action.
 //
-// > **Note** When delete `ResourceAction`, no operation will be performed.
+// > **Note** The action can be performed on either apply or destroy. The default is apply, see `when` argument for more details.
 //
 // ## Example Usage
 //
@@ -45,6 +45,8 @@ type ResourceAction struct {
 	// It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
 	// `<api-version>` is version of the API used to manage this azure resource.
 	Type pulumi.StringOutput `pulumi:"type"`
+	// When to perform the action, value must be one of: `apply`, `destroy`. Default is `apply`.
+	When pulumi.StringPtrOutput `pulumi:"when"`
 }
 
 // NewResourceAction registers a new resource with the given unique name, arguments, and options.
@@ -102,6 +104,8 @@ type resourceActionState struct {
 	// It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
 	// `<api-version>` is version of the API used to manage this azure resource.
 	Type *string `pulumi:"type"`
+	// When to perform the action, value must be one of: `apply`, `destroy`. Default is `apply`.
+	When *string `pulumi:"when"`
 }
 
 type ResourceActionState struct {
@@ -124,6 +128,8 @@ type ResourceActionState struct {
 	// It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
 	// `<api-version>` is version of the API used to manage this azure resource.
 	Type pulumi.StringPtrInput
+	// When to perform the action, value must be one of: `apply`, `destroy`. Default is `apply`.
+	When pulumi.StringPtrInput
 }
 
 func (ResourceActionState) ElementType() reflect.Type {
@@ -148,6 +154,8 @@ type resourceActionArgs struct {
 	// It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
 	// `<api-version>` is version of the API used to manage this azure resource.
 	Type string `pulumi:"type"`
+	// When to perform the action, value must be one of: `apply`, `destroy`. Default is `apply`.
+	When *string `pulumi:"when"`
 }
 
 // The set of arguments for constructing a ResourceAction resource.
@@ -169,6 +177,8 @@ type ResourceActionArgs struct {
 	// It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
 	// `<api-version>` is version of the API used to manage this azure resource.
 	Type pulumi.StringInput
+	// When to perform the action, value must be one of: `apply`, `destroy`. Default is `apply`.
+	When pulumi.StringPtrInput
 }
 
 func (ResourceActionArgs) ElementType() reflect.Type {
@@ -299,6 +309,11 @@ func (o ResourceActionOutput) ResponseExportValues() pulumi.StringArrayOutput {
 // `<api-version>` is version of the API used to manage this azure resource.
 func (o ResourceActionOutput) Type() pulumi.StringOutput {
 	return o.ApplyT(func(v *ResourceAction) pulumi.StringOutput { return v.Type }).(pulumi.StringOutput)
+}
+
+// When to perform the action, value must be one of: `apply`, `destroy`. Default is `apply`.
+func (o ResourceActionOutput) When() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *ResourceAction) pulumi.StringPtrOutput { return v.When }).(pulumi.StringPtrOutput)
 }
 
 type ResourceActionArrayOutput struct{ *pulumi.OutputState }
