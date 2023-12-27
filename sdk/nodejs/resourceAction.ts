@@ -9,7 +9,7 @@ import * as utilities from "./utilities";
  * It's recommended to use `azapi.ResourceAction` resource to perform actions which change a resource's state, please use `azapi.ResourceAction` data source,
  * if user wants to perform readonly action.
  *
- * > **Note** When delete `azapi.ResourceAction`, no operation will be performed.
+ * > **Note** The action can be performed on either apply or destroy. The default is apply, see `when` argument for more details.
  *
  * ## Example Usage
  *
@@ -73,6 +73,7 @@ export class ResourceAction extends pulumi.CustomResource {
      * A list of path that needs to be exported from response body.
      * Setting it to `["*"]` will export the full response body.
      * Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
+     *
      * ```
      * {
      * "keys": [
@@ -96,6 +97,10 @@ export class ResourceAction extends pulumi.CustomResource {
      * `<api-version>` is version of the API used to manage this azure resource.
      */
     public readonly type!: pulumi.Output<string>;
+    /**
+     * When to perform the action, value must be one of: `apply`, `destroy`. Default is `apply`.
+     */
+    public readonly when!: pulumi.Output<string | undefined>;
 
     /**
      * Create a ResourceAction resource with the given unique name, arguments, and options.
@@ -118,6 +123,7 @@ export class ResourceAction extends pulumi.CustomResource {
             resourceInputs["resourceId"] = state ? state.resourceId : undefined;
             resourceInputs["responseExportValues"] = state ? state.responseExportValues : undefined;
             resourceInputs["type"] = state ? state.type : undefined;
+            resourceInputs["when"] = state ? state.when : undefined;
         } else {
             const args = argsOrState as ResourceActionArgs | undefined;
             if ((!args || args.resourceId === undefined) && !opts.urn) {
@@ -133,6 +139,7 @@ export class ResourceAction extends pulumi.CustomResource {
             resourceInputs["resourceId"] = args ? args.resourceId : undefined;
             resourceInputs["responseExportValues"] = args ? args.responseExportValues : undefined;
             resourceInputs["type"] = args ? args.type : undefined;
+            resourceInputs["when"] = args ? args.when : undefined;
             resourceInputs["output"] = undefined /*out*/;
         }
         opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts);
@@ -172,6 +179,7 @@ export interface ResourceActionState {
      * A list of path that needs to be exported from response body.
      * Setting it to `["*"]` will export the full response body.
      * Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
+     *
      * ```
      * {
      * "keys": [
@@ -195,6 +203,10 @@ export interface ResourceActionState {
      * `<api-version>` is version of the API used to manage this azure resource.
      */
     type?: pulumi.Input<string>;
+    /**
+     * When to perform the action, value must be one of: `apply`, `destroy`. Default is `apply`.
+     */
+    when?: pulumi.Input<string>;
 }
 
 /**
@@ -225,6 +237,7 @@ export interface ResourceActionArgs {
      * A list of path that needs to be exported from response body.
      * Setting it to `["*"]` will export the full response body.
      * Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
+     *
      * ```
      * {
      * "keys": [
@@ -248,4 +261,8 @@ export interface ResourceActionArgs {
      * `<api-version>` is version of the API used to manage this azure resource.
      */
     type: pulumi.Input<string>;
+    /**
+     * When to perform the action, value must be one of: `apply`, `destroy`. Default is `apply`.
+     */
+    when?: pulumi.Input<string>;
 }
