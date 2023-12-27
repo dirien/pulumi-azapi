@@ -1,5 +1,0 @@
-{
-  "resource": true,
-  "name": "azapi",
-  "server": "github://api.github.com/dirien/pulumi-azapi"
-}
