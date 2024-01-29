@@ -4,13 +4,15 @@ import (
 	"github.com/dirien/pulumi-azapi/go/azapi"
 	"github.com/pulumi/pulumi-azure/sdk/v5/go/azure/core"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
+	"github.com/pulumi/pulumi/sdk/v3/go/pulumi/config"
 )
 
 func main() {
 	pulumi.Run(func(ctx *pulumi.Context) error {
 
 		location := pulumi.String("West Europe")
-
+		cfg := config.New(ctx, "")
+		cfg.GetSecret("secret")
 		resourceGroup, err := core.NewResourceGroup(ctx, "resource-group", &core.ResourceGroupArgs{
 			Location: location,
 		})

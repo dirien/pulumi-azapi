@@ -15,12 +15,15 @@
 package azapi
 
 import (
+	_ "embed"
 	"fmt"
+	"path/filepath"
+
 	"github.com/Azure/terraform-provider-azapi/shim"
 	"github.com/dirien/pulumi-azapi/provider/pkg/version"
 	"github.com/pulumi/pulumi-terraform-bridge/v3/pkg/tfbridge"
+	tfbridgetokens "github.com/pulumi/pulumi-terraform-bridge/v3/pkg/tfbridge/tokens"
 	shimv2 "github.com/pulumi/pulumi-terraform-bridge/v3/pkg/tfshim/sdk-v2"
-	"path/filepath"
 )
 
 // all of the token components used below.
@@ -31,6 +34,9 @@ const (
 	// modules:
 	mainMod = "index" // the azapi module
 )
+
+//go:embed cmd/pulumi-resource-azapi/bridge-metadata.json
+var metadata []byte
 
 // Provider returns additional overlaid schema and metadata associated with the provider..
 func Provider() tfbridge.ProviderInfo {
@@ -66,9 +72,10 @@ func Provider() tfbridge.ProviderInfo {
 			"azapi",
 			"category/cloud",
 		},
-		License:    "Apache-2.0",
-		Homepage:   "https://github.com/dirien/pulumi-azapi",
-		Repository: "https://github.com/dirien/pulumi-azapi",
+		License:      "Apache-2.0",
+		Homepage:     "https://github.com/dirien/pulumi-azapi",
+		Repository:   "https://github.com/dirien/pulumi-azapi",
+		MetadataInfo: tfbridge.NewProviderMetadata(metadata),
 		// The GitHub Org for the provider - defaults to `terraform-providers`. Note that this
 		// should match the TF provider module's require directive, not any replace directives.
 		GitHubOrg: "Azure",
@@ -95,19 +102,11 @@ func Provider() tfbridge.ProviderInfo {
 			// 		"tags": {Type: tfbridge.MakeType(mainPkg, "Tags")},
 			// 	},
 			// },
-			"azapi_resource":            {Tok: tfbridge.MakeResource(mainPkg, mainMod, "Resource")},
-			"azapi_resource_action":     {Tok: tfbridge.MakeResource(mainPkg, mainMod, "ResourceAction")},
-			"azapi_update_resource":     {Tok: tfbridge.MakeResource(mainPkg, mainMod, "UpdateResource")},
-			"azapi_data_plane_resource": {Tok: tfbridge.MakeResource(mainPkg, mainMod, "DataPlaneResource")},
 		},
 		DataSources: map[string]*tfbridge.DataSourceInfo{
 			// Map each resource in the Terraform provider to a Pulumi function. An example
 			// is below.
 			// "aws_ami": {Tok: tfbridge.MakeDataSource(mainPkg, mainMod, "getAmi")},
-			"azapi_resource":        {Tok: tfbridge.MakeDataSource(mainPkg, mainMod, "getResource")},
-			"azapi_resource_action": {Tok: tfbridge.MakeDataSource(mainPkg, mainMod, "getResourceAction")},
-			"azapi_resource_id":     {Tok: tfbridge.MakeDataSource(mainPkg, mainMod, "getResourceId")},
-			"azapi_resource_list":   {Tok: tfbridge.MakeDataSource(mainPkg, mainMod, "getResourceList")},
 		},
 		JavaScript: &tfbridge.JavaScriptInfo{
 			PackageName: "@ediri/azapi",
@@ -153,6 +152,9 @@ func Provider() tfbridge.ProviderInfo {
 			BasePackage: "io.dirien",
 		},
 	}
+
+	prov.MustComputeTokens(tfbridgetokens.SingleModule("azapi_", mainMod,
+		tfbridgetokens.MakeStandard(mainPkg)))
 
 	prov.SetAutonaming(255, "-")
 

@@ -94,10 +94,12 @@
                 "type": "string"
             },
             "defaultNamingPrefix": {
-                "type": "string"
+                "type": "string",
+                "deprecationMessage": "It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead."
             },
             "defaultNamingSuffix": {
-                "type": "string"
+                "type": "string",
+                "deprecationMessage": "It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead."
             },
             "defaultTags": {
                 "type": "object",
@@ -306,10 +308,12 @@
                 "type": "string"
             },
             "defaultNamingPrefix": {
-                "type": "string"
+                "type": "string",
+                "deprecationMessage": "It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead."
             },
             "defaultNamingSuffix": {
-                "type": "string"
+                "type": "string",
+                "deprecationMessage": "It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead."
             },
             "defaultTags": {
                 "type": "object",
@@ -414,10 +418,12 @@
                 "type": "string"
             },
             "defaultNamingPrefix": {
-                "type": "string"
+                "type": "string",
+                "deprecationMessage": "It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead."
             },
             "defaultNamingSuffix": {
-                "type": "string"
+                "type": "string",
+                "deprecationMessage": "It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead."
             },
             "defaultTags": {
                 "type": "object",
@@ -690,7 +696,8 @@
                 },
                 "removingSpecialChars": {
                     "type": "boolean",
-                    "description": "Whether to remove special characters in resource name. Defaults to `false`.\n"
+                    "description": "Whether to remove special characters in resource name. Defaults to `false`.\n",
+                    "deprecationMessage": "It will not work in the next minor release and will be removed in the next major release. Please specify the `name` field and remove the special characters in the `name` field instead."
                 },
                 "responseExportValues": {
                     "type": "array",
@@ -772,7 +779,8 @@
                 },
                 "removingSpecialChars": {
                     "type": "boolean",
-                    "description": "Whether to remove special characters in resource name. Defaults to `false`.\n"
+                    "description": "Whether to remove special characters in resource name. Defaults to `false`.\n",
+                    "deprecationMessage": "It will not work in the next minor release and will be removed in the next major release. Please specify the `name` field and remove the special characters in the `name` field instead."
                 },
                 "responseExportValues": {
                     "type": "array",
@@ -854,7 +862,8 @@
                     },
                     "removingSpecialChars": {
                         "type": "boolean",
-                        "description": "Whether to remove special characters in resource name. Defaults to `false`.\n"
+                        "description": "Whether to remove special characters in resource name. Defaults to `false`.\n",
+                        "deprecationMessage": "It will not work in the next minor release and will be removed in the next major release. Please specify the `name` field and remove the special characters in the `name` field instead."
                     },
                     "responseExportValues": {
                         "type": "array",
