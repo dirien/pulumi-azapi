@@ -52,6 +52,8 @@ type Resource struct {
 	// For type `Microsoft.Resources/resourceGroups`, the `parentId` could be omitted, it defaults to subscription ID specified in provider or the default subscription(You could check the default subscription by azure cli command: `az account show`).
 	ParentId pulumi.StringOutput `pulumi:"parentId"`
 	// Whether to remove special characters in resource name. Defaults to `false`.
+	//
+	// Deprecated: It will not work in the next minor release and will be removed in the next major release. Please specify the `name` field and remove the special characters in the `name` field instead.
 	RemovingSpecialChars pulumi.BoolPtrOutput `pulumi:"removingSpecialChars"`
 	// A list of path that needs to be exported from response body.
 	// Setting it to `["*"]` will export the full response body.
@@ -129,6 +131,8 @@ type resourceState struct {
 	// For type `Microsoft.Resources/resourceGroups`, the `parentId` could be omitted, it defaults to subscription ID specified in provider or the default subscription(You could check the default subscription by azure cli command: `az account show`).
 	ParentId *string `pulumi:"parentId"`
 	// Whether to remove special characters in resource name. Defaults to `false`.
+	//
+	// Deprecated: It will not work in the next minor release and will be removed in the next major release. Please specify the `name` field and remove the special characters in the `name` field instead.
 	RemovingSpecialChars *bool `pulumi:"removingSpecialChars"`
 	// A list of path that needs to be exported from response body.
 	// Setting it to `["*"]` will export the full response body.
@@ -174,6 +178,8 @@ type ResourceState struct {
 	// For type `Microsoft.Resources/resourceGroups`, the `parentId` could be omitted, it defaults to subscription ID specified in provider or the default subscription(You could check the default subscription by azure cli command: `az account show`).
 	ParentId pulumi.StringPtrInput
 	// Whether to remove special characters in resource name. Defaults to `false`.
+	//
+	// Deprecated: It will not work in the next minor release and will be removed in the next major release. Please specify the `name` field and remove the special characters in the `name` field instead.
 	RemovingSpecialChars pulumi.BoolPtrInput
 	// A list of path that needs to be exported from response body.
 	// Setting it to `["*"]` will export the full response body.
@@ -221,6 +227,8 @@ type resourceArgs struct {
 	// For type `Microsoft.Resources/resourceGroups`, the `parentId` could be omitted, it defaults to subscription ID specified in provider or the default subscription(You could check the default subscription by azure cli command: `az account show`).
 	ParentId *string `pulumi:"parentId"`
 	// Whether to remove special characters in resource name. Defaults to `false`.
+	//
+	// Deprecated: It will not work in the next minor release and will be removed in the next major release. Please specify the `name` field and remove the special characters in the `name` field instead.
 	RemovingSpecialChars *bool `pulumi:"removingSpecialChars"`
 	// A list of path that needs to be exported from response body.
 	// Setting it to `["*"]` will export the full response body.
@@ -265,6 +273,8 @@ type ResourceArgs struct {
 	// For type `Microsoft.Resources/resourceGroups`, the `parentId` could be omitted, it defaults to subscription ID specified in provider or the default subscription(You could check the default subscription by azure cli command: `az account show`).
 	ParentId pulumi.StringPtrInput
 	// Whether to remove special characters in resource name. Defaults to `false`.
+	//
+	// Deprecated: It will not work in the next minor release and will be removed in the next major release. Please specify the `name` field and remove the special characters in the `name` field instead.
 	RemovingSpecialChars pulumi.BoolPtrInput
 	// A list of path that needs to be exported from response body.
 	// Setting it to `["*"]` will export the full response body.
@@ -426,6 +436,8 @@ func (o ResourceOutput) ParentId() pulumi.StringOutput {
 }
 
 // Whether to remove special characters in resource name. Defaults to `false`.
+//
+// Deprecated: It will not work in the next minor release and will be removed in the next major release. Please specify the `name` field and remove the special characters in the `name` field instead.
 func (o ResourceOutput) RemovingSpecialChars() pulumi.BoolPtrOutput {
 	return o.ApplyT(func(v *Resource) pulumi.BoolPtrOutput { return v.RemovingSpecialChars }).(pulumi.BoolPtrOutput)
 }

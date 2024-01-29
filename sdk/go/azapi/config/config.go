@@ -47,9 +47,13 @@ func GetDefaultLocation(ctx *pulumi.Context) string {
 func GetDefaultName(ctx *pulumi.Context) string {
 	return config.Get(ctx, "azapi:defaultName")
 }
+
+// Deprecated: It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead.
 func GetDefaultNamingPrefix(ctx *pulumi.Context) string {
 	return config.Get(ctx, "azapi:defaultNamingPrefix")
 }
+
+// Deprecated: It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead.
 func GetDefaultNamingSuffix(ctx *pulumi.Context) string {
 	return config.Get(ctx, "azapi:defaultNamingSuffix")
 }

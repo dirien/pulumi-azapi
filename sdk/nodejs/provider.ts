@@ -51,7 +51,13 @@ export class Provider extends pulumi.ProviderResource {
     public readonly customCorrelationRequestId!: pulumi.Output<string | undefined>;
     public readonly defaultLocation!: pulumi.Output<string | undefined>;
     public readonly defaultName!: pulumi.Output<string | undefined>;
+    /**
+     * @deprecated It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead.
+     */
     public readonly defaultNamingPrefix!: pulumi.Output<string | undefined>;
+    /**
+     * @deprecated It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead.
+     */
     public readonly defaultNamingSuffix!: pulumi.Output<string | undefined>;
     /**
      * The Cloud Environment which should be used. Possible values are public, usgovernment and china. Defaults to public.
@@ -163,7 +169,13 @@ export interface ProviderArgs {
     customCorrelationRequestId?: pulumi.Input<string>;
     defaultLocation?: pulumi.Input<string>;
     defaultName?: pulumi.Input<string>;
+    /**
+     * @deprecated It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead.
+     */
     defaultNamingPrefix?: pulumi.Input<string>;
+    /**
+     * @deprecated It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead.
+     */
     defaultNamingSuffix?: pulumi.Input<string>;
     defaultTags?: pulumi.Input<{[key: string]: pulumi.Input<string>}>;
     /**
