@@ -99,6 +99,8 @@ export class Resource extends pulumi.CustomResource {
     public readonly parentId!: pulumi.Output<string>;
     /**
      * Whether to remove special characters in resource name. Defaults to `false`.
+     *
+     * @deprecated It will not work in the next minor release and will be removed in the next major release. Please specify the `name` field and remove the special characters in the `name` field instead.
      */
     public readonly removingSpecialChars!: pulumi.Output<boolean | undefined>;
     /**
@@ -247,6 +249,8 @@ export interface ResourceState {
     parentId?: pulumi.Input<string>;
     /**
      * Whether to remove special characters in resource name. Defaults to `false`.
+     *
+     * @deprecated It will not work in the next minor release and will be removed in the next major release. Please specify the `name` field and remove the special characters in the `name` field instead.
      */
     removingSpecialChars?: pulumi.Input<boolean>;
     /**
@@ -333,6 +337,8 @@ export interface ResourceArgs {
     parentId?: pulumi.Input<string>;
     /**
      * Whether to remove special characters in resource name. Defaults to `false`.
+     *
+     * @deprecated It will not work in the next minor release and will be removed in the next major release. Please specify the `name` field and remove the special characters in the `name` field instead.
      */
     removingSpecialChars?: pulumi.Input<boolean>;
     /**

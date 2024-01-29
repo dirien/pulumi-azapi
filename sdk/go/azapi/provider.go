@@ -33,8 +33,10 @@ type Provider struct {
 	CustomCorrelationRequestId pulumi.StringPtrOutput `pulumi:"customCorrelationRequestId"`
 	DefaultLocation            pulumi.StringPtrOutput `pulumi:"defaultLocation"`
 	DefaultName                pulumi.StringPtrOutput `pulumi:"defaultName"`
-	DefaultNamingPrefix        pulumi.StringPtrOutput `pulumi:"defaultNamingPrefix"`
-	DefaultNamingSuffix        pulumi.StringPtrOutput `pulumi:"defaultNamingSuffix"`
+	// Deprecated: It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead.
+	DefaultNamingPrefix pulumi.StringPtrOutput `pulumi:"defaultNamingPrefix"`
+	// Deprecated: It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead.
+	DefaultNamingSuffix pulumi.StringPtrOutput `pulumi:"defaultNamingSuffix"`
 	// The Cloud Environment which should be used. Possible values are public, usgovernment and china. Defaults to public.
 	Environment pulumi.StringOutput `pulumi:"environment"`
 	// The bearer token for the request to the OIDC provider. For use When authenticating as a Service Principal using OpenID
@@ -87,12 +89,14 @@ type providerArgs struct {
 	// The Client Secret which should be used. For use When authenticating as a Service Principal using a Client Secret.
 	ClientSecret *string `pulumi:"clientSecret"`
 	// The value of the x-ms-correlation-request-id header (otherwise an auto-generated UUID will be used).
-	CustomCorrelationRequestId *string           `pulumi:"customCorrelationRequestId"`
-	DefaultLocation            *string           `pulumi:"defaultLocation"`
-	DefaultName                *string           `pulumi:"defaultName"`
-	DefaultNamingPrefix        *string           `pulumi:"defaultNamingPrefix"`
-	DefaultNamingSuffix        *string           `pulumi:"defaultNamingSuffix"`
-	DefaultTags                map[string]string `pulumi:"defaultTags"`
+	CustomCorrelationRequestId *string `pulumi:"customCorrelationRequestId"`
+	DefaultLocation            *string `pulumi:"defaultLocation"`
+	DefaultName                *string `pulumi:"defaultName"`
+	// Deprecated: It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead.
+	DefaultNamingPrefix *string `pulumi:"defaultNamingPrefix"`
+	// Deprecated: It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead.
+	DefaultNamingSuffix *string           `pulumi:"defaultNamingSuffix"`
+	DefaultTags         map[string]string `pulumi:"defaultTags"`
 	// This will disable the x-ms-correlation-request-id header.
 	DisableCorrelationRequestId *bool `pulumi:"disableCorrelationRequestId"`
 	// This will disable the Terraform Partner ID which is used if a custom `partner_id` isn't specified.
@@ -143,9 +147,11 @@ type ProviderArgs struct {
 	CustomCorrelationRequestId pulumi.StringPtrInput
 	DefaultLocation            pulumi.StringPtrInput
 	DefaultName                pulumi.StringPtrInput
-	DefaultNamingPrefix        pulumi.StringPtrInput
-	DefaultNamingSuffix        pulumi.StringPtrInput
-	DefaultTags                pulumi.StringMapInput
+	// Deprecated: It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead.
+	DefaultNamingPrefix pulumi.StringPtrInput
+	// Deprecated: It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead.
+	DefaultNamingSuffix pulumi.StringPtrInput
+	DefaultTags         pulumi.StringMapInput
 	// This will disable the x-ms-correlation-request-id header.
 	DisableCorrelationRequestId pulumi.BoolPtrInput
 	// This will disable the Terraform Partner ID which is used if a custom `partner_id` isn't specified.
@@ -251,10 +257,12 @@ func (o ProviderOutput) DefaultName() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *Provider) pulumi.StringPtrOutput { return v.DefaultName }).(pulumi.StringPtrOutput)
 }
 
+// Deprecated: It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead.
 func (o ProviderOutput) DefaultNamingPrefix() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *Provider) pulumi.StringPtrOutput { return v.DefaultNamingPrefix }).(pulumi.StringPtrOutput)
 }
 
+// Deprecated: It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead.
 func (o ProviderOutput) DefaultNamingSuffix() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *Provider) pulumi.StringPtrOutput { return v.DefaultNamingSuffix }).(pulumi.StringPtrOutput)
 }

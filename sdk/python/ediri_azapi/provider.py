@@ -85,7 +85,13 @@ class ProviderArgs:
         if default_name is not None:
             pulumi.set(__self__, "default_name", default_name)
         if default_naming_prefix is not None:
+            warnings.warn("""It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead.""", DeprecationWarning)
+            pulumi.log.warn("""default_naming_prefix is deprecated: It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead.""")
+        if default_naming_prefix is not None:
             pulumi.set(__self__, "default_naming_prefix", default_naming_prefix)
+        if default_naming_suffix is not None:
+            warnings.warn("""It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead.""", DeprecationWarning)
+            pulumi.log.warn("""default_naming_suffix is deprecated: It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead.""")
         if default_naming_suffix is not None:
             pulumi.set(__self__, "default_naming_suffix", default_naming_suffix)
         if default_tags is not None:
@@ -223,6 +229,9 @@ class ProviderArgs:
     @property
     @pulumi.getter(name="defaultNamingPrefix")
     def default_naming_prefix(self) -> Optional[pulumi.Input[str]]:
+        warnings.warn("""It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead.""", DeprecationWarning)
+        pulumi.log.warn("""default_naming_prefix is deprecated: It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead.""")
+
         return pulumi.get(self, "default_naming_prefix")
 
     @default_naming_prefix.setter
@@ -232,6 +241,9 @@ class ProviderArgs:
     @property
     @pulumi.getter(name="defaultNamingSuffix")
     def default_naming_suffix(self) -> Optional[pulumi.Input[str]]:
+        warnings.warn("""It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead.""", DeprecationWarning)
+        pulumi.log.warn("""default_naming_suffix is deprecated: It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead.""")
+
         return pulumi.get(self, "default_naming_suffix")
 
     @default_naming_suffix.setter
@@ -630,11 +642,17 @@ class Provider(pulumi.ProviderResource):
     @property
     @pulumi.getter(name="defaultNamingPrefix")
     def default_naming_prefix(self) -> pulumi.Output[Optional[str]]:
+        warnings.warn("""It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead.""", DeprecationWarning)
+        pulumi.log.warn("""default_naming_prefix is deprecated: It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead.""")
+
         return pulumi.get(self, "default_naming_prefix")
 
     @property
     @pulumi.getter(name="defaultNamingSuffix")
     def default_naming_suffix(self) -> pulumi.Output[Optional[str]]:
+        warnings.warn("""It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead.""", DeprecationWarning)
+        pulumi.log.warn("""default_naming_suffix is deprecated: It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead.""")
+
         return pulumi.get(self, "default_naming_suffix")
 
     @property
