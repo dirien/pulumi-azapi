@@ -14,9 +14,12 @@ import (
 var _ = internal.GetEnvOrDefault
 
 type ProviderEndpoint struct {
+	// The Active Directory login endpoint which should be used.
 	ActiveDirectoryAuthorityHost *string `pulumi:"activeDirectoryAuthorityHost"`
-	ResourceManagerAudience      *string `pulumi:"resourceManagerAudience"`
-	ResourceManagerEndpoint      *string `pulumi:"resourceManagerEndpoint"`
+	// The resource ID to obtain AD tokens for.
+	ResourceManagerAudience *string `pulumi:"resourceManagerAudience"`
+	// The Resource Manager Endpoint which should be used.
+	ResourceManagerEndpoint *string `pulumi:"resourceManagerEndpoint"`
 }
 
 // ProviderEndpointInput is an input type that accepts ProviderEndpointArgs and ProviderEndpointOutput values.
@@ -31,9 +34,12 @@ type ProviderEndpointInput interface {
 }
 
 type ProviderEndpointArgs struct {
+	// The Active Directory login endpoint which should be used.
 	ActiveDirectoryAuthorityHost pulumi.StringPtrInput `pulumi:"activeDirectoryAuthorityHost"`
-	ResourceManagerAudience      pulumi.StringPtrInput `pulumi:"resourceManagerAudience"`
-	ResourceManagerEndpoint      pulumi.StringPtrInput `pulumi:"resourceManagerEndpoint"`
+	// The resource ID to obtain AD tokens for.
+	ResourceManagerAudience pulumi.StringPtrInput `pulumi:"resourceManagerAudience"`
+	// The Resource Manager Endpoint which should be used.
+	ResourceManagerEndpoint pulumi.StringPtrInput `pulumi:"resourceManagerEndpoint"`
 }
 
 func (ProviderEndpointArgs) ElementType() reflect.Type {
@@ -113,14 +119,17 @@ func (o ProviderEndpointOutput) ToProviderEndpointPtrOutputWithContext(ctx conte
 	}).(ProviderEndpointPtrOutput)
 }
 
+// The Active Directory login endpoint which should be used.
 func (o ProviderEndpointOutput) ActiveDirectoryAuthorityHost() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v ProviderEndpoint) *string { return v.ActiveDirectoryAuthorityHost }).(pulumi.StringPtrOutput)
 }
 
+// The resource ID to obtain AD tokens for.
 func (o ProviderEndpointOutput) ResourceManagerAudience() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v ProviderEndpoint) *string { return v.ResourceManagerAudience }).(pulumi.StringPtrOutput)
 }
 
+// The Resource Manager Endpoint which should be used.
 func (o ProviderEndpointOutput) ResourceManagerEndpoint() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v ProviderEndpoint) *string { return v.ResourceManagerEndpoint }).(pulumi.StringPtrOutput)
 }
@@ -149,6 +158,7 @@ func (o ProviderEndpointPtrOutput) Elem() ProviderEndpointOutput {
 	}).(ProviderEndpointOutput)
 }
 
+// The Active Directory login endpoint which should be used.
 func (o ProviderEndpointPtrOutput) ActiveDirectoryAuthorityHost() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *ProviderEndpoint) *string {
 		if v == nil {
@@ -158,6 +168,7 @@ func (o ProviderEndpointPtrOutput) ActiveDirectoryAuthorityHost() pulumi.StringP
 	}).(pulumi.StringPtrOutput)
 }
 
+// The resource ID to obtain AD tokens for.
 func (o ProviderEndpointPtrOutput) ResourceManagerAudience() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *ProviderEndpoint) *string {
 		if v == nil {
@@ -167,6 +178,7 @@ func (o ProviderEndpointPtrOutput) ResourceManagerAudience() pulumi.StringPtrOut
 	}).(pulumi.StringPtrOutput)
 }
 
+// The Resource Manager Endpoint which should be used.
 func (o ProviderEndpointPtrOutput) ResourceManagerEndpoint() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *ProviderEndpoint) *string {
 		if v == nil {

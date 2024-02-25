@@ -14,9 +14,12 @@ import (
 var _ = internal.GetEnvOrDefault
 
 type Endpoint struct {
+	// The Active Directory login endpoint which should be used.
 	ActiveDirectoryAuthorityHost *string `pulumi:"activeDirectoryAuthorityHost"`
-	ResourceManagerAudience      *string `pulumi:"resourceManagerAudience"`
-	ResourceManagerEndpoint      *string `pulumi:"resourceManagerEndpoint"`
+	// The resource ID to obtain AD tokens for.
+	ResourceManagerAudience *string `pulumi:"resourceManagerAudience"`
+	// The Resource Manager Endpoint which should be used.
+	ResourceManagerEndpoint *string `pulumi:"resourceManagerEndpoint"`
 }
 
 // EndpointInput is an input type that accepts EndpointArgs and EndpointOutput values.
@@ -31,9 +34,12 @@ type EndpointInput interface {
 }
 
 type EndpointArgs struct {
+	// The Active Directory login endpoint which should be used.
 	ActiveDirectoryAuthorityHost pulumi.StringPtrInput `pulumi:"activeDirectoryAuthorityHost"`
-	ResourceManagerAudience      pulumi.StringPtrInput `pulumi:"resourceManagerAudience"`
-	ResourceManagerEndpoint      pulumi.StringPtrInput `pulumi:"resourceManagerEndpoint"`
+	// The resource ID to obtain AD tokens for.
+	ResourceManagerAudience pulumi.StringPtrInput `pulumi:"resourceManagerAudience"`
+	// The Resource Manager Endpoint which should be used.
+	ResourceManagerEndpoint pulumi.StringPtrInput `pulumi:"resourceManagerEndpoint"`
 }
 
 func (EndpointArgs) ElementType() reflect.Type {
@@ -62,14 +68,17 @@ func (o EndpointOutput) ToEndpointOutputWithContext(ctx context.Context) Endpoin
 	return o
 }
 
+// The Active Directory login endpoint which should be used.
 func (o EndpointOutput) ActiveDirectoryAuthorityHost() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v Endpoint) *string { return v.ActiveDirectoryAuthorityHost }).(pulumi.StringPtrOutput)
 }
 
+// The resource ID to obtain AD tokens for.
 func (o EndpointOutput) ResourceManagerAudience() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v Endpoint) *string { return v.ResourceManagerAudience }).(pulumi.StringPtrOutput)
 }
 
+// The Resource Manager Endpoint which should be used.
 func (o EndpointOutput) ResourceManagerEndpoint() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v Endpoint) *string { return v.ResourceManagerEndpoint }).(pulumi.StringPtrOutput)
 }

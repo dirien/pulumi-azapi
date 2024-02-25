@@ -46,8 +46,17 @@ export interface ResourceIdentity {
 
 export namespace config {
     export interface Endpoint {
+        /**
+         * The Active Directory login endpoint which should be used.
+         */
         activeDirectoryAuthorityHost?: string;
+        /**
+         * The resource ID to obtain AD tokens for.
+         */
         resourceManagerAudience?: string;
+        /**
+         * The Resource Manager Endpoint which should be used.
+         */
         resourceManagerEndpoint?: string;
     }
 

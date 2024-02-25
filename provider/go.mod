@@ -12,7 +12,7 @@ replace (
 
 require (
 	github.com/Azure/terraform-provider-azapi/shim v0.0.0-00010101000000-000000000000
-	github.com/pulumi/pulumi-terraform-bridge/pf v0.28.0
+	github.com/pulumi/pulumi-terraform-bridge/pf v0.27.0
 	github.com/pulumi/pulumi-terraform-bridge/v3 v3.75.0
 )
 
@@ -31,7 +31,7 @@ require (
 	github.com/Azure/azure-sdk-for-go/sdk/internal v1.5.0 // indirect
 	github.com/Azure/azure-sdk-for-go/sdk/keyvault/azkeys v0.10.0 // indirect
 	github.com/Azure/azure-sdk-for-go/sdk/keyvault/internal v0.7.1 // indirect
-	github.com/Azure/terraform-provider-azapi v1.12.0 // indirect
+	github.com/Azure/terraform-provider-azapi v1.12.1 // indirect
 	github.com/AzureAD/microsoft-authentication-library-for-go v1.2.0 // indirect
 	github.com/BurntSushi/toml v1.2.1 // indirect
 	github.com/Masterminds/goutils v1.1.1 // indirect
@@ -85,7 +85,7 @@ require (
 	github.com/go-git/gcfg v1.5.1-0.20230307220236-3a3c6141e376 // indirect
 	github.com/go-git/go-billy/v5 v5.5.0 // indirect
 	github.com/go-git/go-git/v5 v5.11.0 // indirect
-	github.com/gofrs/uuid v4.4.0+incompatible // indirect
+	github.com/gofrs/uuid v4.2.0+incompatible // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang-jwt/jwt/v5 v5.1.0 // indirect
 	github.com/golang/glog v1.1.2 // indirect
@@ -121,13 +121,11 @@ require (
 	github.com/hashicorp/go-uuid v1.0.3 // indirect
 	github.com/hashicorp/go-version v1.6.0 // indirect
 	github.com/hashicorp/golang-lru v0.5.4 // indirect
-	github.com/hashicorp/hc-install v0.6.2 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/hashicorp/hcl/v2 v2.19.1 // indirect
 	github.com/hashicorp/hil v0.0.0-20190212132231-97b3a9cdfa93 // indirect
 	github.com/hashicorp/logutils v1.0.0 // indirect
-	github.com/hashicorp/terraform-json v0.18.0 // indirect
-	github.com/hashicorp/terraform-plugin-framework v1.5.0 // indirect
+	github.com/hashicorp/terraform-plugin-framework v1.4.1 // indirect
 	github.com/hashicorp/terraform-plugin-go v0.22.0 // indirect
 	github.com/hashicorp/terraform-plugin-log v0.9.0 // indirect
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.33.0 // indirect

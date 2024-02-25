@@ -46,8 +46,17 @@ export interface GetResourceIdentityArgs {
 }
 
 export interface ProviderEndpoint {
+    /**
+     * The Active Directory login endpoint which should be used.
+     */
     activeDirectoryAuthorityHost?: pulumi.Input<string>;
+    /**
+     * The resource ID to obtain AD tokens for.
+     */
     resourceManagerAudience?: pulumi.Input<string>;
+    /**
+     * The Resource Manager Endpoint which should be used.
+     */
     resourceManagerEndpoint?: pulumi.Input<string>;
 }
 

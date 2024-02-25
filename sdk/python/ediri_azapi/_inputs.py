@@ -21,6 +21,11 @@ class ProviderEndpointArgs:
                  active_directory_authority_host: Optional[pulumi.Input[str]] = None,
                  resource_manager_audience: Optional[pulumi.Input[str]] = None,
                  resource_manager_endpoint: Optional[pulumi.Input[str]] = None):
+        """
+        :param pulumi.Input[str] active_directory_authority_host: The Active Directory login endpoint which should be used.
+        :param pulumi.Input[str] resource_manager_audience: The resource ID to obtain AD tokens for.
+        :param pulumi.Input[str] resource_manager_endpoint: The Resource Manager Endpoint which should be used.
+        """
         if active_directory_authority_host is not None:
             pulumi.set(__self__, "active_directory_authority_host", active_directory_authority_host)
         if resource_manager_audience is not None:
@@ -31,6 +36,9 @@ class ProviderEndpointArgs:
     @property
     @pulumi.getter(name="activeDirectoryAuthorityHost")
     def active_directory_authority_host(self) -> Optional[pulumi.Input[str]]:
+        """
+        The Active Directory login endpoint which should be used.
+        """
         return pulumi.get(self, "active_directory_authority_host")
 
     @active_directory_authority_host.setter
@@ -40,6 +48,9 @@ class ProviderEndpointArgs:
     @property
     @pulumi.getter(name="resourceManagerAudience")
     def resource_manager_audience(self) -> Optional[pulumi.Input[str]]:
+        """
+        The resource ID to obtain AD tokens for.
+        """
         return pulumi.get(self, "resource_manager_audience")
 
     @resource_manager_audience.setter
@@ -49,6 +60,9 @@ class ProviderEndpointArgs:
     @property
     @pulumi.getter(name="resourceManagerEndpoint")
     def resource_manager_endpoint(self) -> Optional[pulumi.Input[str]]:
+        """
+        The Resource Manager Endpoint which should be used.
+        """
         return pulumi.get(self, "resource_manager_endpoint")
 
     @resource_manager_endpoint.setter

@@ -137,9 +137,6 @@ namespace ediri.Azapi
         }
 
         private static readonly __Value<bool?> _disableTerraformPartnerId = new __Value<bool?>(() => __config.GetBoolean("disableTerraformPartnerId"));
-        /// <summary>
-        /// This will disable the Terraform Partner ID which is used if a custom `partner_id` isn't specified.
-        /// </summary>
         public static bool? DisableTerraformPartnerId
         {
             get => _disableTerraformPartnerId.Get();
@@ -280,8 +277,17 @@ namespace ediri.Azapi
 
              public class Endpoint
              {
+            /// <summary>
+            /// The Active Directory login endpoint which should be used.
+            /// </summary>
                 public string? ActiveDirectoryAuthorityHost { get; set; } = null!;
+            /// <summary>
+            /// The resource ID to obtain AD tokens for.
+            /// </summary>
                 public string? ResourceManagerAudience { get; set; } = null!;
+            /// <summary>
+            /// The Resource Manager Endpoint which should be used.
+            /// </summary>
                 public string? ResourceManagerEndpoint { get; set; } = null!;
             }
         }
