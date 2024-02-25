@@ -8,10 +8,10 @@ jobs:
     - name: Call upgrade provider action
       uses: pulumi/pulumi-upgrade-provider-action@e71a8c1d0846a21776530b135339c342896ce628 # v0.0.11
       with:
-        kind: provider
+        kind: all
         email: botdirien.de
         username: dirien-bot
-name: Upgrade provider
+name: Upgrade all (provider and bridge)
 
 permissions:
   contents: write
