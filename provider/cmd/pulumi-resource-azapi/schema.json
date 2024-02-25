@@ -112,8 +112,7 @@
                 "description": "This will disable the x-ms-correlation-request-id header.\n"
             },
             "disableTerraformPartnerId": {
-                "type": "boolean",
-                "description": "This will disable the Terraform Partner ID which is used if a custom `partner_id` isn't specified.\n"
+                "type": "boolean"
             },
             "endpoint": {
                 "$ref": "#/types/azapi:config/endpoint:endpoint"
@@ -175,13 +174,16 @@
         "azapi:config/endpoint:endpoint": {
             "properties": {
                 "activeDirectoryAuthorityHost": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "The Active Directory login endpoint which should be used.\n"
                 },
                 "resourceManagerAudience": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "The resource ID to obtain AD tokens for.\n"
                 },
                 "resourceManagerEndpoint": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "The Resource Manager Endpoint which should be used.\n"
                 }
             },
             "type": "object"
@@ -189,13 +191,16 @@
         "azapi:index/ProviderEndpoint:ProviderEndpoint": {
             "properties": {
                 "activeDirectoryAuthorityHost": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "The Active Directory login endpoint which should be used.\n"
                 },
                 "resourceManagerAudience": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "The resource ID to obtain AD tokens for.\n"
                 },
                 "resourceManagerEndpoint": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "The Resource Manager Endpoint which should be used.\n"
                 }
             },
             "type": "object"
@@ -646,7 +651,7 @@
             }
         },
         "azapi:index/resource:Resource": {
-            "description": "This resource can manage any Azure resource manager resource.\n\n## Example Usage\n\n```hcl\nterraform {\n  required_providers {\n    azapi = {\n      source = \"Azure/azapi\"\n    }\n  }\n}\n\nprovider \"azapi\" {\n}\n\nprovider \"azurerm\" {\n  features {}\n}\n\nresource \"azurerm_resource_group\" \"example\" {\n  name     = \"example-rg\"\n  location = \"west europe\"\n}\n\nresource \"azurerm_user_assigned_identity\" \"example\" {\n  name                = \"example\"\n  resource_group_name = azurerm_resource_group.example.name\n  location            = azurerm_resource_group.example.location\n}\n\n// manage a container registry resource\nresource \"azapi_resource\" \"example\" {\n  type      = \"Microsoft.ContainerRegistry/registries@2020-11-01-preview\"\n  name      = \"registry1\"\n  parent_id = azurerm_resource_group.example.id\n\n  location = azurerm_resource_group.example.location\n  identity {\n    type         = \"SystemAssigned, UserAssigned\"\n    identity_ids = [azurerm_user_assigned_identity.example.id]\n  }\n\n  body = jsonencode({\n    sku = {\n      name = \"Standard\"\n    }\n    properties = {\n      adminUserEnabled = true\n    }\n  })\n\n  tags = {\n    \"Key\" = \"Value\"\n  }\n\n  response_export_values = [\"properties.loginServer\", \"properties.policies.quarantinePolicy.status\"]\n}\n\n// it will output \"registry1.azurecr.io\"\noutput \"login_server\" {\n  value = jsondecode(azapi_resource.example.output).properties.loginServer\n}\n\n// it will output \"disabled\"\noutput \"quarantine_policy\" {\n  value = jsondecode(azapi_resource.example.output).properties.policies.quarantinePolicy.status\n}\n```\n\n## Import\n\nAzure resource can be imported using the `resource id`, e.g. \u003cbreak\u003e\u003cbreak\u003e```sh\u003cbreak\u003e $ pulumi import azapi:index/resource:Resource example /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/resGroup1/providers/Microsoft.MachineLearningServices/workspaces/workspace1/computes/cluster1 \u003cbreak\u003e```\u003cbreak\u003e\u003cbreak\u003e It also supports specifying API version by using the `resource id` with `api-version` as a query parameter, e.g. \u003cbreak\u003e\u003cbreak\u003e```sh\u003cbreak\u003e $ pulumi import azapi:index/resource:Resource example /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/resGroup1/providers/Microsoft.MachineLearningServices/workspaces/workspace1/computes/cluster1?api-version=2021-07-01 \u003cbreak\u003e```\u003cbreak\u003e\u003cbreak\u003e\n",
+            "description": "This resource can manage any Azure resource manager resource.\n\n## Example Usage\n\n```hcl\nterraform {\n  required_providers {\n    azapi = {\n      source = \"Azure/azapi\"\n    }\n  }\n}\n\nprovider \"azapi\" {\n}\n\nprovider \"azurerm\" {\n  features {}\n}\n\nresource \"azurerm_resource_group\" \"example\" {\n  name     = \"example-rg\"\n  location = \"west europe\"\n}\n\nresource \"azurerm_user_assigned_identity\" \"example\" {\n  name                = \"example\"\n  resource_group_name = azurerm_resource_group.example.name\n  location            = azurerm_resource_group.example.location\n}\n\n// manage a container registry resource\nresource \"azapi_resource\" \"example\" {\n  type      = \"Microsoft.ContainerRegistry/registries@2020-11-01-preview\"\n  name      = \"registry1\"\n  parent_id = azurerm_resource_group.example.id\n\n  location = azurerm_resource_group.example.location\n  identity {\n    type         = \"SystemAssigned, UserAssigned\"\n    identity_ids = [azurerm_user_assigned_identity.example.id]\n  }\n\n  body = jsonencode({\n    sku = {\n      name = \"Standard\"\n    }\n    properties = {\n      adminUserEnabled = true\n    }\n  })\n\n  tags = {\n    \"Key\" = \"Value\"\n  }\n\n  response_export_values = [\"properties.loginServer\", \"properties.policies.quarantinePolicy.status\"]\n}\n\n// it will output \"registry1.azurecr.io\"\noutput \"login_server\" {\n  value = jsondecode(azapi_resource.example.output).properties.loginServer\n}\n\n// it will output \"disabled\"\noutput \"quarantine_policy\" {\n  value = jsondecode(azapi_resource.example.output).properties.policies.quarantinePolicy.status\n}\n```\n\n## Import\n\nAzure resource can be imported using the `resource id`, e.g.\u003cbreak\u003e\u003cbreak\u003e ```sh\u003cbreak\u003e $ pulumi import azapi:index/resource:Resource example /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/resGroup1/providers/Microsoft.MachineLearningServices/workspaces/workspace1/computes/cluster1 \u003cbreak\u003e```\u003cbreak\u003e\u003cbreak\u003e It also supports specifying API version by using the `resource id` with `api-version` as a query parameter, e.g.\u003cbreak\u003e\u003cbreak\u003e ```sh\u003cbreak\u003e $ pulumi import azapi:index/resource:Resource example /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/resGroup1/providers/Microsoft.MachineLearningServices/workspaces/workspace1/computes/cluster1?api-version=2021-07-01 \u003cbreak\u003e```\u003cbreak\u003e\u003cbreak\u003e\n",
             "properties": {
                 "body": {
                     "type": "string",
