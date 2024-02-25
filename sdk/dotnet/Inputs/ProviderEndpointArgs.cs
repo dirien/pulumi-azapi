@@ -13,12 +13,21 @@ namespace ediri.Azapi.Inputs
 
     public sealed class ProviderEndpointArgs : global::Pulumi.ResourceArgs
     {
+        /// <summary>
+        /// The Active Directory login endpoint which should be used.
+        /// </summary>
         [Input("activeDirectoryAuthorityHost")]
         public Input<string>? ActiveDirectoryAuthorityHost { get; set; }
 
+        /// <summary>
+        /// The resource ID to obtain AD tokens for.
+        /// </summary>
         [Input("resourceManagerAudience")]
         public Input<string>? ResourceManagerAudience { get; set; }
 
+        /// <summary>
+        /// The Resource Manager Endpoint which should be used.
+        /// </summary>
         [Input("resourceManagerEndpoint")]
         public Input<string>? ResourceManagerEndpoint { get; set; }
 
