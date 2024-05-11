@@ -1,137 +1,16 @@
 {
-    "renames": {
+    "mux": {
         "resources": {
-            "azapi:index/dataPlaneResource:DataPlaneResource": "azapi_data_plane_resource",
-            "azapi:index/resource:Resource": "azapi_resource",
-            "azapi:index/resourceAction:ResourceAction": "azapi_resource_action",
-            "azapi:index/updateResource:UpdateResource": "azapi_update_resource"
+            "azapi:index/dataPlaneResource:DataPlaneResource": 0,
+            "azapi:index/resource:Resource": 0,
+            "azapi:index/resourceAction:ResourceAction": 0,
+            "azapi:index/updateResource:UpdateResource": 0
         },
         "functions": {
-            "azapi:index/getResource:getResource": "azapi_resource",
-            "azapi:index/getResourceAction:getResourceAction": "azapi_resource_action",
-            "azapi:index/getResourceId:getResourceId": "azapi_resource_id",
-            "azapi:index/getResourceList:getResourceList": "azapi_resource_list"
-        },
-        "renamedProperties": {
-            "azapi:config/endpoint:endpoint": {
-                "activeDirectoryAuthorityHost": "active_directory_authority_host",
-                "resourceManagerAudience": "resource_manager_audience",
-                "resourceManagerEndpoint": "resource_manager_endpoint"
-            },
-            "azapi:index/ProviderEndpoint:ProviderEndpoint": {
-                "activeDirectoryAuthorityHost": "active_directory_authority_host",
-                "resourceManagerAudience": "resource_manager_audience",
-                "resourceManagerEndpoint": "resource_manager_endpoint"
-            },
-            "azapi:index/ResourceIdentity:ResourceIdentity": {
-                "identityIds": "identity_ids",
-                "principalId": "principal_id",
-                "tenantId": "tenant_id"
-            },
-            "azapi:index/dataPlaneResource:DataPlaneResource": {
-                "ignoreCasing": "ignore_casing",
-                "ignoreMissingProperty": "ignore_missing_property",
-                "parentId": "parent_id",
-                "responseExportValues": "response_export_values"
-            },
-            "azapi:index/getResource:getResource": {
-                "parentId": "parent_id",
-                "resourceId": "resource_id",
-                "responseExportValues": "response_export_values"
-            },
-            "azapi:index/getResourceAction:getResourceAction": {
-                "resourceId": "resource_id",
-                "responseExportValues": "response_export_values"
-            },
-            "azapi:index/getResourceId:getResourceId": {
-                "parentId": "parent_id",
-                "providerNamespace": "provider_namespace",
-                "resourceGroupName": "resource_group_name",
-                "resourceId": "resource_id",
-                "subscriptionId": "subscription_id"
-            },
-            "azapi:index/getResourceIdentity:getResourceIdentity": {
-                "identityIds": "identity_ids",
-                "principalId": "principal_id",
-                "tenantId": "tenant_id"
-            },
-            "azapi:index/getResourceList:getResourceList": {
-                "parentId": "parent_id",
-                "responseExportValues": "response_export_values"
-            },
-            "azapi:index/resource:Resource": {
-                "ignoreBodyChanges": "ignore_body_changes",
-                "ignoreCasing": "ignore_casing",
-                "ignoreMissingProperty": "ignore_missing_property",
-                "parentId": "parent_id",
-                "removingSpecialChars": "removing_special_chars",
-                "responseExportValues": "response_export_values",
-                "schemaValidationEnabled": "schema_validation_enabled"
-            },
-            "azapi:index/resourceAction:ResourceAction": {
-                "resourceId": "resource_id",
-                "responseExportValues": "response_export_values"
-            },
-            "azapi:index/updateResource:UpdateResource": {
-                "ignoreBodyChanges": "ignore_body_changes",
-                "ignoreCasing": "ignore_casing",
-                "ignoreMissingProperty": "ignore_missing_property",
-                "parentId": "parent_id",
-                "resourceId": "resource_id",
-                "responseExportValues": "response_export_values"
-            },
-            "azapi:index:Provider": {
-                "auxiliaryTenantIds": "auxiliary_tenant_ids",
-                "clientCertificatePassword": "client_certificate_password",
-                "clientCertificatePath": "client_certificate_path",
-                "clientId": "client_id",
-                "clientSecret": "client_secret",
-                "customCorrelationRequestId": "custom_correlation_request_id",
-                "defaultLocation": "default_location",
-                "defaultName": "default_name",
-                "defaultNamingPrefix": "default_naming_prefix",
-                "defaultNamingSuffix": "default_naming_suffix",
-                "defaultTags": "default_tags",
-                "disableCorrelationRequestId": "disable_correlation_request_id",
-                "disableTerraformPartnerId": "disable_terraform_partner_id",
-                "oidcRequestToken": "oidc_request_token",
-                "oidcRequestUrl": "oidc_request_url",
-                "oidcToken": "oidc_token",
-                "oidcTokenFilePath": "oidc_token_file_path",
-                "partnerId": "partner_id",
-                "skipProviderRegistration": "skip_provider_registration",
-                "subscriptionId": "subscription_id",
-                "tenantId": "tenant_id",
-                "useCli": "use_cli",
-                "useMsi": "use_msi",
-                "useOidc": "use_oidc"
-            }
-        },
-        "renamedConfigProperties": {
-            "auxiliaryTenantIds": "auxiliary_tenant_ids",
-            "clientCertificatePassword": "client_certificate_password",
-            "clientCertificatePath": "client_certificate_path",
-            "clientId": "client_id",
-            "clientSecret": "client_secret",
-            "customCorrelationRequestId": "custom_correlation_request_id",
-            "defaultLocation": "default_location",
-            "defaultName": "default_name",
-            "defaultNamingPrefix": "default_naming_prefix",
-            "defaultNamingSuffix": "default_naming_suffix",
-            "defaultTags": "default_tags",
-            "disableCorrelationRequestId": "disable_correlation_request_id",
-            "disableTerraformPartnerId": "disable_terraform_partner_id",
-            "oidcRequestToken": "oidc_request_token",
-            "oidcRequestUrl": "oidc_request_url",
-            "oidcToken": "oidc_token",
-            "oidcTokenFilePath": "oidc_token_file_path",
-            "partnerId": "partner_id",
-            "skipProviderRegistration": "skip_provider_registration",
-            "subscriptionId": "subscription_id",
-            "tenantId": "tenant_id",
-            "useCli": "use_cli",
-            "useMsi": "use_msi",
-            "useOidc": "use_oidc"
+            "azapi:index/getResource:getResource": 0,
+            "azapi:index/getResourceAction:getResourceAction": 0,
+            "azapi:index/getResourceId:getResourceId": 0,
+            "azapi:index/getResourceList:getResourceList": 0
         }
     }
 }

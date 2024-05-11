@@ -182,9 +182,6 @@ export interface ProviderArgs {
      * This will disable the x-ms-correlation-request-id header.
      */
     disableCorrelationRequestId?: pulumi.Input<boolean>;
-    /**
-     * This will disable the Terraform Partner ID which is used if a custom `partner_id` isn't specified.
-     */
     disableTerraformPartnerId?: pulumi.Input<boolean>;
     endpoint?: pulumi.Input<inputs.ProviderEndpoint>;
     /**

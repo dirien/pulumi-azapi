@@ -98,10 +98,9 @@ type providerArgs struct {
 	DefaultNamingSuffix *string           `pulumi:"defaultNamingSuffix"`
 	DefaultTags         map[string]string `pulumi:"defaultTags"`
 	// This will disable the x-ms-correlation-request-id header.
-	DisableCorrelationRequestId *bool `pulumi:"disableCorrelationRequestId"`
-	// This will disable the Terraform Partner ID which is used if a custom `partner_id` isn't specified.
-	DisableTerraformPartnerId *bool             `pulumi:"disableTerraformPartnerId"`
-	Endpoint                  *ProviderEndpoint `pulumi:"endpoint"`
+	DisableCorrelationRequestId *bool             `pulumi:"disableCorrelationRequestId"`
+	DisableTerraformPartnerId   *bool             `pulumi:"disableTerraformPartnerId"`
+	Endpoint                    *ProviderEndpoint `pulumi:"endpoint"`
 	// The Cloud Environment which should be used. Possible values are public, usgovernment and china. Defaults to public.
 	Environment string `pulumi:"environment"`
 	// The bearer token for the request to the OIDC provider. For use When authenticating as a Service Principal using OpenID
@@ -154,9 +153,8 @@ type ProviderArgs struct {
 	DefaultTags         pulumi.StringMapInput
 	// This will disable the x-ms-correlation-request-id header.
 	DisableCorrelationRequestId pulumi.BoolPtrInput
-	// This will disable the Terraform Partner ID which is used if a custom `partner_id` isn't specified.
-	DisableTerraformPartnerId pulumi.BoolPtrInput
-	Endpoint                  ProviderEndpointPtrInput
+	DisableTerraformPartnerId   pulumi.BoolPtrInput
+	Endpoint                    ProviderEndpointPtrInput
 	// The Cloud Environment which should be used. Possible values are public, usgovernment and china. Defaults to public.
 	Environment pulumi.StringInput
 	// The bearer token for the request to the OIDC provider. For use When authenticating as a Service Principal using OpenID
