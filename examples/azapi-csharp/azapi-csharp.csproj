@@ -9,7 +9,7 @@
   <ItemGroup>
     <PackageReference Include="Pulumi" Version="3.*" />
     <PackageReference Include="Pulumi.Azure" Version="5.35.0" />
-    <PackageReference Include="ediri.Azapi" Version="1.2.9" />
+    <PackageReference Include="ediri.Azapi" Version="1.12.2" />
   </ItemGroup>
 
 </Project>
