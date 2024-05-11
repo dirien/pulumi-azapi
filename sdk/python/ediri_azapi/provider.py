@@ -52,7 +52,6 @@ class ProviderArgs:
         :param pulumi.Input[str] client_secret: The Client Secret which should be used. For use When authenticating as a Service Principal using a Client Secret.
         :param pulumi.Input[str] custom_correlation_request_id: The value of the x-ms-correlation-request-id header (otherwise an auto-generated UUID will be used).
         :param pulumi.Input[bool] disable_correlation_request_id: This will disable the x-ms-correlation-request-id header.
-        :param pulumi.Input[bool] disable_terraform_partner_id: This will disable the Terraform Partner ID which is used if a custom `partner_id` isn't specified.
         :param pulumi.Input[str] oidc_request_token: The bearer token for the request to the OIDC provider. For use When authenticating as a Service Principal using OpenID
                Connect.
         :param pulumi.Input[str] oidc_request_url: The URL for the OIDC provider from which to request an ID token. For use When authenticating as a Service Principal
@@ -274,9 +273,6 @@ class ProviderArgs:
     @property
     @pulumi.getter(name="disableTerraformPartnerId")
     def disable_terraform_partner_id(self) -> Optional[pulumi.Input[bool]]:
-        """
-        This will disable the Terraform Partner ID which is used if a custom `partner_id` isn't specified.
-        """
         return pulumi.get(self, "disable_terraform_partner_id")
 
     @disable_terraform_partner_id.setter
@@ -475,7 +471,6 @@ class Provider(pulumi.ProviderResource):
         :param pulumi.Input[str] client_secret: The Client Secret which should be used. For use When authenticating as a Service Principal using a Client Secret.
         :param pulumi.Input[str] custom_correlation_request_id: The value of the x-ms-correlation-request-id header (otherwise an auto-generated UUID will be used).
         :param pulumi.Input[bool] disable_correlation_request_id: This will disable the x-ms-correlation-request-id header.
-        :param pulumi.Input[bool] disable_terraform_partner_id: This will disable the Terraform Partner ID which is used if a custom `partner_id` isn't specified.
         :param pulumi.Input[str] environment: The Cloud Environment which should be used. Possible values are public, usgovernment and china. Defaults to public.
         :param pulumi.Input[str] oidc_request_token: The bearer token for the request to the OIDC provider. For use When authenticating as a Service Principal using OpenID
                Connect.

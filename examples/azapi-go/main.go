@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/dirien/pulumi-azapi/go/azapi"
+	"github.com/dirien/pulumi-azapi/sdk/go/azapi"
 	"github.com/pulumi/pulumi-azure/sdk/v5/go/azure/core"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi/config"
@@ -71,7 +71,7 @@ func main() {
 		}
 
 		_, err = azapi.NewUpdateResource(ctx, "source-control", &azapi.UpdateResourceArgs{
-			Type:         pulumi.String("Microsoft.Web/sites/sourcecontrols@2022-03-01"),
+			Type:         pulumi.String("Microsoft.Web/sites/sourcecontrols@2022-09-01"),
 			Name:         pulumi.String("web"),
 			ParentId:     site.ID(),
 			IgnoreCasing: pulumi.Bool(true),

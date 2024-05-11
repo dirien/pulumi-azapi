@@ -15,8 +15,10 @@
 package azapi
 
 import (
+	"context"
 	_ "embed"
 	"fmt"
+	pfbridge "github.com/pulumi/pulumi-terraform-bridge/pf/tfbridge"
 	"path/filepath"
 
 	"github.com/Azure/terraform-provider-azapi/shim"
@@ -41,10 +43,16 @@ var metadata []byte
 // Provider returns additional overlaid schema and metadata associated with the provider..
 func Provider() tfbridge.ProviderInfo {
 	// Instantiate the Terraform provider
-	p := shimv2.NewProvider(shim.NewProvider()) // Create a Pulumi provider mapping
+
+	p := pfbridge.MuxShimWithPF(context.Background(),
+		shimv2.NewProvider(shim.NewProvider()),
+		shim.Framework()(),
+	)
+
 	prov := tfbridge.ProviderInfo{
-		P:    p,
-		Name: "azapi",
+		P:       p,
+		Version: version.Version,
+		Name:    "azapi",
 		// DisplayName is a way to be able to change the casing of the provider
 		// name when being displayed on the Pulumi registry
 		DisplayName: "AzAPI",
