@@ -2,7 +2,7 @@ package shim
 
 import (
 	"context"
-	"github.com/Azure/terraform-provider-azapi/internal/provider"
+	azprovider "github.com/Azure/terraform-provider-azapi/internal/provider"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	prov "github.com/hashicorp/terraform-plugin-framework/provider"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -10,8 +10,11 @@ import (
 )
 
 func NewProvider() *schema.Provider {
-	p := provider.AzureProvider()
-	return p
+	return &schema.Provider{}
+}
+
+func NewProviderV2() prov.Provider {
+	return azprovider.AzureProvider()
 }
 
 var _ prov.Provider = &AzapiProvider{}
