@@ -46,7 +46,7 @@ func Provider() tfbridge.ProviderInfo {
 
 	p := pfbridge.MuxShimWithPF(context.Background(),
 		shimv2.NewProvider(shim.NewProvider()),
-		shim.Framework()(),
+		shim.NewProviderV2(),
 	)
 
 	prov := tfbridge.ProviderInfo{
