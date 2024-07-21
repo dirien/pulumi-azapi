@@ -234,13 +234,11 @@ class ResourceArgs:
 
     @property
     @pulumi.getter(name="removingSpecialChars")
+    @_utilities.deprecated("""It will not work in the next minor release and will be removed in the next major release. Please specify the `name` field and remove the special characters in the `name` field instead.""")
     def removing_special_chars(self) -> Optional[pulumi.Input[bool]]:
         """
         Whether to remove special characters in resource name. Defaults to `false`.
         """
-        warnings.warn("""It will not work in the next minor release and will be removed in the next major release. Please specify the `name` field and remove the special characters in the `name` field instead.""", DeprecationWarning)
-        pulumi.log.warn("""removing_special_chars is deprecated: It will not work in the next minor release and will be removed in the next major release. Please specify the `name` field and remove the special characters in the `name` field instead.""")
-
         return pulumi.get(self, "removing_special_chars")
 
     @removing_special_chars.setter
@@ -533,13 +531,11 @@ class _ResourceState:
 
     @property
     @pulumi.getter(name="removingSpecialChars")
+    @_utilities.deprecated("""It will not work in the next minor release and will be removed in the next major release. Please specify the `name` field and remove the special characters in the `name` field instead.""")
     def removing_special_chars(self) -> Optional[pulumi.Input[bool]]:
         """
         Whether to remove special characters in resource name. Defaults to `false`.
         """
-        warnings.warn("""It will not work in the next minor release and will be removed in the next major release. Please specify the `name` field and remove the special characters in the `name` field instead.""", DeprecationWarning)
-        pulumi.log.warn("""removing_special_chars is deprecated: It will not work in the next minor release and will be removed in the next major release. Please specify the `name` field and remove the special characters in the `name` field instead.""")
-
         return pulumi.get(self, "removing_special_chars")
 
     @removing_special_chars.setter
@@ -964,13 +960,11 @@ class Resource(pulumi.CustomResource):
 
     @property
     @pulumi.getter(name="removingSpecialChars")
+    @_utilities.deprecated("""It will not work in the next minor release and will be removed in the next major release. Please specify the `name` field and remove the special characters in the `name` field instead.""")
     def removing_special_chars(self) -> pulumi.Output[Optional[bool]]:
         """
         Whether to remove special characters in resource name. Defaults to `false`.
         """
-        warnings.warn("""It will not work in the next minor release and will be removed in the next major release. Please specify the `name` field and remove the special characters in the `name` field instead.""", DeprecationWarning)
-        pulumi.log.warn("""removing_special_chars is deprecated: It will not work in the next minor release and will be removed in the next major release. Please specify the `name` field and remove the special characters in the `name` field instead.""")
-
         return pulumi.get(self, "removing_special_chars")
 
     @property
