@@ -4,10 +4,17 @@
 
 import copy
 import warnings
+import sys
 import pulumi
 import pulumi.runtime
 from typing import Any, Mapping, Optional, Sequence, Union, overload
+if sys.version_info >= (3, 11):
+    from typing import NotRequired, TypedDict, TypeAlias
+else:
+    from typing_extensions import NotRequired, TypedDict, TypeAlias
 from . import _utilities
+from . import outputs
+from ._inputs import *
 
 __all__ = ['UpdateResourceArgs', 'UpdateResource']
 
@@ -15,7 +22,7 @@ __all__ = ['UpdateResourceArgs', 'UpdateResource']
 class UpdateResourceArgs:
     def __init__(__self__, *,
                  type: pulumi.Input[str],
-                 body: Optional[pulumi.Input[str]] = None,
+                 body: Optional[Any] = None,
                  ignore_body_changes: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]] = None,
                  ignore_casing: Optional[pulumi.Input[bool]] = None,
                  ignore_missing_property: Optional[pulumi.Input[bool]] = None,
@@ -23,15 +30,16 @@ class UpdateResourceArgs:
                  name: Optional[pulumi.Input[str]] = None,
                  parent_id: Optional[pulumi.Input[str]] = None,
                  resource_id: Optional[pulumi.Input[str]] = None,
-                 response_export_values: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]] = None):
+                 response_export_values: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]] = None,
+                 timeouts: Optional[pulumi.Input['UpdateResourceTimeoutsArgs']] = None):
         """
         The set of arguments for constructing a UpdateResource resource.
         :param pulumi.Input[str] type: It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
                `<api-version>` is version of the API used to manage this azure resource.
-        :param pulumi.Input[str] body: A JSON object that contains the request body used to add on an existing azure resource.
-        :param pulumi.Input[Sequence[pulumi.Input[str]]] ignore_body_changes: A list of properties that should be ignored when comparing the `body` with its current state.
+        :param Any body: A dynamic attribute that contains the request body used to add on an existing azure resource.
         :param pulumi.Input[bool] ignore_casing: Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.
         :param pulumi.Input[bool] ignore_missing_property: Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.
+               It's recommend to enable this option when some sensitive properties are not returned in response body, instead of setting them in `lifecycle.ignore_changes` because it will make the sensitive fields unable to update.
         :param pulumi.Input[Sequence[pulumi.Input[str]]] locks: A list of ARM resource IDs which are used to avoid create/modify/delete azapi resources at the same time.
         :param pulumi.Input[str] name: Specifies the name of the azure resource. Changing this forces a new resource to be created.
         :param pulumi.Input[str] parent_id: The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created. It supports different kinds of deployment scope for **top level** resources: 
@@ -47,14 +55,14 @@ class UpdateResourceArgs:
                > **Note:** Configuring `name` and `parent_id` is an alternative way to configure `resource_id`.
         :param pulumi.Input[Sequence[pulumi.Input[str]]] response_export_values: A list of path that needs to be exported from response body.
                Setting it to `["*"]` will export the full response body.
-               Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
+               Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following HCL object to computed property `output`.
                ```
                {
-               "properties" : {
-               "loginServer" : "registry1.azurecr.io"
-               "policies" : {
-               "quarantinePolicy" = {
-               "status" = "disabled"
+               properties = {
+               loginServer = "registry1.azurecr.io"
+               policies = {
+               quarantinePolicy = {
+               status = "disabled"
                }
                }
                }
@@ -64,6 +72,9 @@ class UpdateResourceArgs:
         pulumi.set(__self__, "type", type)
         if body is not None:
             pulumi.set(__self__, "body", body)
+        if ignore_body_changes is not None:
+            warnings.warn("""This feature is deprecated and will be removed in a major release. Please use the `lifecycle.ignore_changes` argument to specify the fields in `body` to ignore.""", DeprecationWarning)
+            pulumi.log.warn("""ignore_body_changes is deprecated: This feature is deprecated and will be removed in a major release. Please use the `lifecycle.ignore_changes` argument to specify the fields in `body` to ignore.""")
         if ignore_body_changes is not None:
             pulumi.set(__self__, "ignore_body_changes", ignore_body_changes)
         if ignore_casing is not None:
@@ -80,6 +91,8 @@ class UpdateResourceArgs:
             pulumi.set(__self__, "resource_id", resource_id)
         if response_export_values is not None:
             pulumi.set(__self__, "response_export_values", response_export_values)
+        if timeouts is not None:
+            pulumi.set(__self__, "timeouts", timeouts)
 
     @property
     @pulumi.getter
@@ -96,22 +109,20 @@ class UpdateResourceArgs:
 
     @property
     @pulumi.getter
-    def body(self) -> Optional[pulumi.Input[str]]:
+    def body(self) -> Optional[Any]:
         """
-        A JSON object that contains the request body used to add on an existing azure resource.
+        A dynamic attribute that contains the request body used to add on an existing azure resource.
         """
         return pulumi.get(self, "body")
 
     @body.setter
-    def body(self, value: Optional[pulumi.Input[str]]):
+    def body(self, value: Optional[Any]):
         pulumi.set(self, "body", value)
 
     @property
     @pulumi.getter(name="ignoreBodyChanges")
+    @_utilities.deprecated("""This feature is deprecated and will be removed in a major release. Please use the `lifecycle.ignore_changes` argument to specify the fields in `body` to ignore.""")
     def ignore_body_changes(self) -> Optional[pulumi.Input[Sequence[pulumi.Input[str]]]]:
-        """
-        A list of properties that should be ignored when comparing the `body` with its current state.
-        """
         return pulumi.get(self, "ignore_body_changes")
 
     @ignore_body_changes.setter
@@ -135,6 +146,7 @@ class UpdateResourceArgs:
     def ignore_missing_property(self) -> Optional[pulumi.Input[bool]]:
         """
         Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.
+        It's recommend to enable this option when some sensitive properties are not returned in response body, instead of setting them in `lifecycle.ignore_changes` because it will make the sensitive fields unable to update.
         """
         return pulumi.get(self, "ignore_missing_property")
 
@@ -205,14 +217,14 @@ class UpdateResourceArgs:
         """
         A list of path that needs to be exported from response body.
         Setting it to `["*"]` will export the full response body.
-        Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
+        Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following HCL object to computed property `output`.
         ```
         {
-        "properties" : {
-        "loginServer" : "registry1.azurecr.io"
-        "policies" : {
-        "quarantinePolicy" = {
-        "status" = "disabled"
+        properties = {
+        loginServer = "registry1.azurecr.io"
+        policies = {
+        quarantinePolicy = {
+        status = "disabled"
         }
         }
         }
@@ -225,34 +237,44 @@ class UpdateResourceArgs:
     def response_export_values(self, value: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]]):
         pulumi.set(self, "response_export_values", value)
 
+    @property
+    @pulumi.getter
+    def timeouts(self) -> Optional[pulumi.Input['UpdateResourceTimeoutsArgs']]:
+        return pulumi.get(self, "timeouts")
+
+    @timeouts.setter
+    def timeouts(self, value: Optional[pulumi.Input['UpdateResourceTimeoutsArgs']]):
+        pulumi.set(self, "timeouts", value)
+
 
 @pulumi.input_type
 class _UpdateResourceState:
     def __init__(__self__, *,
-                 body: Optional[pulumi.Input[str]] = None,
+                 body: Optional[Any] = None,
                  ignore_body_changes: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]] = None,
                  ignore_casing: Optional[pulumi.Input[bool]] = None,
                  ignore_missing_property: Optional[pulumi.Input[bool]] = None,
                  locks: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]] = None,
                  name: Optional[pulumi.Input[str]] = None,
-                 output: Optional[pulumi.Input[str]] = None,
+                 output: Optional[Any] = None,
                  parent_id: Optional[pulumi.Input[str]] = None,
                  resource_id: Optional[pulumi.Input[str]] = None,
                  response_export_values: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]] = None,
+                 timeouts: Optional[pulumi.Input['UpdateResourceTimeoutsArgs']] = None,
                  type: Optional[pulumi.Input[str]] = None):
         """
         Input properties used for looking up and filtering UpdateResource resources.
-        :param pulumi.Input[str] body: A JSON object that contains the request body used to add on an existing azure resource.
-        :param pulumi.Input[Sequence[pulumi.Input[str]]] ignore_body_changes: A list of properties that should be ignored when comparing the `body` with its current state.
+        :param Any body: A dynamic attribute that contains the request body used to add on an existing azure resource.
         :param pulumi.Input[bool] ignore_casing: Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.
         :param pulumi.Input[bool] ignore_missing_property: Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.
+               It's recommend to enable this option when some sensitive properties are not returned in response body, instead of setting them in `lifecycle.ignore_changes` because it will make the sensitive fields unable to update.
         :param pulumi.Input[Sequence[pulumi.Input[str]]] locks: A list of ARM resource IDs which are used to avoid create/modify/delete azapi resources at the same time.
         :param pulumi.Input[str] name: Specifies the name of the azure resource. Changing this forces a new resource to be created.
-        :param pulumi.Input[str] output: The output json containing the properties specified in `response_export_values`. Here're some examples to decode json and extract the value.
+        :param Any output: The HCL object containing the properties specified in `response_export_values`. Here are some examples to use the values.
                ```
                // it will output "registry1.azurecr.io"
                output "login_server" {
-               value = jsondecode(azapi_resource.example.output).properties.loginServer
+               value = azapi_resource.example.output.properties.loginServer
                }
         :param pulumi.Input[str] parent_id: The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created. It supports different kinds of deployment scope for **top level** resources: 
                - resource group scope: `parent_id` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.
@@ -267,14 +289,14 @@ class _UpdateResourceState:
                > **Note:** Configuring `name` and `parent_id` is an alternative way to configure `resource_id`.
         :param pulumi.Input[Sequence[pulumi.Input[str]]] response_export_values: A list of path that needs to be exported from response body.
                Setting it to `["*"]` will export the full response body.
-               Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
+               Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following HCL object to computed property `output`.
                ```
                {
-               "properties" : {
-               "loginServer" : "registry1.azurecr.io"
-               "policies" : {
-               "quarantinePolicy" = {
-               "status" = "disabled"
+               properties = {
+               loginServer = "registry1.azurecr.io"
+               policies = {
+               quarantinePolicy = {
+               status = "disabled"
                }
                }
                }
@@ -285,6 +307,9 @@ class _UpdateResourceState:
         """
         if body is not None:
             pulumi.set(__self__, "body", body)
+        if ignore_body_changes is not None:
+            warnings.warn("""This feature is deprecated and will be removed in a major release. Please use the `lifecycle.ignore_changes` argument to specify the fields in `body` to ignore.""", DeprecationWarning)
+            pulumi.log.warn("""ignore_body_changes is deprecated: This feature is deprecated and will be removed in a major release. Please use the `lifecycle.ignore_changes` argument to specify the fields in `body` to ignore.""")
         if ignore_body_changes is not None:
             pulumi.set(__self__, "ignore_body_changes", ignore_body_changes)
         if ignore_casing is not None:
@@ -303,27 +328,27 @@ class _UpdateResourceState:
             pulumi.set(__self__, "resource_id", resource_id)
         if response_export_values is not None:
             pulumi.set(__self__, "response_export_values", response_export_values)
+        if timeouts is not None:
+            pulumi.set(__self__, "timeouts", timeouts)
         if type is not None:
             pulumi.set(__self__, "type", type)
 
     @property
     @pulumi.getter
-    def body(self) -> Optional[pulumi.Input[str]]:
+    def body(self) -> Optional[Any]:
         """
-        A JSON object that contains the request body used to add on an existing azure resource.
+        A dynamic attribute that contains the request body used to add on an existing azure resource.
         """
         return pulumi.get(self, "body")
 
     @body.setter
-    def body(self, value: Optional[pulumi.Input[str]]):
+    def body(self, value: Optional[Any]):
         pulumi.set(self, "body", value)
 
     @property
     @pulumi.getter(name="ignoreBodyChanges")
+    @_utilities.deprecated("""This feature is deprecated and will be removed in a major release. Please use the `lifecycle.ignore_changes` argument to specify the fields in `body` to ignore.""")
     def ignore_body_changes(self) -> Optional[pulumi.Input[Sequence[pulumi.Input[str]]]]:
-        """
-        A list of properties that should be ignored when comparing the `body` with its current state.
-        """
         return pulumi.get(self, "ignore_body_changes")
 
     @ignore_body_changes.setter
@@ -347,6 +372,7 @@ class _UpdateResourceState:
     def ignore_missing_property(self) -> Optional[pulumi.Input[bool]]:
         """
         Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.
+        It's recommend to enable this option when some sensitive properties are not returned in response body, instead of setting them in `lifecycle.ignore_changes` because it will make the sensitive fields unable to update.
         """
         return pulumi.get(self, "ignore_missing_property")
 
@@ -380,19 +406,19 @@ class _UpdateResourceState:
 
     @property
     @pulumi.getter
-    def output(self) -> Optional[pulumi.Input[str]]:
+    def output(self) -> Optional[Any]:
         """
-        The output json containing the properties specified in `response_export_values`. Here're some examples to decode json and extract the value.
+        The HCL object containing the properties specified in `response_export_values`. Here are some examples to use the values.
         ```
         // it will output "registry1.azurecr.io"
         output "login_server" {
-        value = jsondecode(azapi_resource.example.output).properties.loginServer
+        value = azapi_resource.example.output.properties.loginServer
         }
         """
         return pulumi.get(self, "output")
 
     @output.setter
-    def output(self, value: Optional[pulumi.Input[str]]):
+    def output(self, value: Optional[Any]):
         pulumi.set(self, "output", value)
 
     @property
@@ -434,14 +460,14 @@ class _UpdateResourceState:
         """
         A list of path that needs to be exported from response body.
         Setting it to `["*"]` will export the full response body.
-        Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
+        Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following HCL object to computed property `output`.
         ```
         {
-        "properties" : {
-        "loginServer" : "registry1.azurecr.io"
-        "policies" : {
-        "quarantinePolicy" = {
-        "status" = "disabled"
+        properties = {
+        loginServer = "registry1.azurecr.io"
+        policies = {
+        quarantinePolicy = {
+        status = "disabled"
         }
         }
         }
@@ -453,6 +479,15 @@ class _UpdateResourceState:
     @response_export_values.setter
     def response_export_values(self, value: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]]):
         pulumi.set(self, "response_export_values", value)
+
+    @property
+    @pulumi.getter
+    def timeouts(self) -> Optional[pulumi.Input['UpdateResourceTimeoutsArgs']]:
+        return pulumi.get(self, "timeouts")
+
+    @timeouts.setter
+    def timeouts(self, value: Optional[pulumi.Input['UpdateResourceTimeoutsArgs']]):
+        pulumi.set(self, "timeouts", value)
 
     @property
     @pulumi.getter
@@ -473,7 +508,7 @@ class UpdateResource(pulumi.CustomResource):
     def __init__(__self__,
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
-                 body: Optional[pulumi.Input[str]] = None,
+                 body: Optional[Any] = None,
                  ignore_body_changes: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]] = None,
                  ignore_casing: Optional[pulumi.Input[bool]] = None,
                  ignore_missing_property: Optional[pulumi.Input[bool]] = None,
@@ -482,6 +517,7 @@ class UpdateResource(pulumi.CustomResource):
                  parent_id: Optional[pulumi.Input[str]] = None,
                  resource_id: Optional[pulumi.Input[str]] = None,
                  response_export_values: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]] = None,
+                 timeouts: Optional[pulumi.Input[Union['UpdateResourceTimeoutsArgs', 'UpdateResourceTimeoutsArgsDict']]] = None,
                  type: Optional[pulumi.Input[str]] = None,
                  __props__=None):
         """
@@ -495,10 +531,10 @@ class UpdateResource(pulumi.CustomResource):
 
         :param str resource_name: The name of the resource.
         :param pulumi.ResourceOptions opts: Options for the resource.
-        :param pulumi.Input[str] body: A JSON object that contains the request body used to add on an existing azure resource.
-        :param pulumi.Input[Sequence[pulumi.Input[str]]] ignore_body_changes: A list of properties that should be ignored when comparing the `body` with its current state.
+        :param Any body: A dynamic attribute that contains the request body used to add on an existing azure resource.
         :param pulumi.Input[bool] ignore_casing: Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.
         :param pulumi.Input[bool] ignore_missing_property: Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.
+               It's recommend to enable this option when some sensitive properties are not returned in response body, instead of setting them in `lifecycle.ignore_changes` because it will make the sensitive fields unable to update.
         :param pulumi.Input[Sequence[pulumi.Input[str]]] locks: A list of ARM resource IDs which are used to avoid create/modify/delete azapi resources at the same time.
         :param pulumi.Input[str] name: Specifies the name of the azure resource. Changing this forces a new resource to be created.
         :param pulumi.Input[str] parent_id: The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created. It supports different kinds of deployment scope for **top level** resources: 
@@ -514,14 +550,14 @@ class UpdateResource(pulumi.CustomResource):
                > **Note:** Configuring `name` and `parent_id` is an alternative way to configure `resource_id`.
         :param pulumi.Input[Sequence[pulumi.Input[str]]] response_export_values: A list of path that needs to be exported from response body.
                Setting it to `["*"]` will export the full response body.
-               Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
+               Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following HCL object to computed property `output`.
                ```
                {
-               "properties" : {
-               "loginServer" : "registry1.azurecr.io"
-               "policies" : {
-               "quarantinePolicy" = {
-               "status" = "disabled"
+               properties = {
+               loginServer = "registry1.azurecr.io"
+               policies = {
+               quarantinePolicy = {
+               status = "disabled"
                }
                }
                }
@@ -560,7 +596,7 @@ class UpdateResource(pulumi.CustomResource):
     def _internal_init(__self__,
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
-                 body: Optional[pulumi.Input[str]] = None,
+                 body: Optional[Any] = None,
                  ignore_body_changes: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]] = None,
                  ignore_casing: Optional[pulumi.Input[bool]] = None,
                  ignore_missing_property: Optional[pulumi.Input[bool]] = None,
@@ -569,6 +605,7 @@ class UpdateResource(pulumi.CustomResource):
                  parent_id: Optional[pulumi.Input[str]] = None,
                  resource_id: Optional[pulumi.Input[str]] = None,
                  response_export_values: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]] = None,
+                 timeouts: Optional[pulumi.Input[Union['UpdateResourceTimeoutsArgs', 'UpdateResourceTimeoutsArgsDict']]] = None,
                  type: Optional[pulumi.Input[str]] = None,
                  __props__=None):
         opts = pulumi.ResourceOptions.merge(_utilities.get_resource_opts_defaults(), opts)
@@ -588,6 +625,7 @@ class UpdateResource(pulumi.CustomResource):
             __props__.__dict__["parent_id"] = parent_id
             __props__.__dict__["resource_id"] = resource_id
             __props__.__dict__["response_export_values"] = response_export_values
+            __props__.__dict__["timeouts"] = timeouts
             if type is None and not opts.urn:
                 raise TypeError("Missing required property 'type'")
             __props__.__dict__["type"] = type
@@ -602,16 +640,17 @@ class UpdateResource(pulumi.CustomResource):
     def get(resource_name: str,
             id: pulumi.Input[str],
             opts: Optional[pulumi.ResourceOptions] = None,
-            body: Optional[pulumi.Input[str]] = None,
+            body: Optional[Any] = None,
             ignore_body_changes: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]] = None,
             ignore_casing: Optional[pulumi.Input[bool]] = None,
             ignore_missing_property: Optional[pulumi.Input[bool]] = None,
             locks: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]] = None,
             name: Optional[pulumi.Input[str]] = None,
-            output: Optional[pulumi.Input[str]] = None,
+            output: Optional[Any] = None,
             parent_id: Optional[pulumi.Input[str]] = None,
             resource_id: Optional[pulumi.Input[str]] = None,
             response_export_values: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]] = None,
+            timeouts: Optional[pulumi.Input[Union['UpdateResourceTimeoutsArgs', 'UpdateResourceTimeoutsArgsDict']]] = None,
             type: Optional[pulumi.Input[str]] = None) -> 'UpdateResource':
         """
         Get an existing UpdateResource resource's state with the given name, id, and optional extra
@@ -620,17 +659,17 @@ class UpdateResource(pulumi.CustomResource):
         :param str resource_name: The unique name of the resulting resource.
         :param pulumi.Input[str] id: The unique provider ID of the resource to lookup.
         :param pulumi.ResourceOptions opts: Options for the resource.
-        :param pulumi.Input[str] body: A JSON object that contains the request body used to add on an existing azure resource.
-        :param pulumi.Input[Sequence[pulumi.Input[str]]] ignore_body_changes: A list of properties that should be ignored when comparing the `body` with its current state.
+        :param Any body: A dynamic attribute that contains the request body used to add on an existing azure resource.
         :param pulumi.Input[bool] ignore_casing: Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.
         :param pulumi.Input[bool] ignore_missing_property: Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.
+               It's recommend to enable this option when some sensitive properties are not returned in response body, instead of setting them in `lifecycle.ignore_changes` because it will make the sensitive fields unable to update.
         :param pulumi.Input[Sequence[pulumi.Input[str]]] locks: A list of ARM resource IDs which are used to avoid create/modify/delete azapi resources at the same time.
         :param pulumi.Input[str] name: Specifies the name of the azure resource. Changing this forces a new resource to be created.
-        :param pulumi.Input[str] output: The output json containing the properties specified in `response_export_values`. Here're some examples to decode json and extract the value.
+        :param Any output: The HCL object containing the properties specified in `response_export_values`. Here are some examples to use the values.
                ```
                // it will output "registry1.azurecr.io"
                output "login_server" {
-               value = jsondecode(azapi_resource.example.output).properties.loginServer
+               value = azapi_resource.example.output.properties.loginServer
                }
         :param pulumi.Input[str] parent_id: The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created. It supports different kinds of deployment scope for **top level** resources: 
                - resource group scope: `parent_id` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.
@@ -645,14 +684,14 @@ class UpdateResource(pulumi.CustomResource):
                > **Note:** Configuring `name` and `parent_id` is an alternative way to configure `resource_id`.
         :param pulumi.Input[Sequence[pulumi.Input[str]]] response_export_values: A list of path that needs to be exported from response body.
                Setting it to `["*"]` will export the full response body.
-               Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
+               Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following HCL object to computed property `output`.
                ```
                {
-               "properties" : {
-               "loginServer" : "registry1.azurecr.io"
-               "policies" : {
-               "quarantinePolicy" = {
-               "status" = "disabled"
+               properties = {
+               loginServer = "registry1.azurecr.io"
+               policies = {
+               quarantinePolicy = {
+               status = "disabled"
                }
                }
                }
@@ -675,28 +714,27 @@ class UpdateResource(pulumi.CustomResource):
         __props__.__dict__["parent_id"] = parent_id
         __props__.__dict__["resource_id"] = resource_id
         __props__.__dict__["response_export_values"] = response_export_values
+        __props__.__dict__["timeouts"] = timeouts
         __props__.__dict__["type"] = type
         return UpdateResource(resource_name, opts=opts, __props__=__props__)
 
     @property
     @pulumi.getter
-    def body(self) -> pulumi.Output[Optional[str]]:
+    def body(self) -> pulumi.Output[Any]:
         """
-        A JSON object that contains the request body used to add on an existing azure resource.
+        A dynamic attribute that contains the request body used to add on an existing azure resource.
         """
         return pulumi.get(self, "body")
 
     @property
     @pulumi.getter(name="ignoreBodyChanges")
+    @_utilities.deprecated("""This feature is deprecated and will be removed in a major release. Please use the `lifecycle.ignore_changes` argument to specify the fields in `body` to ignore.""")
     def ignore_body_changes(self) -> pulumi.Output[Optional[Sequence[str]]]:
-        """
-        A list of properties that should be ignored when comparing the `body` with its current state.
-        """
         return pulumi.get(self, "ignore_body_changes")
 
     @property
     @pulumi.getter(name="ignoreCasing")
-    def ignore_casing(self) -> pulumi.Output[Optional[bool]]:
+    def ignore_casing(self) -> pulumi.Output[bool]:
         """
         Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.
         """
@@ -704,9 +742,10 @@ class UpdateResource(pulumi.CustomResource):
 
     @property
     @pulumi.getter(name="ignoreMissingProperty")
-    def ignore_missing_property(self) -> pulumi.Output[Optional[bool]]:
+    def ignore_missing_property(self) -> pulumi.Output[bool]:
         """
         Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.
+        It's recommend to enable this option when some sensitive properties are not returned in response body, instead of setting them in `lifecycle.ignore_changes` because it will make the sensitive fields unable to update.
         """
         return pulumi.get(self, "ignore_missing_property")
 
@@ -728,13 +767,13 @@ class UpdateResource(pulumi.CustomResource):
 
     @property
     @pulumi.getter
-    def output(self) -> pulumi.Output[str]:
+    def output(self) -> pulumi.Output[Any]:
         """
-        The output json containing the properties specified in `response_export_values`. Here're some examples to decode json and extract the value.
+        The HCL object containing the properties specified in `response_export_values`. Here are some examples to use the values.
         ```
         // it will output "registry1.azurecr.io"
         output "login_server" {
-        value = jsondecode(azapi_resource.example.output).properties.loginServer
+        value = azapi_resource.example.output.properties.loginServer
         }
         """
         return pulumi.get(self, "output")
@@ -770,14 +809,14 @@ class UpdateResource(pulumi.CustomResource):
         """
         A list of path that needs to be exported from response body.
         Setting it to `["*"]` will export the full response body.
-        Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
+        Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following HCL object to computed property `output`.
         ```
         {
-        "properties" : {
-        "loginServer" : "registry1.azurecr.io"
-        "policies" : {
-        "quarantinePolicy" = {
-        "status" = "disabled"
+        properties = {
+        loginServer = "registry1.azurecr.io"
+        policies = {
+        quarantinePolicy = {
+        status = "disabled"
         }
         }
         }
@@ -785,6 +824,11 @@ class UpdateResource(pulumi.CustomResource):
         ```
         """
         return pulumi.get(self, "response_export_values")
+
+    @property
+    @pulumi.getter
+    def timeouts(self) -> pulumi.Output[Optional['outputs.UpdateResourceTimeouts']]:
+        return pulumi.get(self, "timeouts")
 
     @property
     @pulumi.getter

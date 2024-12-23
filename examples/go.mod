@@ -1,3 +1,3 @@
 module github.com/dirien/pulumi-azapi/examples
 
-go 1.20
+go 1.23

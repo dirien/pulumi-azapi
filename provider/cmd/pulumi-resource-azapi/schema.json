@@ -65,7 +65,8 @@
                 "type": "array",
                 "items": {
                     "type": "string"
-                }
+                },
+                "description": "The Auxiliary Tenant IDs which should be used.\n"
             },
             "clientCertificatePassword": {
                 "type": "string",
@@ -79,33 +80,46 @@
                 "type": "string",
                 "description": "The Client ID which should be used.\n"
             },
+            "clientIdFilePath": {
+                "type": "string",
+                "description": "The path to a file containing the Client ID which should be used.\n"
+            },
             "clientSecret": {
                 "type": "string",
                 "description": "The Client Secret which should be used. For use When authenticating as a Service Principal using a Client Secret.\n"
+            },
+            "clientSecretFilePath": {
+                "type": "string",
+                "description": "The path to a file containing the Client Secret which should be used. For use When authenticating as a Service Principal\nusing a Client Secret.\n"
             },
             "customCorrelationRequestId": {
                 "type": "string",
                 "description": "The value of the x-ms-correlation-request-id header (otherwise an auto-generated UUID will be used).\n"
             },
             "defaultLocation": {
-                "type": "string"
+                "type": "string",
+                "description": "The default location which should be used for resources.\n"
             },
             "defaultName": {
-                "type": "string"
+                "type": "string",
+                "description": "The default name which should be used for resources.\n"
             },
             "defaultNamingPrefix": {
                 "type": "string",
-                "deprecationMessage": "It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead."
+                "description": "The default prefix which should be used for resources.\n",
+                "deprecationMessage": "This field is deprecated and will be removed in a major release. Please specify the naming prefix and suffix in the resource's `name` field instead."
             },
             "defaultNamingSuffix": {
                 "type": "string",
-                "deprecationMessage": "It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead."
+                "description": "The default suffix which should be used for resources.\n",
+                "deprecationMessage": "This field is deprecated and will be removed in a major release. Please specify the naming prefix and suffix in the resource's `name` field instead."
             },
             "defaultTags": {
                 "type": "object",
                 "additionalProperties": {
                     "type": "string"
-                }
+                },
+                "description": "The default tags which should be used for resources.\n"
             },
             "disableCorrelationRequestId": {
                 "type": "boolean",
@@ -114,8 +128,15 @@
             "disableTerraformPartnerId": {
                 "type": "boolean"
             },
-            "endpoint": {
-                "$ref": "#/types/azapi:config/endpoint:endpoint"
+            "enableHclOutputForDataSource": {
+                "type": "boolean",
+                "description": "Enable HCL output for data sources. The default is false. When set to true, the provider will return HCL output for data\nsources. When set to false, the provider will return JSON output for data sources.\n"
+            },
+            "endpoints": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/types/azapi:config/endpoints:endpoints"
+                }
             },
             "environment": {
                 "type": "string",
@@ -165,13 +186,10 @@
                 "type": "boolean",
                 "description": "Allow OpenID Connect to be used for authentication\n"
             }
-        },
-        "defaults": [
-            "environment"
-        ]
+        }
     },
     "types": {
-        "azapi:config/endpoint:endpoint": {
+        "azapi:config/endpoints:endpoints": {
             "properties": {
                 "activeDirectoryAuthorityHost": {
                     "type": "string",
@@ -184,6 +202,23 @@
                 "resourceManagerEndpoint": {
                     "type": "string",
                     "description": "The Resource Manager Endpoint which should be used.\n"
+                }
+            },
+            "type": "object"
+        },
+        "azapi:index/DataPlaneResourceTimeouts:DataPlaneResourceTimeouts": {
+            "properties": {
+                "create": {
+                    "type": "string",
+                    "description": "A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as \"30s\" or \"2h45m\". Valid time units are \"s\" (seconds), \"m\" (minutes), \"h\" (hours).\n"
+                },
+                "delete": {
+                    "type": "string",
+                    "description": "A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as \"30s\" or \"2h45m\". Valid time units are \"s\" (seconds), \"m\" (minutes), \"h\" (hours). Setting a timeout for a Delete operation is only applicable if changes are saved into state before the destroy operation occurs.\n"
+                },
+                "read": {
+                    "type": "string",
+                    "description": "A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as \"30s\" or \"2h45m\". Valid time units are \"s\" (seconds), \"m\" (minutes), \"h\" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.\n"
                 }
             },
             "type": "object"
@@ -201,6 +236,23 @@
                 "resourceManagerEndpoint": {
                     "type": "string",
                     "description": "The Resource Manager Endpoint which should be used.\n"
+                }
+            },
+            "type": "object"
+        },
+        "azapi:index/ResourceActionTimeouts:ResourceActionTimeouts": {
+            "properties": {
+                "create": {
+                    "type": "string",
+                    "description": "A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as \"30s\" or \"2h45m\". Valid time units are \"s\" (seconds), \"m\" (minutes), \"h\" (hours).\n"
+                },
+                "delete": {
+                    "type": "string",
+                    "description": "A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as \"30s\" or \"2h45m\". Valid time units are \"s\" (seconds), \"m\" (minutes), \"h\" (hours). Setting a timeout for a Delete operation is only applicable if changes are saved into state before the destroy operation occurs.\n"
+                },
+                "read": {
+                    "type": "string",
+                    "description": "A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as \"30s\" or \"2h45m\". Valid time units are \"s\" (seconds), \"m\" (minutes), \"h\" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.\n"
                 }
             },
             "type": "object"
@@ -241,6 +293,58 @@
                 }
             }
         },
+        "azapi:index/ResourceTimeouts:ResourceTimeouts": {
+            "properties": {
+                "create": {
+                    "type": "string",
+                    "description": "A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as \"30s\" or \"2h45m\". Valid time units are \"s\" (seconds), \"m\" (minutes), \"h\" (hours).\n"
+                },
+                "delete": {
+                    "type": "string",
+                    "description": "A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as \"30s\" or \"2h45m\". Valid time units are \"s\" (seconds), \"m\" (minutes), \"h\" (hours). Setting a timeout for a Delete operation is only applicable if changes are saved into state before the destroy operation occurs.\n"
+                },
+                "read": {
+                    "type": "string",
+                    "description": "A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as \"30s\" or \"2h45m\". Valid time units are \"s\" (seconds), \"m\" (minutes), \"h\" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.\n"
+                }
+            },
+            "type": "object"
+        },
+        "azapi:index/UpdateResourceTimeouts:UpdateResourceTimeouts": {
+            "properties": {
+                "create": {
+                    "type": "string",
+                    "description": "A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as \"30s\" or \"2h45m\". Valid time units are \"s\" (seconds), \"m\" (minutes), \"h\" (hours).\n"
+                },
+                "delete": {
+                    "type": "string",
+                    "description": "A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as \"30s\" or \"2h45m\". Valid time units are \"s\" (seconds), \"m\" (minutes), \"h\" (hours). Setting a timeout for a Delete operation is only applicable if changes are saved into state before the destroy operation occurs.\n"
+                },
+                "read": {
+                    "type": "string",
+                    "description": "A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as \"30s\" or \"2h45m\". Valid time units are \"s\" (seconds), \"m\" (minutes), \"h\" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.\n"
+                }
+            },
+            "type": "object"
+        },
+        "azapi:index/getResourceActionTimeouts:getResourceActionTimeouts": {
+            "properties": {
+                "read": {
+                    "type": "string",
+                    "description": "A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as \"30s\" or \"2h45m\". Valid time units are \"s\" (seconds), \"m\" (minutes), \"h\" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.\n"
+                }
+            },
+            "type": "object"
+        },
+        "azapi:index/getResourceIdTimeouts:getResourceIdTimeouts": {
+            "properties": {
+                "read": {
+                    "type": "string",
+                    "description": "A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as \"30s\" or \"2h45m\". Valid time units are \"s\" (seconds), \"m\" (minutes), \"h\" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.\n"
+                }
+            },
+            "type": "object"
+        },
         "azapi:index/getResourceIdentity:getResourceIdentity": {
             "properties": {
                 "identityIds": {
@@ -275,6 +379,24 @@
                     "requiredInputs": []
                 }
             }
+        },
+        "azapi:index/getResourceListTimeouts:getResourceListTimeouts": {
+            "properties": {
+                "read": {
+                    "type": "string",
+                    "description": "A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as \"30s\" or \"2h45m\". Valid time units are \"s\" (seconds), \"m\" (minutes), \"h\" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.\n"
+                }
+            },
+            "type": "object"
+        },
+        "azapi:index/getResourceTimeouts:getResourceTimeouts": {
+            "properties": {
+                "read": {
+                    "type": "string",
+                    "description": "A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as \"30s\" or \"2h45m\". Valid time units are \"s\" (seconds), \"m\" (minutes), \"h\" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.\n"
+                }
+            },
+            "type": "object"
         }
     },
     "provider": {
@@ -284,7 +406,8 @@
                 "type": "array",
                 "items": {
                     "type": "string"
-                }
+                },
+                "description": "The Auxiliary Tenant IDs which should be used.\n"
             },
             "clientCertificatePassword": {
                 "type": "string",
@@ -298,33 +421,46 @@
                 "type": "string",
                 "description": "The Client ID which should be used.\n"
             },
+            "clientIdFilePath": {
+                "type": "string",
+                "description": "The path to a file containing the Client ID which should be used.\n"
+            },
             "clientSecret": {
                 "type": "string",
                 "description": "The Client Secret which should be used. For use When authenticating as a Service Principal using a Client Secret.\n"
+            },
+            "clientSecretFilePath": {
+                "type": "string",
+                "description": "The path to a file containing the Client Secret which should be used. For use When authenticating as a Service Principal\nusing a Client Secret.\n"
             },
             "customCorrelationRequestId": {
                 "type": "string",
                 "description": "The value of the x-ms-correlation-request-id header (otherwise an auto-generated UUID will be used).\n"
             },
             "defaultLocation": {
-                "type": "string"
+                "type": "string",
+                "description": "The default location which should be used for resources.\n"
             },
             "defaultName": {
-                "type": "string"
+                "type": "string",
+                "description": "The default name which should be used for resources.\n"
             },
             "defaultNamingPrefix": {
                 "type": "string",
-                "deprecationMessage": "It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead."
+                "description": "The default prefix which should be used for resources.\n",
+                "deprecationMessage": "This field is deprecated and will be removed in a major release. Please specify the naming prefix and suffix in the resource's `name` field instead."
             },
             "defaultNamingSuffix": {
                 "type": "string",
-                "deprecationMessage": "It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead."
+                "description": "The default suffix which should be used for resources.\n",
+                "deprecationMessage": "This field is deprecated and will be removed in a major release. Please specify the naming prefix and suffix in the resource's `name` field instead."
             },
             "defaultTags": {
                 "type": "object",
                 "additionalProperties": {
                     "type": "string"
-                }
+                },
+                "description": "The default tags which should be used for resources.\n"
             },
             "disableCorrelationRequestId": {
                 "type": "boolean",
@@ -333,8 +469,15 @@
             "disableTerraformPartnerId": {
                 "type": "boolean"
             },
-            "endpoint": {
-                "$ref": "#/types/azapi:index/ProviderEndpoint:ProviderEndpoint"
+            "enableHclOutputForDataSource": {
+                "type": "boolean",
+                "description": "Enable HCL output for data sources. The default is false. When set to true, the provider will return HCL output for data\nsources. When set to false, the provider will return JSON output for data sources.\n"
+            },
+            "endpoints": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/types/azapi:index/ProviderEndpoint:ProviderEndpoint"
+                }
             },
             "environment": {
                 "type": "string",
@@ -385,15 +528,13 @@
                 "description": "Allow OpenID Connect to be used for authentication\n"
             }
         },
-        "required": [
-            "environment"
-        ],
         "inputProperties": {
             "auxiliaryTenantIds": {
                 "type": "array",
                 "items": {
                     "type": "string"
-                }
+                },
+                "description": "The Auxiliary Tenant IDs which should be used.\n"
             },
             "clientCertificatePassword": {
                 "type": "string",
@@ -407,33 +548,46 @@
                 "type": "string",
                 "description": "The Client ID which should be used.\n"
             },
+            "clientIdFilePath": {
+                "type": "string",
+                "description": "The path to a file containing the Client ID which should be used.\n"
+            },
             "clientSecret": {
                 "type": "string",
                 "description": "The Client Secret which should be used. For use When authenticating as a Service Principal using a Client Secret.\n"
+            },
+            "clientSecretFilePath": {
+                "type": "string",
+                "description": "The path to a file containing the Client Secret which should be used. For use When authenticating as a Service Principal\nusing a Client Secret.\n"
             },
             "customCorrelationRequestId": {
                 "type": "string",
                 "description": "The value of the x-ms-correlation-request-id header (otherwise an auto-generated UUID will be used).\n"
             },
             "defaultLocation": {
-                "type": "string"
+                "type": "string",
+                "description": "The default location which should be used for resources.\n"
             },
             "defaultName": {
-                "type": "string"
+                "type": "string",
+                "description": "The default name which should be used for resources.\n"
             },
             "defaultNamingPrefix": {
                 "type": "string",
-                "deprecationMessage": "It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead."
+                "description": "The default prefix which should be used for resources.\n",
+                "deprecationMessage": "This field is deprecated and will be removed in a major release. Please specify the naming prefix and suffix in the resource's `name` field instead."
             },
             "defaultNamingSuffix": {
                 "type": "string",
-                "deprecationMessage": "It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead."
+                "description": "The default suffix which should be used for resources.\n",
+                "deprecationMessage": "This field is deprecated and will be removed in a major release. Please specify the naming prefix and suffix in the resource's `name` field instead."
             },
             "defaultTags": {
                 "type": "object",
                 "additionalProperties": {
                     "type": "string"
-                }
+                },
+                "description": "The default tags which should be used for resources.\n"
             },
             "disableCorrelationRequestId": {
                 "type": "boolean",
@@ -442,8 +596,15 @@
             "disableTerraformPartnerId": {
                 "type": "boolean"
             },
-            "endpoint": {
-                "$ref": "#/types/azapi:index/ProviderEndpoint:ProviderEndpoint"
+            "enableHclOutputForDataSource": {
+                "type": "boolean",
+                "description": "Enable HCL output for data sources. The default is false. When set to true, the provider will return HCL output for data\nsources. When set to false, the provider will return JSON output for data sources.\n"
+            },
+            "endpoints": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/types/azapi:index/ProviderEndpoint:ProviderEndpoint"
+                }
             },
             "environment": {
                 "type": "string",
@@ -493,18 +654,15 @@
                 "type": "boolean",
                 "description": "Allow OpenID Connect to be used for authentication\n"
             }
-        },
-        "requiredInputs": [
-            "environment"
-        ]
+        }
     },
     "resources": {
         "azapi:index/dataPlaneResource:DataPlaneResource": {
-            "description": "This resource can manage some Azure data plane resource.\n\n## Example Usage\n\n```hcl\nterraform {\n  required_providers {\n    azapi = {\n      source = \"Azure/azapi\"\n    }\n  }\n}\n\nprovider \"azapi\" {\n}\n\nprovider \"azurerm\" {\n  features {}\n}\n\ndata \"azurerm_synapse_workspace\" \"example\" {\n  name                = \"example-workspace\"\n  resource_group_name = azurerm_resource_group.example.name\n}\n\nresource \"azapi_data_plane_resource\" \"dataset\" {\n  type      = \"Microsoft.Synapse/workspaces/datasets@2020-12-01\"\n  parent_id = trimprefix(data.azurerm_synapse_workspace.example.connectivity_endpoints.dev, \"https://\")\n  name      = \"example-dataset\"\n  body = jsonencode({\n    properties = {\n      type = \"AzureBlob\",\n      typeProperties = {\n        folderPath = {\n          value = \"@dataset().MyFolderPath\"\n          type  = \"Expression\"\n        }\n        fileName = {\n          value = \"@dataset().MyFileName\"\n          type  = \"Expression\"\n        }\n        format = {\n          type = \"TextFormat\"\n        }\n      }\n      parameters = {\n        MyFolderPath = {\n          type = \"String\"\n        }\n        MyFileName = {\n          type = \"String\"\n        }\n      }\n    }\n  })\n}\n\n```\n\n## Available Resources\n\n| Resource Type | URL | Parent ID Example                                                                           |\n| --- | --- |---------------------------------------------------------------------------------------------|\n| Microsoft.AppConfiguration/configurationStores/keyValues | /kv/{key} | {storeName}.azconfig.io                                                                     |\n| Microsoft.DeviceUpdate/accounts/groups | /deviceupdate/{instanceId}/management/groups/{groupId} | {accountName}.api.adu.microsoft.com/deviceupdate/{instanceName}                             |\n| Microsoft.DeviceUpdate/accounts/groups/deployments | /deviceUpdate/{instanceId}/management/groups/{groupId}/deployments/{deploymentId} | {accountName}.api.adu.microsoft.com/deviceupdate/{instanceName}/management/groups/{groupId} |\n| Microsoft.DeviceUpdate/accounts/v2/deployments | /deviceupdate/{instanceId}/v2/management/deployments/{deploymentId} | {accountName}.api.adu.microsoft.com/deviceupdate/{instanceName}                             |\n| Microsoft.DeviceUpdate/accounts/v2/groups | /deviceupdate/{instanceId}/v2/management/groups/{groupId} | {accountName}.api.adu.microsoft.com/deviceupdate/{instanceName}                             |\n| Microsoft.DigitalTwins/digitalTwinsInstances/digitaltwins | /digitaltwins/{id} | {instanceName}.api.weu.digitaltwins.azure.net                                               |\n| Microsoft.DigitalTwins/digitalTwinsInstances/digitaltwins/relationships | /digitaltwins/{id}/relationships/{relationshipId} | {instanceName}.api.weu.digitaltwins.azure.net/digitaltwins/{digitalTwinId}                  |\n| Microsoft.DigitalTwins/digitalTwinsInstances/eventroutes | /eventroutes/{id} | {instanceName}.api.weu.digitaltwins.azure.net                                               |\n| Microsoft.DigitalTwins/digitalTwinsInstances/jobs/imports | /jobs/imports/{id} | {instanceName}.api.weu.digitaltwins.azure.net                                               |\n| Microsoft.IoTCentral/IoTApps/organizations | /organizations/{organizationId} | {appSubdomain}.azureiotcentral.com                                                          |\n| Microsoft.IoTCentral/IoTApps/scheduledJobs | /scheduledJobs/{scheduledJobId} | {appSubdomain}.azureiotcentral.com                                                          |\n| Microsoft.IoTCentral/IoTApps/users | /users/{userId} | {appSubdomain}.azureiotcentral.com                                                          |\n| Microsoft.IoTCentral/iotApps/apiTokens | /apiTokens/{tokenId} | {appSubdomain}.azureiotcentral.com                                                          |\n| Microsoft.IoTCentral/iotApps/continuousDataExports | /continuousDataExports/{exportId} | {appSubdomain}.azureiotcentral.com                                                          |\n| Microsoft.IoTCentral/iotApps/dashboards | /dashboards/{dashboardId} | {appSubdomain}.azureiotcentral.com                                                          |\n| Microsoft.IoTCentral/iotApps/dataExport/destinations | /dataExport/destinations/{destinationId} | {appSubdomain}.azureiotcentral.com                                                          |\n| Microsoft.IoTCentral/iotApps/dataExport/exports | /dataExport/exports/{exportId} | {appSubdomain}.azureiotcentral.com                                                          |\n| Microsoft.IoTCentral/iotApps/deploymentManifests | /deploymentManifests/{deploymentManifestId} | {appSubdomain}.azureiotcentral.com                                                          |\n| Microsoft.IoTCentral/iotApps/deviceGroups | /deviceGroups/{deviceGroupId} | {appSubdomain}.azureiotcentral.com                                                          |\n| Microsoft.IoTCentral/iotApps/deviceTemplates | /deviceTemplates/{deviceTemplateId} | {appSubdomain}.azureiotcentral.com                                                          |\n| Microsoft.IoTCentral/iotApps/devices | /devices/{deviceId} | {appSubdomain}.azureiotcentral.com                                                          |\n| Microsoft.IoTCentral/iotApps/devices/attestation | /devices/{deviceId}/attestation | {appSubdomain}.azureiotcentral.com                                                          |\n| Microsoft.IoTCentral/iotApps/devices/relationships | /devices/{deviceId}/relationships/{relationshipId} | {appSubdomain}.azureiotcentral.com/devices/{deviceId}                                       |\n| Microsoft.IoTCentral/iotApps/enrollmentGroups | /enrollmentGroups/{enrollmentGroupId} | {appSubdomain}.azureiotcentral.com                                                          |\n| Microsoft.IoTCentral/iotApps/enrollmentGroups/certificates | /enrollmentGroups/{enrollmentGroupId}/certificates/{entry} | {appSubdomain}.azureiotcentral.com/enrollmentGroups/{enrollmentGroupId}                     |\n| Microsoft.KeyVault/vaults/certificates/contacts | /certificates/contacts | {vaultName}.vault.azure.net                                                                 |\n| Microsoft.KeyVault/vaults/certificates/issuers | /certificates/issuers/{issuer-name} | {vaultName}.vault.azure.net                                                                 |\n| Microsoft.KeyVault/vaults/storage | /storage/{storage-account-name} | {vaultName}.vault.azure.net                                                                 |\n| Microsoft.KeyVault/vaults/storage/sas | /storage/{storage-account-name}/sas/{sas-definition-name} | {vaultName}.vault.azure.net/storage/{storage-account-name}                                  |\n| Microsoft.Purview/accounts/Account/collections | /collections/{collectionName} | {accountName}.purview.azure.com                                                             |\n| Microsoft.Purview/accounts/Account/resourceSetRuleConfigs | /resourceSetRuleConfigs/defaultResourceSetRuleConfig | {accountName}.purview.azure.com                                                             |\n| Microsoft.Purview/accounts/Scanning/azureKeyVaults | /azureKeyVaults/{azureKeyVaultName} | {accountName}.purview.azure.com/scan                                                        |\n| Microsoft.Purview/accounts/Scanning/classificationrules | /classificationrules/{classificationRuleName} | {accountName}.purview.azure.com/scan                                                        |\n| Microsoft.Purview/accounts/Scanning/credentials | /credentials/{credentialName} | {accountName}.purview.azure.com/scan                                                        |\n| Microsoft.Purview/accounts/Scanning/datasources | /datasources/{dataSourceName} | {accountName}.purview.azure.com/scan                                                        |\n| Microsoft.Purview/accounts/Scanning/datasources/scans | /datasources/{dataSourceName}/scans/{scanName} | {accountName}.purview.azure.com/scan/datasources/{dataSourceName}                           |\n| Microsoft.Purview/accounts/Scanning/datasources/scans/triggers | /datasources/{dataSourceName}/scans/{scanName}/triggers/default | {accountName}.purview.azure.com/scan/datasources/{dataSourceName}/scans/{scanName}          |\n| Microsoft.Purview/accounts/Scanning/integrationruntimes | /integrationruntimes/{integrationRuntimeName} | {accountName}.purview.azure.com/scan                                                        |\n| Microsoft.Purview/accounts/Scanning/managedvirtualnetworks/managedprivateendpoints | /managedvirtualnetworks/{managedVirtualNetworkName}/managedprivateendpoints/{managedPrivateEndpointName} | {accountName}.purview.azure.com/scan/managedvirtualnetworks/{managedVirtualNetworkName}     |\n| Microsoft.Purview/accounts/Workflow/workflows | /workflows/{workflowId} | {accountName}.purview.azure.com                                                             |\n| Microsoft.Synapse/workspaces/dataflows | /dataflows/{dataFlowName} | {workspaceName}.dev.azuresynapse.net                                                        |\n| Microsoft.Synapse/workspaces/datasets | /datasets/{datasetName} | {workspaceName}.dev.azuresynapse.net                                                        |\n| Microsoft.Synapse/workspaces/kqlScripts | /kqlScripts/{kqlScriptName} | {workspaceName}.dev.azuresynapse.net                                                        |\n| Microsoft.Synapse/workspaces/libraries | /libraries/{libraryName} | {workspaceName}.dev.azuresynapse.net                                                        |\n| Microsoft.Synapse/workspaces/linkconnections | /linkconnections/{linkConnectionName} | {workspaceName}.dev.azuresynapse.net                                                        |\n| Microsoft.Synapse/workspaces/linkedservices | /linkedservices/{linkedServiceName} | {workspaceName}.dev.azuresynapse.net                                                        |\n| Microsoft.Synapse/workspaces/managedVirtualNetworks/managedPrivateEndpoints | /managedVirtualNetworks/{managedVirtualNetworkName}/managedPrivateEndpoints/{managedPrivateEndpointName} | {workspaceName}.dev.azuresynapse.net/managedVirtualNetworks/{managedVirtualNetworkName}     |\n| Microsoft.Synapse/workspaces/notebooks | /notebooks/{notebookName} | {workspaceName}.dev.azuresynapse.net                                                        |\n| Microsoft.Synapse/workspaces/pipelines | /pipelines/{pipelineName} | {workspaceName}.dev.azuresynapse.net                                                        |\n| Microsoft.Synapse/workspaces/roleAssignments | /roleAssignments/{roleAssignmentId} | {workspaceName}.dev.azuresynapse.net                                                        |\n| Microsoft.Synapse/workspaces/sparkJobDefinitions | /sparkJobDefinitions/{sparkJobDefinitionName} | {workspaceName}.dev.azuresynapse.net                                                        |\n| Microsoft.Synapse/workspaces/sparkconfigurations | /sparkconfigurations/{sparkConfigurationName} | {workspaceName}.dev.azuresynapse.net                                                        |\n| Microsoft.Synapse/workspaces/sqlScripts | /sqlScripts/{sqlScriptName} | {workspaceName}.dev.azuresynapse.net                                                        |\n| Microsoft.Synapse/workspaces/triggers | /triggers/{triggerName} | {workspaceName}.dev.azuresynapse.net                                                        |\n",
+            "description": "This resource can manage some Azure data plane resource.\n\n## Example Usage\n\n```hcl\nterraform {\n  required_providers {\n    azapi = {\n      source = \"Azure/azapi\"\n    }\n  }\n}\n\nprovider \"azapi\" {\n}\n\nprovider \"azurerm\" {\n  features {}\n}\n\ndata \"azurerm_synapse_workspace\" \"example\" {\n  name                = \"example-workspace\"\n  resource_group_name = azurerm_resource_group.example.name\n}\n\nresource \"azapi_data_plane_resource\" \"dataset\" {\n  type      = \"Microsoft.Synapse/workspaces/datasets@2020-12-01\"\n  parent_id = trimprefix(data.azurerm_synapse_workspace.example.connectivity_endpoints.dev, \"https://\")\n  name      = \"example-dataset\"\n  body = {\n    properties = {\n      type = \"AzureBlob\",\n      typeProperties = {\n        folderPath = {\n          value = \"@dataset().MyFolderPath\"\n          type  = \"Expression\"\n        }\n        fileName = {\n          value = \"@dataset().MyFileName\"\n          type  = \"Expression\"\n        }\n        format = {\n          type = \"TextFormat\"\n        }\n      }\n      parameters = {\n        MyFolderPath = {\n          type = \"String\"\n        }\n        MyFileName = {\n          type = \"String\"\n        }\n      }\n    }\n  }\n}\n\n```\n\n## Available Resources\n\n| Resource Type | URL | Parent ID Example                                                                           |\n| --- | --- |---------------------------------------------------------------------------------------------|\n| Microsoft.AppConfiguration/configurationStores/keyValues | /kv/{key} | {storeName}.azconfig.io                                                                     |\n| Microsoft.DeviceUpdate/accounts/groups | /deviceupdate/{instanceId}/management/groups/{groupId} | {accountName}.api.adu.microsoft.com/deviceupdate/{instanceName}                             |\n| Microsoft.DeviceUpdate/accounts/groups/deployments | /deviceUpdate/{instanceId}/management/groups/{groupId}/deployments/{deploymentId} | {accountName}.api.adu.microsoft.com/deviceupdate/{instanceName}/management/groups/{groupId} |\n| Microsoft.DeviceUpdate/accounts/v2/deployments | /deviceupdate/{instanceId}/v2/management/deployments/{deploymentId} | {accountName}.api.adu.microsoft.com/deviceupdate/{instanceName}                             |\n| Microsoft.DeviceUpdate/accounts/v2/groups | /deviceupdate/{instanceId}/v2/management/groups/{groupId} | {accountName}.api.adu.microsoft.com/deviceupdate/{instanceName}                             |\n| Microsoft.DigitalTwins/digitalTwinsInstances/digitaltwins | /digitaltwins/{id} | {instanceName}.api.weu.digitaltwins.azure.net                                               |\n| Microsoft.DigitalTwins/digitalTwinsInstances/digitaltwins/relationships | /digitaltwins/{id}/relationships/{relationshipId} | {instanceName}.api.weu.digitaltwins.azure.net/digitaltwins/{digitalTwinId}                  |\n| Microsoft.DigitalTwins/digitalTwinsInstances/eventroutes | /eventroutes/{id} | {instanceName}.api.weu.digitaltwins.azure.net                                               |\n| Microsoft.DigitalTwins/digitalTwinsInstances/jobs/imports | /jobs/imports/{id} | {instanceName}.api.weu.digitaltwins.azure.net                                               |\n| Microsoft.IoTCentral/IoTApps/organizations | /organizations/{organizationId} | {appSubdomain}.azureiotcentral.com                                                          |\n| Microsoft.IoTCentral/IoTApps/scheduledJobs | /scheduledJobs/{scheduledJobId} | {appSubdomain}.azureiotcentral.com                                                          |\n| Microsoft.IoTCentral/IoTApps/users | /users/{userId} | {appSubdomain}.azureiotcentral.com                                                          |\n| Microsoft.IoTCentral/iotApps/apiTokens | /apiTokens/{tokenId} | {appSubdomain}.azureiotcentral.com                                                          |\n| Microsoft.IoTCentral/iotApps/continuousDataExports | /continuousDataExports/{exportId} | {appSubdomain}.azureiotcentral.com                                                          |\n| Microsoft.IoTCentral/iotApps/dashboards | /dashboards/{dashboardId} | {appSubdomain}.azureiotcentral.com                                                          |\n| Microsoft.IoTCentral/iotApps/dataExport/destinations | /dataExport/destinations/{destinationId} | {appSubdomain}.azureiotcentral.com                                                          |\n| Microsoft.IoTCentral/iotApps/dataExport/exports | /dataExport/exports/{exportId} | {appSubdomain}.azureiotcentral.com                                                          |\n| Microsoft.IoTCentral/iotApps/deploymentManifests | /deploymentManifests/{deploymentManifestId} | {appSubdomain}.azureiotcentral.com                                                          |\n| Microsoft.IoTCentral/iotApps/deviceGroups | /deviceGroups/{deviceGroupId} | {appSubdomain}.azureiotcentral.com                                                          |\n| Microsoft.IoTCentral/iotApps/deviceTemplates | /deviceTemplates/{deviceTemplateId} | {appSubdomain}.azureiotcentral.com                                                          |\n| Microsoft.IoTCentral/iotApps/devices | /devices/{deviceId} | {appSubdomain}.azureiotcentral.com                                                          |\n| Microsoft.IoTCentral/iotApps/devices/attestation | /devices/{deviceId}/attestation | {appSubdomain}.azureiotcentral.com                                                          |\n| Microsoft.IoTCentral/iotApps/devices/relationships | /devices/{deviceId}/relationships/{relationshipId} | {appSubdomain}.azureiotcentral.com/devices/{deviceId}                                       |\n| Microsoft.IoTCentral/iotApps/enrollmentGroups | /enrollmentGroups/{enrollmentGroupId} | {appSubdomain}.azureiotcentral.com                                                          |\n| Microsoft.IoTCentral/iotApps/enrollmentGroups/certificates | /enrollmentGroups/{enrollmentGroupId}/certificates/{entry} | {appSubdomain}.azureiotcentral.com/enrollmentGroups/{enrollmentGroupId}                     |\n| Microsoft.KeyVault/vaults/certificates/contacts | /certificates/contacts | {vaultName}.vault.azure.net                                                                 |\n| Microsoft.KeyVault/vaults/certificates/issuers | /certificates/issuers/{issuer-name} | {vaultName}.vault.azure.net                                                                 |\n| Microsoft.KeyVault/vaults/storage | /storage/{storage-account-name} | {vaultName}.vault.azure.net                                                                 |\n| Microsoft.KeyVault/vaults/storage/sas | /storage/{storage-account-name}/sas/{sas-definition-name} | {vaultName}.vault.azure.net/storage/{storage-account-name}                                  |\n| Microsoft.Purview/accounts/Account/collections | /collections/{collectionName} | {accountName}.purview.azure.com                                                             |\n| Microsoft.Purview/accounts/Account/resourceSetRuleConfigs | /resourceSetRuleConfigs/defaultResourceSetRuleConfig | {accountName}.purview.azure.com                                                             |\n| Microsoft.Purview/accounts/Scanning/azureKeyVaults | /azureKeyVaults/{azureKeyVaultName} | {accountName}.purview.azure.com/scan                                                        |\n| Microsoft.Purview/accounts/Scanning/classificationrules | /classificationrules/{classificationRuleName} | {accountName}.purview.azure.com/scan                                                        |\n| Microsoft.Purview/accounts/Scanning/credentials | /credentials/{credentialName} | {accountName}.purview.azure.com/scan                                                        |\n| Microsoft.Purview/accounts/Scanning/datasources | /datasources/{dataSourceName} | {accountName}.purview.azure.com/scan                                                        |\n| Microsoft.Purview/accounts/Scanning/datasources/scans | /datasources/{dataSourceName}/scans/{scanName} | {accountName}.purview.azure.com/scan/datasources/{dataSourceName}                           |\n| Microsoft.Purview/accounts/Scanning/datasources/scans/triggers | /datasources/{dataSourceName}/scans/{scanName}/triggers/default | {accountName}.purview.azure.com/scan/datasources/{dataSourceName}/scans/{scanName}          |\n| Microsoft.Purview/accounts/Scanning/integrationruntimes | /integrationruntimes/{integrationRuntimeName} | {accountName}.purview.azure.com/scan                                                        |\n| Microsoft.Purview/accounts/Scanning/managedvirtualnetworks/managedprivateendpoints | /managedvirtualnetworks/{managedVirtualNetworkName}/managedprivateendpoints/{managedPrivateEndpointName} | {accountName}.purview.azure.com/scan/managedvirtualnetworks/{managedVirtualNetworkName}     |\n| Microsoft.Purview/accounts/Workflow/workflows | /workflows/{workflowId} | {accountName}.purview.azure.com                                                             |\n| Microsoft.Synapse/workspaces/databases | /databases/{databaseName} | {workspaceName}.dev.azuresynapse.net                                                        |\n| Microsoft.Synapse/workspaces/dataflows | /dataflows/{dataFlowName} | {workspaceName}.dev.azuresynapse.net                                                        |\n| Microsoft.Synapse/workspaces/datasets | /datasets/{datasetName} | {workspaceName}.dev.azuresynapse.net                                                        |\n| Microsoft.Synapse/workspaces/kqlScripts | /kqlScripts/{kqlScriptName} | {workspaceName}.dev.azuresynapse.net                                                        |\n| Microsoft.Synapse/workspaces/libraries | /libraries/{libraryName} | {workspaceName}.dev.azuresynapse.net                                                        |\n| Microsoft.Synapse/workspaces/linkconnections | /linkconnections/{linkConnectionName} | {workspaceName}.dev.azuresynapse.net                                                        |\n| Microsoft.Synapse/workspaces/linkedservices | /linkedservices/{linkedServiceName} | {workspaceName}.dev.azuresynapse.net                                                        |\n| Microsoft.Synapse/workspaces/managedVirtualNetworks/managedPrivateEndpoints | /managedVirtualNetworks/{managedVirtualNetworkName}/managedPrivateEndpoints/{managedPrivateEndpointName} | {workspaceName}.dev.azuresynapse.net/managedVirtualNetworks/{managedVirtualNetworkName}     |\n| Microsoft.Synapse/workspaces/notebooks | /notebooks/{notebookName} | {workspaceName}.dev.azuresynapse.net                                                        |\n| Microsoft.Synapse/workspaces/pipelines | /pipelines/{pipelineName} | {workspaceName}.dev.azuresynapse.net                                                        |\n| Microsoft.Synapse/workspaces/roleAssignments | /roleAssignments/{roleAssignmentId} | {workspaceName}.dev.azuresynapse.net                                                        |\n| Microsoft.Synapse/workspaces/sparkJobDefinitions | /sparkJobDefinitions/{sparkJobDefinitionName} | {workspaceName}.dev.azuresynapse.net                                                        |\n| Microsoft.Synapse/workspaces/sparkconfigurations | /sparkconfigurations/{sparkConfigurationName} | {workspaceName}.dev.azuresynapse.net                                                        |\n| Microsoft.Synapse/workspaces/sqlScripts | /sqlScripts/{sqlScriptName} | {workspaceName}.dev.azuresynapse.net                                                        |\n| Microsoft.Synapse/workspaces/triggers | /triggers/{triggerName} | {workspaceName}.dev.azuresynapse.net                                                        |\n",
             "properties": {
                 "body": {
-                    "type": "string",
-                    "description": "A JSON object that contains the request body used to create and update data plane resource.\n"
+                    "$ref": "pulumi.json#/Any",
+                    "description": "A dynamic attribute that contains the request body used to create and update data plane resource.\n"
                 },
                 "ignoreCasing": {
                     "type": "boolean",
@@ -512,7 +670,7 @@
                 },
                 "ignoreMissingProperty": {
                     "type": "boolean",
-                    "description": "Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.\n"
+                    "description": "Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`. \nIt's recommend to enable this option when some sensitive properties are not returned in response body, instead of setting them in `lifecycle.ignore_changes` because it will make the sensitive fields unable to update.\n"
                 },
                 "locks": {
                     "type": "array",
@@ -526,8 +684,8 @@
                     "description": "Specifies the name of the azure resource. Changing this forces a new resource to be created.\n"
                 },
                 "output": {
-                    "type": "string",
-                    "description": "The output json containing the properties specified in `response_export_values`. Here're some examples to decode json and extract the value.\n```\n// it will output \"registry1.azurecr.io\"\noutput \"login_server\" {\nvalue = jsondecode(azapi_data_plane_resource.example.output).properties.loginServer\n}\n"
+                    "$ref": "pulumi.json#/Any",
+                    "description": "The output HCL object containing the properties specified in `response_export_values`. Here are some examples to use the values.\n```\n// it will output \"registry1.azurecr.io\"\noutput \"login_server\" {\nvalue = azapi_data_plane_resource.example.output.properties.loginServer\n}\n"
                 },
                 "parentId": {
                     "type": "string",
@@ -538,7 +696,10 @@
                     "items": {
                         "type": "string"
                     },
-                    "description": "A list of path that needs to be exported from response body.\nSetting it to `[\"*\"]` will export the full response body.\nHere's an example. If it sets to `[\"properties.loginServer\", \"properties.policies.quarantinePolicy.status\"]`, it will set the following json to computed property `output`.\n```\n{\n\"properties\" : {\n\"loginServer\" : \"registry1.azurecr.io\"\n\"policies\" : {\n\"quarantinePolicy\" = {\n\"status\" = \"disabled\"\n}\n}\n}\n}\n```\n"
+                    "description": "A list of path that needs to be exported from response body.\nSetting it to `[\"*\"]` will export the full response body.\nHere's an example. If it sets to `[\"properties.loginServer\", \"properties.policies.quarantinePolicy.status\"]`, it will set the following HCL object to computed property `output`.\n```\n{\n\"properties\" : {\n\"loginServer\" : \"registry1.azurecr.io\"\n\"policies\" : {\n\"quarantinePolicy\" = {\n\"status\" = \"disabled\"\n}\n}\n}\n}\n```\n"
+                },
+                "timeouts": {
+                    "$ref": "#/types/azapi:index/DataPlaneResourceTimeouts:DataPlaneResourceTimeouts"
                 },
                 "type": {
                     "type": "string",
@@ -546,6 +707,9 @@
                 }
             },
             "required": [
+                "body",
+                "ignoreCasing",
+                "ignoreMissingProperty",
                 "name",
                 "output",
                 "parentId",
@@ -553,8 +717,8 @@
             ],
             "inputProperties": {
                 "body": {
-                    "type": "string",
-                    "description": "A JSON object that contains the request body used to create and update data plane resource.\n"
+                    "$ref": "pulumi.json#/Any",
+                    "description": "A dynamic attribute that contains the request body used to create and update data plane resource.\n"
                 },
                 "ignoreCasing": {
                     "type": "boolean",
@@ -562,7 +726,7 @@
                 },
                 "ignoreMissingProperty": {
                     "type": "boolean",
-                    "description": "Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.\n"
+                    "description": "Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`. \nIt's recommend to enable this option when some sensitive properties are not returned in response body, instead of setting them in `lifecycle.ignore_changes` because it will make the sensitive fields unable to update.\n"
                 },
                 "locks": {
                     "type": "array",
@@ -573,20 +737,21 @@
                 },
                 "name": {
                     "type": "string",
-                    "description": "Specifies the name of the azure resource. Changing this forces a new resource to be created.\n",
-                    "willReplaceOnChanges": true
+                    "description": "Specifies the name of the azure resource. Changing this forces a new resource to be created.\n"
                 },
                 "parentId": {
                     "type": "string",
-                    "description": "The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created.\n",
-                    "willReplaceOnChanges": true
+                    "description": "The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created.\n"
                 },
                 "responseExportValues": {
                     "type": "array",
                     "items": {
                         "type": "string"
                     },
-                    "description": "A list of path that needs to be exported from response body.\nSetting it to `[\"*\"]` will export the full response body.\nHere's an example. If it sets to `[\"properties.loginServer\", \"properties.policies.quarantinePolicy.status\"]`, it will set the following json to computed property `output`.\n```\n{\n\"properties\" : {\n\"loginServer\" : \"registry1.azurecr.io\"\n\"policies\" : {\n\"quarantinePolicy\" = {\n\"status\" = \"disabled\"\n}\n}\n}\n}\n```\n"
+                    "description": "A list of path that needs to be exported from response body.\nSetting it to `[\"*\"]` will export the full response body.\nHere's an example. If it sets to `[\"properties.loginServer\", \"properties.policies.quarantinePolicy.status\"]`, it will set the following HCL object to computed property `output`.\n```\n{\n\"properties\" : {\n\"loginServer\" : \"registry1.azurecr.io\"\n\"policies\" : {\n\"quarantinePolicy\" = {\n\"status\" = \"disabled\"\n}\n}\n}\n}\n```\n"
+                },
+                "timeouts": {
+                    "$ref": "#/types/azapi:index/DataPlaneResourceTimeouts:DataPlaneResourceTimeouts"
                 },
                 "type": {
                     "type": "string",
@@ -601,8 +766,8 @@
                 "description": "Input properties used for looking up and filtering DataPlaneResource resources.\n",
                 "properties": {
                     "body": {
-                        "type": "string",
-                        "description": "A JSON object that contains the request body used to create and update data plane resource.\n"
+                        "$ref": "pulumi.json#/Any",
+                        "description": "A dynamic attribute that contains the request body used to create and update data plane resource.\n"
                     },
                     "ignoreCasing": {
                         "type": "boolean",
@@ -610,7 +775,7 @@
                     },
                     "ignoreMissingProperty": {
                         "type": "boolean",
-                        "description": "Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.\n"
+                        "description": "Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`. \nIt's recommend to enable this option when some sensitive properties are not returned in response body, instead of setting them in `lifecycle.ignore_changes` because it will make the sensitive fields unable to update.\n"
                     },
                     "locks": {
                         "type": "array",
@@ -621,24 +786,25 @@
                     },
                     "name": {
                         "type": "string",
-                        "description": "Specifies the name of the azure resource. Changing this forces a new resource to be created.\n",
-                        "willReplaceOnChanges": true
+                        "description": "Specifies the name of the azure resource. Changing this forces a new resource to be created.\n"
                     },
                     "output": {
-                        "type": "string",
-                        "description": "The output json containing the properties specified in `response_export_values`. Here're some examples to decode json and extract the value.\n```\n// it will output \"registry1.azurecr.io\"\noutput \"login_server\" {\nvalue = jsondecode(azapi_data_plane_resource.example.output).properties.loginServer\n}\n"
+                        "$ref": "pulumi.json#/Any",
+                        "description": "The output HCL object containing the properties specified in `response_export_values`. Here are some examples to use the values.\n```\n// it will output \"registry1.azurecr.io\"\noutput \"login_server\" {\nvalue = azapi_data_plane_resource.example.output.properties.loginServer\n}\n"
                     },
                     "parentId": {
                         "type": "string",
-                        "description": "The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created.\n",
-                        "willReplaceOnChanges": true
+                        "description": "The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created.\n"
                     },
                     "responseExportValues": {
                         "type": "array",
                         "items": {
                             "type": "string"
                         },
-                        "description": "A list of path that needs to be exported from response body.\nSetting it to `[\"*\"]` will export the full response body.\nHere's an example. If it sets to `[\"properties.loginServer\", \"properties.policies.quarantinePolicy.status\"]`, it will set the following json to computed property `output`.\n```\n{\n\"properties\" : {\n\"loginServer\" : \"registry1.azurecr.io\"\n\"policies\" : {\n\"quarantinePolicy\" = {\n\"status\" = \"disabled\"\n}\n}\n}\n}\n```\n"
+                        "description": "A list of path that needs to be exported from response body.\nSetting it to `[\"*\"]` will export the full response body.\nHere's an example. If it sets to `[\"properties.loginServer\", \"properties.policies.quarantinePolicy.status\"]`, it will set the following HCL object to computed property `output`.\n```\n{\n\"properties\" : {\n\"loginServer\" : \"registry1.azurecr.io\"\n\"policies\" : {\n\"quarantinePolicy\" = {\n\"status\" = \"disabled\"\n}\n}\n}\n}\n```\n"
+                    },
+                    "timeouts": {
+                        "$ref": "#/types/azapi:index/DataPlaneResourceTimeouts:DataPlaneResourceTimeouts"
                     },
                     "type": {
                         "type": "string",
@@ -649,14 +815,17 @@
             }
         },
         "azapi:index/resource:Resource": {
-            "description": "This resource can manage any Azure resource manager resource.\n\n## Example Usage\n\n```hcl\nterraform {\n  required_providers {\n    azapi = {\n      source = \"Azure/azapi\"\n    }\n  }\n}\n\nprovider \"azapi\" {\n}\n\nprovider \"azurerm\" {\n  features {}\n}\n\nresource \"azurerm_resource_group\" \"example\" {\n  name     = \"example-rg\"\n  location = \"west europe\"\n}\n\nresource \"azurerm_user_assigned_identity\" \"example\" {\n  name                = \"example\"\n  resource_group_name = azurerm_resource_group.example.name\n  location            = azurerm_resource_group.example.location\n}\n\n// manage a container registry resource\nresource \"azapi_resource\" \"example\" {\n  type      = \"Microsoft.ContainerRegistry/registries@2020-11-01-preview\"\n  name      = \"registry1\"\n  parent_id = azurerm_resource_group.example.id\n\n  location = azurerm_resource_group.example.location\n  identity {\n    type         = \"SystemAssigned, UserAssigned\"\n    identity_ids = [azurerm_user_assigned_identity.example.id]\n  }\n\n  body = jsonencode({\n    sku = {\n      name = \"Standard\"\n    }\n    properties = {\n      adminUserEnabled = true\n    }\n  })\n\n  tags = {\n    \"Key\" = \"Value\"\n  }\n\n  response_export_values = [\"properties.loginServer\", \"properties.policies.quarantinePolicy.status\"]\n}\n\n// it will output \"registry1.azurecr.io\"\noutput \"login_server\" {\n  value = jsondecode(azapi_resource.example.output).properties.loginServer\n}\n\n// it will output \"disabled\"\noutput \"quarantine_policy\" {\n  value = jsondecode(azapi_resource.example.output).properties.policies.quarantinePolicy.status\n}\n```\n\n## Import\n\nAzure resource can be imported using the `resource id`, e.g.\n\n```sh\n$ pulumi import azapi:index/resource:Resource example /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/resGroup1/providers/Microsoft.MachineLearningServices/workspaces/workspace1/computes/cluster1\n```\n\nIt also supports specifying API version by using the `resource id` with `api-version` as a query parameter, e.g.\n\n```sh\n$ pulumi import azapi:index/resource:Resource example /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/resGroup1/providers/Microsoft.MachineLearningServices/workspaces/workspace1/computes/cluster1?api-version=2021-07-01\n```\n\n",
+            "description": "This resource can manage any Azure resource manager resource.\n\n## Example Usage\n\n```hcl\nterraform {\n  required_providers {\n    azapi = {\n      source = \"Azure/azapi\"\n    }\n  }\n}\n\nprovider \"azapi\" {\n}\n\nprovider \"azurerm\" {\n  features {}\n}\n\nresource \"azurerm_resource_group\" \"example\" {\n  name     = \"example-rg\"\n  location = \"west europe\"\n}\n\nresource \"azurerm_user_assigned_identity\" \"example\" {\n  name                = \"example\"\n  resource_group_name = azurerm_resource_group.example.name\n  location            = azurerm_resource_group.example.location\n}\n\n// manage a container registry resource\nresource \"azapi_resource\" \"example\" {\n  type      = \"Microsoft.ContainerRegistry/registries@2020-11-01-preview\"\n  name      = \"registry1\"\n  parent_id = azurerm_resource_group.example.id\n\n  location = azurerm_resource_group.example.location\n  identity {\n    type         = \"SystemAssigned, UserAssigned\"\n    identity_ids = [azurerm_user_assigned_identity.example.id]\n  }\n\n  body = {\n    sku = {\n      name = \"Standard\"\n    }\n    properties = {\n      adminUserEnabled = true\n    }\n  }\n\n  tags = {\n    \"Key\" = \"Value\"\n  }\n\n  response_export_values = [\"properties.loginServer\", \"properties.policies.quarantinePolicy.status\"]\n}\n\n// it will output \"registry1.azurecr.io\"\noutput \"login_server\" {\n  value = azapi_resource.example.output.properties.loginServer\n}\n\n// it will output \"disabled\"\noutput \"quarantine_policy\" {\n  value = azapi_resource.example.output.properties.policies.quarantinePolicy.status\n}\n```\n\n## Import\n\nAzure resource can be imported using the `resource id`, e.g.\n\n```sh\n$ pulumi import azapi:index/resource:Resource example /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/resGroup1/providers/Microsoft.MachineLearningServices/workspaces/workspace1/computes/cluster1\n```\n\nIt also supports specifying API version by using the `resource id` with `api-version` as a query parameter, e.g.\n\n```sh\n$ pulumi import azapi:index/resource:Resource example /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/resGroup1/providers/Microsoft.MachineLearningServices/workspaces/workspace1/computes/cluster1?api-version=2021-07-01\n```\n\n",
             "properties": {
                 "body": {
-                    "type": "string",
-                    "description": "A JSON object that contains the request body used to create and update azure resource.\n"
+                    "$ref": "pulumi.json#/Any",
+                    "description": "A dynamic attribute that contains the request body used to create and update azure resource.\n"
                 },
-                "identity": {
-                    "$ref": "#/types/azapi:index/ResourceIdentity:ResourceIdentity",
+                "identities": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/types/azapi:index/ResourceIdentity:ResourceIdentity"
+                    },
                     "description": "A `identity` block as defined below.\n"
                 },
                 "ignoreBodyChanges": {
@@ -664,7 +833,7 @@
                     "items": {
                         "type": "string"
                     },
-                    "description": "A list of properties that should be ignored when comparing the `body` with its current state.\n"
+                    "deprecationMessage": "This feature is deprecated and will be removed in a major release. Please use the `lifecycle.ignore_changes` argument to specify the fields in `body` to ignore."
                 },
                 "ignoreCasing": {
                     "type": "boolean",
@@ -672,7 +841,7 @@
                 },
                 "ignoreMissingProperty": {
                     "type": "boolean",
-                    "description": "Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.\n"
+                    "description": "Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.\nIt's recommend to enable this option when some sensitive properties are not returned in response body, instead of setting them in `lifecycle.ignore_changes` because it will make the sensitive fields unable to update.\n"
                 },
                 "location": {
                     "type": "string",
@@ -690,8 +859,8 @@
                     "description": "Specifies the name of the azure resource. Changing this forces a new resource to be created.\n"
                 },
                 "output": {
-                    "type": "string",
-                    "description": "The output json containing the properties specified in `response_export_values`. Here're some examples to decode json and extract the value.\n```\n// it will output \"registry1.azurecr.io\"\noutput \"login_server\" {\nvalue = jsondecode(azapi_resource.example.output).properties.loginServer\n}\n"
+                    "$ref": "pulumi.json#/Any",
+                    "description": "The output HCL object containing the properties specified in `response_export_values`. Here are some examples use the values.\n```\n// it will output \"registry1.azurecr.io\"\noutput \"login_server\" {\nvalue = azapi_resource.example.output.properties.loginServer\n}\n"
                 },
                 "parentId": {
                     "type": "string",
@@ -700,14 +869,14 @@
                 "removingSpecialChars": {
                     "type": "boolean",
                     "description": "Whether to remove special characters in resource name. Defaults to `false`.\n",
-                    "deprecationMessage": "It will not work in the next minor release and will be removed in the next major release. Please specify the `name` field and remove the special characters in the `name` field instead."
+                    "deprecationMessage": "This feature is deprecated and will be removed in a major release. Please use the `name` argument to specify the name of the resource."
                 },
                 "responseExportValues": {
                     "type": "array",
                     "items": {
                         "type": "string"
                     },
-                    "description": "A list of path that needs to be exported from response body.\nSetting it to `[\"*\"]` will export the full response body.\nHere's an example. If it sets to `[\"properties.loginServer\", \"properties.policies.quarantinePolicy.status\"]`, it will set the following json to computed property `output`.\n```\n{\n\"properties\" : {\n\"loginServer\" : \"registry1.azurecr.io\"\n\"policies\" : {\n\"quarantinePolicy\" = {\n\"status\" = \"disabled\"\n}\n}\n}\n}\n```\n"
+                    "description": "A list of path that needs to be exported from response body.\nSetting it to `[\"*\"]` will export the full response body.\nHere's an example. If it sets to `[\"properties.loginServer\", \"properties.policies.quarantinePolicy.status\"]`, it will set the following HCL object to computed property `output`.\n```\n{\nproperties = {\nloginServer = \"registry1.azurecr.io\"\npolicies = {\nquarantinePolicy = {\nstatus = \"disabled\"\n}\n}\n}\n}\n```\n"
                 },
                 "schemaValidationEnabled": {
                     "type": "boolean",
@@ -720,27 +889,37 @@
                     },
                     "description": "A mapping of tags which should be assigned to the azure resource.\n"
                 },
+                "timeouts": {
+                    "$ref": "#/types/azapi:index/ResourceTimeouts:ResourceTimeouts"
+                },
                 "type": {
                     "type": "string",
                     "description": "It is in a format like `\u003cresource-type\u003e@\u003capi-version\u003e`. `\u003cresource-type\u003e` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.\n`\u003capi-version\u003e` is version of the API used to manage this azure resource.\n"
                 }
             },
             "required": [
-                "identity",
+                "body",
+                "ignoreCasing",
+                "ignoreMissingProperty",
                 "location",
                 "name",
                 "output",
                 "parentId",
+                "removingSpecialChars",
+                "schemaValidationEnabled",
                 "tags",
                 "type"
             ],
             "inputProperties": {
                 "body": {
-                    "type": "string",
-                    "description": "A JSON object that contains the request body used to create and update azure resource.\n"
+                    "$ref": "pulumi.json#/Any",
+                    "description": "A dynamic attribute that contains the request body used to create and update azure resource.\n"
                 },
-                "identity": {
-                    "$ref": "#/types/azapi:index/ResourceIdentity:ResourceIdentity",
+                "identities": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/types/azapi:index/ResourceIdentity:ResourceIdentity"
+                    },
                     "description": "A `identity` block as defined below.\n"
                 },
                 "ignoreBodyChanges": {
@@ -748,7 +927,7 @@
                     "items": {
                         "type": "string"
                     },
-                    "description": "A list of properties that should be ignored when comparing the `body` with its current state.\n"
+                    "deprecationMessage": "This feature is deprecated and will be removed in a major release. Please use the `lifecycle.ignore_changes` argument to specify the fields in `body` to ignore."
                 },
                 "ignoreCasing": {
                     "type": "boolean",
@@ -756,12 +935,11 @@
                 },
                 "ignoreMissingProperty": {
                     "type": "boolean",
-                    "description": "Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.\n"
+                    "description": "Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.\nIt's recommend to enable this option when some sensitive properties are not returned in response body, instead of setting them in `lifecycle.ignore_changes` because it will make the sensitive fields unable to update.\n"
                 },
                 "location": {
                     "type": "string",
-                    "description": "The Azure Region where the azure resource should exist.\n",
-                    "willReplaceOnChanges": true
+                    "description": "The Azure Region where the azure resource should exist.\n"
                 },
                 "locks": {
                     "type": "array",
@@ -772,25 +950,23 @@
                 },
                 "name": {
                     "type": "string",
-                    "description": "Specifies the name of the azure resource. Changing this forces a new resource to be created.\n",
-                    "willReplaceOnChanges": true
+                    "description": "Specifies the name of the azure resource. Changing this forces a new resource to be created.\n"
                 },
                 "parentId": {
                     "type": "string",
-                    "description": "The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created. It supports different kinds of deployment scope for **top level** resources: \n- resource group scope: `parent_id` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.\n- management group scope: `parent_id` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.\n- extension scope: `parent_id` should be the ID of the resource you're adding the extension to.\n- subscription scope: `parent_id` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`\n- tenant scope: `parent_id` should be `/`\n\nFor child level resources, the `parent_id` should be the ID of its parent resource, for example, subnet resource's `parent_id` is the ID of the vnet.\n\nFor type `Microsoft.Resources/resourceGroups`, the `parent_id` could be omitted, it defaults to subscription ID specified in provider or the default subscription(You could check the default subscription by azure cli command: `az account show`).\n",
-                    "willReplaceOnChanges": true
+                    "description": "The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created. It supports different kinds of deployment scope for **top level** resources: \n- resource group scope: `parent_id` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.\n- management group scope: `parent_id` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.\n- extension scope: `parent_id` should be the ID of the resource you're adding the extension to.\n- subscription scope: `parent_id` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`\n- tenant scope: `parent_id` should be `/`\n\nFor child level resources, the `parent_id` should be the ID of its parent resource, for example, subnet resource's `parent_id` is the ID of the vnet.\n\nFor type `Microsoft.Resources/resourceGroups`, the `parent_id` could be omitted, it defaults to subscription ID specified in provider or the default subscription(You could check the default subscription by azure cli command: `az account show`).\n"
                 },
                 "removingSpecialChars": {
                     "type": "boolean",
                     "description": "Whether to remove special characters in resource name. Defaults to `false`.\n",
-                    "deprecationMessage": "It will not work in the next minor release and will be removed in the next major release. Please specify the `name` field and remove the special characters in the `name` field instead."
+                    "deprecationMessage": "This feature is deprecated and will be removed in a major release. Please use the `name` argument to specify the name of the resource."
                 },
                 "responseExportValues": {
                     "type": "array",
                     "items": {
                         "type": "string"
                     },
-                    "description": "A list of path that needs to be exported from response body.\nSetting it to `[\"*\"]` will export the full response body.\nHere's an example. If it sets to `[\"properties.loginServer\", \"properties.policies.quarantinePolicy.status\"]`, it will set the following json to computed property `output`.\n```\n{\n\"properties\" : {\n\"loginServer\" : \"registry1.azurecr.io\"\n\"policies\" : {\n\"quarantinePolicy\" = {\n\"status\" = \"disabled\"\n}\n}\n}\n}\n```\n"
+                    "description": "A list of path that needs to be exported from response body.\nSetting it to `[\"*\"]` will export the full response body.\nHere's an example. If it sets to `[\"properties.loginServer\", \"properties.policies.quarantinePolicy.status\"]`, it will set the following HCL object to computed property `output`.\n```\n{\nproperties = {\nloginServer = \"registry1.azurecr.io\"\npolicies = {\nquarantinePolicy = {\nstatus = \"disabled\"\n}\n}\n}\n}\n```\n"
                 },
                 "schemaValidationEnabled": {
                     "type": "boolean",
@@ -802,6 +978,9 @@
                         "type": "string"
                     },
                     "description": "A mapping of tags which should be assigned to the azure resource.\n"
+                },
+                "timeouts": {
+                    "$ref": "#/types/azapi:index/ResourceTimeouts:ResourceTimeouts"
                 },
                 "type": {
                     "type": "string",
@@ -815,11 +994,14 @@
                 "description": "Input properties used for looking up and filtering Resource resources.\n",
                 "properties": {
                     "body": {
-                        "type": "string",
-                        "description": "A JSON object that contains the request body used to create and update azure resource.\n"
+                        "$ref": "pulumi.json#/Any",
+                        "description": "A dynamic attribute that contains the request body used to create and update azure resource.\n"
                     },
-                    "identity": {
-                        "$ref": "#/types/azapi:index/ResourceIdentity:ResourceIdentity",
+                    "identities": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/types/azapi:index/ResourceIdentity:ResourceIdentity"
+                        },
                         "description": "A `identity` block as defined below.\n"
                     },
                     "ignoreBodyChanges": {
@@ -827,7 +1009,7 @@
                         "items": {
                             "type": "string"
                         },
-                        "description": "A list of properties that should be ignored when comparing the `body` with its current state.\n"
+                        "deprecationMessage": "This feature is deprecated and will be removed in a major release. Please use the `lifecycle.ignore_changes` argument to specify the fields in `body` to ignore."
                     },
                     "ignoreCasing": {
                         "type": "boolean",
@@ -835,12 +1017,11 @@
                     },
                     "ignoreMissingProperty": {
                         "type": "boolean",
-                        "description": "Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.\n"
+                        "description": "Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.\nIt's recommend to enable this option when some sensitive properties are not returned in response body, instead of setting them in `lifecycle.ignore_changes` because it will make the sensitive fields unable to update.\n"
                     },
                     "location": {
                         "type": "string",
-                        "description": "The Azure Region where the azure resource should exist.\n",
-                        "willReplaceOnChanges": true
+                        "description": "The Azure Region where the azure resource should exist.\n"
                     },
                     "locks": {
                         "type": "array",
@@ -851,29 +1032,27 @@
                     },
                     "name": {
                         "type": "string",
-                        "description": "Specifies the name of the azure resource. Changing this forces a new resource to be created.\n",
-                        "willReplaceOnChanges": true
+                        "description": "Specifies the name of the azure resource. Changing this forces a new resource to be created.\n"
                     },
                     "output": {
-                        "type": "string",
-                        "description": "The output json containing the properties specified in `response_export_values`. Here're some examples to decode json and extract the value.\n```\n// it will output \"registry1.azurecr.io\"\noutput \"login_server\" {\nvalue = jsondecode(azapi_resource.example.output).properties.loginServer\n}\n"
+                        "$ref": "pulumi.json#/Any",
+                        "description": "The output HCL object containing the properties specified in `response_export_values`. Here are some examples use the values.\n```\n// it will output \"registry1.azurecr.io\"\noutput \"login_server\" {\nvalue = azapi_resource.example.output.properties.loginServer\n}\n"
                     },
                     "parentId": {
                         "type": "string",
-                        "description": "The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created. It supports different kinds of deployment scope for **top level** resources: \n- resource group scope: `parent_id` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.\n- management group scope: `parent_id` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.\n- extension scope: `parent_id` should be the ID of the resource you're adding the extension to.\n- subscription scope: `parent_id` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`\n- tenant scope: `parent_id` should be `/`\n\nFor child level resources, the `parent_id` should be the ID of its parent resource, for example, subnet resource's `parent_id` is the ID of the vnet.\n\nFor type `Microsoft.Resources/resourceGroups`, the `parent_id` could be omitted, it defaults to subscription ID specified in provider or the default subscription(You could check the default subscription by azure cli command: `az account show`).\n",
-                        "willReplaceOnChanges": true
+                        "description": "The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created. It supports different kinds of deployment scope for **top level** resources: \n- resource group scope: `parent_id` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.\n- management group scope: `parent_id` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.\n- extension scope: `parent_id` should be the ID of the resource you're adding the extension to.\n- subscription scope: `parent_id` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`\n- tenant scope: `parent_id` should be `/`\n\nFor child level resources, the `parent_id` should be the ID of its parent resource, for example, subnet resource's `parent_id` is the ID of the vnet.\n\nFor type `Microsoft.Resources/resourceGroups`, the `parent_id` could be omitted, it defaults to subscription ID specified in provider or the default subscription(You could check the default subscription by azure cli command: `az account show`).\n"
                     },
                     "removingSpecialChars": {
                         "type": "boolean",
                         "description": "Whether to remove special characters in resource name. Defaults to `false`.\n",
-                        "deprecationMessage": "It will not work in the next minor release and will be removed in the next major release. Please specify the `name` field and remove the special characters in the `name` field instead."
+                        "deprecationMessage": "This feature is deprecated and will be removed in a major release. Please use the `name` argument to specify the name of the resource."
                     },
                     "responseExportValues": {
                         "type": "array",
                         "items": {
                             "type": "string"
                         },
-                        "description": "A list of path that needs to be exported from response body.\nSetting it to `[\"*\"]` will export the full response body.\nHere's an example. If it sets to `[\"properties.loginServer\", \"properties.policies.quarantinePolicy.status\"]`, it will set the following json to computed property `output`.\n```\n{\n\"properties\" : {\n\"loginServer\" : \"registry1.azurecr.io\"\n\"policies\" : {\n\"quarantinePolicy\" = {\n\"status\" = \"disabled\"\n}\n}\n}\n}\n```\n"
+                        "description": "A list of path that needs to be exported from response body.\nSetting it to `[\"*\"]` will export the full response body.\nHere's an example. If it sets to `[\"properties.loginServer\", \"properties.policies.quarantinePolicy.status\"]`, it will set the following HCL object to computed property `output`.\n```\n{\nproperties = {\nloginServer = \"registry1.azurecr.io\"\npolicies = {\nquarantinePolicy = {\nstatus = \"disabled\"\n}\n}\n}\n}\n```\n"
                     },
                     "schemaValidationEnabled": {
                         "type": "boolean",
@@ -886,6 +1065,9 @@
                         },
                         "description": "A mapping of tags which should be assigned to the azure resource.\n"
                     },
+                    "timeouts": {
+                        "$ref": "#/types/azapi:index/ResourceTimeouts:ResourceTimeouts"
+                    },
                     "type": {
                         "type": "string",
                         "description": "It is in a format like `\u003cresource-type\u003e@\u003capi-version\u003e`. `\u003cresource-type\u003e` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.\n`\u003capi-version\u003e` is version of the API used to manage this azure resource.\n"
@@ -895,15 +1077,15 @@
             }
         },
         "azapi:index/resourceAction:ResourceAction": {
-            "description": "This resource can perform any Azure resource manager resource action.\nIt's recommended to use `azapi.ResourceAction` resource to perform actions which change a resource's state, please use `azapi.ResourceAction` data source,\nif user wants to perform readonly action.\n\n\u003e **Note** The action can be performed on either apply or destroy. The default is apply, see `when` argument for more details.\n\n## Example Usage\n\n```hcl\nterraform {\n  required_providers {\n    azapi = {\n      source = \"Azure/azapi\"\n    }\n  }\n}\n\nprovider \"azapi\" {\n}\n\nprovider \"azurerm\" {\n  features {}\n}\n\nvariable \"enabled\" {\n  type        = bool\n  default     = false\n  description = \"whether start the spring service\"\n}\n\nresource \"azurerm_resource_group\" \"example\" {\n  name     = \"example-rg\"\n  location = \"west europe\"\n}\n\nresource \"azurerm_spring_cloud_service\" \"test\" {\n  name                = \"example-spring\"\n  resource_group_name = azurerm_resource_group.test.name\n  location            = azurerm_resource_group.test.location\n  sku_name            = \"S0\"\n}\n\nresource \"azapi_resource_action\" \"start\" {\n  type                   = \"Microsoft.AppPlatform/Spring@2022-05-01-preview\"\n  resource_id            = azurerm_spring_cloud_service.test.id\n  action                 = \"start\"\n  response_export_values = [\"*\"]\n\n  count = var.enabled ? 1 : 0\n}\n\nresource \"azapi_resource_action\" \"stop\" {\n  type                   = \"Microsoft.AppPlatform/Spring@2022-05-01-preview\"\n  resource_id            = azurerm_spring_cloud_service.test.id\n  action                 = \"stop\"\n  response_export_values = [\"*\"]\n\n  count = var.enabled ? 0 : 1\n}\n```\n\nHere's an example to use the `azapi.ResourceAction` resource to register a provider.\n\n```hcl\nprovider \"azurerm\" {\n  features {}\n}\n\ndata \"azurerm_client_config\" \"current\" {}\n\nresource \"azapi_resource_action\" \"test\" {\n  type        = \"Microsoft.Resources/providers@2021-04-01\"\n  resource_id = \"/subscriptions/${data.azurerm_client_config.current.subscription_id}/providers/Microsoft.Compute\"\n  action      = \"register\"\n  method      = \"POST\"\n}\n```\n\nHere's an example to use the `azapi.ResourceAction` resource to perform a provider action.\n\n```hcl\nterraform {\n  required_providers {\n    azapi = {\n      source = \"Azure/azapi\"\n    }\n  }\n}\n\ndata \"azapi_resource_action\" \"test\" {\n  type        = \"Microsoft.ResourceGraph@2020-04-01-preview\"\n  resource_id = \"/providers/Microsoft.ResourceGraph\"\n  action      = \"resources\"\n  body = jsonencode({\n    query = \"resources| where name contains \\\"test\\\"\"\n  })\n  response_export_values = [\"*\"]\n}\n```\n",
+            "description": "This resource can perform any Azure resource manager resource action.\nIt's recommended to use `azapi.ResourceAction` resource to perform actions which change a resource's state, please use `azapi.ResourceAction` data source,\nif user wants to perform readonly action.\n\n\u003e **Note** The action can be performed on either apply or destroy. The default is apply, see `when` argument for more details.\n\n## Example Usage\n\n```hcl\nterraform {\n  required_providers {\n    azapi = {\n      source = \"Azure/azapi\"\n    }\n  }\n}\n\nprovider \"azapi\" {\n}\n\nprovider \"azurerm\" {\n  features {}\n}\n\nvariable \"enabled\" {\n  type        = bool\n  default     = false\n  description = \"whether start the spring service\"\n}\n\nresource \"azurerm_resource_group\" \"example\" {\n  name     = \"example-rg\"\n  location = \"west europe\"\n}\n\nresource \"azurerm_spring_cloud_service\" \"test\" {\n  name                = \"example-spring\"\n  resource_group_name = azurerm_resource_group.test.name\n  location            = azurerm_resource_group.test.location\n  sku_name            = \"S0\"\n}\n\nresource \"azapi_resource_action\" \"start\" {\n  type                   = \"Microsoft.AppPlatform/Spring@2022-05-01-preview\"\n  resource_id            = azurerm_spring_cloud_service.test.id\n  action                 = \"start\"\n  response_export_values = [\"*\"]\n\n  count = var.enabled ? 1 : 0\n}\n\nresource \"azapi_resource_action\" \"stop\" {\n  type                   = \"Microsoft.AppPlatform/Spring@2022-05-01-preview\"\n  resource_id            = azurerm_spring_cloud_service.test.id\n  action                 = \"stop\"\n  response_export_values = [\"*\"]\n\n  count = var.enabled ? 0 : 1\n}\n```\n\nHere's an example to use the `azapi.ResourceAction` resource to register a provider.\n\n```hcl\nprovider \"azurerm\" {\n  features {}\n}\n\ndata \"azurerm_client_config\" \"current\" {}\n\nresource \"azapi_resource_action\" \"test\" {\n  type        = \"Microsoft.Resources/providers@2021-04-01\"\n  resource_id = \"/subscriptions/${data.azurerm_client_config.current.subscription_id}/providers/Microsoft.Compute\"\n  action      = \"register\"\n  method      = \"POST\"\n}\n```\n\nHere's an example to use the `azapi.ResourceAction` resource to perform a provider action.\n\n```hcl\nterraform {\n  required_providers {\n    azapi = {\n      source = \"Azure/azapi\"\n    }\n  }\n}\n\ndata \"azapi_resource_action\" \"test\" {\n  type        = \"Microsoft.ResourceGraph@2020-04-01-preview\"\n  resource_id = \"/providers/Microsoft.ResourceGraph\"\n  action      = \"resources\"\n  body = {\n    query = \"resources| where name contains \\\"test\\\"\"\n  }\n  response_export_values = [\"*\"]\n}\n```\n",
             "properties": {
                 "action": {
                     "type": "string",
                     "description": "The name of the resource action. It's also possible to make Http requests towards the resource ID if leave this field empty.\n"
                 },
                 "body": {
-                    "type": "string",
-                    "description": "A JSON object that contains the request body.\n"
+                    "$ref": "pulumi.json#/Any",
+                    "description": "A dynamic attribute that contains the request body.\n"
                 },
                 "locks": {
                     "type": "array",
@@ -917,8 +1099,8 @@
                     "description": "Specifies the Http method of the azure resource action. Allowed values are `POST`, `PATCH`, `PUT` and `DELETE`. Defaults to `POST`.\n"
                 },
                 "output": {
-                    "type": "string",
-                    "description": "The output json containing the properties specified in `response_export_values`. Here are some examples to decode json and extract the value.\n"
+                    "$ref": "pulumi.json#/Any",
+                    "description": "The HCL object containing the properties specified in `response_export_values`. Here are some examples to use the values.\n"
                 },
                 "resourceId": {
                     "type": "string",
@@ -929,7 +1111,10 @@
                     "items": {
                         "type": "string"
                     },
-                    "description": "A list of path that needs to be exported from response body.\nSetting it to `[\"*\"]` will export the full response body.\nHere's an example. If it sets to `[\"keys\"]`, it will set the following json to computed property `output`.\n\n```\n{\n\"keys\": [\n{\n\"KeyName\": \"Primary\",\n\"Permissions\": \"Full\",\n\"Value\": \"nHGYNd******i4wdug==\"\n},\n{\n\"KeyName\": \"Secondary\",\n\"Permissions\": \"Full\",\n\"Value\": \"6yoCad******SLzKzg==\"\n}\n]\n}\n```\n"
+                    "description": "A list of path that needs to be exported from response body.\nSetting it to `[\"*\"]` will export the full response body.\nHere's an example. If it sets to `[\"keys\"]`, it will set the following HCL object to computed property `output`.\n\n```\n{\nkeys = [\n{\nKeyName = \"Primary\"\nPermissions = \"Full\"\nValue = \"nHGYNd******i4wdug==\"\n},\n{\nKeyName = \"Secondary\"\nPermissions = \"Full\"\nValue = \"6yoCad******SLzKzg==\"\n}\n]\n}\n```\n"
+                },
+                "timeouts": {
+                    "$ref": "#/types/azapi:index/ResourceActionTimeouts:ResourceActionTimeouts"
                 },
                 "type": {
                     "type": "string",
@@ -941,19 +1126,20 @@
                 }
             },
             "required": [
+                "method",
                 "output",
                 "resourceId",
-                "type"
+                "type",
+                "when"
             ],
             "inputProperties": {
                 "action": {
                     "type": "string",
-                    "description": "The name of the resource action. It's also possible to make Http requests towards the resource ID if leave this field empty.\n",
-                    "willReplaceOnChanges": true
+                    "description": "The name of the resource action. It's also possible to make Http requests towards the resource ID if leave this field empty.\n"
                 },
                 "body": {
-                    "type": "string",
-                    "description": "A JSON object that contains the request body.\n"
+                    "$ref": "pulumi.json#/Any",
+                    "description": "A dynamic attribute that contains the request body.\n"
                 },
                 "locks": {
                     "type": "array",
@@ -968,20 +1154,21 @@
                 },
                 "resourceId": {
                     "type": "string",
-                    "description": "The ID of an existing azure source.\n",
-                    "willReplaceOnChanges": true
+                    "description": "The ID of an existing azure source.\n"
                 },
                 "responseExportValues": {
                     "type": "array",
                     "items": {
                         "type": "string"
                     },
-                    "description": "A list of path that needs to be exported from response body.\nSetting it to `[\"*\"]` will export the full response body.\nHere's an example. If it sets to `[\"keys\"]`, it will set the following json to computed property `output`.\n\n```\n{\n\"keys\": [\n{\n\"KeyName\": \"Primary\",\n\"Permissions\": \"Full\",\n\"Value\": \"nHGYNd******i4wdug==\"\n},\n{\n\"KeyName\": \"Secondary\",\n\"Permissions\": \"Full\",\n\"Value\": \"6yoCad******SLzKzg==\"\n}\n]\n}\n```\n"
+                    "description": "A list of path that needs to be exported from response body.\nSetting it to `[\"*\"]` will export the full response body.\nHere's an example. If it sets to `[\"keys\"]`, it will set the following HCL object to computed property `output`.\n\n```\n{\nkeys = [\n{\nKeyName = \"Primary\"\nPermissions = \"Full\"\nValue = \"nHGYNd******i4wdug==\"\n},\n{\nKeyName = \"Secondary\"\nPermissions = \"Full\"\nValue = \"6yoCad******SLzKzg==\"\n}\n]\n}\n```\n"
+                },
+                "timeouts": {
+                    "$ref": "#/types/azapi:index/ResourceActionTimeouts:ResourceActionTimeouts"
                 },
                 "type": {
                     "type": "string",
-                    "description": "It is in a format like `\u003cresource-type\u003e@\u003capi-version\u003e`. `\u003cresource-type\u003e` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.\n`\u003capi-version\u003e` is version of the API used to manage this azure resource.\n",
-                    "willReplaceOnChanges": true
+                    "description": "It is in a format like `\u003cresource-type\u003e@\u003capi-version\u003e`. `\u003cresource-type\u003e` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.\n`\u003capi-version\u003e` is version of the API used to manage this azure resource.\n"
                 },
                 "when": {
                     "type": "string",
@@ -997,12 +1184,11 @@
                 "properties": {
                     "action": {
                         "type": "string",
-                        "description": "The name of the resource action. It's also possible to make Http requests towards the resource ID if leave this field empty.\n",
-                        "willReplaceOnChanges": true
+                        "description": "The name of the resource action. It's also possible to make Http requests towards the resource ID if leave this field empty.\n"
                     },
                     "body": {
-                        "type": "string",
-                        "description": "A JSON object that contains the request body.\n"
+                        "$ref": "pulumi.json#/Any",
+                        "description": "A dynamic attribute that contains the request body.\n"
                     },
                     "locks": {
                         "type": "array",
@@ -1016,25 +1202,26 @@
                         "description": "Specifies the Http method of the azure resource action. Allowed values are `POST`, `PATCH`, `PUT` and `DELETE`. Defaults to `POST`.\n"
                     },
                     "output": {
-                        "type": "string",
-                        "description": "The output json containing the properties specified in `response_export_values`. Here are some examples to decode json and extract the value.\n"
+                        "$ref": "pulumi.json#/Any",
+                        "description": "The HCL object containing the properties specified in `response_export_values`. Here are some examples to use the values.\n"
                     },
                     "resourceId": {
                         "type": "string",
-                        "description": "The ID of an existing azure source.\n",
-                        "willReplaceOnChanges": true
+                        "description": "The ID of an existing azure source.\n"
                     },
                     "responseExportValues": {
                         "type": "array",
                         "items": {
                             "type": "string"
                         },
-                        "description": "A list of path that needs to be exported from response body.\nSetting it to `[\"*\"]` will export the full response body.\nHere's an example. If it sets to `[\"keys\"]`, it will set the following json to computed property `output`.\n\n```\n{\n\"keys\": [\n{\n\"KeyName\": \"Primary\",\n\"Permissions\": \"Full\",\n\"Value\": \"nHGYNd******i4wdug==\"\n},\n{\n\"KeyName\": \"Secondary\",\n\"Permissions\": \"Full\",\n\"Value\": \"6yoCad******SLzKzg==\"\n}\n]\n}\n```\n"
+                        "description": "A list of path that needs to be exported from response body.\nSetting it to `[\"*\"]` will export the full response body.\nHere's an example. If it sets to `[\"keys\"]`, it will set the following HCL object to computed property `output`.\n\n```\n{\nkeys = [\n{\nKeyName = \"Primary\"\nPermissions = \"Full\"\nValue = \"nHGYNd******i4wdug==\"\n},\n{\nKeyName = \"Secondary\"\nPermissions = \"Full\"\nValue = \"6yoCad******SLzKzg==\"\n}\n]\n}\n```\n"
+                    },
+                    "timeouts": {
+                        "$ref": "#/types/azapi:index/ResourceActionTimeouts:ResourceActionTimeouts"
                     },
                     "type": {
                         "type": "string",
-                        "description": "It is in a format like `\u003cresource-type\u003e@\u003capi-version\u003e`. `\u003cresource-type\u003e` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.\n`\u003capi-version\u003e` is version of the API used to manage this azure resource.\n",
-                        "willReplaceOnChanges": true
+                        "description": "It is in a format like `\u003cresource-type\u003e@\u003capi-version\u003e`. `\u003cresource-type\u003e` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.\n`\u003capi-version\u003e` is version of the API used to manage this azure resource.\n"
                     },
                     "when": {
                         "type": "string",
@@ -1045,18 +1232,18 @@
             }
         },
         "azapi:index/updateResource:UpdateResource": {
-            "description": "This resource can manage a subset of any existing Azure resource manager resource's properties.\n\n\u003e **Note** This resource is used to add or modify properties on an existing resource.\nWhen delete `azapi.UpdateResource`, no operation will be performed, and these properties will stay unchanged.\nIf you want to restore the modified properties to some values, you must apply the restored properties before deleting.\n\n## Example Usage\n\n```hcl\nterraform {\n  required_providers {\n    azapi = {\n      source = \"Azure/azapi\"\n    }\n  }\n}\n\nprovider \"azapi\" {\n}\n\nprovider \"azurerm\" {\n  features {}\n}\n\nresource \"azurerm_resource_group\" \"example\" {\n  name     = \"example-rg\"\n  location = \"west europe\"\n}\n\nresource \"azurerm_public_ip\" \"example\" {\n  name                = \"example-ip\"\n  location            = azurerm_resource_group.example.location\n  resource_group_name = azurerm_resource_group.example.name\n  allocation_method   = \"Static\"\n}\n\nresource \"azurerm_lb\" \"example\" {\n  name                = \"example-lb\"\n  location            = azurerm_resource_group.example.location\n  resource_group_name = azurerm_resource_group.example.name\n\n  frontend_ip_configuration {\n    name                 = \"PublicIPAddress\"\n    public_ip_address_id = azurerm_public_ip.example.id\n  }\n}\n\nresource \"azurerm_lb_nat_rule\" \"example\" {\n  resource_group_name            = azurerm_resource_group.example.name\n  loadbalancer_id                = azurerm_lb.example.id\n  name                           = \"RDPAccess\"\n  protocol                       = \"Tcp\"\n  frontend_port                  = 3389\n  backend_port                   = 3389\n  frontend_ip_configuration_name = \"PublicIPAddress\"\n}\n\nresource \"azapi_update_resource\" \"example\" {\n  type        = \"Microsoft.Network/loadBalancers@2021-03-01\"\n  resource_id = azurerm_lb.example.id\n\n  body = jsonencode({\n    properties = {\n      inboundNatRules = [\n        {\n          properties = {\n            idleTimeoutInMinutes = 15\n          }\n        }\n      ]\n    }\n  })\n\n  depends_on = [\n    azurerm_lb_nat_rule.example,\n  ]\n}\n\n```\n",
+            "description": "This resource can manage a subset of any existing Azure resource manager resource's properties.\n\n\u003e **Note** This resource is used to add or modify properties on an existing resource.\nWhen delete `azapi.UpdateResource`, no operation will be performed, and these properties will stay unchanged.\nIf you want to restore the modified properties to some values, you must apply the restored properties before deleting.\n\n## Example Usage\n\n```hcl\nterraform {\n  required_providers {\n    azapi = {\n      source = \"Azure/azapi\"\n    }\n  }\n}\n\nprovider \"azapi\" {\n}\n\nprovider \"azurerm\" {\n  features {}\n}\n\nresource \"azurerm_resource_group\" \"example\" {\n  name     = \"example-rg\"\n  location = \"west europe\"\n}\n\nresource \"azurerm_public_ip\" \"example\" {\n  name                = \"example-ip\"\n  location            = azurerm_resource_group.example.location\n  resource_group_name = azurerm_resource_group.example.name\n  allocation_method   = \"Static\"\n}\n\nresource \"azurerm_lb\" \"example\" {\n  name                = \"example-lb\"\n  location            = azurerm_resource_group.example.location\n  resource_group_name = azurerm_resource_group.example.name\n\n  frontend_ip_configuration {\n    name                 = \"PublicIPAddress\"\n    public_ip_address_id = azurerm_public_ip.example.id\n  }\n}\n\nresource \"azurerm_lb_nat_rule\" \"example\" {\n  resource_group_name            = azurerm_resource_group.example.name\n  loadbalancer_id                = azurerm_lb.example.id\n  name                           = \"RDPAccess\"\n  protocol                       = \"Tcp\"\n  frontend_port                  = 3389\n  backend_port                   = 3389\n  frontend_ip_configuration_name = \"PublicIPAddress\"\n}\n\nresource \"azapi_update_resource\" \"example\" {\n  type        = \"Microsoft.Network/loadBalancers@2021-03-01\"\n  resource_id = azurerm_lb.example.id\n\n  body = {\n    properties = {\n      inboundNatRules = [\n        {\n          properties = {\n            idleTimeoutInMinutes = 15\n          }\n        }\n      ]\n    }\n  }\n\n  depends_on = [\n    azurerm_lb_nat_rule.example,\n  ]\n}\n\n```\n",
             "properties": {
                 "body": {
-                    "type": "string",
-                    "description": "A JSON object that contains the request body used to add on an existing azure resource.\n"
+                    "$ref": "pulumi.json#/Any",
+                    "description": "A dynamic attribute that contains the request body used to add on an existing azure resource.\n"
                 },
                 "ignoreBodyChanges": {
                     "type": "array",
                     "items": {
                         "type": "string"
                     },
-                    "description": "A list of properties that should be ignored when comparing the `body` with its current state.\n"
+                    "deprecationMessage": "This feature is deprecated and will be removed in a major release. Please use the `lifecycle.ignore_changes` argument to specify the fields in `body` to ignore."
                 },
                 "ignoreCasing": {
                     "type": "boolean",
@@ -1064,7 +1251,7 @@
                 },
                 "ignoreMissingProperty": {
                     "type": "boolean",
-                    "description": "Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.\n"
+                    "description": "Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.\nIt's recommend to enable this option when some sensitive properties are not returned in response body, instead of setting them in `lifecycle.ignore_changes` because it will make the sensitive fields unable to update.\n"
                 },
                 "locks": {
                     "type": "array",
@@ -1078,8 +1265,8 @@
                     "description": "Specifies the name of the azure resource. Changing this forces a new resource to be created.\n"
                 },
                 "output": {
-                    "type": "string",
-                    "description": "The output json containing the properties specified in `response_export_values`. Here're some examples to decode json and extract the value.\n```\n// it will output \"registry1.azurecr.io\"\noutput \"login_server\" {\nvalue = jsondecode(azapi_resource.example.output).properties.loginServer\n}\n"
+                    "$ref": "pulumi.json#/Any",
+                    "description": "The HCL object containing the properties specified in `response_export_values`. Here are some examples to use the values.\n```\n// it will output \"registry1.azurecr.io\"\noutput \"login_server\" {\nvalue = azapi_resource.example.output.properties.loginServer\n}\n"
                 },
                 "parentId": {
                     "type": "string",
@@ -1094,7 +1281,10 @@
                     "items": {
                         "type": "string"
                     },
-                    "description": "A list of path that needs to be exported from response body.\nSetting it to `[\"*\"]` will export the full response body.\nHere's an example. If it sets to `[\"properties.loginServer\", \"properties.policies.quarantinePolicy.status\"]`, it will set the following json to computed property `output`.\n```\n{\n\"properties\" : {\n\"loginServer\" : \"registry1.azurecr.io\"\n\"policies\" : {\n\"quarantinePolicy\" = {\n\"status\" = \"disabled\"\n}\n}\n}\n}\n```\n"
+                    "description": "A list of path that needs to be exported from response body.\nSetting it to `[\"*\"]` will export the full response body.\nHere's an example. If it sets to `[\"properties.loginServer\", \"properties.policies.quarantinePolicy.status\"]`, it will set the following HCL object to computed property `output`.\n```\n{\nproperties = {\nloginServer = \"registry1.azurecr.io\"\npolicies = {\nquarantinePolicy = {\nstatus = \"disabled\"\n}\n}\n}\n}\n```\n"
+                },
+                "timeouts": {
+                    "$ref": "#/types/azapi:index/UpdateResourceTimeouts:UpdateResourceTimeouts"
                 },
                 "type": {
                     "type": "string",
@@ -1102,6 +1292,9 @@
                 }
             },
             "required": [
+                "body",
+                "ignoreCasing",
+                "ignoreMissingProperty",
                 "name",
                 "output",
                 "parentId",
@@ -1110,15 +1303,15 @@
             ],
             "inputProperties": {
                 "body": {
-                    "type": "string",
-                    "description": "A JSON object that contains the request body used to add on an existing azure resource.\n"
+                    "$ref": "pulumi.json#/Any",
+                    "description": "A dynamic attribute that contains the request body used to add on an existing azure resource.\n"
                 },
                 "ignoreBodyChanges": {
                     "type": "array",
                     "items": {
                         "type": "string"
                     },
-                    "description": "A list of properties that should be ignored when comparing the `body` with its current state.\n"
+                    "deprecationMessage": "This feature is deprecated and will be removed in a major release. Please use the `lifecycle.ignore_changes` argument to specify the fields in `body` to ignore."
                 },
                 "ignoreCasing": {
                     "type": "boolean",
@@ -1126,7 +1319,7 @@
                 },
                 "ignoreMissingProperty": {
                     "type": "boolean",
-                    "description": "Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.\n"
+                    "description": "Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.\nIt's recommend to enable this option when some sensitive properties are not returned in response body, instead of setting them in `lifecycle.ignore_changes` because it will make the sensitive fields unable to update.\n"
                 },
                 "locks": {
                     "type": "array",
@@ -1137,25 +1330,25 @@
                 },
                 "name": {
                     "type": "string",
-                    "description": "Specifies the name of the azure resource. Changing this forces a new resource to be created.\n",
-                    "willReplaceOnChanges": true
+                    "description": "Specifies the name of the azure resource. Changing this forces a new resource to be created.\n"
                 },
                 "parentId": {
                     "type": "string",
-                    "description": "The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created. It supports different kinds of deployment scope for **top level** resources: \n- resource group scope: `parent_id` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.\n- management group scope: `parent_id` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.\n- extension scope: `parent_id` should be the ID of the resource you're adding the extension to.\n- subscription scope: `parent_id` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`\n- tenant scope: `parent_id` should be `/`\n\nFor child level resources, the `parent_id` should be the ID of its parent resource, for example, subnet resource's `parent_id` is the ID of the vnet.\n",
-                    "willReplaceOnChanges": true
+                    "description": "The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created. It supports different kinds of deployment scope for **top level** resources: \n- resource group scope: `parent_id` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.\n- management group scope: `parent_id` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.\n- extension scope: `parent_id` should be the ID of the resource you're adding the extension to.\n- subscription scope: `parent_id` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`\n- tenant scope: `parent_id` should be `/`\n\nFor child level resources, the `parent_id` should be the ID of its parent resource, for example, subnet resource's `parent_id` is the ID of the vnet.\n"
                 },
                 "resourceId": {
                     "type": "string",
-                    "description": "The ID of an existing azure source. Changing this forces a new azure resource to be created.\n\n\u003e **Note:** Configuring `name` and `parent_id` is an alternative way to configure `resource_id`.\n",
-                    "willReplaceOnChanges": true
+                    "description": "The ID of an existing azure source. Changing this forces a new azure resource to be created.\n\n\u003e **Note:** Configuring `name` and `parent_id` is an alternative way to configure `resource_id`.\n"
                 },
                 "responseExportValues": {
                     "type": "array",
                     "items": {
                         "type": "string"
                     },
-                    "description": "A list of path that needs to be exported from response body.\nSetting it to `[\"*\"]` will export the full response body.\nHere's an example. If it sets to `[\"properties.loginServer\", \"properties.policies.quarantinePolicy.status\"]`, it will set the following json to computed property `output`.\n```\n{\n\"properties\" : {\n\"loginServer\" : \"registry1.azurecr.io\"\n\"policies\" : {\n\"quarantinePolicy\" = {\n\"status\" = \"disabled\"\n}\n}\n}\n}\n```\n"
+                    "description": "A list of path that needs to be exported from response body.\nSetting it to `[\"*\"]` will export the full response body.\nHere's an example. If it sets to `[\"properties.loginServer\", \"properties.policies.quarantinePolicy.status\"]`, it will set the following HCL object to computed property `output`.\n```\n{\nproperties = {\nloginServer = \"registry1.azurecr.io\"\npolicies = {\nquarantinePolicy = {\nstatus = \"disabled\"\n}\n}\n}\n}\n```\n"
+                },
+                "timeouts": {
+                    "$ref": "#/types/azapi:index/UpdateResourceTimeouts:UpdateResourceTimeouts"
                 },
                 "type": {
                     "type": "string",
@@ -1169,15 +1362,15 @@
                 "description": "Input properties used for looking up and filtering UpdateResource resources.\n",
                 "properties": {
                     "body": {
-                        "type": "string",
-                        "description": "A JSON object that contains the request body used to add on an existing azure resource.\n"
+                        "$ref": "pulumi.json#/Any",
+                        "description": "A dynamic attribute that contains the request body used to add on an existing azure resource.\n"
                     },
                     "ignoreBodyChanges": {
                         "type": "array",
                         "items": {
                             "type": "string"
                         },
-                        "description": "A list of properties that should be ignored when comparing the `body` with its current state.\n"
+                        "deprecationMessage": "This feature is deprecated and will be removed in a major release. Please use the `lifecycle.ignore_changes` argument to specify the fields in `body` to ignore."
                     },
                     "ignoreCasing": {
                         "type": "boolean",
@@ -1185,7 +1378,7 @@
                     },
                     "ignoreMissingProperty": {
                         "type": "boolean",
-                        "description": "Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.\n"
+                        "description": "Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.\nIt's recommend to enable this option when some sensitive properties are not returned in response body, instead of setting them in `lifecycle.ignore_changes` because it will make the sensitive fields unable to update.\n"
                     },
                     "locks": {
                         "type": "array",
@@ -1196,29 +1389,29 @@
                     },
                     "name": {
                         "type": "string",
-                        "description": "Specifies the name of the azure resource. Changing this forces a new resource to be created.\n",
-                        "willReplaceOnChanges": true
+                        "description": "Specifies the name of the azure resource. Changing this forces a new resource to be created.\n"
                     },
                     "output": {
-                        "type": "string",
-                        "description": "The output json containing the properties specified in `response_export_values`. Here're some examples to decode json and extract the value.\n```\n// it will output \"registry1.azurecr.io\"\noutput \"login_server\" {\nvalue = jsondecode(azapi_resource.example.output).properties.loginServer\n}\n"
+                        "$ref": "pulumi.json#/Any",
+                        "description": "The HCL object containing the properties specified in `response_export_values`. Here are some examples to use the values.\n```\n// it will output \"registry1.azurecr.io\"\noutput \"login_server\" {\nvalue = azapi_resource.example.output.properties.loginServer\n}\n"
                     },
                     "parentId": {
                         "type": "string",
-                        "description": "The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created. It supports different kinds of deployment scope for **top level** resources: \n- resource group scope: `parent_id` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.\n- management group scope: `parent_id` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.\n- extension scope: `parent_id` should be the ID of the resource you're adding the extension to.\n- subscription scope: `parent_id` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`\n- tenant scope: `parent_id` should be `/`\n\nFor child level resources, the `parent_id` should be the ID of its parent resource, for example, subnet resource's `parent_id` is the ID of the vnet.\n",
-                        "willReplaceOnChanges": true
+                        "description": "The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created. It supports different kinds of deployment scope for **top level** resources: \n- resource group scope: `parent_id` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.\n- management group scope: `parent_id` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.\n- extension scope: `parent_id` should be the ID of the resource you're adding the extension to.\n- subscription scope: `parent_id` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`\n- tenant scope: `parent_id` should be `/`\n\nFor child level resources, the `parent_id` should be the ID of its parent resource, for example, subnet resource's `parent_id` is the ID of the vnet.\n"
                     },
                     "resourceId": {
                         "type": "string",
-                        "description": "The ID of an existing azure source. Changing this forces a new azure resource to be created.\n\n\u003e **Note:** Configuring `name` and `parent_id` is an alternative way to configure `resource_id`.\n",
-                        "willReplaceOnChanges": true
+                        "description": "The ID of an existing azure source. Changing this forces a new azure resource to be created.\n\n\u003e **Note:** Configuring `name` and `parent_id` is an alternative way to configure `resource_id`.\n"
                     },
                     "responseExportValues": {
                         "type": "array",
                         "items": {
                             "type": "string"
                         },
-                        "description": "A list of path that needs to be exported from response body.\nSetting it to `[\"*\"]` will export the full response body.\nHere's an example. If it sets to `[\"properties.loginServer\", \"properties.policies.quarantinePolicy.status\"]`, it will set the following json to computed property `output`.\n```\n{\n\"properties\" : {\n\"loginServer\" : \"registry1.azurecr.io\"\n\"policies\" : {\n\"quarantinePolicy\" = {\n\"status\" = \"disabled\"\n}\n}\n}\n}\n```\n"
+                        "description": "A list of path that needs to be exported from response body.\nSetting it to `[\"*\"]` will export the full response body.\nHere's an example. If it sets to `[\"properties.loginServer\", \"properties.policies.quarantinePolicy.status\"]`, it will set the following HCL object to computed property `output`.\n```\n{\nproperties = {\nloginServer = \"registry1.azurecr.io\"\npolicies = {\nquarantinePolicy = {\nstatus = \"disabled\"\n}\n}\n}\n}\n```\n"
+                    },
+                    "timeouts": {
+                        "$ref": "#/types/azapi:index/UpdateResourceTimeouts:UpdateResourceTimeouts"
                     },
                     "type": {
                         "type": "string",
@@ -1231,14 +1424,10 @@
     },
     "functions": {
         "azapi:index/getResource:getResource": {
-            "description": "This resource can access any existing Azure resource manager resource.\n\n## Example Usage\n\n```hcl\nterraform {\n  required_providers {\n    azapi = {\n      source = \"Azure/azapi\"\n    }\n  }\n}\n\nprovider \"azapi\" {\n}\n\nprovider \"azurerm\" {\n  features {}\n}\n\nresource \"azurerm_resource_group\" \"example\" {\n  name     = \"example-rg\"\n  location = \"west europe\"\n}\n\nresource \"azurerm_container_registry\" \"example\" {\n  name                = \"example\"\n  resource_group_name = azurerm_resource_group.example.name\n  location            = azurerm_resource_group.example.location\n  sku                 = \"Premium\"\n  admin_enabled       = false\n}\n\ndata \"azapi_resource\" \"example\" {\n  name      = \"example\"\n  parent_id = azurerm_resource_group.example.id\n  type      = \"Microsoft.ContainerRegistry/registries@2020-11-01-preview\"\n\n  response_export_values = [\"properties.loginServer\", \"properties.policies.quarantinePolicy.status\"]\n}\n\n// it will output \"registry1.azurecr.io\"\noutput \"login_server\" {\n  value = jsondecode(data.azapi_resource.example.output).properties.loginServer\n}\n\n// it will output \"disabled\"\noutput \"quarantine_policy\" {\n  value = jsondecode(data.azapi_resource.example.output).properties.policies.quarantinePolicy.status\n}\n```\n",
+            "description": "This resource can access any existing Azure resource manager resource.\n\n## Example Usage\n\n```hcl\nterraform {\n  required_providers {\n    azapi = {\n      source = \"Azure/azapi\"\n    }\n  }\n}\n\nprovider \"azapi\" {\n  enable_hcl_output_for_data_source = true\n}\n\nprovider \"azurerm\" {\n  features {}\n}\n\nresource \"azurerm_resource_group\" \"example\" {\n  name     = \"example-rg\"\n  location = \"west europe\"\n}\n\nresource \"azurerm_container_registry\" \"example\" {\n  name                = \"example\"\n  resource_group_name = azurerm_resource_group.example.name\n  location            = azurerm_resource_group.example.location\n  sku                 = \"Premium\"\n  admin_enabled       = false\n}\n\ndata \"azapi_resource\" \"example\" {\n  name      = \"example\"\n  parent_id = azurerm_resource_group.example.id\n  type      = \"Microsoft.ContainerRegistry/registries@2020-11-01-preview\"\n\n  response_export_values = [\"properties.loginServer\", \"properties.policies.quarantinePolicy.status\"]\n}\n\n// it will output \"registry1.azurecr.io\"\noutput \"login_server\" {\n  value = data.azapi_resource.example.output.properties.loginServer\n}\n\n// it will output \"disabled\"\noutput \"quarantine_policy\" {\n  value = data.azapi_resource.example.output.properties.policies.quarantinePolicy.status\n}\n```\n",
             "inputs": {
                 "description": "A collection of arguments for invoking getResource.\n",
                 "properties": {
-                    "identity": {
-                        "$ref": "#/types/azapi:index/getResourceIdentity:getResourceIdentity",
-                        "description": "An `identity` block as defined below, which contains the Managed Service Identity information for this azure resource.\n"
-                    },
                     "name": {
                         "type": "string",
                         "description": "Specifies the name of the azure resource.\n"
@@ -1256,7 +1445,10 @@
                         "items": {
                             "type": "string"
                         },
-                        "description": "A list of path that needs to be exported from response body.\nSetting it to `[\"*\"]` will export the full response body.\nHere's an example. If it sets to `[\"properties.loginServer\", \"properties.policies.quarantinePolicy.status\"]`, it will set the following json to computed property `output`.\n```\n{\n\"properties\" : {\n\"loginServer\" : \"registry1.azurecr.io\"\n\"policies\" : {\n\"quarantinePolicy\" = {\n\"status\" = \"disabled\"\n}\n}\n}\n}\n```\n"
+                        "description": "A list of path that needs to be exported from response body.\nSetting it to `[\"*\"]` will export the full response body.\nHere's an example. If it sets to `[\"properties.loginServer\", \"properties.policies.quarantinePolicy.status\"]`, it will set the HCL object to computed property `output`.\n```\n{\nproperties = {\nloginServer = \"registry1.azurecr.io\"\npolicies = {\nquarantinePolicy = {\nstatus = \"disabled\"\n}\n}\n}\n}\n```\n"
+                    },
+                    "timeouts": {
+                        "$ref": "#/types/azapi:index/getResourceTimeouts:getResourceTimeouts"
                     },
                     "type": {
                         "type": "string",
@@ -1273,10 +1465,13 @@
                 "properties": {
                     "id": {
                         "type": "string",
-                        "description": "The provider-assigned unique ID for this managed resource.\n"
+                        "description": "The ID of the azure resource.\n"
                     },
-                    "identity": {
-                        "$ref": "#/types/azapi:index/getResourceIdentity:getResourceIdentity",
+                    "identities": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/types/azapi:index/getResourceIdentity:getResourceIdentity"
+                        },
                         "description": "An `identity` block as defined below, which contains the Managed Service Identity information for this azure resource.\n"
                     },
                     "location": {
@@ -1287,8 +1482,8 @@
                         "type": "string"
                     },
                     "output": {
-                        "type": "string",
-                        "description": "The output json containing the properties specified in `response_export_values`. Here're some examples to decode json and extract the value.\n```\n// it will output \"registry1.azurecr.io\"\noutput \"login_server\" {\nvalue = jsondecode(azapi_resource.example.output).properties.loginServer\n}\n"
+                        "$ref": "pulumi.json#/Any",
+                        "description": "The output containing the properties specified in `response_export_values`. It supports both JSON and HCL object. By default, it will be in JSON format.\nIf specifying `enable_hcl_output_for_data_source` to `true` in the provider block, it will be in HCL format.\nHere are some examples to use the values in HCL format:\n```\n// it will output \"registry1.azurecr.io\"\noutput \"login_server\" {\nvalue = data.azapi_resource.example.output.properties.loginServer\n}\n"
                     },
                     "parentId": {
                         "type": "string"
@@ -1309,6 +1504,9 @@
                         },
                         "description": "A mapping of tags which should be assigned to the azure resource.\n"
                     },
+                    "timeouts": {
+                        "$ref": "#/types/azapi:index/getResourceTimeouts:getResourceTimeouts"
+                    },
                     "type": {
                         "type": "string",
                         "description": "The Type of Identity which should be used for this azure resource. Possible values are `SystemAssigned`, `UserAssigned` and `SystemAssigned,UserAssigned`.\n"
@@ -1316,18 +1514,20 @@
                 },
                 "type": "object",
                 "required": [
-                    "identity",
+                    "id",
+                    "identities",
                     "location",
+                    "name",
                     "output",
                     "parentId",
+                    "resourceId",
                     "tags",
-                    "type",
-                    "id"
+                    "type"
                 ]
             }
         },
         "azapi:index/getResourceAction:getResourceAction": {
-            "description": "This resource can perform resource action which gets information from an existing resource.\nIt's recommended to use `azapi.ResourceAction` data source to perform readonly action, please use `azapi.ResourceAction` resource,\nif user wants to perform actions which change a resource's state.\n\n## Example Usage\n\n```hcl\nterraform {\n  required_providers {\n    azapi = {\n      source = \"Azure/azapi\"\n    }\n  }\n}\n\nprovider \"azapi\" {\n}\n\nprovider \"azurerm\" {\n  features {}\n}\n\nresource \"azurerm_resource_group\" \"example\" {\n  name     = \"example-rg\"\n  location = \"west europe\"\n}\n\nresource \"azurerm_automation_account\" \"example\" {\n  name                = \"example-account\"\n  resource_group_name = azurerm_resource_group.example.name\n  location            = azurerm_resource_group.example.location\n  sku_name            = \"Basic\"\n}\n\ndata \"azapi_resource_action\" \"example\" {\n  type                   = \"Microsoft.Automation/automationAccounts@2021-06-22\"\n  resource_id            = azurerm_automation_account.example.id\n  action                 = \"listKeys\"\n  response_export_values = [\"*\"]\n}\n```\n\nHere's an example to use the `azapi.ResourceAction` data source to get a provider's permissions.\n\n```hcl\nprovider \"azurerm\" {\n  features {}\n}\n\ndata \"azurerm_client_config\" \"current\" {}\n\ndata \"azapi_resource_action\" \"test\" {\n  type        = \"Microsoft.Resources/providers@2021-04-01\"\n  resource_id = \"/subscriptions/${data.azurerm_client_config.current.subscription_id}/providers/Microsoft.Network\"\n  action      = \"providerPermissions\"\n  method      = \"GET\"\n}\n```\n\nHere's an example to use the `azapi.ResourceAction` data source to perform a provider action.\n\n```hcl\nterraform {\n  required_providers {\n    azapi = {\n      source = \"Azure/azapi\"\n    }\n  }\n}\n\nresource \"azapi_resource_action\" \"test\" {\n  type        = \"Microsoft.Cache@2023-04-01\"\n  resource_id = \"/subscriptions/00000000-0000-0000-0000-000000000000/providers/Microsoft.Cache\"\n  action      = \"CheckNameAvailability\"\n  body = jsonencode({\n    type = \"Microsoft.Cache/Redis\"\n    name = \"cacheName\"\n  })\n}\n```\n",
+            "description": "This resource can perform resource action which gets information from an existing resource.\nIt's recommended to use `azapi.ResourceAction` data source to perform readonly action, please use `azapi.ResourceAction` resource,\nif user wants to perform actions which change a resource's state.\n\n## Example Usage\n\n```hcl\nterraform {\n  required_providers {\n    azapi = {\n      source = \"Azure/azapi\"\n    }\n  }\n}\n\nprovider \"azapi\" {\n  enable_hcl_output_for_data_source = true\n}\n\nprovider \"azurerm\" {\n  features {}\n}\n\nresource \"azurerm_resource_group\" \"example\" {\n  name     = \"example-rg\"\n  location = \"west europe\"\n}\n\nresource \"azurerm_automation_account\" \"example\" {\n  name                = \"example-account\"\n  resource_group_name = azurerm_resource_group.example.name\n  location            = azurerm_resource_group.example.location\n  sku_name            = \"Basic\"\n}\n\ndata \"azapi_resource_action\" \"example\" {\n  type                   = \"Microsoft.Automation/automationAccounts@2021-06-22\"\n  resource_id            = azurerm_automation_account.example.id\n  action                 = \"listKeys\"\n  response_export_values = [\"*\"]\n}\n```\n\nHere's an example to use the `azapi.ResourceAction` data source to get a provider's permissions.\n\n```hcl\nterraform {\n  required_providers {\n    azapi = {\n      source = \"Azure/azapi\"\n    }\n  }\n}\n\nprovider \"azurerm\" {\n  features {}\n}\n\nprovider \"azapi\" {\n  enable_hcl_output_for_data_source = true\n}\n\ndata \"azurerm_client_config\" \"current\" {}\n\ndata \"azapi_resource_action\" \"test\" {\n  type        = \"Microsoft.Resources/providers@2021-04-01\"\n  resource_id = \"/subscriptions/${data.azurerm_client_config.current.subscription_id}/providers/Microsoft.Network\"\n  action      = \"providerPermissions\"\n  method      = \"GET\"\n}\n```\n\nHere's an example to use the `azapi.ResourceAction` data source to perform a provider action.\n\n```hcl\nterraform {\n  required_providers {\n    azapi = {\n      source = \"Azure/azapi\"\n    }\n  }\n}\n\nprovider \"azapi\" {\n  enable_hcl_output_for_data_source = true\n}\n\nresource \"azapi_resource_action\" \"test\" {\n  type        = \"Microsoft.Cache@2023-04-01\"\n  resource_id = \"/subscriptions/00000000-0000-0000-0000-000000000000/providers/Microsoft.Cache\"\n  action      = \"CheckNameAvailability\"\n  body = {\n    type = \"Microsoft.Cache/Redis\"\n    name = \"cacheName\"\n  }\n}\n```\n",
             "inputs": {
                 "description": "A collection of arguments for invoking getResourceAction.\n",
                 "properties": {
@@ -1336,8 +1536,8 @@
                         "description": "The name of the resource action. It's also possible to make Http requests towards the resource ID if leave this field empty.\n"
                     },
                     "body": {
-                        "type": "string",
-                        "description": "A JSON object that contains the request body.\n"
+                        "$ref": "pulumi.json#/Any",
+                        "description": "A dynamic attribute that contains the request body.\n"
                     },
                     "method": {
                         "type": "string",
@@ -1352,7 +1552,10 @@
                         "items": {
                             "type": "string"
                         },
-                        "description": "A list of path that needs to be exported from response body.\nSetting it to `[\"*\"]` will export the full response body.\nHere's an example. If it sets to `[\"keys\"]`, it will set the following json to computed property `output`.\n```\n{\n\"keys\": [\n{\n\"KeyName\": \"Primary\",\n\"Permissions\": \"Full\",\n\"Value\": \"nHGYNd******i4wdug==\"\n},\n{\n\"KeyName\": \"Secondary\",\n\"Permissions\": \"Full\",\n\"Value\": \"6yoCad******SLzKzg==\"\n}\n]\n}\n```\n"
+                        "description": "A list of path that needs to be exported from response body.\nSetting it to `[\"*\"]` will export the full response body.\nHere's an example. If it sets to `[\"keys\"]`, it will set the following HCL object to computed property `output`.\n```\n{\nkeys = [\n{\nKeyName = \"Primary\"\nPermissions = \"Full\"\nValue = \"nHGYNd******i4wdug==\"\n},\n{\nKeyName = \"Secondary\"\nPermissions = \"Full\"\nValue = \"6yoCad******SLzKzg==\"\n}\n]\n}\n```\n"
+                    },
+                    "timeouts": {
+                        "$ref": "#/types/azapi:index/getResourceActionTimeouts:getResourceActionTimeouts"
                     },
                     "type": {
                         "type": "string",
@@ -1371,18 +1574,18 @@
                         "type": "string"
                     },
                     "body": {
-                        "type": "string"
+                        "$ref": "pulumi.json#/Any"
                     },
                     "id": {
                         "type": "string",
-                        "description": "The provider-assigned unique ID for this managed resource.\n"
+                        "description": "The ID of the azure resource action.\n"
                     },
                     "method": {
                         "type": "string"
                     },
                     "output": {
-                        "type": "string",
-                        "description": "The output json containing the properties specified in `response_export_values`. Here are some examples to decode json and extract the value.\n```hcl\n// it will output \"nHGYNd******i4wdug==\"\noutput \"primary_key\" {\nvalue = jsondecode(azapi_resource_action.test.output).keys.0.Value\n}\n"
+                        "$ref": "pulumi.json#/Any",
+                        "description": "The output containing the properties specified in `response_export_values`. It supports both JSON and HCL object. By default, it will be in JSON format.\nIf specifying `enable_hcl_output_for_data_source` to `true` in the provider block, it will be in HCL format.\nHere are some examples to use the values in HCL format:\n```hcl\n// it will output \"nHGYNd******i4wdug==\"\noutput \"primary_key\" {\nvalue = azapi_resource_action.test.output.keys.0.Value\n}\n"
                     },
                     "resourceId": {
                         "type": "string"
@@ -1393,15 +1596,19 @@
                             "type": "string"
                         }
                     },
+                    "timeouts": {
+                        "$ref": "#/types/azapi:index/getResourceActionTimeouts:getResourceActionTimeouts"
+                    },
                     "type": {
                         "type": "string"
                     }
                 },
                 "type": "object",
                 "required": [
+                    "id",
+                    "method",
                     "output",
-                    "type",
-                    "id"
+                    "type"
                 ]
             }
         },
@@ -1422,6 +1629,9 @@
                         "type": "string",
                         "description": "The ID of an existing azure source.\n\n\u003e **Note:** Configuring `name` and `parent_id` is an alternative way to configure `resource_id`.\n"
                     },
+                    "timeouts": {
+                        "$ref": "#/types/azapi:index/getResourceIdTimeouts:getResourceIdTimeouts"
+                    },
                     "type": {
                         "type": "string",
                         "description": "It is in a format like `\u003cresource-type\u003e@\u003capi-version\u003e`. `\u003cresource-type\u003e` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.\n`\u003capi-version\u003e` is version of the API used to manage this azure resource.\n"
@@ -1437,7 +1647,7 @@
                 "properties": {
                     "id": {
                         "type": "string",
-                        "description": "The provider-assigned unique ID for this managed resource.\n"
+                        "description": "The ID of the azure resource.\n"
                     },
                     "name": {
                         "type": "string",
@@ -1469,12 +1679,16 @@
                         "type": "string",
                         "description": "The subscription ID of the azure resource.\n"
                     },
+                    "timeouts": {
+                        "$ref": "#/types/azapi:index/getResourceIdTimeouts:getResourceIdTimeouts"
+                    },
                     "type": {
                         "type": "string"
                     }
                 },
                 "type": "object",
                 "required": [
+                    "id",
                     "name",
                     "parentId",
                     "parts",
@@ -1482,13 +1696,12 @@
                     "resourceGroupName",
                     "resourceId",
                     "subscriptionId",
-                    "type",
-                    "id"
+                    "type"
                 ]
             }
         },
         "azapi:index/getResourceList:getResourceList": {
-            "description": "This resource can list all resources of a specific type under a scope. If the API supports paging, it will automatically fetch all pages and return the full list.\n\n## Example Usage\n\n```hcl\nterraform {\n  required_providers {\n    azapi = {\n      source = \"Azure/azapi\"\n    }\n  }\n}\n\nprovider \"azapi\" {\n}\n\ndata \"azapi_resource_list\" \"listBySubscription\" {\n  type                   = \"Microsoft.Automation/automationAccounts@2021-06-22\"\n  parent_id              = \"/subscriptions/00000000-0000-0000-0000-000000000000\"\n  response_export_values = [\"*\"]\n}\n\ndata \"azapi_resource_list\" \"listByResourceGroup\" {\n  type                   = \"Microsoft.Automation/automationAccounts@2021-06-22\"\n  parent_id              = \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg1\"\n  response_export_values = [\"*\"]\n}\n\ndata \"azapi_resource_list\" \"listSubnetsByVnet\" {\n  type                   = \"Microsoft.Network/virtualNetworks/subnets@2021-02-01\"\n  parent_id              = \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg1/providers/Microsoft.Network/virtualNetworks/vnet1\"\n  response_export_values = [\"*\"]\n}\n\n```\n",
+            "description": "This resource can list all resources of a specific type under a scope. If the API supports paging, it will automatically fetch all pages and return the full list.\n\n## Example Usage\n\n```hcl\nterraform {\n  required_providers {\n    azapi = {\n      source = \"Azure/azapi\"\n    }\n  }\n}\n\nprovider \"azapi\" {\n  enable_hcl_output_for_data_source = true\n}\n\ndata \"azapi_resource_list\" \"listBySubscription\" {\n  type                   = \"Microsoft.Automation/automationAccounts@2021-06-22\"\n  parent_id              = \"/subscriptions/00000000-0000-0000-0000-000000000000\"\n  response_export_values = [\"*\"]\n}\n\ndata \"azapi_resource_list\" \"listByResourceGroup\" {\n  type                   = \"Microsoft.Automation/automationAccounts@2021-06-22\"\n  parent_id              = \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg1\"\n  response_export_values = [\"*\"]\n}\n\ndata \"azapi_resource_list\" \"listSubnetsByVnet\" {\n  type                   = \"Microsoft.Network/virtualNetworks/subnets@2021-02-01\"\n  parent_id              = \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg1/providers/Microsoft.Network/virtualNetworks/vnet1\"\n  response_export_values = [\"*\"]\n}\n\n```\n",
             "inputs": {
                 "description": "A collection of arguments for invoking getResourceList.\n",
                 "properties": {
@@ -1501,7 +1714,10 @@
                         "items": {
                             "type": "string"
                         },
-                        "description": "A list of path that needs to be exported from response body.\nSetting it to `[\"*\"]` will export the full response body.\nHere's an example. If it sets to `[\"value\"]`, it will set the following json to computed property `output`.\n```\n{\n\"value\": [\n{\n\"id\": \"id1\",\n\"Permissions\": \"Full\"\n},\n{\n\"id\": \"id2\",\n\"Permissions\": \"Full\"\n}\n]\n}\n```\n"
+                        "description": "A list of path that needs to be exported from response body.\nSetting it to `[\"*\"]` will export the full response body.\nHere's an example. If it sets to `[\"value\"]`, it will set the following HCL object to computed property `output`.\n```\n{\nvalue = [\n{\nid = \"id1\"\nPermissions = \"Full\"\n},\n{\nid = \"id2\"\nPermissions = \"Full\"\n}\n]\n}\n```\n"
+                    },
+                    "timeouts": {
+                        "$ref": "#/types/azapi:index/getResourceListTimeouts:getResourceListTimeouts"
                     },
                     "type": {
                         "type": "string",
@@ -1519,11 +1735,11 @@
                 "properties": {
                     "id": {
                         "type": "string",
-                        "description": "The provider-assigned unique ID for this managed resource.\n"
+                        "description": "The ID of the azure resource list.\n"
                     },
                     "output": {
-                        "type": "string",
-                        "description": "The output json containing the properties specified in `response_export_values`. Here are some examples to decode json and extract the value.\n"
+                        "$ref": "pulumi.json#/Any",
+                        "description": "The output containing the properties specified in `response_export_values`. It supports both JSON and HCL object. By default, it will be in JSON format.\nIf specifying `enable_hcl_output_for_data_source` to `true` in the provider block, it will be in HCL format.\nHere are some examples to use the values in HCL format:\n```hcl\noutput \"value\" {\nvalue = data.azapi_resource_list.example.output.value\n}\n```\n"
                     },
                     "parentId": {
                         "type": "string"
@@ -1534,16 +1750,19 @@
                             "type": "string"
                         }
                     },
+                    "timeouts": {
+                        "$ref": "#/types/azapi:index/getResourceListTimeouts:getResourceListTimeouts"
+                    },
                     "type": {
                         "type": "string"
                     }
                 },
                 "type": "object",
                 "required": [
+                    "id",
                     "output",
                     "parentId",
-                    "type",
-                    "id"
+                    "type"
                 ]
             }
         }

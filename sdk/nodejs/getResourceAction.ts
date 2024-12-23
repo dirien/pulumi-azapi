@@ -2,6 +2,8 @@
 // *** Do not edit by hand unless you're certain you know what you are doing! ***
 
 import * as pulumi from "@pulumi/pulumi";
+import * as inputs from "./types/input";
+import * as outputs from "./types/output";
 import * as utilities from "./utilities";
 
 /**
@@ -16,7 +18,6 @@ import * as utilities from "./utilities";
  * Here's an example to use the `azapi.ResourceAction` data source to perform a provider action.
  */
 export function getResourceAction(args: GetResourceActionArgs, opts?: pulumi.InvokeOptions): Promise<GetResourceActionResult> {
-
     opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts || {});
     return pulumi.runtime.invoke("azapi:index/getResourceAction:getResourceAction", {
         "action": args.action,
@@ -24,6 +25,7 @@ export function getResourceAction(args: GetResourceActionArgs, opts?: pulumi.Inv
         "method": args.method,
         "resourceId": args.resourceId,
         "responseExportValues": args.responseExportValues,
+        "timeouts": args.timeouts,
         "type": args.type,
     }, opts);
 }
@@ -37,9 +39,9 @@ export interface GetResourceActionArgs {
      */
     action?: string;
     /**
-     * A JSON object that contains the request body.
+     * A dynamic attribute that contains the request body.
      */
-    body?: string;
+    body?: any;
     /**
      * Specifies the Http method of the azure resource action. Allowed values are `POST` and `GET`. Defaults to `POST`.
      */
@@ -51,25 +53,26 @@ export interface GetResourceActionArgs {
     /**
      * A list of path that needs to be exported from response body.
      * Setting it to `["*"]` will export the full response body.
-     * Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
+     * Here's an example. If it sets to `["keys"]`, it will set the following HCL object to computed property `output`.
      * ```
      * {
-     * "keys": [
+     * keys = [
      * {
-     * "KeyName": "Primary",
-     * "Permissions": "Full",
-     * "Value": "nHGYNd******i4wdug=="
+     * KeyName = "Primary"
+     * Permissions = "Full"
+     * Value = "nHGYNd******i4wdug=="
      * },
      * {
-     * "KeyName": "Secondary",
-     * "Permissions": "Full",
-     * "Value": "6yoCad******SLzKzg=="
+     * KeyName = "Secondary"
+     * Permissions = "Full"
+     * Value = "6yoCad******SLzKzg=="
      * }
      * ]
      * }
      * ```
      */
     responseExportValues?: string[];
+    timeouts?: inputs.GetResourceActionTimeouts;
     /**
      * It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
      * `<api-version>` is version of the API used to manage this azure resource.
@@ -82,23 +85,26 @@ export interface GetResourceActionArgs {
  */
 export interface GetResourceActionResult {
     readonly action?: string;
-    readonly body?: string;
+    readonly body?: any;
     /**
-     * The provider-assigned unique ID for this managed resource.
+     * The ID of the azure resource action.
      */
     readonly id: string;
-    readonly method?: string;
+    readonly method: string;
     /**
-     * The output json containing the properties specified in `responseExportValues`. Here are some examples to decode json and extract the value.
+     * The output containing the properties specified in `responseExportValues`. It supports both JSON and HCL object. By default, it will be in JSON format.
+     * If specifying `enableHclOutputForDataSource` to `true` in the provider block, it will be in HCL format.
+     * Here are some examples to use the values in HCL format:
      * ```hcl
      * // it will output "nHGYNd******i4wdug=="
      * output "primaryKey" {
-     * value = jsondecode(azapi_resource_action.test.output).keys.0.Value
+     * value = azapi_resource_action.test.output.keys.0.Value
      * }
      */
-    readonly output: string;
+    readonly output: any;
     readonly resourceId?: string;
     readonly responseExportValues?: string[];
+    readonly timeouts?: outputs.GetResourceActionTimeouts;
     readonly type: string;
 }
 /**
@@ -112,8 +118,17 @@ export interface GetResourceActionResult {
  *
  * Here's an example to use the `azapi.ResourceAction` data source to perform a provider action.
  */
-export function getResourceActionOutput(args: GetResourceActionOutputArgs, opts?: pulumi.InvokeOptions): pulumi.Output<GetResourceActionResult> {
-    return pulumi.output(args).apply((a: any) => getResourceAction(a, opts))
+export function getResourceActionOutput(args: GetResourceActionOutputArgs, opts?: pulumi.InvokeOutputOptions): pulumi.Output<GetResourceActionResult> {
+    opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts || {});
+    return pulumi.runtime.invokeOutput("azapi:index/getResourceAction:getResourceAction", {
+        "action": args.action,
+        "body": args.body,
+        "method": args.method,
+        "resourceId": args.resourceId,
+        "responseExportValues": args.responseExportValues,
+        "timeouts": args.timeouts,
+        "type": args.type,
+    }, opts);
 }
 
 /**
@@ -125,9 +140,9 @@ export interface GetResourceActionOutputArgs {
      */
     action?: pulumi.Input<string>;
     /**
-     * A JSON object that contains the request body.
+     * A dynamic attribute that contains the request body.
      */
-    body?: pulumi.Input<string>;
+    body?: any;
     /**
      * Specifies the Http method of the azure resource action. Allowed values are `POST` and `GET`. Defaults to `POST`.
      */
@@ -139,25 +154,26 @@ export interface GetResourceActionOutputArgs {
     /**
      * A list of path that needs to be exported from response body.
      * Setting it to `["*"]` will export the full response body.
-     * Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
+     * Here's an example. If it sets to `["keys"]`, it will set the following HCL object to computed property `output`.
      * ```
      * {
-     * "keys": [
+     * keys = [
      * {
-     * "KeyName": "Primary",
-     * "Permissions": "Full",
-     * "Value": "nHGYNd******i4wdug=="
+     * KeyName = "Primary"
+     * Permissions = "Full"
+     * Value = "nHGYNd******i4wdug=="
      * },
      * {
-     * "KeyName": "Secondary",
-     * "Permissions": "Full",
-     * "Value": "6yoCad******SLzKzg=="
+     * KeyName = "Secondary"
+     * Permissions = "Full"
+     * Value = "6yoCad******SLzKzg=="
      * }
      * ]
      * }
      * ```
      */
     responseExportValues?: pulumi.Input<pulumi.Input<string>[]>;
+    timeouts?: pulumi.Input<inputs.GetResourceActionTimeoutsArgs>;
     /**
      * It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
      * `<api-version>` is version of the API used to manage this azure resource.

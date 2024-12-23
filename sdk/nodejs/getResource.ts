@@ -12,14 +12,13 @@ import * as utilities from "./utilities";
  * ## Example Usage
  */
 export function getResource(args: GetResourceArgs, opts?: pulumi.InvokeOptions): Promise<GetResourceResult> {
-
     opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts || {});
     return pulumi.runtime.invoke("azapi:index/getResource:getResource", {
-        "identity": args.identity,
         "name": args.name,
         "parentId": args.parentId,
         "resourceId": args.resourceId,
         "responseExportValues": args.responseExportValues,
+        "timeouts": args.timeouts,
         "type": args.type,
     }, opts);
 }
@@ -28,10 +27,6 @@ export function getResource(args: GetResourceArgs, opts?: pulumi.InvokeOptions):
  * A collection of arguments for invoking getResource.
  */
 export interface GetResourceArgs {
-    /**
-     * An `identity` block as defined below, which contains the Managed Service Identity information for this azure resource.
-     */
-    identity?: inputs.GetResourceIdentity;
     /**
      * Specifies the name of the azure resource.
      */
@@ -58,14 +53,14 @@ export interface GetResourceArgs {
     /**
      * A list of path that needs to be exported from response body.
      * Setting it to `["*"]` will export the full response body.
-     * Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
+     * Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the HCL object to computed property `output`.
      * ```
      * {
-     * "properties" : {
-     * "loginServer" : "registry1.azurecr.io"
-     * "policies" : {
-     * "quarantinePolicy" = {
-     * "status" = "disabled"
+     * properties = {
+     * loginServer = "registry1.azurecr.io"
+     * policies = {
+     * quarantinePolicy = {
+     * status = "disabled"
      * }
      * }
      * }
@@ -73,6 +68,7 @@ export interface GetResourceArgs {
      * ```
      */
     responseExportValues?: string[];
+    timeouts?: inputs.GetResourceTimeouts;
     /**
      * It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
      * `<api-version>` is version of the API used to manage this azure resource.
@@ -85,34 +81,37 @@ export interface GetResourceArgs {
  */
 export interface GetResourceResult {
     /**
-     * The provider-assigned unique ID for this managed resource.
+     * The ID of the azure resource.
      */
     readonly id: string;
     /**
      * An `identity` block as defined below, which contains the Managed Service Identity information for this azure resource.
      */
-    readonly identity: outputs.GetResourceIdentity;
+    readonly identities: outputs.GetResourceIdentity[];
     /**
      * The Azure Region where the azure resource should exist.
      */
     readonly location: string;
-    readonly name?: string;
+    readonly name: string;
     /**
-     * The output json containing the properties specified in `responseExportValues`. Here're some examples to decode json and extract the value.
+     * The output containing the properties specified in `responseExportValues`. It supports both JSON and HCL object. By default, it will be in JSON format.
+     * If specifying `enableHclOutputForDataSource` to `true` in the provider block, it will be in HCL format.
+     * Here are some examples to use the values in HCL format:
      * ```
      * // it will output "registry1.azurecr.io"
      * output "loginServer" {
-     * value = jsondecode(azapi_resource.example.output).properties.loginServer
+     * value = data.azapi_resource.example.output.properties.loginServer
      * }
      */
-    readonly output: string;
+    readonly output: any;
     readonly parentId: string;
-    readonly resourceId?: string;
+    readonly resourceId: string;
     readonly responseExportValues?: string[];
     /**
      * A mapping of tags which should be assigned to the azure resource.
      */
     readonly tags: {[key: string]: string};
+    readonly timeouts?: outputs.GetResourceTimeouts;
     /**
      * The Type of Identity which should be used for this azure resource. Possible values are `SystemAssigned`, `UserAssigned` and `SystemAssigned,UserAssigned`.
      */
@@ -123,18 +122,22 @@ export interface GetResourceResult {
  *
  * ## Example Usage
  */
-export function getResourceOutput(args: GetResourceOutputArgs, opts?: pulumi.InvokeOptions): pulumi.Output<GetResourceResult> {
-    return pulumi.output(args).apply((a: any) => getResource(a, opts))
+export function getResourceOutput(args: GetResourceOutputArgs, opts?: pulumi.InvokeOutputOptions): pulumi.Output<GetResourceResult> {
+    opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts || {});
+    return pulumi.runtime.invokeOutput("azapi:index/getResource:getResource", {
+        "name": args.name,
+        "parentId": args.parentId,
+        "resourceId": args.resourceId,
+        "responseExportValues": args.responseExportValues,
+        "timeouts": args.timeouts,
+        "type": args.type,
+    }, opts);
 }
 
 /**
  * A collection of arguments for invoking getResource.
  */
 export interface GetResourceOutputArgs {
-    /**
-     * An `identity` block as defined below, which contains the Managed Service Identity information for this azure resource.
-     */
-    identity?: pulumi.Input<inputs.GetResourceIdentityArgs>;
     /**
      * Specifies the name of the azure resource.
      */
@@ -161,14 +164,14 @@ export interface GetResourceOutputArgs {
     /**
      * A list of path that needs to be exported from response body.
      * Setting it to `["*"]` will export the full response body.
-     * Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
+     * Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the HCL object to computed property `output`.
      * ```
      * {
-     * "properties" : {
-     * "loginServer" : "registry1.azurecr.io"
-     * "policies" : {
-     * "quarantinePolicy" = {
-     * "status" = "disabled"
+     * properties = {
+     * loginServer = "registry1.azurecr.io"
+     * policies = {
+     * quarantinePolicy = {
+     * status = "disabled"
      * }
      * }
      * }
@@ -176,6 +179,7 @@ export interface GetResourceOutputArgs {
      * ```
      */
     responseExportValues?: pulumi.Input<pulumi.Input<string>[]>;
+    timeouts?: pulumi.Input<inputs.GetResourceTimeoutsArgs>;
     /**
      * It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
      * `<api-version>` is version of the API used to manage this azure resource.

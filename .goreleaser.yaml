@@ -1,3 +1,4 @@
+version: 2
 archives:
   - id: archive
     name_template: '{{ .Binary }}-{{ .Tag }}-{{ .Os }}-{{ .Arch }}'
@@ -70,4 +71,4 @@ release:
   prerelease: auto
 
 snapshot:
-  name_template: '{{ .Tag }}-SNAPSHOT'
+   version_template: '{{ .Tag }}-SNAPSHOT'

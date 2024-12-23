@@ -40,7 +40,8 @@ type GetResourceIdArgs struct {
 	// The ID of an existing azure source.
 	//
 	// > **Note:** Configuring `name` and `parentId` is an alternative way to configure `resourceId`.
-	ResourceId *string `pulumi:"resourceId"`
+	ResourceId *string                `pulumi:"resourceId"`
+	Timeouts   *GetResourceIdTimeouts `pulumi:"timeouts"`
 	// It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
 	// `<api-version>` is version of the API used to manage this azure resource.
 	Type string `pulumi:"type"`
@@ -48,7 +49,7 @@ type GetResourceIdArgs struct {
 
 // A collection of values returned by getResourceId.
 type GetResourceIdResult struct {
-	// The provider-assigned unique ID for this managed resource.
+	// The ID of the azure resource.
 	Id string `pulumi:"id"`
 	// The name of the azure resource.
 	Name string `pulumi:"name"`
@@ -62,20 +63,17 @@ type GetResourceIdResult struct {
 	ResourceGroupName string `pulumi:"resourceGroupName"`
 	ResourceId        string `pulumi:"resourceId"`
 	// The subscription ID of the azure resource.
-	SubscriptionId string `pulumi:"subscriptionId"`
-	Type           string `pulumi:"type"`
+	SubscriptionId string                 `pulumi:"subscriptionId"`
+	Timeouts       *GetResourceIdTimeouts `pulumi:"timeouts"`
+	Type           string                 `pulumi:"type"`
 }
 
 func GetResourceIdOutput(ctx *pulumi.Context, args GetResourceIdOutputArgs, opts ...pulumi.InvokeOption) GetResourceIdResultOutput {
-	return pulumi.ToOutputWithContext(context.Background(), args).
-		ApplyT(func(v interface{}) (GetResourceIdResult, error) {
+	return pulumi.ToOutputWithContext(ctx.Context(), args).
+		ApplyT(func(v interface{}) (GetResourceIdResultOutput, error) {
 			args := v.(GetResourceIdArgs)
-			r, err := GetResourceId(ctx, &args, opts...)
-			var s GetResourceIdResult
-			if r != nil {
-				s = *r
-			}
-			return s, err
+			options := pulumi.InvokeOutputOptions{InvokeOptions: internal.PkgInvokeDefaultOpts(opts)}
+			return ctx.InvokeOutput("azapi:index/getResourceId:getResourceId", args, GetResourceIdResultOutput{}, options).(GetResourceIdResultOutput), nil
 		}).(GetResourceIdResultOutput)
 }
 
@@ -95,7 +93,8 @@ type GetResourceIdOutputArgs struct {
 	// The ID of an existing azure source.
 	//
 	// > **Note:** Configuring `name` and `parentId` is an alternative way to configure `resourceId`.
-	ResourceId pulumi.StringPtrInput `pulumi:"resourceId"`
+	ResourceId pulumi.StringPtrInput         `pulumi:"resourceId"`
+	Timeouts   GetResourceIdTimeoutsPtrInput `pulumi:"timeouts"`
 	// It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
 	// `<api-version>` is version of the API used to manage this azure resource.
 	Type pulumi.StringInput `pulumi:"type"`
@@ -120,7 +119,7 @@ func (o GetResourceIdResultOutput) ToGetResourceIdResultOutputWithContext(ctx co
 	return o
 }
 
-// The provider-assigned unique ID for this managed resource.
+// The ID of the azure resource.
 func (o GetResourceIdResultOutput) Id() pulumi.StringOutput {
 	return o.ApplyT(func(v GetResourceIdResult) string { return v.Id }).(pulumi.StringOutput)
 }
@@ -157,6 +156,10 @@ func (o GetResourceIdResultOutput) ResourceId() pulumi.StringOutput {
 // The subscription ID of the azure resource.
 func (o GetResourceIdResultOutput) SubscriptionId() pulumi.StringOutput {
 	return o.ApplyT(func(v GetResourceIdResult) string { return v.SubscriptionId }).(pulumi.StringOutput)
+}
+
+func (o GetResourceIdResultOutput) Timeouts() GetResourceIdTimeoutsPtrOutput {
+	return o.ApplyT(func(v GetResourceIdResult) *GetResourceIdTimeouts { return v.Timeouts }).(GetResourceIdTimeoutsPtrOutput)
 }
 
 func (o GetResourceIdResultOutput) Type() pulumi.StringOutput {

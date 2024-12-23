@@ -4,10 +4,17 @@
 
 import copy
 import warnings
+import sys
 import pulumi
 import pulumi.runtime
 from typing import Any, Mapping, Optional, Sequence, Union, overload
+if sys.version_info >= (3, 11):
+    from typing import NotRequired, TypedDict, TypeAlias
+else:
+    from typing_extensions import NotRequired, TypedDict, TypeAlias
 from . import _utilities
+from . import outputs
+from ._inputs import *
 
 __all__ = [
     'GetResourceIdResult',
@@ -21,7 +28,7 @@ class GetResourceIdResult:
     """
     A collection of values returned by getResourceId.
     """
-    def __init__(__self__, id=None, name=None, parent_id=None, parts=None, provider_namespace=None, resource_group_name=None, resource_id=None, subscription_id=None, type=None):
+    def __init__(__self__, id=None, name=None, parent_id=None, parts=None, provider_namespace=None, resource_group_name=None, resource_id=None, subscription_id=None, timeouts=None, type=None):
         if id and not isinstance(id, str):
             raise TypeError("Expected argument 'id' to be a str")
         pulumi.set(__self__, "id", id)
@@ -46,6 +53,9 @@ class GetResourceIdResult:
         if subscription_id and not isinstance(subscription_id, str):
             raise TypeError("Expected argument 'subscription_id' to be a str")
         pulumi.set(__self__, "subscription_id", subscription_id)
+        if timeouts and not isinstance(timeouts, dict):
+            raise TypeError("Expected argument 'timeouts' to be a dict")
+        pulumi.set(__self__, "timeouts", timeouts)
         if type and not isinstance(type, str):
             raise TypeError("Expected argument 'type' to be a str")
         pulumi.set(__self__, "type", type)
@@ -54,7 +64,7 @@ class GetResourceIdResult:
     @pulumi.getter
     def id(self) -> str:
         """
-        The provider-assigned unique ID for this managed resource.
+        The ID of the azure resource.
         """
         return pulumi.get(self, "id")
 
@@ -113,6 +123,11 @@ class GetResourceIdResult:
 
     @property
     @pulumi.getter
+    def timeouts(self) -> Optional['outputs.GetResourceIdTimeoutsResult']:
+        return pulumi.get(self, "timeouts")
+
+    @property
+    @pulumi.getter
     def type(self) -> str:
         return pulumi.get(self, "type")
 
@@ -131,12 +146,14 @@ class AwaitableGetResourceIdResult(GetResourceIdResult):
             resource_group_name=self.resource_group_name,
             resource_id=self.resource_id,
             subscription_id=self.subscription_id,
+            timeouts=self.timeouts,
             type=self.type)
 
 
 def get_resource_id(name: Optional[str] = None,
                     parent_id: Optional[str] = None,
                     resource_id: Optional[str] = None,
+                    timeouts: Optional[Union['GetResourceIdTimeoutsArgs', 'GetResourceIdTimeoutsArgsDict']] = None,
                     type: Optional[str] = None,
                     opts: Optional[pulumi.InvokeOptions] = None) -> AwaitableGetResourceIdResult:
     """
@@ -164,6 +181,7 @@ def get_resource_id(name: Optional[str] = None,
     __args__['name'] = name
     __args__['parentId'] = parent_id
     __args__['resourceId'] = resource_id
+    __args__['timeouts'] = timeouts
     __args__['type'] = type
     opts = pulumi.InvokeOptions.merge(_utilities.get_invoke_opts_defaults(), opts)
     __ret__ = pulumi.runtime.invoke('azapi:index/getResourceId:getResourceId', __args__, opts=opts, typ=GetResourceIdResult).value
@@ -177,15 +195,14 @@ def get_resource_id(name: Optional[str] = None,
         resource_group_name=pulumi.get(__ret__, 'resource_group_name'),
         resource_id=pulumi.get(__ret__, 'resource_id'),
         subscription_id=pulumi.get(__ret__, 'subscription_id'),
+        timeouts=pulumi.get(__ret__, 'timeouts'),
         type=pulumi.get(__ret__, 'type'))
-
-
-@_utilities.lift_output_func(get_resource_id)
 def get_resource_id_output(name: Optional[pulumi.Input[Optional[str]]] = None,
                            parent_id: Optional[pulumi.Input[Optional[str]]] = None,
                            resource_id: Optional[pulumi.Input[Optional[str]]] = None,
+                           timeouts: Optional[pulumi.Input[Optional[Union['GetResourceIdTimeoutsArgs', 'GetResourceIdTimeoutsArgsDict']]]] = None,
                            type: Optional[pulumi.Input[str]] = None,
-                           opts: Optional[pulumi.InvokeOptions] = None) -> pulumi.Output[GetResourceIdResult]:
+                           opts: Optional[Union[pulumi.InvokeOptions, pulumi.InvokeOutputOptions]] = None) -> pulumi.Output[GetResourceIdResult]:
     """
     This resource can parse an Azure resource ID into its separate fields.
 
@@ -207,4 +224,22 @@ def get_resource_id_output(name: Optional[pulumi.Input[Optional[str]]] = None,
     :param str type: It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
            `<api-version>` is version of the API used to manage this azure resource.
     """
-    ...
+    __args__ = dict()
+    __args__['name'] = name
+    __args__['parentId'] = parent_id
+    __args__['resourceId'] = resource_id
+    __args__['timeouts'] = timeouts
+    __args__['type'] = type
+    opts = pulumi.InvokeOutputOptions.merge(_utilities.get_invoke_opts_defaults(), opts)
+    __ret__ = pulumi.runtime.invoke_output('azapi:index/getResourceId:getResourceId', __args__, opts=opts, typ=GetResourceIdResult)
+    return __ret__.apply(lambda __response__: GetResourceIdResult(
+        id=pulumi.get(__response__, 'id'),
+        name=pulumi.get(__response__, 'name'),
+        parent_id=pulumi.get(__response__, 'parent_id'),
+        parts=pulumi.get(__response__, 'parts'),
+        provider_namespace=pulumi.get(__response__, 'provider_namespace'),
+        resource_group_name=pulumi.get(__response__, 'resource_group_name'),
+        resource_id=pulumi.get(__response__, 'resource_id'),
+        subscription_id=pulumi.get(__response__, 'subscription_id'),
+        timeouts=pulumi.get(__response__, 'timeouts'),
+        type=pulumi.get(__response__, 'type')))

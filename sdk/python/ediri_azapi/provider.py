@@ -4,9 +4,14 @@
 
 import copy
 import warnings
+import sys
 import pulumi
 import pulumi.runtime
 from typing import Any, Mapping, Optional, Sequence, Union, overload
+if sys.version_info >= (3, 11):
+    from typing import NotRequired, TypedDict, TypeAlias
+else:
+    from typing_extensions import NotRequired, TypedDict, TypeAlias
 from . import _utilities
 from ._inputs import *
 
@@ -15,12 +20,13 @@ __all__ = ['ProviderArgs', 'Provider']
 @pulumi.input_type
 class ProviderArgs:
     def __init__(__self__, *,
-                 environment: pulumi.Input[str],
                  auxiliary_tenant_ids: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]] = None,
                  client_certificate_password: Optional[pulumi.Input[str]] = None,
                  client_certificate_path: Optional[pulumi.Input[str]] = None,
                  client_id: Optional[pulumi.Input[str]] = None,
+                 client_id_file_path: Optional[pulumi.Input[str]] = None,
                  client_secret: Optional[pulumi.Input[str]] = None,
+                 client_secret_file_path: Optional[pulumi.Input[str]] = None,
                  custom_correlation_request_id: Optional[pulumi.Input[str]] = None,
                  default_location: Optional[pulumi.Input[str]] = None,
                  default_name: Optional[pulumi.Input[str]] = None,
@@ -29,7 +35,9 @@ class ProviderArgs:
                  default_tags: Optional[pulumi.Input[Mapping[str, pulumi.Input[str]]]] = None,
                  disable_correlation_request_id: Optional[pulumi.Input[bool]] = None,
                  disable_terraform_partner_id: Optional[pulumi.Input[bool]] = None,
-                 endpoint: Optional[pulumi.Input['ProviderEndpointArgs']] = None,
+                 enable_hcl_output_for_data_source: Optional[pulumi.Input[bool]] = None,
+                 endpoints: Optional[pulumi.Input[Sequence[pulumi.Input['ProviderEndpointArgs']]]] = None,
+                 environment: Optional[pulumi.Input[str]] = None,
                  oidc_request_token: Optional[pulumi.Input[str]] = None,
                  oidc_request_url: Optional[pulumi.Input[str]] = None,
                  oidc_token: Optional[pulumi.Input[str]] = None,
@@ -43,15 +51,26 @@ class ProviderArgs:
                  use_oidc: Optional[pulumi.Input[bool]] = None):
         """
         The set of arguments for constructing a Provider resource.
-        :param pulumi.Input[str] environment: The Cloud Environment which should be used. Possible values are public, usgovernment and china. Defaults to public.
+        :param pulumi.Input[Sequence[pulumi.Input[str]]] auxiliary_tenant_ids: The Auxiliary Tenant IDs which should be used.
         :param pulumi.Input[str] client_certificate_password: The password associated with the Client Certificate. For use when authenticating as a Service Principal using a Client
                Certificate
         :param pulumi.Input[str] client_certificate_path: The path to the Client Certificate associated with the Service Principal for use when authenticating as a Service
                Principal using a Client Certificate.
         :param pulumi.Input[str] client_id: The Client ID which should be used.
+        :param pulumi.Input[str] client_id_file_path: The path to a file containing the Client ID which should be used.
         :param pulumi.Input[str] client_secret: The Client Secret which should be used. For use When authenticating as a Service Principal using a Client Secret.
+        :param pulumi.Input[str] client_secret_file_path: The path to a file containing the Client Secret which should be used. For use When authenticating as a Service Principal
+               using a Client Secret.
         :param pulumi.Input[str] custom_correlation_request_id: The value of the x-ms-correlation-request-id header (otherwise an auto-generated UUID will be used).
+        :param pulumi.Input[str] default_location: The default location which should be used for resources.
+        :param pulumi.Input[str] default_name: The default name which should be used for resources.
+        :param pulumi.Input[str] default_naming_prefix: The default prefix which should be used for resources.
+        :param pulumi.Input[str] default_naming_suffix: The default suffix which should be used for resources.
+        :param pulumi.Input[Mapping[str, pulumi.Input[str]]] default_tags: The default tags which should be used for resources.
         :param pulumi.Input[bool] disable_correlation_request_id: This will disable the x-ms-correlation-request-id header.
+        :param pulumi.Input[bool] enable_hcl_output_for_data_source: Enable HCL output for data sources. The default is false. When set to true, the provider will return HCL output for data
+               sources. When set to false, the provider will return JSON output for data sources.
+        :param pulumi.Input[str] environment: The Cloud Environment which should be used. Possible values are public, usgovernment and china. Defaults to public.
         :param pulumi.Input[str] oidc_request_token: The bearer token for the request to the OIDC provider. For use When authenticating as a Service Principal using OpenID
                Connect.
         :param pulumi.Input[str] oidc_request_url: The URL for the OIDC provider from which to request an ID token. For use When authenticating as a Service Principal
@@ -66,7 +85,6 @@ class ProviderArgs:
         :param pulumi.Input[bool] use_msi: Allow Managed Service Identity to be used for Authentication.
         :param pulumi.Input[bool] use_oidc: Allow OpenID Connect to be used for authentication
         """
-        pulumi.set(__self__, "environment", environment)
         if auxiliary_tenant_ids is not None:
             pulumi.set(__self__, "auxiliary_tenant_ids", auxiliary_tenant_ids)
         if client_certificate_password is not None:
@@ -75,8 +93,12 @@ class ProviderArgs:
             pulumi.set(__self__, "client_certificate_path", client_certificate_path)
         if client_id is not None:
             pulumi.set(__self__, "client_id", client_id)
+        if client_id_file_path is not None:
+            pulumi.set(__self__, "client_id_file_path", client_id_file_path)
         if client_secret is not None:
             pulumi.set(__self__, "client_secret", client_secret)
+        if client_secret_file_path is not None:
+            pulumi.set(__self__, "client_secret_file_path", client_secret_file_path)
         if custom_correlation_request_id is not None:
             pulumi.set(__self__, "custom_correlation_request_id", custom_correlation_request_id)
         if default_location is not None:
@@ -84,13 +106,13 @@ class ProviderArgs:
         if default_name is not None:
             pulumi.set(__self__, "default_name", default_name)
         if default_naming_prefix is not None:
-            warnings.warn("""It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead.""", DeprecationWarning)
-            pulumi.log.warn("""default_naming_prefix is deprecated: It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead.""")
+            warnings.warn("""This field is deprecated and will be removed in a major release. Please specify the naming prefix and suffix in the resource's `name` field instead.""", DeprecationWarning)
+            pulumi.log.warn("""default_naming_prefix is deprecated: This field is deprecated and will be removed in a major release. Please specify the naming prefix and suffix in the resource's `name` field instead.""")
         if default_naming_prefix is not None:
             pulumi.set(__self__, "default_naming_prefix", default_naming_prefix)
         if default_naming_suffix is not None:
-            warnings.warn("""It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead.""", DeprecationWarning)
-            pulumi.log.warn("""default_naming_suffix is deprecated: It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead.""")
+            warnings.warn("""This field is deprecated and will be removed in a major release. Please specify the naming prefix and suffix in the resource's `name` field instead.""", DeprecationWarning)
+            pulumi.log.warn("""default_naming_suffix is deprecated: This field is deprecated and will be removed in a major release. Please specify the naming prefix and suffix in the resource's `name` field instead.""")
         if default_naming_suffix is not None:
             pulumi.set(__self__, "default_naming_suffix", default_naming_suffix)
         if default_tags is not None:
@@ -99,8 +121,12 @@ class ProviderArgs:
             pulumi.set(__self__, "disable_correlation_request_id", disable_correlation_request_id)
         if disable_terraform_partner_id is not None:
             pulumi.set(__self__, "disable_terraform_partner_id", disable_terraform_partner_id)
-        if endpoint is not None:
-            pulumi.set(__self__, "endpoint", endpoint)
+        if enable_hcl_output_for_data_source is not None:
+            pulumi.set(__self__, "enable_hcl_output_for_data_source", enable_hcl_output_for_data_source)
+        if endpoints is not None:
+            pulumi.set(__self__, "endpoints", endpoints)
+        if environment is not None:
+            pulumi.set(__self__, "environment", environment)
         if oidc_request_token is not None:
             pulumi.set(__self__, "oidc_request_token", oidc_request_token)
         if oidc_request_url is not None:
@@ -125,20 +151,11 @@ class ProviderArgs:
             pulumi.set(__self__, "use_oidc", use_oidc)
 
     @property
-    @pulumi.getter
-    def environment(self) -> pulumi.Input[str]:
-        """
-        The Cloud Environment which should be used. Possible values are public, usgovernment and china. Defaults to public.
-        """
-        return pulumi.get(self, "environment")
-
-    @environment.setter
-    def environment(self, value: pulumi.Input[str]):
-        pulumi.set(self, "environment", value)
-
-    @property
     @pulumi.getter(name="auxiliaryTenantIds")
     def auxiliary_tenant_ids(self) -> Optional[pulumi.Input[Sequence[pulumi.Input[str]]]]:
+        """
+        The Auxiliary Tenant IDs which should be used.
+        """
         return pulumi.get(self, "auxiliary_tenant_ids")
 
     @auxiliary_tenant_ids.setter
@@ -184,6 +201,18 @@ class ProviderArgs:
         pulumi.set(self, "client_id", value)
 
     @property
+    @pulumi.getter(name="clientIdFilePath")
+    def client_id_file_path(self) -> Optional[pulumi.Input[str]]:
+        """
+        The path to a file containing the Client ID which should be used.
+        """
+        return pulumi.get(self, "client_id_file_path")
+
+    @client_id_file_path.setter
+    def client_id_file_path(self, value: Optional[pulumi.Input[str]]):
+        pulumi.set(self, "client_id_file_path", value)
+
+    @property
     @pulumi.getter(name="clientSecret")
     def client_secret(self) -> Optional[pulumi.Input[str]]:
         """
@@ -194,6 +223,19 @@ class ProviderArgs:
     @client_secret.setter
     def client_secret(self, value: Optional[pulumi.Input[str]]):
         pulumi.set(self, "client_secret", value)
+
+    @property
+    @pulumi.getter(name="clientSecretFilePath")
+    def client_secret_file_path(self) -> Optional[pulumi.Input[str]]:
+        """
+        The path to a file containing the Client Secret which should be used. For use When authenticating as a Service Principal
+        using a Client Secret.
+        """
+        return pulumi.get(self, "client_secret_file_path")
+
+    @client_secret_file_path.setter
+    def client_secret_file_path(self, value: Optional[pulumi.Input[str]]):
+        pulumi.set(self, "client_secret_file_path", value)
 
     @property
     @pulumi.getter(name="customCorrelationRequestId")
@@ -210,6 +252,9 @@ class ProviderArgs:
     @property
     @pulumi.getter(name="defaultLocation")
     def default_location(self) -> Optional[pulumi.Input[str]]:
+        """
+        The default location which should be used for resources.
+        """
         return pulumi.get(self, "default_location")
 
     @default_location.setter
@@ -219,6 +264,9 @@ class ProviderArgs:
     @property
     @pulumi.getter(name="defaultName")
     def default_name(self) -> Optional[pulumi.Input[str]]:
+        """
+        The default name which should be used for resources.
+        """
         return pulumi.get(self, "default_name")
 
     @default_name.setter
@@ -227,8 +275,11 @@ class ProviderArgs:
 
     @property
     @pulumi.getter(name="defaultNamingPrefix")
-    @_utilities.deprecated("""It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead.""")
+    @_utilities.deprecated("""This field is deprecated and will be removed in a major release. Please specify the naming prefix and suffix in the resource's `name` field instead.""")
     def default_naming_prefix(self) -> Optional[pulumi.Input[str]]:
+        """
+        The default prefix which should be used for resources.
+        """
         return pulumi.get(self, "default_naming_prefix")
 
     @default_naming_prefix.setter
@@ -237,8 +288,11 @@ class ProviderArgs:
 
     @property
     @pulumi.getter(name="defaultNamingSuffix")
-    @_utilities.deprecated("""It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead.""")
+    @_utilities.deprecated("""This field is deprecated and will be removed in a major release. Please specify the naming prefix and suffix in the resource's `name` field instead.""")
     def default_naming_suffix(self) -> Optional[pulumi.Input[str]]:
+        """
+        The default suffix which should be used for resources.
+        """
         return pulumi.get(self, "default_naming_suffix")
 
     @default_naming_suffix.setter
@@ -248,6 +302,9 @@ class ProviderArgs:
     @property
     @pulumi.getter(name="defaultTags")
     def default_tags(self) -> Optional[pulumi.Input[Mapping[str, pulumi.Input[str]]]]:
+        """
+        The default tags which should be used for resources.
+        """
         return pulumi.get(self, "default_tags")
 
     @default_tags.setter
@@ -276,13 +333,38 @@ class ProviderArgs:
         pulumi.set(self, "disable_terraform_partner_id", value)
 
     @property
-    @pulumi.getter
-    def endpoint(self) -> Optional[pulumi.Input['ProviderEndpointArgs']]:
-        return pulumi.get(self, "endpoint")
+    @pulumi.getter(name="enableHclOutputForDataSource")
+    def enable_hcl_output_for_data_source(self) -> Optional[pulumi.Input[bool]]:
+        """
+        Enable HCL output for data sources. The default is false. When set to true, the provider will return HCL output for data
+        sources. When set to false, the provider will return JSON output for data sources.
+        """
+        return pulumi.get(self, "enable_hcl_output_for_data_source")
 
-    @endpoint.setter
-    def endpoint(self, value: Optional[pulumi.Input['ProviderEndpointArgs']]):
-        pulumi.set(self, "endpoint", value)
+    @enable_hcl_output_for_data_source.setter
+    def enable_hcl_output_for_data_source(self, value: Optional[pulumi.Input[bool]]):
+        pulumi.set(self, "enable_hcl_output_for_data_source", value)
+
+    @property
+    @pulumi.getter
+    def endpoints(self) -> Optional[pulumi.Input[Sequence[pulumi.Input['ProviderEndpointArgs']]]]:
+        return pulumi.get(self, "endpoints")
+
+    @endpoints.setter
+    def endpoints(self, value: Optional[pulumi.Input[Sequence[pulumi.Input['ProviderEndpointArgs']]]]):
+        pulumi.set(self, "endpoints", value)
+
+    @property
+    @pulumi.getter
+    def environment(self) -> Optional[pulumi.Input[str]]:
+        """
+        The Cloud Environment which should be used. Possible values are public, usgovernment and china. Defaults to public.
+        """
+        return pulumi.get(self, "environment")
+
+    @environment.setter
+    def environment(self, value: Optional[pulumi.Input[str]]):
+        pulumi.set(self, "environment", value)
 
     @property
     @pulumi.getter(name="oidcRequestToken")
@@ -428,7 +510,9 @@ class Provider(pulumi.ProviderResource):
                  client_certificate_password: Optional[pulumi.Input[str]] = None,
                  client_certificate_path: Optional[pulumi.Input[str]] = None,
                  client_id: Optional[pulumi.Input[str]] = None,
+                 client_id_file_path: Optional[pulumi.Input[str]] = None,
                  client_secret: Optional[pulumi.Input[str]] = None,
+                 client_secret_file_path: Optional[pulumi.Input[str]] = None,
                  custom_correlation_request_id: Optional[pulumi.Input[str]] = None,
                  default_location: Optional[pulumi.Input[str]] = None,
                  default_name: Optional[pulumi.Input[str]] = None,
@@ -437,7 +521,8 @@ class Provider(pulumi.ProviderResource):
                  default_tags: Optional[pulumi.Input[Mapping[str, pulumi.Input[str]]]] = None,
                  disable_correlation_request_id: Optional[pulumi.Input[bool]] = None,
                  disable_terraform_partner_id: Optional[pulumi.Input[bool]] = None,
-                 endpoint: Optional[pulumi.Input[pulumi.InputType['ProviderEndpointArgs']]] = None,
+                 enable_hcl_output_for_data_source: Optional[pulumi.Input[bool]] = None,
+                 endpoints: Optional[pulumi.Input[Sequence[pulumi.Input[Union['ProviderEndpointArgs', 'ProviderEndpointArgsDict']]]]] = None,
                  environment: Optional[pulumi.Input[str]] = None,
                  oidc_request_token: Optional[pulumi.Input[str]] = None,
                  oidc_request_url: Optional[pulumi.Input[str]] = None,
@@ -459,14 +544,25 @@ class Provider(pulumi.ProviderResource):
 
         :param str resource_name: The name of the resource.
         :param pulumi.ResourceOptions opts: Options for the resource.
+        :param pulumi.Input[Sequence[pulumi.Input[str]]] auxiliary_tenant_ids: The Auxiliary Tenant IDs which should be used.
         :param pulumi.Input[str] client_certificate_password: The password associated with the Client Certificate. For use when authenticating as a Service Principal using a Client
                Certificate
         :param pulumi.Input[str] client_certificate_path: The path to the Client Certificate associated with the Service Principal for use when authenticating as a Service
                Principal using a Client Certificate.
         :param pulumi.Input[str] client_id: The Client ID which should be used.
+        :param pulumi.Input[str] client_id_file_path: The path to a file containing the Client ID which should be used.
         :param pulumi.Input[str] client_secret: The Client Secret which should be used. For use When authenticating as a Service Principal using a Client Secret.
+        :param pulumi.Input[str] client_secret_file_path: The path to a file containing the Client Secret which should be used. For use When authenticating as a Service Principal
+               using a Client Secret.
         :param pulumi.Input[str] custom_correlation_request_id: The value of the x-ms-correlation-request-id header (otherwise an auto-generated UUID will be used).
+        :param pulumi.Input[str] default_location: The default location which should be used for resources.
+        :param pulumi.Input[str] default_name: The default name which should be used for resources.
+        :param pulumi.Input[str] default_naming_prefix: The default prefix which should be used for resources.
+        :param pulumi.Input[str] default_naming_suffix: The default suffix which should be used for resources.
+        :param pulumi.Input[Mapping[str, pulumi.Input[str]]] default_tags: The default tags which should be used for resources.
         :param pulumi.Input[bool] disable_correlation_request_id: This will disable the x-ms-correlation-request-id header.
+        :param pulumi.Input[bool] enable_hcl_output_for_data_source: Enable HCL output for data sources. The default is false. When set to true, the provider will return HCL output for data
+               sources. When set to false, the provider will return JSON output for data sources.
         :param pulumi.Input[str] environment: The Cloud Environment which should be used. Possible values are public, usgovernment and china. Defaults to public.
         :param pulumi.Input[str] oidc_request_token: The bearer token for the request to the OIDC provider. For use When authenticating as a Service Principal using OpenID
                Connect.
@@ -486,7 +582,7 @@ class Provider(pulumi.ProviderResource):
     @overload
     def __init__(__self__,
                  resource_name: str,
-                 args: ProviderArgs,
+                 args: Optional[ProviderArgs] = None,
                  opts: Optional[pulumi.ResourceOptions] = None):
         """
         The provider type for the azapi package. By default, resources use package-wide configuration
@@ -513,7 +609,9 @@ class Provider(pulumi.ProviderResource):
                  client_certificate_password: Optional[pulumi.Input[str]] = None,
                  client_certificate_path: Optional[pulumi.Input[str]] = None,
                  client_id: Optional[pulumi.Input[str]] = None,
+                 client_id_file_path: Optional[pulumi.Input[str]] = None,
                  client_secret: Optional[pulumi.Input[str]] = None,
+                 client_secret_file_path: Optional[pulumi.Input[str]] = None,
                  custom_correlation_request_id: Optional[pulumi.Input[str]] = None,
                  default_location: Optional[pulumi.Input[str]] = None,
                  default_name: Optional[pulumi.Input[str]] = None,
@@ -522,7 +620,8 @@ class Provider(pulumi.ProviderResource):
                  default_tags: Optional[pulumi.Input[Mapping[str, pulumi.Input[str]]]] = None,
                  disable_correlation_request_id: Optional[pulumi.Input[bool]] = None,
                  disable_terraform_partner_id: Optional[pulumi.Input[bool]] = None,
-                 endpoint: Optional[pulumi.Input[pulumi.InputType['ProviderEndpointArgs']]] = None,
+                 enable_hcl_output_for_data_source: Optional[pulumi.Input[bool]] = None,
+                 endpoints: Optional[pulumi.Input[Sequence[pulumi.Input[Union['ProviderEndpointArgs', 'ProviderEndpointArgsDict']]]]] = None,
                  environment: Optional[pulumi.Input[str]] = None,
                  oidc_request_token: Optional[pulumi.Input[str]] = None,
                  oidc_request_url: Optional[pulumi.Input[str]] = None,
@@ -548,7 +647,9 @@ class Provider(pulumi.ProviderResource):
             __props__.__dict__["client_certificate_password"] = client_certificate_password
             __props__.__dict__["client_certificate_path"] = client_certificate_path
             __props__.__dict__["client_id"] = client_id
+            __props__.__dict__["client_id_file_path"] = client_id_file_path
             __props__.__dict__["client_secret"] = client_secret
+            __props__.__dict__["client_secret_file_path"] = client_secret_file_path
             __props__.__dict__["custom_correlation_request_id"] = custom_correlation_request_id
             __props__.__dict__["default_location"] = default_location
             __props__.__dict__["default_name"] = default_name
@@ -557,9 +658,8 @@ class Provider(pulumi.ProviderResource):
             __props__.__dict__["default_tags"] = pulumi.Output.from_input(default_tags).apply(pulumi.runtime.to_json) if default_tags is not None else None
             __props__.__dict__["disable_correlation_request_id"] = pulumi.Output.from_input(disable_correlation_request_id).apply(pulumi.runtime.to_json) if disable_correlation_request_id is not None else None
             __props__.__dict__["disable_terraform_partner_id"] = pulumi.Output.from_input(disable_terraform_partner_id).apply(pulumi.runtime.to_json) if disable_terraform_partner_id is not None else None
-            __props__.__dict__["endpoint"] = pulumi.Output.from_input(endpoint).apply(pulumi.runtime.to_json) if endpoint is not None else None
-            if environment is None and not opts.urn:
-                raise TypeError("Missing required property 'environment'")
+            __props__.__dict__["enable_hcl_output_for_data_source"] = pulumi.Output.from_input(enable_hcl_output_for_data_source).apply(pulumi.runtime.to_json) if enable_hcl_output_for_data_source is not None else None
+            __props__.__dict__["endpoints"] = pulumi.Output.from_input(endpoints).apply(pulumi.runtime.to_json) if endpoints is not None else None
             __props__.__dict__["environment"] = environment
             __props__.__dict__["oidc_request_token"] = oidc_request_token
             __props__.__dict__["oidc_request_url"] = oidc_request_url
@@ -605,12 +705,29 @@ class Provider(pulumi.ProviderResource):
         return pulumi.get(self, "client_id")
 
     @property
+    @pulumi.getter(name="clientIdFilePath")
+    def client_id_file_path(self) -> pulumi.Output[Optional[str]]:
+        """
+        The path to a file containing the Client ID which should be used.
+        """
+        return pulumi.get(self, "client_id_file_path")
+
+    @property
     @pulumi.getter(name="clientSecret")
     def client_secret(self) -> pulumi.Output[Optional[str]]:
         """
         The Client Secret which should be used. For use When authenticating as a Service Principal using a Client Secret.
         """
         return pulumi.get(self, "client_secret")
+
+    @property
+    @pulumi.getter(name="clientSecretFilePath")
+    def client_secret_file_path(self) -> pulumi.Output[Optional[str]]:
+        """
+        The path to a file containing the Client Secret which should be used. For use When authenticating as a Service Principal
+        using a Client Secret.
+        """
+        return pulumi.get(self, "client_secret_file_path")
 
     @property
     @pulumi.getter(name="customCorrelationRequestId")
@@ -623,28 +740,40 @@ class Provider(pulumi.ProviderResource):
     @property
     @pulumi.getter(name="defaultLocation")
     def default_location(self) -> pulumi.Output[Optional[str]]:
+        """
+        The default location which should be used for resources.
+        """
         return pulumi.get(self, "default_location")
 
     @property
     @pulumi.getter(name="defaultName")
     def default_name(self) -> pulumi.Output[Optional[str]]:
+        """
+        The default name which should be used for resources.
+        """
         return pulumi.get(self, "default_name")
 
     @property
     @pulumi.getter(name="defaultNamingPrefix")
-    @_utilities.deprecated("""It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead.""")
+    @_utilities.deprecated("""This field is deprecated and will be removed in a major release. Please specify the naming prefix and suffix in the resource's `name` field instead.""")
     def default_naming_prefix(self) -> pulumi.Output[Optional[str]]:
+        """
+        The default prefix which should be used for resources.
+        """
         return pulumi.get(self, "default_naming_prefix")
 
     @property
     @pulumi.getter(name="defaultNamingSuffix")
-    @_utilities.deprecated("""It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead.""")
+    @_utilities.deprecated("""This field is deprecated and will be removed in a major release. Please specify the naming prefix and suffix in the resource's `name` field instead.""")
     def default_naming_suffix(self) -> pulumi.Output[Optional[str]]:
+        """
+        The default suffix which should be used for resources.
+        """
         return pulumi.get(self, "default_naming_suffix")
 
     @property
     @pulumi.getter
-    def environment(self) -> pulumi.Output[str]:
+    def environment(self) -> pulumi.Output[Optional[str]]:
         """
         The Cloud Environment which should be used. Possible values are public, usgovernment and china. Defaults to public.
         """

@@ -60,6 +60,7 @@ import (
 // | Microsoft.Purview/accounts/Scanning/integrationruntimes | /integrationruntimes/{integrationRuntimeName} | {accountName}.purview.azure.com/scan                                                        |
 // | Microsoft.Purview/accounts/Scanning/managedvirtualnetworks/managedprivateendpoints | /managedvirtualnetworks/{managedVirtualNetworkName}/managedprivateendpoints/{managedPrivateEndpointName} | {accountName}.purview.azure.com/scan/managedvirtualnetworks/{managedVirtualNetworkName}     |
 // | Microsoft.Purview/accounts/Workflow/workflows | /workflows/{workflowId} | {accountName}.purview.azure.com                                                             |
+// | Microsoft.Synapse/workspaces/databases | /databases/{databaseName} | {workspaceName}.dev.azuresynapse.net                                                        |
 // | Microsoft.Synapse/workspaces/dataflows | /dataflows/{dataFlowName} | {workspaceName}.dev.azuresynapse.net                                                        |
 // | Microsoft.Synapse/workspaces/datasets | /datasets/{datasetName} | {workspaceName}.dev.azuresynapse.net                                                        |
 // | Microsoft.Synapse/workspaces/kqlScripts | /kqlScripts/{kqlScriptName} | {workspaceName}.dev.azuresynapse.net                                                        |
@@ -77,24 +78,26 @@ import (
 type DataPlaneResource struct {
 	pulumi.CustomResourceState
 
-	// A JSON object that contains the request body used to create and update data plane resource.
-	Body pulumi.StringPtrOutput `pulumi:"body"`
+	// A dynamic attribute that contains the request body used to create and update data plane resource.
+	Body pulumi.AnyOutput `pulumi:"body"`
 	// Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.
-	IgnoreCasing pulumi.BoolPtrOutput `pulumi:"ignoreCasing"`
+	IgnoreCasing pulumi.BoolOutput `pulumi:"ignoreCasing"`
 	// Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.
-	IgnoreMissingProperty pulumi.BoolPtrOutput `pulumi:"ignoreMissingProperty"`
+	// It's recommend to enable this option when some sensitive properties are not returned in response body, instead of setting them in `lifecycle.ignore_changes` because it will make the sensitive fields unable to update.
+	IgnoreMissingProperty pulumi.BoolOutput `pulumi:"ignoreMissingProperty"`
 	// A list of ARM resource IDs which are used to avoid create/modify/delete azapi resources at the same time.
 	Locks pulumi.StringArrayOutput `pulumi:"locks"`
 	// Specifies the name of the azure resource. Changing this forces a new resource to be created.
 	Name pulumi.StringOutput `pulumi:"name"`
-	// The output json containing the properties specified in `responseExportValues`. Here're some examples to decode json and extract the value.
-	Output pulumi.StringOutput `pulumi:"output"`
+	// The output HCL object containing the properties specified in `responseExportValues`. Here are some examples to use the values.
+	Output pulumi.AnyOutput `pulumi:"output"`
 	// The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created.
 	ParentId pulumi.StringOutput `pulumi:"parentId"`
 	// A list of path that needs to be exported from response body.
 	// Setting it to `["*"]` will export the full response body.
-	// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-	ResponseExportValues pulumi.StringArrayOutput `pulumi:"responseExportValues"`
+	// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following HCL object to computed property `output`.
+	ResponseExportValues pulumi.StringArrayOutput           `pulumi:"responseExportValues"`
+	Timeouts             DataPlaneResourceTimeoutsPtrOutput `pulumi:"timeouts"`
 	// It is in a format like `<resource-type>@<api-version>`. `<api-version>` is version of the API used to manage this azure data plane resource.
 	//
 	// > **Note** For the available resource types and parent IDs, please refer to the `Available Resources` section below.
@@ -137,24 +140,26 @@ func GetDataPlaneResource(ctx *pulumi.Context,
 
 // Input properties used for looking up and filtering DataPlaneResource resources.
 type dataPlaneResourceState struct {
-	// A JSON object that contains the request body used to create and update data plane resource.
-	Body *string `pulumi:"body"`
+	// A dynamic attribute that contains the request body used to create and update data plane resource.
+	Body interface{} `pulumi:"body"`
 	// Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.
 	IgnoreCasing *bool `pulumi:"ignoreCasing"`
 	// Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.
+	// It's recommend to enable this option when some sensitive properties are not returned in response body, instead of setting them in `lifecycle.ignore_changes` because it will make the sensitive fields unable to update.
 	IgnoreMissingProperty *bool `pulumi:"ignoreMissingProperty"`
 	// A list of ARM resource IDs which are used to avoid create/modify/delete azapi resources at the same time.
 	Locks []string `pulumi:"locks"`
 	// Specifies the name of the azure resource. Changing this forces a new resource to be created.
 	Name *string `pulumi:"name"`
-	// The output json containing the properties specified in `responseExportValues`. Here're some examples to decode json and extract the value.
-	Output *string `pulumi:"output"`
+	// The output HCL object containing the properties specified in `responseExportValues`. Here are some examples to use the values.
+	Output interface{} `pulumi:"output"`
 	// The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created.
 	ParentId *string `pulumi:"parentId"`
 	// A list of path that needs to be exported from response body.
 	// Setting it to `["*"]` will export the full response body.
-	// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-	ResponseExportValues []string `pulumi:"responseExportValues"`
+	// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following HCL object to computed property `output`.
+	ResponseExportValues []string                   `pulumi:"responseExportValues"`
+	Timeouts             *DataPlaneResourceTimeouts `pulumi:"timeouts"`
 	// It is in a format like `<resource-type>@<api-version>`. `<api-version>` is version of the API used to manage this azure data plane resource.
 	//
 	// > **Note** For the available resource types and parent IDs, please refer to the `Available Resources` section below.
@@ -162,24 +167,26 @@ type dataPlaneResourceState struct {
 }
 
 type DataPlaneResourceState struct {
-	// A JSON object that contains the request body used to create and update data plane resource.
-	Body pulumi.StringPtrInput
+	// A dynamic attribute that contains the request body used to create and update data plane resource.
+	Body pulumi.Input
 	// Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.
 	IgnoreCasing pulumi.BoolPtrInput
 	// Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.
+	// It's recommend to enable this option when some sensitive properties are not returned in response body, instead of setting them in `lifecycle.ignore_changes` because it will make the sensitive fields unable to update.
 	IgnoreMissingProperty pulumi.BoolPtrInput
 	// A list of ARM resource IDs which are used to avoid create/modify/delete azapi resources at the same time.
 	Locks pulumi.StringArrayInput
 	// Specifies the name of the azure resource. Changing this forces a new resource to be created.
 	Name pulumi.StringPtrInput
-	// The output json containing the properties specified in `responseExportValues`. Here're some examples to decode json and extract the value.
-	Output pulumi.StringPtrInput
+	// The output HCL object containing the properties specified in `responseExportValues`. Here are some examples to use the values.
+	Output pulumi.Input
 	// The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created.
 	ParentId pulumi.StringPtrInput
 	// A list of path that needs to be exported from response body.
 	// Setting it to `["*"]` will export the full response body.
-	// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
+	// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following HCL object to computed property `output`.
 	ResponseExportValues pulumi.StringArrayInput
+	Timeouts             DataPlaneResourceTimeoutsPtrInput
 	// It is in a format like `<resource-type>@<api-version>`. `<api-version>` is version of the API used to manage this azure data plane resource.
 	//
 	// > **Note** For the available resource types and parent IDs, please refer to the `Available Resources` section below.
@@ -191,11 +198,12 @@ func (DataPlaneResourceState) ElementType() reflect.Type {
 }
 
 type dataPlaneResourceArgs struct {
-	// A JSON object that contains the request body used to create and update data plane resource.
-	Body *string `pulumi:"body"`
+	// A dynamic attribute that contains the request body used to create and update data plane resource.
+	Body interface{} `pulumi:"body"`
 	// Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.
 	IgnoreCasing *bool `pulumi:"ignoreCasing"`
 	// Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.
+	// It's recommend to enable this option when some sensitive properties are not returned in response body, instead of setting them in `lifecycle.ignore_changes` because it will make the sensitive fields unable to update.
 	IgnoreMissingProperty *bool `pulumi:"ignoreMissingProperty"`
 	// A list of ARM resource IDs which are used to avoid create/modify/delete azapi resources at the same time.
 	Locks []string `pulumi:"locks"`
@@ -205,8 +213,9 @@ type dataPlaneResourceArgs struct {
 	ParentId string `pulumi:"parentId"`
 	// A list of path that needs to be exported from response body.
 	// Setting it to `["*"]` will export the full response body.
-	// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-	ResponseExportValues []string `pulumi:"responseExportValues"`
+	// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following HCL object to computed property `output`.
+	ResponseExportValues []string                   `pulumi:"responseExportValues"`
+	Timeouts             *DataPlaneResourceTimeouts `pulumi:"timeouts"`
 	// It is in a format like `<resource-type>@<api-version>`. `<api-version>` is version of the API used to manage this azure data plane resource.
 	//
 	// > **Note** For the available resource types and parent IDs, please refer to the `Available Resources` section below.
@@ -215,11 +224,12 @@ type dataPlaneResourceArgs struct {
 
 // The set of arguments for constructing a DataPlaneResource resource.
 type DataPlaneResourceArgs struct {
-	// A JSON object that contains the request body used to create and update data plane resource.
-	Body pulumi.StringPtrInput
+	// A dynamic attribute that contains the request body used to create and update data plane resource.
+	Body pulumi.Input
 	// Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.
 	IgnoreCasing pulumi.BoolPtrInput
 	// Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.
+	// It's recommend to enable this option when some sensitive properties are not returned in response body, instead of setting them in `lifecycle.ignore_changes` because it will make the sensitive fields unable to update.
 	IgnoreMissingProperty pulumi.BoolPtrInput
 	// A list of ARM resource IDs which are used to avoid create/modify/delete azapi resources at the same time.
 	Locks pulumi.StringArrayInput
@@ -229,8 +239,9 @@ type DataPlaneResourceArgs struct {
 	ParentId pulumi.StringInput
 	// A list of path that needs to be exported from response body.
 	// Setting it to `["*"]` will export the full response body.
-	// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
+	// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following HCL object to computed property `output`.
 	ResponseExportValues pulumi.StringArrayInput
+	Timeouts             DataPlaneResourceTimeoutsPtrInput
 	// It is in a format like `<resource-type>@<api-version>`. `<api-version>` is version of the API used to manage this azure data plane resource.
 	//
 	// > **Note** For the available resource types and parent IDs, please refer to the `Available Resources` section below.
@@ -324,19 +335,20 @@ func (o DataPlaneResourceOutput) ToDataPlaneResourceOutputWithContext(ctx contex
 	return o
 }
 
-// A JSON object that contains the request body used to create and update data plane resource.
-func (o DataPlaneResourceOutput) Body() pulumi.StringPtrOutput {
-	return o.ApplyT(func(v *DataPlaneResource) pulumi.StringPtrOutput { return v.Body }).(pulumi.StringPtrOutput)
+// A dynamic attribute that contains the request body used to create and update data plane resource.
+func (o DataPlaneResourceOutput) Body() pulumi.AnyOutput {
+	return o.ApplyT(func(v *DataPlaneResource) pulumi.AnyOutput { return v.Body }).(pulumi.AnyOutput)
 }
 
 // Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.
-func (o DataPlaneResourceOutput) IgnoreCasing() pulumi.BoolPtrOutput {
-	return o.ApplyT(func(v *DataPlaneResource) pulumi.BoolPtrOutput { return v.IgnoreCasing }).(pulumi.BoolPtrOutput)
+func (o DataPlaneResourceOutput) IgnoreCasing() pulumi.BoolOutput {
+	return o.ApplyT(func(v *DataPlaneResource) pulumi.BoolOutput { return v.IgnoreCasing }).(pulumi.BoolOutput)
 }
 
 // Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.
-func (o DataPlaneResourceOutput) IgnoreMissingProperty() pulumi.BoolPtrOutput {
-	return o.ApplyT(func(v *DataPlaneResource) pulumi.BoolPtrOutput { return v.IgnoreMissingProperty }).(pulumi.BoolPtrOutput)
+// It's recommend to enable this option when some sensitive properties are not returned in response body, instead of setting them in `lifecycle.ignore_changes` because it will make the sensitive fields unable to update.
+func (o DataPlaneResourceOutput) IgnoreMissingProperty() pulumi.BoolOutput {
+	return o.ApplyT(func(v *DataPlaneResource) pulumi.BoolOutput { return v.IgnoreMissingProperty }).(pulumi.BoolOutput)
 }
 
 // A list of ARM resource IDs which are used to avoid create/modify/delete azapi resources at the same time.
@@ -349,9 +361,9 @@ func (o DataPlaneResourceOutput) Name() pulumi.StringOutput {
 	return o.ApplyT(func(v *DataPlaneResource) pulumi.StringOutput { return v.Name }).(pulumi.StringOutput)
 }
 
-// The output json containing the properties specified in `responseExportValues`. Here're some examples to decode json and extract the value.
-func (o DataPlaneResourceOutput) Output() pulumi.StringOutput {
-	return o.ApplyT(func(v *DataPlaneResource) pulumi.StringOutput { return v.Output }).(pulumi.StringOutput)
+// The output HCL object containing the properties specified in `responseExportValues`. Here are some examples to use the values.
+func (o DataPlaneResourceOutput) Output() pulumi.AnyOutput {
+	return o.ApplyT(func(v *DataPlaneResource) pulumi.AnyOutput { return v.Output }).(pulumi.AnyOutput)
 }
 
 // The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created.
@@ -361,9 +373,13 @@ func (o DataPlaneResourceOutput) ParentId() pulumi.StringOutput {
 
 // A list of path that needs to be exported from response body.
 // Setting it to `["*"]` will export the full response body.
-// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
+// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following HCL object to computed property `output`.
 func (o DataPlaneResourceOutput) ResponseExportValues() pulumi.StringArrayOutput {
 	return o.ApplyT(func(v *DataPlaneResource) pulumi.StringArrayOutput { return v.ResponseExportValues }).(pulumi.StringArrayOutput)
+}
+
+func (o DataPlaneResourceOutput) Timeouts() DataPlaneResourceTimeoutsPtrOutput {
+	return o.ApplyT(func(v *DataPlaneResource) DataPlaneResourceTimeoutsPtrOutput { return v.Timeouts }).(DataPlaneResourceTimeoutsPtrOutput)
 }
 
 // It is in a format like `<resource-type>@<api-version>`. `<api-version>` is version of the API used to manage this azure data plane resource.

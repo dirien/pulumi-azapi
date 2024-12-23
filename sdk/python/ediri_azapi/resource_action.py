@@ -4,10 +4,17 @@
 
 import copy
 import warnings
+import sys
 import pulumi
 import pulumi.runtime
 from typing import Any, Mapping, Optional, Sequence, Union, overload
+if sys.version_info >= (3, 11):
+    from typing import NotRequired, TypedDict, TypeAlias
+else:
+    from typing_extensions import NotRequired, TypedDict, TypeAlias
 from . import _utilities
+from . import outputs
+from ._inputs import *
 
 __all__ = ['ResourceActionArgs', 'ResourceAction']
 
@@ -17,10 +24,11 @@ class ResourceActionArgs:
                  resource_id: pulumi.Input[str],
                  type: pulumi.Input[str],
                  action: Optional[pulumi.Input[str]] = None,
-                 body: Optional[pulumi.Input[str]] = None,
+                 body: Optional[Any] = None,
                  locks: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]] = None,
                  method: Optional[pulumi.Input[str]] = None,
                  response_export_values: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]] = None,
+                 timeouts: Optional[pulumi.Input['ResourceActionTimeoutsArgs']] = None,
                  when: Optional[pulumi.Input[str]] = None):
         """
         The set of arguments for constructing a ResourceAction resource.
@@ -28,25 +36,25 @@ class ResourceActionArgs:
         :param pulumi.Input[str] type: It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
                `<api-version>` is version of the API used to manage this azure resource.
         :param pulumi.Input[str] action: The name of the resource action. It's also possible to make Http requests towards the resource ID if leave this field empty.
-        :param pulumi.Input[str] body: A JSON object that contains the request body.
+        :param Any body: A dynamic attribute that contains the request body.
         :param pulumi.Input[Sequence[pulumi.Input[str]]] locks: A list of ARM resource IDs which are used to avoid modify azapi resources at the same time.
         :param pulumi.Input[str] method: Specifies the Http method of the azure resource action. Allowed values are `POST`, `PATCH`, `PUT` and `DELETE`. Defaults to `POST`.
         :param pulumi.Input[Sequence[pulumi.Input[str]]] response_export_values: A list of path that needs to be exported from response body.
                Setting it to `["*"]` will export the full response body.
-               Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
+               Here's an example. If it sets to `["keys"]`, it will set the following HCL object to computed property `output`.
                
                ```
                {
-               "keys": [
+               keys = [
                {
-               "KeyName": "Primary",
-               "Permissions": "Full",
-               "Value": "nHGYNd******i4wdug=="
+               KeyName = "Primary"
+               Permissions = "Full"
+               Value = "nHGYNd******i4wdug=="
                },
                {
-               "KeyName": "Secondary",
-               "Permissions": "Full",
-               "Value": "6yoCad******SLzKzg=="
+               KeyName = "Secondary"
+               Permissions = "Full"
+               Value = "6yoCad******SLzKzg=="
                }
                ]
                }
@@ -65,6 +73,8 @@ class ResourceActionArgs:
             pulumi.set(__self__, "method", method)
         if response_export_values is not None:
             pulumi.set(__self__, "response_export_values", response_export_values)
+        if timeouts is not None:
+            pulumi.set(__self__, "timeouts", timeouts)
         if when is not None:
             pulumi.set(__self__, "when", when)
 
@@ -107,14 +117,14 @@ class ResourceActionArgs:
 
     @property
     @pulumi.getter
-    def body(self) -> Optional[pulumi.Input[str]]:
+    def body(self) -> Optional[Any]:
         """
-        A JSON object that contains the request body.
+        A dynamic attribute that contains the request body.
         """
         return pulumi.get(self, "body")
 
     @body.setter
-    def body(self, value: Optional[pulumi.Input[str]]):
+    def body(self, value: Optional[Any]):
         pulumi.set(self, "body", value)
 
     @property
@@ -147,20 +157,20 @@ class ResourceActionArgs:
         """
         A list of path that needs to be exported from response body.
         Setting it to `["*"]` will export the full response body.
-        Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
+        Here's an example. If it sets to `["keys"]`, it will set the following HCL object to computed property `output`.
 
         ```
         {
-        "keys": [
+        keys = [
         {
-        "KeyName": "Primary",
-        "Permissions": "Full",
-        "Value": "nHGYNd******i4wdug=="
+        KeyName = "Primary"
+        Permissions = "Full"
+        Value = "nHGYNd******i4wdug=="
         },
         {
-        "KeyName": "Secondary",
-        "Permissions": "Full",
-        "Value": "6yoCad******SLzKzg=="
+        KeyName = "Secondary"
+        Permissions = "Full"
+        Value = "6yoCad******SLzKzg=="
         }
         ]
         }
@@ -171,6 +181,15 @@ class ResourceActionArgs:
     @response_export_values.setter
     def response_export_values(self, value: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]]):
         pulumi.set(self, "response_export_values", value)
+
+    @property
+    @pulumi.getter
+    def timeouts(self) -> Optional[pulumi.Input['ResourceActionTimeoutsArgs']]:
+        return pulumi.get(self, "timeouts")
+
+    @timeouts.setter
+    def timeouts(self, value: Optional[pulumi.Input['ResourceActionTimeoutsArgs']]):
+        pulumi.set(self, "timeouts", value)
 
     @property
     @pulumi.getter
@@ -189,38 +208,39 @@ class ResourceActionArgs:
 class _ResourceActionState:
     def __init__(__self__, *,
                  action: Optional[pulumi.Input[str]] = None,
-                 body: Optional[pulumi.Input[str]] = None,
+                 body: Optional[Any] = None,
                  locks: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]] = None,
                  method: Optional[pulumi.Input[str]] = None,
-                 output: Optional[pulumi.Input[str]] = None,
+                 output: Optional[Any] = None,
                  resource_id: Optional[pulumi.Input[str]] = None,
                  response_export_values: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]] = None,
+                 timeouts: Optional[pulumi.Input['ResourceActionTimeoutsArgs']] = None,
                  type: Optional[pulumi.Input[str]] = None,
                  when: Optional[pulumi.Input[str]] = None):
         """
         Input properties used for looking up and filtering ResourceAction resources.
         :param pulumi.Input[str] action: The name of the resource action. It's also possible to make Http requests towards the resource ID if leave this field empty.
-        :param pulumi.Input[str] body: A JSON object that contains the request body.
+        :param Any body: A dynamic attribute that contains the request body.
         :param pulumi.Input[Sequence[pulumi.Input[str]]] locks: A list of ARM resource IDs which are used to avoid modify azapi resources at the same time.
         :param pulumi.Input[str] method: Specifies the Http method of the azure resource action. Allowed values are `POST`, `PATCH`, `PUT` and `DELETE`. Defaults to `POST`.
-        :param pulumi.Input[str] output: The output json containing the properties specified in `response_export_values`. Here are some examples to decode json and extract the value.
+        :param Any output: The HCL object containing the properties specified in `response_export_values`. Here are some examples to use the values.
         :param pulumi.Input[str] resource_id: The ID of an existing azure source.
         :param pulumi.Input[Sequence[pulumi.Input[str]]] response_export_values: A list of path that needs to be exported from response body.
                Setting it to `["*"]` will export the full response body.
-               Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
+               Here's an example. If it sets to `["keys"]`, it will set the following HCL object to computed property `output`.
                
                ```
                {
-               "keys": [
+               keys = [
                {
-               "KeyName": "Primary",
-               "Permissions": "Full",
-               "Value": "nHGYNd******i4wdug=="
+               KeyName = "Primary"
+               Permissions = "Full"
+               Value = "nHGYNd******i4wdug=="
                },
                {
-               "KeyName": "Secondary",
-               "Permissions": "Full",
-               "Value": "6yoCad******SLzKzg=="
+               KeyName = "Secondary"
+               Permissions = "Full"
+               Value = "6yoCad******SLzKzg=="
                }
                ]
                }
@@ -243,6 +263,8 @@ class _ResourceActionState:
             pulumi.set(__self__, "resource_id", resource_id)
         if response_export_values is not None:
             pulumi.set(__self__, "response_export_values", response_export_values)
+        if timeouts is not None:
+            pulumi.set(__self__, "timeouts", timeouts)
         if type is not None:
             pulumi.set(__self__, "type", type)
         if when is not None:
@@ -262,14 +284,14 @@ class _ResourceActionState:
 
     @property
     @pulumi.getter
-    def body(self) -> Optional[pulumi.Input[str]]:
+    def body(self) -> Optional[Any]:
         """
-        A JSON object that contains the request body.
+        A dynamic attribute that contains the request body.
         """
         return pulumi.get(self, "body")
 
     @body.setter
-    def body(self, value: Optional[pulumi.Input[str]]):
+    def body(self, value: Optional[Any]):
         pulumi.set(self, "body", value)
 
     @property
@@ -298,14 +320,14 @@ class _ResourceActionState:
 
     @property
     @pulumi.getter
-    def output(self) -> Optional[pulumi.Input[str]]:
+    def output(self) -> Optional[Any]:
         """
-        The output json containing the properties specified in `response_export_values`. Here are some examples to decode json and extract the value.
+        The HCL object containing the properties specified in `response_export_values`. Here are some examples to use the values.
         """
         return pulumi.get(self, "output")
 
     @output.setter
-    def output(self, value: Optional[pulumi.Input[str]]):
+    def output(self, value: Optional[Any]):
         pulumi.set(self, "output", value)
 
     @property
@@ -326,20 +348,20 @@ class _ResourceActionState:
         """
         A list of path that needs to be exported from response body.
         Setting it to `["*"]` will export the full response body.
-        Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
+        Here's an example. If it sets to `["keys"]`, it will set the following HCL object to computed property `output`.
 
         ```
         {
-        "keys": [
+        keys = [
         {
-        "KeyName": "Primary",
-        "Permissions": "Full",
-        "Value": "nHGYNd******i4wdug=="
+        KeyName = "Primary"
+        Permissions = "Full"
+        Value = "nHGYNd******i4wdug=="
         },
         {
-        "KeyName": "Secondary",
-        "Permissions": "Full",
-        "Value": "6yoCad******SLzKzg=="
+        KeyName = "Secondary"
+        Permissions = "Full"
+        Value = "6yoCad******SLzKzg=="
         }
         ]
         }
@@ -350,6 +372,15 @@ class _ResourceActionState:
     @response_export_values.setter
     def response_export_values(self, value: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]]):
         pulumi.set(self, "response_export_values", value)
+
+    @property
+    @pulumi.getter
+    def timeouts(self) -> Optional[pulumi.Input['ResourceActionTimeoutsArgs']]:
+        return pulumi.get(self, "timeouts")
+
+    @timeouts.setter
+    def timeouts(self, value: Optional[pulumi.Input['ResourceActionTimeoutsArgs']]):
+        pulumi.set(self, "timeouts", value)
 
     @property
     @pulumi.getter
@@ -383,11 +414,12 @@ class ResourceAction(pulumi.CustomResource):
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
                  action: Optional[pulumi.Input[str]] = None,
-                 body: Optional[pulumi.Input[str]] = None,
+                 body: Optional[Any] = None,
                  locks: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]] = None,
                  method: Optional[pulumi.Input[str]] = None,
                  resource_id: Optional[pulumi.Input[str]] = None,
                  response_export_values: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]] = None,
+                 timeouts: Optional[pulumi.Input[Union['ResourceActionTimeoutsArgs', 'ResourceActionTimeoutsArgsDict']]] = None,
                  type: Optional[pulumi.Input[str]] = None,
                  when: Optional[pulumi.Input[str]] = None,
                  __props__=None):
@@ -407,26 +439,26 @@ class ResourceAction(pulumi.CustomResource):
         :param str resource_name: The name of the resource.
         :param pulumi.ResourceOptions opts: Options for the resource.
         :param pulumi.Input[str] action: The name of the resource action. It's also possible to make Http requests towards the resource ID if leave this field empty.
-        :param pulumi.Input[str] body: A JSON object that contains the request body.
+        :param Any body: A dynamic attribute that contains the request body.
         :param pulumi.Input[Sequence[pulumi.Input[str]]] locks: A list of ARM resource IDs which are used to avoid modify azapi resources at the same time.
         :param pulumi.Input[str] method: Specifies the Http method of the azure resource action. Allowed values are `POST`, `PATCH`, `PUT` and `DELETE`. Defaults to `POST`.
         :param pulumi.Input[str] resource_id: The ID of an existing azure source.
         :param pulumi.Input[Sequence[pulumi.Input[str]]] response_export_values: A list of path that needs to be exported from response body.
                Setting it to `["*"]` will export the full response body.
-               Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
+               Here's an example. If it sets to `["keys"]`, it will set the following HCL object to computed property `output`.
                
                ```
                {
-               "keys": [
+               keys = [
                {
-               "KeyName": "Primary",
-               "Permissions": "Full",
-               "Value": "nHGYNd******i4wdug=="
+               KeyName = "Primary"
+               Permissions = "Full"
+               Value = "nHGYNd******i4wdug=="
                },
                {
-               "KeyName": "Secondary",
-               "Permissions": "Full",
-               "Value": "6yoCad******SLzKzg=="
+               KeyName = "Secondary"
+               Permissions = "Full"
+               Value = "6yoCad******SLzKzg=="
                }
                ]
                }
@@ -470,11 +502,12 @@ class ResourceAction(pulumi.CustomResource):
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
                  action: Optional[pulumi.Input[str]] = None,
-                 body: Optional[pulumi.Input[str]] = None,
+                 body: Optional[Any] = None,
                  locks: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]] = None,
                  method: Optional[pulumi.Input[str]] = None,
                  resource_id: Optional[pulumi.Input[str]] = None,
                  response_export_values: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]] = None,
+                 timeouts: Optional[pulumi.Input[Union['ResourceActionTimeoutsArgs', 'ResourceActionTimeoutsArgsDict']]] = None,
                  type: Optional[pulumi.Input[str]] = None,
                  when: Optional[pulumi.Input[str]] = None,
                  __props__=None):
@@ -494,6 +527,7 @@ class ResourceAction(pulumi.CustomResource):
                 raise TypeError("Missing required property 'resource_id'")
             __props__.__dict__["resource_id"] = resource_id
             __props__.__dict__["response_export_values"] = response_export_values
+            __props__.__dict__["timeouts"] = timeouts
             if type is None and not opts.urn:
                 raise TypeError("Missing required property 'type'")
             __props__.__dict__["type"] = type
@@ -510,12 +544,13 @@ class ResourceAction(pulumi.CustomResource):
             id: pulumi.Input[str],
             opts: Optional[pulumi.ResourceOptions] = None,
             action: Optional[pulumi.Input[str]] = None,
-            body: Optional[pulumi.Input[str]] = None,
+            body: Optional[Any] = None,
             locks: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]] = None,
             method: Optional[pulumi.Input[str]] = None,
-            output: Optional[pulumi.Input[str]] = None,
+            output: Optional[Any] = None,
             resource_id: Optional[pulumi.Input[str]] = None,
             response_export_values: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]] = None,
+            timeouts: Optional[pulumi.Input[Union['ResourceActionTimeoutsArgs', 'ResourceActionTimeoutsArgsDict']]] = None,
             type: Optional[pulumi.Input[str]] = None,
             when: Optional[pulumi.Input[str]] = None) -> 'ResourceAction':
         """
@@ -526,27 +561,27 @@ class ResourceAction(pulumi.CustomResource):
         :param pulumi.Input[str] id: The unique provider ID of the resource to lookup.
         :param pulumi.ResourceOptions opts: Options for the resource.
         :param pulumi.Input[str] action: The name of the resource action. It's also possible to make Http requests towards the resource ID if leave this field empty.
-        :param pulumi.Input[str] body: A JSON object that contains the request body.
+        :param Any body: A dynamic attribute that contains the request body.
         :param pulumi.Input[Sequence[pulumi.Input[str]]] locks: A list of ARM resource IDs which are used to avoid modify azapi resources at the same time.
         :param pulumi.Input[str] method: Specifies the Http method of the azure resource action. Allowed values are `POST`, `PATCH`, `PUT` and `DELETE`. Defaults to `POST`.
-        :param pulumi.Input[str] output: The output json containing the properties specified in `response_export_values`. Here are some examples to decode json and extract the value.
+        :param Any output: The HCL object containing the properties specified in `response_export_values`. Here are some examples to use the values.
         :param pulumi.Input[str] resource_id: The ID of an existing azure source.
         :param pulumi.Input[Sequence[pulumi.Input[str]]] response_export_values: A list of path that needs to be exported from response body.
                Setting it to `["*"]` will export the full response body.
-               Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
+               Here's an example. If it sets to `["keys"]`, it will set the following HCL object to computed property `output`.
                
                ```
                {
-               "keys": [
+               keys = [
                {
-               "KeyName": "Primary",
-               "Permissions": "Full",
-               "Value": "nHGYNd******i4wdug=="
+               KeyName = "Primary"
+               Permissions = "Full"
+               Value = "nHGYNd******i4wdug=="
                },
                {
-               "KeyName": "Secondary",
-               "Permissions": "Full",
-               "Value": "6yoCad******SLzKzg=="
+               KeyName = "Secondary"
+               Permissions = "Full"
+               Value = "6yoCad******SLzKzg=="
                }
                ]
                }
@@ -566,6 +601,7 @@ class ResourceAction(pulumi.CustomResource):
         __props__.__dict__["output"] = output
         __props__.__dict__["resource_id"] = resource_id
         __props__.__dict__["response_export_values"] = response_export_values
+        __props__.__dict__["timeouts"] = timeouts
         __props__.__dict__["type"] = type
         __props__.__dict__["when"] = when
         return ResourceAction(resource_name, opts=opts, __props__=__props__)
@@ -580,9 +616,9 @@ class ResourceAction(pulumi.CustomResource):
 
     @property
     @pulumi.getter
-    def body(self) -> pulumi.Output[Optional[str]]:
+    def body(self) -> pulumi.Output[Optional[Any]]:
         """
-        A JSON object that contains the request body.
+        A dynamic attribute that contains the request body.
         """
         return pulumi.get(self, "body")
 
@@ -596,7 +632,7 @@ class ResourceAction(pulumi.CustomResource):
 
     @property
     @pulumi.getter
-    def method(self) -> pulumi.Output[Optional[str]]:
+    def method(self) -> pulumi.Output[str]:
         """
         Specifies the Http method of the azure resource action. Allowed values are `POST`, `PATCH`, `PUT` and `DELETE`. Defaults to `POST`.
         """
@@ -604,9 +640,9 @@ class ResourceAction(pulumi.CustomResource):
 
     @property
     @pulumi.getter
-    def output(self) -> pulumi.Output[str]:
+    def output(self) -> pulumi.Output[Any]:
         """
-        The output json containing the properties specified in `response_export_values`. Here are some examples to decode json and extract the value.
+        The HCL object containing the properties specified in `response_export_values`. Here are some examples to use the values.
         """
         return pulumi.get(self, "output")
 
@@ -624,26 +660,31 @@ class ResourceAction(pulumi.CustomResource):
         """
         A list of path that needs to be exported from response body.
         Setting it to `["*"]` will export the full response body.
-        Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
+        Here's an example. If it sets to `["keys"]`, it will set the following HCL object to computed property `output`.
 
         ```
         {
-        "keys": [
+        keys = [
         {
-        "KeyName": "Primary",
-        "Permissions": "Full",
-        "Value": "nHGYNd******i4wdug=="
+        KeyName = "Primary"
+        Permissions = "Full"
+        Value = "nHGYNd******i4wdug=="
         },
         {
-        "KeyName": "Secondary",
-        "Permissions": "Full",
-        "Value": "6yoCad******SLzKzg=="
+        KeyName = "Secondary"
+        Permissions = "Full"
+        Value = "6yoCad******SLzKzg=="
         }
         ]
         }
         ```
         """
         return pulumi.get(self, "response_export_values")
+
+    @property
+    @pulumi.getter
+    def timeouts(self) -> pulumi.Output[Optional['outputs.ResourceActionTimeouts']]:
+        return pulumi.get(self, "timeouts")
 
     @property
     @pulumi.getter
@@ -656,7 +697,7 @@ class ResourceAction(pulumi.CustomResource):
 
     @property
     @pulumi.getter
-    def when(self) -> pulumi.Output[Optional[str]]:
+    def when(self) -> pulumi.Output[str]:
         """
         When to perform the action, value must be one of: `apply`, `destroy`. Default is `apply`.
         """

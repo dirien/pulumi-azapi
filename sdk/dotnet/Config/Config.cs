@@ -33,6 +33,9 @@ namespace ediri.Azapi
         private static readonly global::Pulumi.Config __config = new global::Pulumi.Config("azapi");
 
         private static readonly __Value<ImmutableArray<string>> _auxiliaryTenantIds = new __Value<ImmutableArray<string>>(() => __config.GetObject<ImmutableArray<string>>("auxiliaryTenantIds"));
+        /// <summary>
+        /// The Auxiliary Tenant IDs which should be used.
+        /// </summary>
         public static ImmutableArray<string> AuxiliaryTenantIds
         {
             get => _auxiliaryTenantIds.Get();
@@ -71,6 +74,16 @@ namespace ediri.Azapi
             set => _clientId.Set(value);
         }
 
+        private static readonly __Value<string?> _clientIdFilePath = new __Value<string?>(() => __config.Get("clientIdFilePath"));
+        /// <summary>
+        /// The path to a file containing the Client ID which should be used.
+        /// </summary>
+        public static string? ClientIdFilePath
+        {
+            get => _clientIdFilePath.Get();
+            set => _clientIdFilePath.Set(value);
+        }
+
         private static readonly __Value<string?> _clientSecret = new __Value<string?>(() => __config.Get("clientSecret"));
         /// <summary>
         /// The Client Secret which should be used. For use When authenticating as a Service Principal using a Client Secret.
@@ -79,6 +92,17 @@ namespace ediri.Azapi
         {
             get => _clientSecret.Get();
             set => _clientSecret.Set(value);
+        }
+
+        private static readonly __Value<string?> _clientSecretFilePath = new __Value<string?>(() => __config.Get("clientSecretFilePath"));
+        /// <summary>
+        /// The path to a file containing the Client Secret which should be used. For use When authenticating as a Service Principal
+        /// using a Client Secret.
+        /// </summary>
+        public static string? ClientSecretFilePath
+        {
+            get => _clientSecretFilePath.Get();
+            set => _clientSecretFilePath.Set(value);
         }
 
         private static readonly __Value<string?> _customCorrelationRequestId = new __Value<string?>(() => __config.Get("customCorrelationRequestId"));
@@ -92,6 +116,9 @@ namespace ediri.Azapi
         }
 
         private static readonly __Value<string?> _defaultLocation = new __Value<string?>(() => __config.Get("defaultLocation"));
+        /// <summary>
+        /// The default location which should be used for resources.
+        /// </summary>
         public static string? DefaultLocation
         {
             get => _defaultLocation.Get();
@@ -99,6 +126,9 @@ namespace ediri.Azapi
         }
 
         private static readonly __Value<string?> _defaultName = new __Value<string?>(() => __config.Get("defaultName"));
+        /// <summary>
+        /// The default name which should be used for resources.
+        /// </summary>
         public static string? DefaultName
         {
             get => _defaultName.Get();
@@ -106,6 +136,9 @@ namespace ediri.Azapi
         }
 
         private static readonly __Value<string?> _defaultNamingPrefix = new __Value<string?>(() => __config.Get("defaultNamingPrefix"));
+        /// <summary>
+        /// The default prefix which should be used for resources.
+        /// </summary>
         public static string? DefaultNamingPrefix
         {
             get => _defaultNamingPrefix.Get();
@@ -113,6 +146,9 @@ namespace ediri.Azapi
         }
 
         private static readonly __Value<string?> _defaultNamingSuffix = new __Value<string?>(() => __config.Get("defaultNamingSuffix"));
+        /// <summary>
+        /// The default suffix which should be used for resources.
+        /// </summary>
         public static string? DefaultNamingSuffix
         {
             get => _defaultNamingSuffix.Get();
@@ -120,6 +156,9 @@ namespace ediri.Azapi
         }
 
         private static readonly __Value<ImmutableDictionary<string, string>?> _defaultTags = new __Value<ImmutableDictionary<string, string>?>(() => __config.GetObject<ImmutableDictionary<string, string>>("defaultTags"));
+        /// <summary>
+        /// The default tags which should be used for resources.
+        /// </summary>
         public static ImmutableDictionary<string, string>? DefaultTags
         {
             get => _defaultTags.Get();
@@ -143,11 +182,22 @@ namespace ediri.Azapi
             set => _disableTerraformPartnerId.Set(value);
         }
 
-        private static readonly __Value<ediri.Azapi.Config.Types.Endpoint?> _endpoint = new __Value<ediri.Azapi.Config.Types.Endpoint?>(() => __config.GetObject<ediri.Azapi.Config.Types.Endpoint>("endpoint"));
-        public static ediri.Azapi.Config.Types.Endpoint? Endpoint
+        private static readonly __Value<bool?> _enableHclOutputForDataSource = new __Value<bool?>(() => __config.GetBoolean("enableHclOutputForDataSource"));
+        /// <summary>
+        /// Enable HCL output for data sources. The default is false. When set to true, the provider will return HCL output for data
+        /// sources. When set to false, the provider will return JSON output for data sources.
+        /// </summary>
+        public static bool? EnableHclOutputForDataSource
         {
-            get => _endpoint.Get();
-            set => _endpoint.Set(value);
+            get => _enableHclOutputForDataSource.Get();
+            set => _enableHclOutputForDataSource.Set(value);
+        }
+
+        private static readonly __Value<ImmutableArray<ediri.Azapi.Config.Types.Endpoints>> _endpoints = new __Value<ImmutableArray<ediri.Azapi.Config.Types.Endpoints>>(() => __config.GetObject<ImmutableArray<ediri.Azapi.Config.Types.Endpoints>>("endpoints"));
+        public static ImmutableArray<ediri.Azapi.Config.Types.Endpoints> Endpoints
+        {
+            get => _endpoints.Get();
+            set => _endpoints.Set(value);
         }
 
         private static readonly __Value<string?> _environment = new __Value<string?>(() => __config.Get("environment"));
@@ -275,7 +325,7 @@ namespace ediri.Azapi
         public static class Types
         {
 
-             public class Endpoint
+             public class Endpoints
              {
             /// <summary>
             /// The Active Directory login endpoint which should be used.

@@ -34,16 +34,17 @@ func LookupResourceAction(ctx *pulumi.Context, args *LookupResourceActionArgs, o
 type LookupResourceActionArgs struct {
 	// The name of the resource action. It's also possible to make Http requests towards the resource ID if leave this field empty.
 	Action *string `pulumi:"action"`
-	// A JSON object that contains the request body.
-	Body *string `pulumi:"body"`
+	// A dynamic attribute that contains the request body.
+	Body interface{} `pulumi:"body"`
 	// Specifies the Http method of the azure resource action. Allowed values are `POST` and `GET`. Defaults to `POST`.
 	Method *string `pulumi:"method"`
 	// The ID of an existing azure source.
 	ResourceId *string `pulumi:"resourceId"`
 	// A list of path that needs to be exported from response body.
 	// Setting it to `["*"]` will export the full response body.
-	// Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
-	ResponseExportValues []string `pulumi:"responseExportValues"`
+	// Here's an example. If it sets to `["keys"]`, it will set the following HCL object to computed property `output`.
+	ResponseExportValues []string                   `pulumi:"responseExportValues"`
+	Timeouts             *GetResourceActionTimeouts `pulumi:"timeouts"`
 	// It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
 	// `<api-version>` is version of the API used to manage this azure resource.
 	Type string `pulumi:"type"`
@@ -51,28 +52,27 @@ type LookupResourceActionArgs struct {
 
 // A collection of values returned by getResourceAction.
 type LookupResourceActionResult struct {
-	Action *string `pulumi:"action"`
-	Body   *string `pulumi:"body"`
-	// The provider-assigned unique ID for this managed resource.
-	Id     string  `pulumi:"id"`
-	Method *string `pulumi:"method"`
-	// The output json containing the properties specified in `responseExportValues`. Here are some examples to decode json and extract the value.
-	Output               string   `pulumi:"output"`
-	ResourceId           *string  `pulumi:"resourceId"`
-	ResponseExportValues []string `pulumi:"responseExportValues"`
-	Type                 string   `pulumi:"type"`
+	Action *string     `pulumi:"action"`
+	Body   interface{} `pulumi:"body"`
+	// The ID of the azure resource action.
+	Id     string `pulumi:"id"`
+	Method string `pulumi:"method"`
+	// The output containing the properties specified in `responseExportValues`. It supports both JSON and HCL object. By default, it will be in JSON format.
+	// If specifying `enableHclOutputForDataSource` to `true` in the provider block, it will be in HCL format.
+	// Here are some examples to use the values in HCL format:
+	Output               interface{}                `pulumi:"output"`
+	ResourceId           *string                    `pulumi:"resourceId"`
+	ResponseExportValues []string                   `pulumi:"responseExportValues"`
+	Timeouts             *GetResourceActionTimeouts `pulumi:"timeouts"`
+	Type                 string                     `pulumi:"type"`
 }
 
 func LookupResourceActionOutput(ctx *pulumi.Context, args LookupResourceActionOutputArgs, opts ...pulumi.InvokeOption) LookupResourceActionResultOutput {
-	return pulumi.ToOutputWithContext(context.Background(), args).
-		ApplyT(func(v interface{}) (LookupResourceActionResult, error) {
+	return pulumi.ToOutputWithContext(ctx.Context(), args).
+		ApplyT(func(v interface{}) (LookupResourceActionResultOutput, error) {
 			args := v.(LookupResourceActionArgs)
-			r, err := LookupResourceAction(ctx, &args, opts...)
-			var s LookupResourceActionResult
-			if r != nil {
-				s = *r
-			}
-			return s, err
+			options := pulumi.InvokeOutputOptions{InvokeOptions: internal.PkgInvokeDefaultOpts(opts)}
+			return ctx.InvokeOutput("azapi:index/getResourceAction:getResourceAction", args, LookupResourceActionResultOutput{}, options).(LookupResourceActionResultOutput), nil
 		}).(LookupResourceActionResultOutput)
 }
 
@@ -80,16 +80,17 @@ func LookupResourceActionOutput(ctx *pulumi.Context, args LookupResourceActionOu
 type LookupResourceActionOutputArgs struct {
 	// The name of the resource action. It's also possible to make Http requests towards the resource ID if leave this field empty.
 	Action pulumi.StringPtrInput `pulumi:"action"`
-	// A JSON object that contains the request body.
-	Body pulumi.StringPtrInput `pulumi:"body"`
+	// A dynamic attribute that contains the request body.
+	Body pulumi.Input `pulumi:"body"`
 	// Specifies the Http method of the azure resource action. Allowed values are `POST` and `GET`. Defaults to `POST`.
 	Method pulumi.StringPtrInput `pulumi:"method"`
 	// The ID of an existing azure source.
 	ResourceId pulumi.StringPtrInput `pulumi:"resourceId"`
 	// A list of path that needs to be exported from response body.
 	// Setting it to `["*"]` will export the full response body.
-	// Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
-	ResponseExportValues pulumi.StringArrayInput `pulumi:"responseExportValues"`
+	// Here's an example. If it sets to `["keys"]`, it will set the following HCL object to computed property `output`.
+	ResponseExportValues pulumi.StringArrayInput           `pulumi:"responseExportValues"`
+	Timeouts             GetResourceActionTimeoutsPtrInput `pulumi:"timeouts"`
 	// It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
 	// `<api-version>` is version of the API used to manage this azure resource.
 	Type pulumi.StringInput `pulumi:"type"`
@@ -118,22 +119,24 @@ func (o LookupResourceActionResultOutput) Action() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v LookupResourceActionResult) *string { return v.Action }).(pulumi.StringPtrOutput)
 }
 
-func (o LookupResourceActionResultOutput) Body() pulumi.StringPtrOutput {
-	return o.ApplyT(func(v LookupResourceActionResult) *string { return v.Body }).(pulumi.StringPtrOutput)
+func (o LookupResourceActionResultOutput) Body() pulumi.AnyOutput {
+	return o.ApplyT(func(v LookupResourceActionResult) interface{} { return v.Body }).(pulumi.AnyOutput)
 }
 
-// The provider-assigned unique ID for this managed resource.
+// The ID of the azure resource action.
 func (o LookupResourceActionResultOutput) Id() pulumi.StringOutput {
 	return o.ApplyT(func(v LookupResourceActionResult) string { return v.Id }).(pulumi.StringOutput)
 }
 
-func (o LookupResourceActionResultOutput) Method() pulumi.StringPtrOutput {
-	return o.ApplyT(func(v LookupResourceActionResult) *string { return v.Method }).(pulumi.StringPtrOutput)
+func (o LookupResourceActionResultOutput) Method() pulumi.StringOutput {
+	return o.ApplyT(func(v LookupResourceActionResult) string { return v.Method }).(pulumi.StringOutput)
 }
 
-// The output json containing the properties specified in `responseExportValues`. Here are some examples to decode json and extract the value.
-func (o LookupResourceActionResultOutput) Output() pulumi.StringOutput {
-	return o.ApplyT(func(v LookupResourceActionResult) string { return v.Output }).(pulumi.StringOutput)
+// The output containing the properties specified in `responseExportValues`. It supports both JSON and HCL object. By default, it will be in JSON format.
+// If specifying `enableHclOutputForDataSource` to `true` in the provider block, it will be in HCL format.
+// Here are some examples to use the values in HCL format:
+func (o LookupResourceActionResultOutput) Output() pulumi.AnyOutput {
+	return o.ApplyT(func(v LookupResourceActionResult) interface{} { return v.Output }).(pulumi.AnyOutput)
 }
 
 func (o LookupResourceActionResultOutput) ResourceId() pulumi.StringPtrOutput {
@@ -142,6 +145,10 @@ func (o LookupResourceActionResultOutput) ResourceId() pulumi.StringPtrOutput {
 
 func (o LookupResourceActionResultOutput) ResponseExportValues() pulumi.StringArrayOutput {
 	return o.ApplyT(func(v LookupResourceActionResult) []string { return v.ResponseExportValues }).(pulumi.StringArrayOutput)
+}
+
+func (o LookupResourceActionResultOutput) Timeouts() GetResourceActionTimeoutsPtrOutput {
+	return o.ApplyT(func(v LookupResourceActionResult) *GetResourceActionTimeouts { return v.Timeouts }).(GetResourceActionTimeoutsPtrOutput)
 }
 
 func (o LookupResourceActionResultOutput) Type() pulumi.StringOutput {

@@ -33,10 +33,10 @@ namespace ediri.Azapi
         public Output<string?> Action { get; private set; } = null!;
 
         /// <summary>
-        /// A JSON object that contains the request body.
+        /// A dynamic attribute that contains the request body.
         /// </summary>
         [Output("body")]
-        public Output<string?> Body { get; private set; } = null!;
+        public Output<object?> Body { get; private set; } = null!;
 
         /// <summary>
         /// A list of ARM resource IDs which are used to avoid modify azapi resources at the same time.
@@ -48,13 +48,13 @@ namespace ediri.Azapi
         /// Specifies the Http method of the azure resource action. Allowed values are `POST`, `PATCH`, `PUT` and `DELETE`. Defaults to `POST`.
         /// </summary>
         [Output("method")]
-        public Output<string?> Method { get; private set; } = null!;
+        public Output<string> Method { get; private set; } = null!;
 
         /// <summary>
-        /// The output json containing the properties specified in `response_export_values`. Here are some examples to decode json and extract the value.
+        /// The HCL object containing the properties specified in `response_export_values`. Here are some examples to use the values.
         /// </summary>
         [Output("output")]
-        public Output<string> Output { get; private set; } = null!;
+        public Output<object> Output { get; private set; } = null!;
 
         /// <summary>
         /// The ID of an existing azure source.
@@ -65,20 +65,20 @@ namespace ediri.Azapi
         /// <summary>
         /// A list of path that needs to be exported from response body.
         /// Setting it to `["*"]` will export the full response body.
-        /// Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
+        /// Here's an example. If it sets to `["keys"]`, it will set the following HCL object to computed property `output`.
         /// 
         /// ```
         /// {
-        /// "keys": [
+        /// keys = [
         /// {
-        /// "KeyName": "Primary",
-        /// "Permissions": "Full",
-        /// "Value": "nHGYNd******i4wdug=="
+        /// KeyName = "Primary"
+        /// Permissions = "Full"
+        /// Value = "nHGYNd******i4wdug=="
         /// },
         /// {
-        /// "KeyName": "Secondary",
-        /// "Permissions": "Full",
-        /// "Value": "6yoCad******SLzKzg=="
+        /// KeyName = "Secondary"
+        /// Permissions = "Full"
+        /// Value = "6yoCad******SLzKzg=="
         /// }
         /// ]
         /// }
@@ -86,6 +86,9 @@ namespace ediri.Azapi
         /// </summary>
         [Output("responseExportValues")]
         public Output<ImmutableArray<string>> ResponseExportValues { get; private set; } = null!;
+
+        [Output("timeouts")]
+        public Output<Outputs.ResourceActionTimeouts?> Timeouts { get; private set; } = null!;
 
         /// <summary>
         /// It is in a format like `&lt;resource-type&gt;@&lt;api-version&gt;`. `&lt;resource-type&gt;` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
@@ -98,7 +101,7 @@ namespace ediri.Azapi
         /// When to perform the action, value must be one of: `apply`, `destroy`. Default is `apply`.
         /// </summary>
         [Output("when")]
-        public Output<string?> When { get; private set; } = null!;
+        public Output<string> When { get; private set; } = null!;
 
 
         /// <summary>
@@ -154,10 +157,10 @@ namespace ediri.Azapi
         public Input<string>? Action { get; set; }
 
         /// <summary>
-        /// A JSON object that contains the request body.
+        /// A dynamic attribute that contains the request body.
         /// </summary>
         [Input("body")]
-        public Input<string>? Body { get; set; }
+        public Input<object>? Body { get; set; }
 
         [Input("locks")]
         private InputList<string>? _locks;
@@ -189,20 +192,20 @@ namespace ediri.Azapi
         /// <summary>
         /// A list of path that needs to be exported from response body.
         /// Setting it to `["*"]` will export the full response body.
-        /// Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
+        /// Here's an example. If it sets to `["keys"]`, it will set the following HCL object to computed property `output`.
         /// 
         /// ```
         /// {
-        /// "keys": [
+        /// keys = [
         /// {
-        /// "KeyName": "Primary",
-        /// "Permissions": "Full",
-        /// "Value": "nHGYNd******i4wdug=="
+        /// KeyName = "Primary"
+        /// Permissions = "Full"
+        /// Value = "nHGYNd******i4wdug=="
         /// },
         /// {
-        /// "KeyName": "Secondary",
-        /// "Permissions": "Full",
-        /// "Value": "6yoCad******SLzKzg=="
+        /// KeyName = "Secondary"
+        /// Permissions = "Full"
+        /// Value = "6yoCad******SLzKzg=="
         /// }
         /// ]
         /// }
@@ -213,6 +216,9 @@ namespace ediri.Azapi
             get => _responseExportValues ?? (_responseExportValues = new InputList<string>());
             set => _responseExportValues = value;
         }
+
+        [Input("timeouts")]
+        public Input<Inputs.ResourceActionTimeoutsArgs>? Timeouts { get; set; }
 
         /// <summary>
         /// It is in a format like `&lt;resource-type&gt;@&lt;api-version&gt;`. `&lt;resource-type&gt;` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
@@ -242,10 +248,10 @@ namespace ediri.Azapi
         public Input<string>? Action { get; set; }
 
         /// <summary>
-        /// A JSON object that contains the request body.
+        /// A dynamic attribute that contains the request body.
         /// </summary>
         [Input("body")]
-        public Input<string>? Body { get; set; }
+        public Input<object>? Body { get; set; }
 
         [Input("locks")]
         private InputList<string>? _locks;
@@ -266,10 +272,10 @@ namespace ediri.Azapi
         public Input<string>? Method { get; set; }
 
         /// <summary>
-        /// The output json containing the properties specified in `response_export_values`. Here are some examples to decode json and extract the value.
+        /// The HCL object containing the properties specified in `response_export_values`. Here are some examples to use the values.
         /// </summary>
         [Input("output")]
-        public Input<string>? Output { get; set; }
+        public Input<object>? Output { get; set; }
 
         /// <summary>
         /// The ID of an existing azure source.
@@ -283,20 +289,20 @@ namespace ediri.Azapi
         /// <summary>
         /// A list of path that needs to be exported from response body.
         /// Setting it to `["*"]` will export the full response body.
-        /// Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
+        /// Here's an example. If it sets to `["keys"]`, it will set the following HCL object to computed property `output`.
         /// 
         /// ```
         /// {
-        /// "keys": [
+        /// keys = [
         /// {
-        /// "KeyName": "Primary",
-        /// "Permissions": "Full",
-        /// "Value": "nHGYNd******i4wdug=="
+        /// KeyName = "Primary"
+        /// Permissions = "Full"
+        /// Value = "nHGYNd******i4wdug=="
         /// },
         /// {
-        /// "KeyName": "Secondary",
-        /// "Permissions": "Full",
-        /// "Value": "6yoCad******SLzKzg=="
+        /// KeyName = "Secondary"
+        /// Permissions = "Full"
+        /// Value = "6yoCad******SLzKzg=="
         /// }
         /// ]
         /// }
@@ -307,6 +313,9 @@ namespace ediri.Azapi
             get => _responseExportValues ?? (_responseExportValues = new InputList<string>());
             set => _responseExportValues = value;
         }
+
+        [Input("timeouts")]
+        public Input<Inputs.ResourceActionTimeoutsGetArgs>? Timeouts { get; set; }
 
         /// <summary>
         /// It is in a format like `&lt;resource-type&gt;@&lt;api-version&gt;`. `&lt;resource-type&gt;` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.

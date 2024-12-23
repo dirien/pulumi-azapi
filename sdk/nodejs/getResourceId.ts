@@ -2,6 +2,8 @@
 // *** Do not edit by hand unless you're certain you know what you are doing! ***
 
 import * as pulumi from "@pulumi/pulumi";
+import * as inputs from "./types/input";
+import * as outputs from "./types/output";
 import * as utilities from "./utilities";
 
 /**
@@ -10,12 +12,12 @@ import * as utilities from "./utilities";
  * ## Example Usage
  */
 export function getResourceId(args: GetResourceIdArgs, opts?: pulumi.InvokeOptions): Promise<GetResourceIdResult> {
-
     opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts || {});
     return pulumi.runtime.invoke("azapi:index/getResourceId:getResourceId", {
         "name": args.name,
         "parentId": args.parentId,
         "resourceId": args.resourceId,
+        "timeouts": args.timeouts,
         "type": args.type,
     }, opts);
 }
@@ -45,6 +47,7 @@ export interface GetResourceIdArgs {
      * > **Note:** Configuring `name` and `parentId` is an alternative way to configure `resourceId`.
      */
     resourceId?: string;
+    timeouts?: inputs.GetResourceIdTimeouts;
     /**
      * It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
      * `<api-version>` is version of the API used to manage this azure resource.
@@ -57,7 +60,7 @@ export interface GetResourceIdArgs {
  */
 export interface GetResourceIdResult {
     /**
-     * The provider-assigned unique ID for this managed resource.
+     * The ID of the azure resource.
      */
     readonly id: string;
     /**
@@ -85,6 +88,7 @@ export interface GetResourceIdResult {
      * The subscription ID of the azure resource.
      */
     readonly subscriptionId: string;
+    readonly timeouts?: outputs.GetResourceIdTimeouts;
     readonly type: string;
 }
 /**
@@ -92,8 +96,15 @@ export interface GetResourceIdResult {
  *
  * ## Example Usage
  */
-export function getResourceIdOutput(args: GetResourceIdOutputArgs, opts?: pulumi.InvokeOptions): pulumi.Output<GetResourceIdResult> {
-    return pulumi.output(args).apply((a: any) => getResourceId(a, opts))
+export function getResourceIdOutput(args: GetResourceIdOutputArgs, opts?: pulumi.InvokeOutputOptions): pulumi.Output<GetResourceIdResult> {
+    opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts || {});
+    return pulumi.runtime.invokeOutput("azapi:index/getResourceId:getResourceId", {
+        "name": args.name,
+        "parentId": args.parentId,
+        "resourceId": args.resourceId,
+        "timeouts": args.timeouts,
+        "type": args.type,
+    }, opts);
 }
 
 /**
@@ -121,6 +132,7 @@ export interface GetResourceIdOutputArgs {
      * > **Note:** Configuring `name` and `parentId` is an alternative way to configure `resourceId`.
      */
     resourceId?: pulumi.Input<string>;
+    timeouts?: pulumi.Input<inputs.GetResourceIdTimeoutsArgs>;
     /**
      * It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
      * `<api-version>` is version of the API used to manage this azure resource.

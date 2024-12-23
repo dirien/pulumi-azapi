@@ -4,13 +4,21 @@
 
 import copy
 import warnings
+import sys
 import pulumi
 import pulumi.runtime
 from typing import Any, Mapping, Optional, Sequence, Union, overload
+if sys.version_info >= (3, 11):
+    from typing import NotRequired, TypedDict, TypeAlias
+else:
+    from typing_extensions import NotRequired, TypedDict, TypeAlias
 from .. import _utilities
 from . import outputs
 
 auxiliaryTenantIds: Optional[str]
+"""
+The Auxiliary Tenant IDs which should be used.
+"""
 
 clientCertificatePassword: Optional[str]
 """
@@ -29,9 +37,20 @@ clientId: Optional[str]
 The Client ID which should be used.
 """
 
+clientIdFilePath: Optional[str]
+"""
+The path to a file containing the Client ID which should be used.
+"""
+
 clientSecret: Optional[str]
 """
 The Client Secret which should be used. For use When authenticating as a Service Principal using a Client Secret.
+"""
+
+clientSecretFilePath: Optional[str]
+"""
+The path to a file containing the Client Secret which should be used. For use When authenticating as a Service Principal
+using a Client Secret.
 """
 
 customCorrelationRequestId: Optional[str]
@@ -40,14 +59,29 @@ The value of the x-ms-correlation-request-id header (otherwise an auto-generated
 """
 
 defaultLocation: Optional[str]
+"""
+The default location which should be used for resources.
+"""
 
 defaultName: Optional[str]
+"""
+The default name which should be used for resources.
+"""
 
 defaultNamingPrefix: Optional[str]
+"""
+The default prefix which should be used for resources.
+"""
 
 defaultNamingSuffix: Optional[str]
+"""
+The default suffix which should be used for resources.
+"""
 
 defaultTags: Optional[str]
+"""
+The default tags which should be used for resources.
+"""
 
 disableCorrelationRequestId: Optional[bool]
 """
@@ -56,7 +90,13 @@ This will disable the x-ms-correlation-request-id header.
 
 disableTerraformPartnerId: Optional[bool]
 
-endpoint: Optional[str]
+enableHclOutputForDataSource: Optional[bool]
+"""
+Enable HCL output for data sources. The default is false. When set to true, the provider will return HCL output for data
+sources. When set to false, the provider will return JSON output for data sources.
+"""
+
+endpoints: Optional[str]
 
 environment: Optional[str]
 """

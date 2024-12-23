@@ -40,10 +40,23 @@ namespace ediri.Azapi
         public Output<string?> ClientId { get; private set; } = null!;
 
         /// <summary>
+        /// The path to a file containing the Client ID which should be used.
+        /// </summary>
+        [Output("clientIdFilePath")]
+        public Output<string?> ClientIdFilePath { get; private set; } = null!;
+
+        /// <summary>
         /// The Client Secret which should be used. For use When authenticating as a Service Principal using a Client Secret.
         /// </summary>
         [Output("clientSecret")]
         public Output<string?> ClientSecret { get; private set; } = null!;
+
+        /// <summary>
+        /// The path to a file containing the Client Secret which should be used. For use When authenticating as a Service Principal
+        /// using a Client Secret.
+        /// </summary>
+        [Output("clientSecretFilePath")]
+        public Output<string?> ClientSecretFilePath { get; private set; } = null!;
 
         /// <summary>
         /// The value of the x-ms-correlation-request-id header (otherwise an auto-generated UUID will be used).
@@ -51,15 +64,27 @@ namespace ediri.Azapi
         [Output("customCorrelationRequestId")]
         public Output<string?> CustomCorrelationRequestId { get; private set; } = null!;
 
+        /// <summary>
+        /// The default location which should be used for resources.
+        /// </summary>
         [Output("defaultLocation")]
         public Output<string?> DefaultLocation { get; private set; } = null!;
 
+        /// <summary>
+        /// The default name which should be used for resources.
+        /// </summary>
         [Output("defaultName")]
         public Output<string?> DefaultName { get; private set; } = null!;
 
+        /// <summary>
+        /// The default prefix which should be used for resources.
+        /// </summary>
         [Output("defaultNamingPrefix")]
         public Output<string?> DefaultNamingPrefix { get; private set; } = null!;
 
+        /// <summary>
+        /// The default suffix which should be used for resources.
+        /// </summary>
         [Output("defaultNamingSuffix")]
         public Output<string?> DefaultNamingSuffix { get; private set; } = null!;
 
@@ -67,7 +92,7 @@ namespace ediri.Azapi
         /// The Cloud Environment which should be used. Possible values are public, usgovernment and china. Defaults to public.
         /// </summary>
         [Output("environment")]
-        public Output<string> Environment { get; private set; } = null!;
+        public Output<string?> Environment { get; private set; } = null!;
 
         /// <summary>
         /// The bearer token for the request to the OIDC provider. For use When authenticating as a Service Principal using OpenID
@@ -121,7 +146,7 @@ namespace ediri.Azapi
         /// <param name="name">The unique name of the resource</param>
         /// <param name="args">The arguments used to populate this resource's properties</param>
         /// <param name="options">A bag of options that control this resource's behavior</param>
-        public Provider(string name, ProviderArgs args, CustomResourceOptions? options = null)
+        public Provider(string name, ProviderArgs? args = null, CustomResourceOptions? options = null)
             : base("azapi", name, args ?? new ProviderArgs(), MakeResourceOptions(options, ""))
         {
         }
@@ -144,6 +169,10 @@ namespace ediri.Azapi
     {
         [Input("auxiliaryTenantIds", json: true)]
         private InputList<string>? _auxiliaryTenantIds;
+
+        /// <summary>
+        /// The Auxiliary Tenant IDs which should be used.
+        /// </summary>
         public InputList<string> AuxiliaryTenantIds
         {
             get => _auxiliaryTenantIds ?? (_auxiliaryTenantIds = new InputList<string>());
@@ -171,10 +200,23 @@ namespace ediri.Azapi
         public Input<string>? ClientId { get; set; }
 
         /// <summary>
+        /// The path to a file containing the Client ID which should be used.
+        /// </summary>
+        [Input("clientIdFilePath")]
+        public Input<string>? ClientIdFilePath { get; set; }
+
+        /// <summary>
         /// The Client Secret which should be used. For use When authenticating as a Service Principal using a Client Secret.
         /// </summary>
         [Input("clientSecret")]
         public Input<string>? ClientSecret { get; set; }
+
+        /// <summary>
+        /// The path to a file containing the Client Secret which should be used. For use When authenticating as a Service Principal
+        /// using a Client Secret.
+        /// </summary>
+        [Input("clientSecretFilePath")]
+        public Input<string>? ClientSecretFilePath { get; set; }
 
         /// <summary>
         /// The value of the x-ms-correlation-request-id header (otherwise an auto-generated UUID will be used).
@@ -182,20 +224,36 @@ namespace ediri.Azapi
         [Input("customCorrelationRequestId")]
         public Input<string>? CustomCorrelationRequestId { get; set; }
 
+        /// <summary>
+        /// The default location which should be used for resources.
+        /// </summary>
         [Input("defaultLocation")]
         public Input<string>? DefaultLocation { get; set; }
 
+        /// <summary>
+        /// The default name which should be used for resources.
+        /// </summary>
         [Input("defaultName")]
         public Input<string>? DefaultName { get; set; }
 
+        /// <summary>
+        /// The default prefix which should be used for resources.
+        /// </summary>
         [Input("defaultNamingPrefix")]
         public Input<string>? DefaultNamingPrefix { get; set; }
 
+        /// <summary>
+        /// The default suffix which should be used for resources.
+        /// </summary>
         [Input("defaultNamingSuffix")]
         public Input<string>? DefaultNamingSuffix { get; set; }
 
         [Input("defaultTags", json: true)]
         private InputMap<string>? _defaultTags;
+
+        /// <summary>
+        /// The default tags which should be used for resources.
+        /// </summary>
         public InputMap<string> DefaultTags
         {
             get => _defaultTags ?? (_defaultTags = new InputMap<string>());
@@ -211,14 +269,26 @@ namespace ediri.Azapi
         [Input("disableTerraformPartnerId", json: true)]
         public Input<bool>? DisableTerraformPartnerId { get; set; }
 
-        [Input("endpoint", json: true)]
-        public Input<Inputs.ProviderEndpointArgs>? Endpoint { get; set; }
+        /// <summary>
+        /// Enable HCL output for data sources. The default is false. When set to true, the provider will return HCL output for data
+        /// sources. When set to false, the provider will return JSON output for data sources.
+        /// </summary>
+        [Input("enableHclOutputForDataSource", json: true)]
+        public Input<bool>? EnableHclOutputForDataSource { get; set; }
+
+        [Input("endpoints", json: true)]
+        private InputList<Inputs.ProviderEndpointArgs>? _endpoints;
+        public InputList<Inputs.ProviderEndpointArgs> Endpoints
+        {
+            get => _endpoints ?? (_endpoints = new InputList<Inputs.ProviderEndpointArgs>());
+            set => _endpoints = value;
+        }
 
         /// <summary>
         /// The Cloud Environment which should be used. Possible values are public, usgovernment and china. Defaults to public.
         /// </summary>
-        [Input("environment", required: true)]
-        public Input<string> Environment { get; set; } = null!;
+        [Input("environment")]
+        public Input<string>? Environment { get; set; }
 
         /// <summary>
         /// The bearer token for the request to the OIDC provider. For use When authenticating as a Service Principal using OpenID

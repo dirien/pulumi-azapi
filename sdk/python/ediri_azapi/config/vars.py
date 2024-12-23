@@ -4,9 +4,14 @@
 
 import copy
 import warnings
+import sys
 import pulumi
 import pulumi.runtime
 from typing import Any, Mapping, Optional, Sequence, Union, overload
+if sys.version_info >= (3, 11):
+    from typing import NotRequired, TypedDict, TypeAlias
+else:
+    from typing_extensions import NotRequired, TypedDict, TypeAlias
 from .. import _utilities
 from . import outputs
 
@@ -18,6 +23,9 @@ __config__ = pulumi.Config('azapi')
 class _ExportableConfig(types.ModuleType):
     @property
     def auxiliary_tenant_ids(self) -> Optional[str]:
+        """
+        The Auxiliary Tenant IDs which should be used.
+        """
         return __config__.get('auxiliaryTenantIds')
 
     @property
@@ -44,11 +52,26 @@ class _ExportableConfig(types.ModuleType):
         return __config__.get('clientId')
 
     @property
+    def client_id_file_path(self) -> Optional[str]:
+        """
+        The path to a file containing the Client ID which should be used.
+        """
+        return __config__.get('clientIdFilePath')
+
+    @property
     def client_secret(self) -> Optional[str]:
         """
         The Client Secret which should be used. For use When authenticating as a Service Principal using a Client Secret.
         """
         return __config__.get('clientSecret')
+
+    @property
+    def client_secret_file_path(self) -> Optional[str]:
+        """
+        The path to a file containing the Client Secret which should be used. For use When authenticating as a Service Principal
+        using a Client Secret.
+        """
+        return __config__.get('clientSecretFilePath')
 
     @property
     def custom_correlation_request_id(self) -> Optional[str]:
@@ -59,22 +82,37 @@ class _ExportableConfig(types.ModuleType):
 
     @property
     def default_location(self) -> Optional[str]:
+        """
+        The default location which should be used for resources.
+        """
         return __config__.get('defaultLocation')
 
     @property
     def default_name(self) -> Optional[str]:
+        """
+        The default name which should be used for resources.
+        """
         return __config__.get('defaultName')
 
     @property
     def default_naming_prefix(self) -> Optional[str]:
+        """
+        The default prefix which should be used for resources.
+        """
         return __config__.get('defaultNamingPrefix')
 
     @property
     def default_naming_suffix(self) -> Optional[str]:
+        """
+        The default suffix which should be used for resources.
+        """
         return __config__.get('defaultNamingSuffix')
 
     @property
     def default_tags(self) -> Optional[str]:
+        """
+        The default tags which should be used for resources.
+        """
         return __config__.get('defaultTags')
 
     @property
@@ -89,8 +127,16 @@ class _ExportableConfig(types.ModuleType):
         return __config__.get_bool('disableTerraformPartnerId')
 
     @property
-    def endpoint(self) -> Optional[str]:
-        return __config__.get('endpoint')
+    def enable_hcl_output_for_data_source(self) -> Optional[bool]:
+        """
+        Enable HCL output for data sources. The default is false. When set to true, the provider will return HCL output for data
+        sources. When set to false, the provider will return JSON output for data sources.
+        """
+        return __config__.get_bool('enableHclOutputForDataSource')
+
+    @property
+    def endpoints(self) -> Optional[str]:
+        return __config__.get('endpoints')
 
     @property
     def environment(self) -> Optional[str]:

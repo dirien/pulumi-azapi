@@ -11,6 +11,7 @@ import (
 
 var _ = internal.GetEnvOrDefault
 
+// The Auxiliary Tenant IDs which should be used.
 func GetAuxiliaryTenantIds(ctx *pulumi.Context) string {
 	return config.Get(ctx, "azapi:auxiliaryTenantIds")
 }
@@ -32,31 +33,52 @@ func GetClientId(ctx *pulumi.Context) string {
 	return config.Get(ctx, "azapi:clientId")
 }
 
+// The path to a file containing the Client ID which should be used.
+func GetClientIdFilePath(ctx *pulumi.Context) string {
+	return config.Get(ctx, "azapi:clientIdFilePath")
+}
+
 // The Client Secret which should be used. For use When authenticating as a Service Principal using a Client Secret.
 func GetClientSecret(ctx *pulumi.Context) string {
 	return config.Get(ctx, "azapi:clientSecret")
+}
+
+// The path to a file containing the Client Secret which should be used. For use When authenticating as a Service Principal
+// using a Client Secret.
+func GetClientSecretFilePath(ctx *pulumi.Context) string {
+	return config.Get(ctx, "azapi:clientSecretFilePath")
 }
 
 // The value of the x-ms-correlation-request-id header (otherwise an auto-generated UUID will be used).
 func GetCustomCorrelationRequestId(ctx *pulumi.Context) string {
 	return config.Get(ctx, "azapi:customCorrelationRequestId")
 }
+
+// The default location which should be used for resources.
 func GetDefaultLocation(ctx *pulumi.Context) string {
 	return config.Get(ctx, "azapi:defaultLocation")
 }
+
+// The default name which should be used for resources.
 func GetDefaultName(ctx *pulumi.Context) string {
 	return config.Get(ctx, "azapi:defaultName")
 }
 
-// Deprecated: It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead.
+// The default prefix which should be used for resources.
+//
+// Deprecated: This field is deprecated and will be removed in a major release. Please specify the naming prefix and suffix in the resource's `name` field instead.
 func GetDefaultNamingPrefix(ctx *pulumi.Context) string {
 	return config.Get(ctx, "azapi:defaultNamingPrefix")
 }
 
-// Deprecated: It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead.
+// The default suffix which should be used for resources.
+//
+// Deprecated: This field is deprecated and will be removed in a major release. Please specify the naming prefix and suffix in the resource's `name` field instead.
 func GetDefaultNamingSuffix(ctx *pulumi.Context) string {
 	return config.Get(ctx, "azapi:defaultNamingSuffix")
 }
+
+// The default tags which should be used for resources.
 func GetDefaultTags(ctx *pulumi.Context) string {
 	return config.Get(ctx, "azapi:defaultTags")
 }
@@ -68,8 +90,14 @@ func GetDisableCorrelationRequestId(ctx *pulumi.Context) bool {
 func GetDisableTerraformPartnerId(ctx *pulumi.Context) bool {
 	return config.GetBool(ctx, "azapi:disableTerraformPartnerId")
 }
-func GetEndpoint(ctx *pulumi.Context) string {
-	return config.Get(ctx, "azapi:endpoint")
+
+// Enable HCL output for data sources. The default is false. When set to true, the provider will return HCL output for data
+// sources. When set to false, the provider will return JSON output for data sources.
+func GetEnableHclOutputForDataSource(ctx *pulumi.Context) bool {
+	return config.GetBool(ctx, "azapi:enableHclOutputForDataSource")
+}
+func GetEndpoints(ctx *pulumi.Context) string {
+	return config.Get(ctx, "azapi:endpoints")
 }
 
 // The Cloud Environment which should be used. Possible values are public, usgovernment and china. Defaults to public.

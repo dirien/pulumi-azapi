@@ -9,6 +9,9 @@ import * as utilities from "../utilities";
 declare var exports: any;
 const __config = new pulumi.Config("azapi");
 
+/**
+ * The Auxiliary Tenant IDs which should be used.
+ */
 export declare const auxiliaryTenantIds: string[] | undefined;
 Object.defineProperty(exports, "auxiliaryTenantIds", {
     get() {
@@ -53,12 +56,35 @@ Object.defineProperty(exports, "clientId", {
 });
 
 /**
+ * The path to a file containing the Client ID which should be used.
+ */
+export declare const clientIdFilePath: string | undefined;
+Object.defineProperty(exports, "clientIdFilePath", {
+    get() {
+        return __config.get("clientIdFilePath");
+    },
+    enumerable: true,
+});
+
+/**
  * The Client Secret which should be used. For use When authenticating as a Service Principal using a Client Secret.
  */
 export declare const clientSecret: string | undefined;
 Object.defineProperty(exports, "clientSecret", {
     get() {
         return __config.get("clientSecret");
+    },
+    enumerable: true,
+});
+
+/**
+ * The path to a file containing the Client Secret which should be used. For use When authenticating as a Service Principal
+ * using a Client Secret.
+ */
+export declare const clientSecretFilePath: string | undefined;
+Object.defineProperty(exports, "clientSecretFilePath", {
+    get() {
+        return __config.get("clientSecretFilePath");
     },
     enumerable: true,
 });
@@ -74,6 +100,9 @@ Object.defineProperty(exports, "customCorrelationRequestId", {
     enumerable: true,
 });
 
+/**
+ * The default location which should be used for resources.
+ */
 export declare const defaultLocation: string | undefined;
 Object.defineProperty(exports, "defaultLocation", {
     get() {
@@ -82,6 +111,9 @@ Object.defineProperty(exports, "defaultLocation", {
     enumerable: true,
 });
 
+/**
+ * The default name which should be used for resources.
+ */
 export declare const defaultName: string | undefined;
 Object.defineProperty(exports, "defaultName", {
     get() {
@@ -90,6 +122,9 @@ Object.defineProperty(exports, "defaultName", {
     enumerable: true,
 });
 
+/**
+ * The default prefix which should be used for resources.
+ */
 export declare const defaultNamingPrefix: string | undefined;
 Object.defineProperty(exports, "defaultNamingPrefix", {
     get() {
@@ -98,6 +133,9 @@ Object.defineProperty(exports, "defaultNamingPrefix", {
     enumerable: true,
 });
 
+/**
+ * The default suffix which should be used for resources.
+ */
 export declare const defaultNamingSuffix: string | undefined;
 Object.defineProperty(exports, "defaultNamingSuffix", {
     get() {
@@ -106,6 +144,9 @@ Object.defineProperty(exports, "defaultNamingSuffix", {
     enumerable: true,
 });
 
+/**
+ * The default tags which should be used for resources.
+ */
 export declare const defaultTags: {[key: string]: string} | undefined;
 Object.defineProperty(exports, "defaultTags", {
     get() {
@@ -133,10 +174,22 @@ Object.defineProperty(exports, "disableTerraformPartnerId", {
     enumerable: true,
 });
 
-export declare const endpoint: outputs.config.Endpoint | undefined;
-Object.defineProperty(exports, "endpoint", {
+/**
+ * Enable HCL output for data sources. The default is false. When set to true, the provider will return HCL output for data
+ * sources. When set to false, the provider will return JSON output for data sources.
+ */
+export declare const enableHclOutputForDataSource: boolean | undefined;
+Object.defineProperty(exports, "enableHclOutputForDataSource", {
     get() {
-        return __config.getObject<outputs.config.Endpoint>("endpoint");
+        return __config.getObject<boolean>("enableHclOutputForDataSource");
+    },
+    enumerable: true,
+});
+
+export declare const endpoints: outputs.config.Endpoints[] | undefined;
+Object.defineProperty(exports, "endpoints", {
+    get() {
+        return __config.getObject<outputs.config.Endpoints[]>("endpoints");
     },
     enumerable: true,
 });

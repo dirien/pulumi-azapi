@@ -7,7 +7,6 @@ import (
 	"context"
 	"reflect"
 
-	"errors"
 	"github.com/dirien/pulumi-azapi/sdk/go/azapi/internal"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
@@ -27,18 +26,29 @@ type Provider struct {
 	ClientCertificatePath pulumi.StringPtrOutput `pulumi:"clientCertificatePath"`
 	// The Client ID which should be used.
 	ClientId pulumi.StringPtrOutput `pulumi:"clientId"`
+	// The path to a file containing the Client ID which should be used.
+	ClientIdFilePath pulumi.StringPtrOutput `pulumi:"clientIdFilePath"`
 	// The Client Secret which should be used. For use When authenticating as a Service Principal using a Client Secret.
 	ClientSecret pulumi.StringPtrOutput `pulumi:"clientSecret"`
+	// The path to a file containing the Client Secret which should be used. For use When authenticating as a Service Principal
+	// using a Client Secret.
+	ClientSecretFilePath pulumi.StringPtrOutput `pulumi:"clientSecretFilePath"`
 	// The value of the x-ms-correlation-request-id header (otherwise an auto-generated UUID will be used).
 	CustomCorrelationRequestId pulumi.StringPtrOutput `pulumi:"customCorrelationRequestId"`
-	DefaultLocation            pulumi.StringPtrOutput `pulumi:"defaultLocation"`
-	DefaultName                pulumi.StringPtrOutput `pulumi:"defaultName"`
-	// Deprecated: It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead.
+	// The default location which should be used for resources.
+	DefaultLocation pulumi.StringPtrOutput `pulumi:"defaultLocation"`
+	// The default name which should be used for resources.
+	DefaultName pulumi.StringPtrOutput `pulumi:"defaultName"`
+	// The default prefix which should be used for resources.
+	//
+	// Deprecated: This field is deprecated and will be removed in a major release. Please specify the naming prefix and suffix in the resource's `name` field instead.
 	DefaultNamingPrefix pulumi.StringPtrOutput `pulumi:"defaultNamingPrefix"`
-	// Deprecated: It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead.
+	// The default suffix which should be used for resources.
+	//
+	// Deprecated: This field is deprecated and will be removed in a major release. Please specify the naming prefix and suffix in the resource's `name` field instead.
 	DefaultNamingSuffix pulumi.StringPtrOutput `pulumi:"defaultNamingSuffix"`
 	// The Cloud Environment which should be used. Possible values are public, usgovernment and china. Defaults to public.
-	Environment pulumi.StringOutput `pulumi:"environment"`
+	Environment pulumi.StringPtrOutput `pulumi:"environment"`
 	// The bearer token for the request to the OIDC provider. For use When authenticating as a Service Principal using OpenID
 	// Connect.
 	OidcRequestToken pulumi.StringPtrOutput `pulumi:"oidcRequestToken"`
@@ -61,12 +71,9 @@ type Provider struct {
 func NewProvider(ctx *pulumi.Context,
 	name string, args *ProviderArgs, opts ...pulumi.ResourceOption) (*Provider, error) {
 	if args == nil {
-		return nil, errors.New("missing one or more required arguments")
+		args = &ProviderArgs{}
 	}
 
-	if args.Environment == nil {
-		return nil, errors.New("invalid value for required argument 'Environment'")
-	}
 	opts = internal.PkgResourceDefaultOpts(opts)
 	var resource Provider
 	err := ctx.RegisterResource("pulumi:providers:azapi", name, args, &resource, opts...)
@@ -77,6 +84,7 @@ func NewProvider(ctx *pulumi.Context,
 }
 
 type providerArgs struct {
+	// The Auxiliary Tenant IDs which should be used.
 	AuxiliaryTenantIds []string `pulumi:"auxiliaryTenantIds"`
 	// The password associated with the Client Certificate. For use when authenticating as a Service Principal using a Client
 	// Certificate
@@ -86,23 +94,38 @@ type providerArgs struct {
 	ClientCertificatePath *string `pulumi:"clientCertificatePath"`
 	// The Client ID which should be used.
 	ClientId *string `pulumi:"clientId"`
+	// The path to a file containing the Client ID which should be used.
+	ClientIdFilePath *string `pulumi:"clientIdFilePath"`
 	// The Client Secret which should be used. For use When authenticating as a Service Principal using a Client Secret.
 	ClientSecret *string `pulumi:"clientSecret"`
+	// The path to a file containing the Client Secret which should be used. For use When authenticating as a Service Principal
+	// using a Client Secret.
+	ClientSecretFilePath *string `pulumi:"clientSecretFilePath"`
 	// The value of the x-ms-correlation-request-id header (otherwise an auto-generated UUID will be used).
 	CustomCorrelationRequestId *string `pulumi:"customCorrelationRequestId"`
-	DefaultLocation            *string `pulumi:"defaultLocation"`
-	DefaultName                *string `pulumi:"defaultName"`
-	// Deprecated: It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead.
+	// The default location which should be used for resources.
+	DefaultLocation *string `pulumi:"defaultLocation"`
+	// The default name which should be used for resources.
+	DefaultName *string `pulumi:"defaultName"`
+	// The default prefix which should be used for resources.
+	//
+	// Deprecated: This field is deprecated and will be removed in a major release. Please specify the naming prefix and suffix in the resource's `name` field instead.
 	DefaultNamingPrefix *string `pulumi:"defaultNamingPrefix"`
-	// Deprecated: It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead.
-	DefaultNamingSuffix *string           `pulumi:"defaultNamingSuffix"`
-	DefaultTags         map[string]string `pulumi:"defaultTags"`
+	// The default suffix which should be used for resources.
+	//
+	// Deprecated: This field is deprecated and will be removed in a major release. Please specify the naming prefix and suffix in the resource's `name` field instead.
+	DefaultNamingSuffix *string `pulumi:"defaultNamingSuffix"`
+	// The default tags which should be used for resources.
+	DefaultTags map[string]string `pulumi:"defaultTags"`
 	// This will disable the x-ms-correlation-request-id header.
-	DisableCorrelationRequestId *bool             `pulumi:"disableCorrelationRequestId"`
-	DisableTerraformPartnerId   *bool             `pulumi:"disableTerraformPartnerId"`
-	Endpoint                    *ProviderEndpoint `pulumi:"endpoint"`
+	DisableCorrelationRequestId *bool `pulumi:"disableCorrelationRequestId"`
+	DisableTerraformPartnerId   *bool `pulumi:"disableTerraformPartnerId"`
+	// Enable HCL output for data sources. The default is false. When set to true, the provider will return HCL output for data
+	// sources. When set to false, the provider will return JSON output for data sources.
+	EnableHclOutputForDataSource *bool              `pulumi:"enableHclOutputForDataSource"`
+	Endpoints                    []ProviderEndpoint `pulumi:"endpoints"`
 	// The Cloud Environment which should be used. Possible values are public, usgovernment and china. Defaults to public.
-	Environment string `pulumi:"environment"`
+	Environment *string `pulumi:"environment"`
 	// The bearer token for the request to the OIDC provider. For use When authenticating as a Service Principal using OpenID
 	// Connect.
 	OidcRequestToken *string `pulumi:"oidcRequestToken"`
@@ -131,6 +154,7 @@ type providerArgs struct {
 
 // The set of arguments for constructing a Provider resource.
 type ProviderArgs struct {
+	// The Auxiliary Tenant IDs which should be used.
 	AuxiliaryTenantIds pulumi.StringArrayInput
 	// The password associated with the Client Certificate. For use when authenticating as a Service Principal using a Client
 	// Certificate
@@ -140,23 +164,38 @@ type ProviderArgs struct {
 	ClientCertificatePath pulumi.StringPtrInput
 	// The Client ID which should be used.
 	ClientId pulumi.StringPtrInput
+	// The path to a file containing the Client ID which should be used.
+	ClientIdFilePath pulumi.StringPtrInput
 	// The Client Secret which should be used. For use When authenticating as a Service Principal using a Client Secret.
 	ClientSecret pulumi.StringPtrInput
+	// The path to a file containing the Client Secret which should be used. For use When authenticating as a Service Principal
+	// using a Client Secret.
+	ClientSecretFilePath pulumi.StringPtrInput
 	// The value of the x-ms-correlation-request-id header (otherwise an auto-generated UUID will be used).
 	CustomCorrelationRequestId pulumi.StringPtrInput
-	DefaultLocation            pulumi.StringPtrInput
-	DefaultName                pulumi.StringPtrInput
-	// Deprecated: It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead.
+	// The default location which should be used for resources.
+	DefaultLocation pulumi.StringPtrInput
+	// The default name which should be used for resources.
+	DefaultName pulumi.StringPtrInput
+	// The default prefix which should be used for resources.
+	//
+	// Deprecated: This field is deprecated and will be removed in a major release. Please specify the naming prefix and suffix in the resource's `name` field instead.
 	DefaultNamingPrefix pulumi.StringPtrInput
-	// Deprecated: It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead.
+	// The default suffix which should be used for resources.
+	//
+	// Deprecated: This field is deprecated and will be removed in a major release. Please specify the naming prefix and suffix in the resource's `name` field instead.
 	DefaultNamingSuffix pulumi.StringPtrInput
-	DefaultTags         pulumi.StringMapInput
+	// The default tags which should be used for resources.
+	DefaultTags pulumi.StringMapInput
 	// This will disable the x-ms-correlation-request-id header.
 	DisableCorrelationRequestId pulumi.BoolPtrInput
 	DisableTerraformPartnerId   pulumi.BoolPtrInput
-	Endpoint                    ProviderEndpointPtrInput
+	// Enable HCL output for data sources. The default is false. When set to true, the provider will return HCL output for data
+	// sources. When set to false, the provider will return JSON output for data sources.
+	EnableHclOutputForDataSource pulumi.BoolPtrInput
+	Endpoints                    ProviderEndpointArrayInput
 	// The Cloud Environment which should be used. Possible values are public, usgovernment and china. Defaults to public.
-	Environment pulumi.StringInput
+	Environment pulumi.StringPtrInput
 	// The bearer token for the request to the OIDC provider. For use When authenticating as a Service Principal using OpenID
 	// Connect.
 	OidcRequestToken pulumi.StringPtrInput
@@ -237,9 +276,20 @@ func (o ProviderOutput) ClientId() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *Provider) pulumi.StringPtrOutput { return v.ClientId }).(pulumi.StringPtrOutput)
 }
 
+// The path to a file containing the Client ID which should be used.
+func (o ProviderOutput) ClientIdFilePath() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *Provider) pulumi.StringPtrOutput { return v.ClientIdFilePath }).(pulumi.StringPtrOutput)
+}
+
 // The Client Secret which should be used. For use When authenticating as a Service Principal using a Client Secret.
 func (o ProviderOutput) ClientSecret() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *Provider) pulumi.StringPtrOutput { return v.ClientSecret }).(pulumi.StringPtrOutput)
+}
+
+// The path to a file containing the Client Secret which should be used. For use When authenticating as a Service Principal
+// using a Client Secret.
+func (o ProviderOutput) ClientSecretFilePath() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *Provider) pulumi.StringPtrOutput { return v.ClientSecretFilePath }).(pulumi.StringPtrOutput)
 }
 
 // The value of the x-ms-correlation-request-id header (otherwise an auto-generated UUID will be used).
@@ -247,27 +297,33 @@ func (o ProviderOutput) CustomCorrelationRequestId() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *Provider) pulumi.StringPtrOutput { return v.CustomCorrelationRequestId }).(pulumi.StringPtrOutput)
 }
 
+// The default location which should be used for resources.
 func (o ProviderOutput) DefaultLocation() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *Provider) pulumi.StringPtrOutput { return v.DefaultLocation }).(pulumi.StringPtrOutput)
 }
 
+// The default name which should be used for resources.
 func (o ProviderOutput) DefaultName() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *Provider) pulumi.StringPtrOutput { return v.DefaultName }).(pulumi.StringPtrOutput)
 }
 
-// Deprecated: It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead.
+// The default prefix which should be used for resources.
+//
+// Deprecated: This field is deprecated and will be removed in a major release. Please specify the naming prefix and suffix in the resource's `name` field instead.
 func (o ProviderOutput) DefaultNamingPrefix() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *Provider) pulumi.StringPtrOutput { return v.DefaultNamingPrefix }).(pulumi.StringPtrOutput)
 }
 
-// Deprecated: It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead.
+// The default suffix which should be used for resources.
+//
+// Deprecated: This field is deprecated and will be removed in a major release. Please specify the naming prefix and suffix in the resource's `name` field instead.
 func (o ProviderOutput) DefaultNamingSuffix() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *Provider) pulumi.StringPtrOutput { return v.DefaultNamingSuffix }).(pulumi.StringPtrOutput)
 }
 
 // The Cloud Environment which should be used. Possible values are public, usgovernment and china. Defaults to public.
-func (o ProviderOutput) Environment() pulumi.StringOutput {
-	return o.ApplyT(func(v *Provider) pulumi.StringOutput { return v.Environment }).(pulumi.StringOutput)
+func (o ProviderOutput) Environment() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *Provider) pulumi.StringPtrOutput { return v.Environment }).(pulumi.StringPtrOutput)
 }
 
 // The bearer token for the request to the OIDC provider. For use When authenticating as a Service Principal using OpenID

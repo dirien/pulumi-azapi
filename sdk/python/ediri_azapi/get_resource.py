@@ -4,9 +4,14 @@
 
 import copy
 import warnings
+import sys
 import pulumi
 import pulumi.runtime
 from typing import Any, Mapping, Optional, Sequence, Union, overload
+if sys.version_info >= (3, 11):
+    from typing import NotRequired, TypedDict, TypeAlias
+else:
+    from typing_extensions import NotRequired, TypedDict, TypeAlias
 from . import _utilities
 from . import outputs
 from ._inputs import *
@@ -23,21 +28,21 @@ class GetResourceResult:
     """
     A collection of values returned by getResource.
     """
-    def __init__(__self__, id=None, identity=None, location=None, name=None, output=None, parent_id=None, resource_id=None, response_export_values=None, tags=None, type=None):
+    def __init__(__self__, id=None, identities=None, location=None, name=None, output=None, parent_id=None, resource_id=None, response_export_values=None, tags=None, timeouts=None, type=None):
         if id and not isinstance(id, str):
             raise TypeError("Expected argument 'id' to be a str")
         pulumi.set(__self__, "id", id)
-        if identity and not isinstance(identity, dict):
-            raise TypeError("Expected argument 'identity' to be a dict")
-        pulumi.set(__self__, "identity", identity)
+        if identities and not isinstance(identities, list):
+            raise TypeError("Expected argument 'identities' to be a list")
+        pulumi.set(__self__, "identities", identities)
         if location and not isinstance(location, str):
             raise TypeError("Expected argument 'location' to be a str")
         pulumi.set(__self__, "location", location)
         if name and not isinstance(name, str):
             raise TypeError("Expected argument 'name' to be a str")
         pulumi.set(__self__, "name", name)
-        if output and not isinstance(output, str):
-            raise TypeError("Expected argument 'output' to be a str")
+        if output and not isinstance(output, dict):
+            raise TypeError("Expected argument 'output' to be a dict")
         pulumi.set(__self__, "output", output)
         if parent_id and not isinstance(parent_id, str):
             raise TypeError("Expected argument 'parent_id' to be a str")
@@ -51,6 +56,9 @@ class GetResourceResult:
         if tags and not isinstance(tags, dict):
             raise TypeError("Expected argument 'tags' to be a dict")
         pulumi.set(__self__, "tags", tags)
+        if timeouts and not isinstance(timeouts, dict):
+            raise TypeError("Expected argument 'timeouts' to be a dict")
+        pulumi.set(__self__, "timeouts", timeouts)
         if type and not isinstance(type, str):
             raise TypeError("Expected argument 'type' to be a str")
         pulumi.set(__self__, "type", type)
@@ -59,17 +67,17 @@ class GetResourceResult:
     @pulumi.getter
     def id(self) -> str:
         """
-        The provider-assigned unique ID for this managed resource.
+        The ID of the azure resource.
         """
         return pulumi.get(self, "id")
 
     @property
     @pulumi.getter
-    def identity(self) -> 'outputs.GetResourceIdentityResult':
+    def identities(self) -> Sequence['outputs.GetResourceIdentityResult']:
         """
         An `identity` block as defined below, which contains the Managed Service Identity information for this azure resource.
         """
-        return pulumi.get(self, "identity")
+        return pulumi.get(self, "identities")
 
     @property
     @pulumi.getter
@@ -81,18 +89,20 @@ class GetResourceResult:
 
     @property
     @pulumi.getter
-    def name(self) -> Optional[str]:
+    def name(self) -> str:
         return pulumi.get(self, "name")
 
     @property
     @pulumi.getter
-    def output(self) -> str:
+    def output(self) -> Any:
         """
-        The output json containing the properties specified in `response_export_values`. Here're some examples to decode json and extract the value.
+        The output containing the properties specified in `response_export_values`. It supports both JSON and HCL object. By default, it will be in JSON format.
+        If specifying `enable_hcl_output_for_data_source` to `true` in the provider block, it will be in HCL format.
+        Here are some examples to use the values in HCL format:
         ```
         // it will output "registry1.azurecr.io"
         output "login_server" {
-        value = jsondecode(azapi_resource.example.output).properties.loginServer
+        value = data.azapi_resource.example.output.properties.loginServer
         }
         """
         return pulumi.get(self, "output")
@@ -104,7 +114,7 @@ class GetResourceResult:
 
     @property
     @pulumi.getter(name="resourceId")
-    def resource_id(self) -> Optional[str]:
+    def resource_id(self) -> str:
         return pulumi.get(self, "resource_id")
 
     @property
@@ -122,6 +132,11 @@ class GetResourceResult:
 
     @property
     @pulumi.getter
+    def timeouts(self) -> Optional['outputs.GetResourceTimeoutsResult']:
+        return pulumi.get(self, "timeouts")
+
+    @property
+    @pulumi.getter
     def type(self) -> str:
         """
         The Type of Identity which should be used for this azure resource. Possible values are `SystemAssigned`, `UserAssigned` and `SystemAssigned,UserAssigned`.
@@ -136,7 +151,7 @@ class AwaitableGetResourceResult(GetResourceResult):
             yield self
         return GetResourceResult(
             id=self.id,
-            identity=self.identity,
+            identities=self.identities,
             location=self.location,
             name=self.name,
             output=self.output,
@@ -144,14 +159,15 @@ class AwaitableGetResourceResult(GetResourceResult):
             resource_id=self.resource_id,
             response_export_values=self.response_export_values,
             tags=self.tags,
+            timeouts=self.timeouts,
             type=self.type)
 
 
-def get_resource(identity: Optional[pulumi.InputType['GetResourceIdentityArgs']] = None,
-                 name: Optional[str] = None,
+def get_resource(name: Optional[str] = None,
                  parent_id: Optional[str] = None,
                  resource_id: Optional[str] = None,
                  response_export_values: Optional[Sequence[str]] = None,
+                 timeouts: Optional[Union['GetResourceTimeoutsArgs', 'GetResourceTimeoutsArgsDict']] = None,
                  type: Optional[str] = None,
                  opts: Optional[pulumi.InvokeOptions] = None) -> AwaitableGetResourceResult:
     """
@@ -160,7 +176,6 @@ def get_resource(identity: Optional[pulumi.InputType['GetResourceIdentityArgs']]
     ## Example Usage
 
 
-    :param pulumi.InputType['GetResourceIdentityArgs'] identity: An `identity` block as defined below, which contains the Managed Service Identity information for this azure resource.
     :param str name: Specifies the name of the azure resource.
     :param str parent_id: The ID of the azure resource in which this resource is created. It supports different kinds of deployment scope for **top level** resources: 
            - resource group scope: `parent_id` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.
@@ -177,14 +192,14 @@ def get_resource(identity: Optional[pulumi.InputType['GetResourceIdentityArgs']]
            > **Note:** Configuring `name` and `parent_id` is an alternative way to configure `resource_id`.
     :param Sequence[str] response_export_values: A list of path that needs to be exported from response body.
            Setting it to `["*"]` will export the full response body.
-           Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
+           Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the HCL object to computed property `output`.
            ```
            {
-           "properties" : {
-           "loginServer" : "registry1.azurecr.io"
-           "policies" : {
-           "quarantinePolicy" = {
-           "status" = "disabled"
+           properties = {
+           loginServer = "registry1.azurecr.io"
+           policies = {
+           quarantinePolicy = {
+           status = "disabled"
            }
            }
            }
@@ -194,18 +209,18 @@ def get_resource(identity: Optional[pulumi.InputType['GetResourceIdentityArgs']]
            `<api-version>` is version of the API used to manage this azure resource.
     """
     __args__ = dict()
-    __args__['identity'] = identity
     __args__['name'] = name
     __args__['parentId'] = parent_id
     __args__['resourceId'] = resource_id
     __args__['responseExportValues'] = response_export_values
+    __args__['timeouts'] = timeouts
     __args__['type'] = type
     opts = pulumi.InvokeOptions.merge(_utilities.get_invoke_opts_defaults(), opts)
     __ret__ = pulumi.runtime.invoke('azapi:index/getResource:getResource', __args__, opts=opts, typ=GetResourceResult).value
 
     return AwaitableGetResourceResult(
         id=pulumi.get(__ret__, 'id'),
-        identity=pulumi.get(__ret__, 'identity'),
+        identities=pulumi.get(__ret__, 'identities'),
         location=pulumi.get(__ret__, 'location'),
         name=pulumi.get(__ret__, 'name'),
         output=pulumi.get(__ret__, 'output'),
@@ -213,24 +228,21 @@ def get_resource(identity: Optional[pulumi.InputType['GetResourceIdentityArgs']]
         resource_id=pulumi.get(__ret__, 'resource_id'),
         response_export_values=pulumi.get(__ret__, 'response_export_values'),
         tags=pulumi.get(__ret__, 'tags'),
+        timeouts=pulumi.get(__ret__, 'timeouts'),
         type=pulumi.get(__ret__, 'type'))
-
-
-@_utilities.lift_output_func(get_resource)
-def get_resource_output(identity: Optional[pulumi.Input[Optional[pulumi.InputType['GetResourceIdentityArgs']]]] = None,
-                        name: Optional[pulumi.Input[Optional[str]]] = None,
+def get_resource_output(name: Optional[pulumi.Input[Optional[str]]] = None,
                         parent_id: Optional[pulumi.Input[Optional[str]]] = None,
                         resource_id: Optional[pulumi.Input[Optional[str]]] = None,
                         response_export_values: Optional[pulumi.Input[Optional[Sequence[str]]]] = None,
+                        timeouts: Optional[pulumi.Input[Optional[Union['GetResourceTimeoutsArgs', 'GetResourceTimeoutsArgsDict']]]] = None,
                         type: Optional[pulumi.Input[str]] = None,
-                        opts: Optional[pulumi.InvokeOptions] = None) -> pulumi.Output[GetResourceResult]:
+                        opts: Optional[Union[pulumi.InvokeOptions, pulumi.InvokeOutputOptions]] = None) -> pulumi.Output[GetResourceResult]:
     """
     This resource can access any existing Azure resource manager resource.
 
     ## Example Usage
 
 
-    :param pulumi.InputType['GetResourceIdentityArgs'] identity: An `identity` block as defined below, which contains the Managed Service Identity information for this azure resource.
     :param str name: Specifies the name of the azure resource.
     :param str parent_id: The ID of the azure resource in which this resource is created. It supports different kinds of deployment scope for **top level** resources: 
            - resource group scope: `parent_id` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.
@@ -247,14 +259,14 @@ def get_resource_output(identity: Optional[pulumi.Input[Optional[pulumi.InputTyp
            > **Note:** Configuring `name` and `parent_id` is an alternative way to configure `resource_id`.
     :param Sequence[str] response_export_values: A list of path that needs to be exported from response body.
            Setting it to `["*"]` will export the full response body.
-           Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
+           Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the HCL object to computed property `output`.
            ```
            {
-           "properties" : {
-           "loginServer" : "registry1.azurecr.io"
-           "policies" : {
-           "quarantinePolicy" = {
-           "status" = "disabled"
+           properties = {
+           loginServer = "registry1.azurecr.io"
+           policies = {
+           quarantinePolicy = {
+           status = "disabled"
            }
            }
            }
@@ -263,4 +275,24 @@ def get_resource_output(identity: Optional[pulumi.Input[Optional[pulumi.InputTyp
     :param str type: It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
            `<api-version>` is version of the API used to manage this azure resource.
     """
-    ...
+    __args__ = dict()
+    __args__['name'] = name
+    __args__['parentId'] = parent_id
+    __args__['resourceId'] = resource_id
+    __args__['responseExportValues'] = response_export_values
+    __args__['timeouts'] = timeouts
+    __args__['type'] = type
+    opts = pulumi.InvokeOutputOptions.merge(_utilities.get_invoke_opts_defaults(), opts)
+    __ret__ = pulumi.runtime.invoke_output('azapi:index/getResource:getResource', __args__, opts=opts, typ=GetResourceResult)
+    return __ret__.apply(lambda __response__: GetResourceResult(
+        id=pulumi.get(__response__, 'id'),
+        identities=pulumi.get(__response__, 'identities'),
+        location=pulumi.get(__response__, 'location'),
+        name=pulumi.get(__response__, 'name'),
+        output=pulumi.get(__response__, 'output'),
+        parent_id=pulumi.get(__response__, 'parent_id'),
+        resource_id=pulumi.get(__response__, 'resource_id'),
+        response_export_values=pulumi.get(__response__, 'response_export_values'),
+        tags=pulumi.get(__response__, 'tags'),
+        timeouts=pulumi.get(__response__, 'timeouts'),
+        type=pulumi.get(__response__, 'type')))

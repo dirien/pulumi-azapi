@@ -4,10 +4,17 @@
 
 import copy
 import warnings
+import sys
 import pulumi
 import pulumi.runtime
 from typing import Any, Mapping, Optional, Sequence, Union, overload
+if sys.version_info >= (3, 11):
+    from typing import NotRequired, TypedDict, TypeAlias
+else:
+    from typing_extensions import NotRequired, TypedDict, TypeAlias
 from . import _utilities
+from . import outputs
+from ._inputs import *
 
 __all__ = [
     'GetResourceListResult',
@@ -21,12 +28,12 @@ class GetResourceListResult:
     """
     A collection of values returned by getResourceList.
     """
-    def __init__(__self__, id=None, output=None, parent_id=None, response_export_values=None, type=None):
+    def __init__(__self__, id=None, output=None, parent_id=None, response_export_values=None, timeouts=None, type=None):
         if id and not isinstance(id, str):
             raise TypeError("Expected argument 'id' to be a str")
         pulumi.set(__self__, "id", id)
-        if output and not isinstance(output, str):
-            raise TypeError("Expected argument 'output' to be a str")
+        if output and not isinstance(output, dict):
+            raise TypeError("Expected argument 'output' to be a dict")
         pulumi.set(__self__, "output", output)
         if parent_id and not isinstance(parent_id, str):
             raise TypeError("Expected argument 'parent_id' to be a str")
@@ -34,6 +41,9 @@ class GetResourceListResult:
         if response_export_values and not isinstance(response_export_values, list):
             raise TypeError("Expected argument 'response_export_values' to be a list")
         pulumi.set(__self__, "response_export_values", response_export_values)
+        if timeouts and not isinstance(timeouts, dict):
+            raise TypeError("Expected argument 'timeouts' to be a dict")
+        pulumi.set(__self__, "timeouts", timeouts)
         if type and not isinstance(type, str):
             raise TypeError("Expected argument 'type' to be a str")
         pulumi.set(__self__, "type", type)
@@ -42,15 +52,22 @@ class GetResourceListResult:
     @pulumi.getter
     def id(self) -> str:
         """
-        The provider-assigned unique ID for this managed resource.
+        The ID of the azure resource list.
         """
         return pulumi.get(self, "id")
 
     @property
     @pulumi.getter
-    def output(self) -> str:
+    def output(self) -> Any:
         """
-        The output json containing the properties specified in `response_export_values`. Here are some examples to decode json and extract the value.
+        The output containing the properties specified in `response_export_values`. It supports both JSON and HCL object. By default, it will be in JSON format.
+        If specifying `enable_hcl_output_for_data_source` to `true` in the provider block, it will be in HCL format.
+        Here are some examples to use the values in HCL format:
+        ```hcl
+        output "value" {
+        value = data.azapi_resource_list.example.output.value
+        }
+        ```
         """
         return pulumi.get(self, "output")
 
@@ -63,6 +80,11 @@ class GetResourceListResult:
     @pulumi.getter(name="responseExportValues")
     def response_export_values(self) -> Optional[Sequence[str]]:
         return pulumi.get(self, "response_export_values")
+
+    @property
+    @pulumi.getter
+    def timeouts(self) -> Optional['outputs.GetResourceListTimeoutsResult']:
+        return pulumi.get(self, "timeouts")
 
     @property
     @pulumi.getter
@@ -80,11 +102,13 @@ class AwaitableGetResourceListResult(GetResourceListResult):
             output=self.output,
             parent_id=self.parent_id,
             response_export_values=self.response_export_values,
+            timeouts=self.timeouts,
             type=self.type)
 
 
 def get_resource_list(parent_id: Optional[str] = None,
                       response_export_values: Optional[Sequence[str]] = None,
+                      timeouts: Optional[Union['GetResourceListTimeoutsArgs', 'GetResourceListTimeoutsArgsDict']] = None,
                       type: Optional[str] = None,
                       opts: Optional[pulumi.InvokeOptions] = None) -> AwaitableGetResourceListResult:
     """
@@ -96,17 +120,17 @@ def get_resource_list(parent_id: Optional[str] = None,
     :param str parent_id: The parent resource ID to list resources under. e.g. `/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/myResourceGroup`.
     :param Sequence[str] response_export_values: A list of path that needs to be exported from response body.
            Setting it to `["*"]` will export the full response body.
-           Here's an example. If it sets to `["value"]`, it will set the following json to computed property `output`.
+           Here's an example. If it sets to `["value"]`, it will set the following HCL object to computed property `output`.
            ```
            {
-           "value": [
+           value = [
            {
-           "id": "id1",
-           "Permissions": "Full"
+           id = "id1"
+           Permissions = "Full"
            },
            {
-           "id": "id2",
-           "Permissions": "Full"
+           id = "id2"
+           Permissions = "Full"
            }
            ]
            }
@@ -117,6 +141,7 @@ def get_resource_list(parent_id: Optional[str] = None,
     __args__ = dict()
     __args__['parentId'] = parent_id
     __args__['responseExportValues'] = response_export_values
+    __args__['timeouts'] = timeouts
     __args__['type'] = type
     opts = pulumi.InvokeOptions.merge(_utilities.get_invoke_opts_defaults(), opts)
     __ret__ = pulumi.runtime.invoke('azapi:index/getResourceList:getResourceList', __args__, opts=opts, typ=GetResourceListResult).value
@@ -126,14 +151,13 @@ def get_resource_list(parent_id: Optional[str] = None,
         output=pulumi.get(__ret__, 'output'),
         parent_id=pulumi.get(__ret__, 'parent_id'),
         response_export_values=pulumi.get(__ret__, 'response_export_values'),
+        timeouts=pulumi.get(__ret__, 'timeouts'),
         type=pulumi.get(__ret__, 'type'))
-
-
-@_utilities.lift_output_func(get_resource_list)
 def get_resource_list_output(parent_id: Optional[pulumi.Input[str]] = None,
                              response_export_values: Optional[pulumi.Input[Optional[Sequence[str]]]] = None,
+                             timeouts: Optional[pulumi.Input[Optional[Union['GetResourceListTimeoutsArgs', 'GetResourceListTimeoutsArgsDict']]]] = None,
                              type: Optional[pulumi.Input[str]] = None,
-                             opts: Optional[pulumi.InvokeOptions] = None) -> pulumi.Output[GetResourceListResult]:
+                             opts: Optional[Union[pulumi.InvokeOptions, pulumi.InvokeOutputOptions]] = None) -> pulumi.Output[GetResourceListResult]:
     """
     This resource can list all resources of a specific type under a scope. If the API supports paging, it will automatically fetch all pages and return the full list.
 
@@ -143,17 +167,17 @@ def get_resource_list_output(parent_id: Optional[pulumi.Input[str]] = None,
     :param str parent_id: The parent resource ID to list resources under. e.g. `/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/myResourceGroup`.
     :param Sequence[str] response_export_values: A list of path that needs to be exported from response body.
            Setting it to `["*"]` will export the full response body.
-           Here's an example. If it sets to `["value"]`, it will set the following json to computed property `output`.
+           Here's an example. If it sets to `["value"]`, it will set the following HCL object to computed property `output`.
            ```
            {
-           "value": [
+           value = [
            {
-           "id": "id1",
-           "Permissions": "Full"
+           id = "id1"
+           Permissions = "Full"
            },
            {
-           "id": "id2",
-           "Permissions": "Full"
+           id = "id2"
+           Permissions = "Full"
            }
            ]
            }
@@ -161,4 +185,17 @@ def get_resource_list_output(parent_id: Optional[pulumi.Input[str]] = None,
     :param str type: It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
            `<api-version>` is version of the API used to manage this azure resource.
     """
-    ...
+    __args__ = dict()
+    __args__['parentId'] = parent_id
+    __args__['responseExportValues'] = response_export_values
+    __args__['timeouts'] = timeouts
+    __args__['type'] = type
+    opts = pulumi.InvokeOutputOptions.merge(_utilities.get_invoke_opts_defaults(), opts)
+    __ret__ = pulumi.runtime.invoke_output('azapi:index/getResourceList:getResourceList', __args__, opts=opts, typ=GetResourceListResult)
+    return __ret__.apply(lambda __response__: GetResourceListResult(
+        id=pulumi.get(__response__, 'id'),
+        output=pulumi.get(__response__, 'output'),
+        parent_id=pulumi.get(__response__, 'parent_id'),
+        response_export_values=pulumi.get(__response__, 'response_export_values'),
+        timeouts=pulumi.get(__response__, 'timeouts'),
+        type=pulumi.get(__response__, 'type')))

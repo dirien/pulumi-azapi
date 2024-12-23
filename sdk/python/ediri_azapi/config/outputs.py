@@ -4,17 +4,22 @@
 
 import copy
 import warnings
+import sys
 import pulumi
 import pulumi.runtime
 from typing import Any, Mapping, Optional, Sequence, Union, overload
+if sys.version_info >= (3, 11):
+    from typing import NotRequired, TypedDict, TypeAlias
+else:
+    from typing_extensions import NotRequired, TypedDict, TypeAlias
 from .. import _utilities
 
 __all__ = [
-    'Endpoint',
+    'Endpoints',
 ]
 
 @pulumi.output_type
-class Endpoint(dict):
+class Endpoints(dict):
     def __init__(__self__, *,
                  active_directory_authority_host: Optional[str] = None,
                  resource_manager_audience: Optional[str] = None,

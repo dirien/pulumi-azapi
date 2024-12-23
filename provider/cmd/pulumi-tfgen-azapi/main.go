@@ -16,9 +16,9 @@ package main
 
 import (
 	azapi "github.com/dirien/pulumi-azapi/provider"
-	"github.com/pulumi/pulumi-terraform-bridge/pf/tfgen"
+	"github.com/pulumi/pulumi-terraform-bridge/v3/pkg/pf/tfgen"
 )
 
 func main() {
-	tfgen.MainWithMuxer("azapi", azapi.Provider())
+	tfgen.Main("azapi", azapi.Provider())
 }

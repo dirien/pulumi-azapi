@@ -131,6 +131,66 @@ namespace ediri.Azapi
         /// </summary>
         public static Output<GetResourceIdResult> Invoke(GetResourceIdInvokeArgs args, InvokeOptions? options = null)
             => global::Pulumi.Deployment.Instance.Invoke<GetResourceIdResult>("azapi:index/getResourceId:getResourceId", args ?? new GetResourceIdInvokeArgs(), options.WithDefaults());
+
+        /// <summary>
+        /// This resource can parse an Azure resource ID into its separate fields.
+        /// 
+        /// ## Example Usage
+        /// 
+        /// ```hcl
+        /// terraform {
+        ///   required_providers {
+        ///     azapi = {
+        ///       source = "Azure/azapi"
+        ///     }
+        ///   }
+        /// }
+        /// 
+        /// provider "azapi" {
+        /// }
+        /// 
+        /// data "azapi_resource_id" "account" {
+        ///   type        = "Microsoft.Automation/automationAccounts@2021-06-22"
+        ///   resource_id = "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg1/providers/Microsoft.Automation/automationAccounts/automationAccount1"
+        /// }
+        /// 
+        /// output "account_name" {
+        ///   value = data.azapi_resource_id.account.name
+        /// }
+        /// 
+        /// output "account_resource_group" {
+        ///   value = data.azapi_resource_id.account.resource_group_name
+        /// }
+        /// 
+        /// output "account_subscription" {
+        ///   value = data.azapi_resource_id.account.subscription_id
+        /// }
+        /// 
+        /// output "account_parent_id" {
+        ///   value = data.azapi_resource_id.account.parent_id
+        /// }
+        /// 
+        /// data "azapi_resource_id" "vnet" {
+        ///   type      = "Microsoft.Network/virtualNetworks@2021-02-01"
+        ///   parent_id = "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg1"
+        ///   name      = "vnet1"
+        /// }
+        /// 
+        /// output "vnet_id" {
+        ///   value = data.azapi_resource_id.vnet.id
+        /// }
+        /// 
+        /// output "vnet_resource_group" {
+        ///   value = data.azapi_resource_id.vnet.resource_group_name
+        /// }
+        /// 
+        /// output "vnet_subscription" {
+        ///   value = data.azapi_resource_id.vnet.subscription_id
+        /// }
+        /// ```
+        /// </summary>
+        public static Output<GetResourceIdResult> Invoke(GetResourceIdInvokeArgs args, InvokeOutputOptions options)
+            => global::Pulumi.Deployment.Instance.Invoke<GetResourceIdResult>("azapi:index/getResourceId:getResourceId", args ?? new GetResourceIdInvokeArgs(), options.WithDefaults());
     }
 
 
@@ -162,6 +222,9 @@ namespace ediri.Azapi
         /// </summary>
         [Input("resourceId")]
         public string? ResourceId { get; set; }
+
+        [Input("timeouts")]
+        public Inputs.GetResourceIdTimeoutsArgs? Timeouts { get; set; }
 
         /// <summary>
         /// It is in a format like `&lt;resource-type&gt;@&lt;api-version&gt;`. `&lt;resource-type&gt;` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
@@ -205,6 +268,9 @@ namespace ediri.Azapi
         [Input("resourceId")]
         public Input<string>? ResourceId { get; set; }
 
+        [Input("timeouts")]
+        public Input<Inputs.GetResourceIdTimeoutsInputArgs>? Timeouts { get; set; }
+
         /// <summary>
         /// It is in a format like `&lt;resource-type&gt;@&lt;api-version&gt;`. `&lt;resource-type&gt;` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
         /// `&lt;api-version&gt;` is version of the API used to manage this azure resource.
@@ -223,7 +289,7 @@ namespace ediri.Azapi
     public sealed class GetResourceIdResult
     {
         /// <summary>
-        /// The provider-assigned unique ID for this managed resource.
+        /// The ID of the azure resource.
         /// </summary>
         public readonly string Id;
         /// <summary>
@@ -251,6 +317,7 @@ namespace ediri.Azapi
         /// The subscription ID of the azure resource.
         /// </summary>
         public readonly string SubscriptionId;
+        public readonly Outputs.GetResourceIdTimeoutsResult? Timeouts;
         public readonly string Type;
 
         [OutputConstructor]
@@ -271,6 +338,8 @@ namespace ediri.Azapi
 
             string subscriptionId,
 
+            Outputs.GetResourceIdTimeoutsResult? timeouts,
+
             string type)
         {
             Id = id;
@@ -281,6 +350,7 @@ namespace ediri.Azapi
             ResourceGroupName = resourceGroupName;
             ResourceId = resourceId;
             SubscriptionId = subscriptionId;
+            Timeouts = timeouts;
             Type = type;
         }
     }

@@ -2,6 +2,8 @@
 // *** Do not edit by hand unless you're certain you know what you are doing! ***
 
 import * as pulumi from "@pulumi/pulumi";
+import * as inputs from "./types/input";
+import * as outputs from "./types/output";
 import * as utilities from "./utilities";
 
 /**
@@ -42,21 +44,22 @@ export class UpdateResource extends pulumi.CustomResource {
     }
 
     /**
-     * A JSON object that contains the request body used to add on an existing azure resource.
+     * A dynamic attribute that contains the request body used to add on an existing azure resource.
      */
-    public readonly body!: pulumi.Output<string | undefined>;
+    public readonly body!: pulumi.Output<any>;
     /**
-     * A list of properties that should be ignored when comparing the `body` with its current state.
+     * @deprecated This feature is deprecated and will be removed in a major release. Please use the `lifecycle.ignore_changes` argument to specify the fields in `body` to ignore.
      */
     public readonly ignoreBodyChanges!: pulumi.Output<string[] | undefined>;
     /**
      * Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.
      */
-    public readonly ignoreCasing!: pulumi.Output<boolean | undefined>;
+    public readonly ignoreCasing!: pulumi.Output<boolean>;
     /**
      * Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.
+     * It's recommend to enable this option when some sensitive properties are not returned in response body, instead of setting them in `lifecycle.ignore_changes` because it will make the sensitive fields unable to update.
      */
-    public readonly ignoreMissingProperty!: pulumi.Output<boolean | undefined>;
+    public readonly ignoreMissingProperty!: pulumi.Output<boolean>;
     /**
      * A list of ARM resource IDs which are used to avoid create/modify/delete azapi resources at the same time.
      */
@@ -66,14 +69,14 @@ export class UpdateResource extends pulumi.CustomResource {
      */
     public readonly name!: pulumi.Output<string>;
     /**
-     * The output json containing the properties specified in `responseExportValues`. Here're some examples to decode json and extract the value.
+     * The HCL object containing the properties specified in `responseExportValues`. Here are some examples to use the values.
      * ```
      * // it will output "registry1.azurecr.io"
      * output "loginServer" {
-     * value = jsondecode(azapi_resource.example.output).properties.loginServer
+     * value = azapi_resource.example.output.properties.loginServer
      * }
      */
-    public /*out*/ readonly output!: pulumi.Output<string>;
+    public /*out*/ readonly output!: pulumi.Output<any>;
     /**
      * The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created. It supports different kinds of deployment scope for **top level** resources: 
      * - resource group scope: `parentId` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.
@@ -94,14 +97,14 @@ export class UpdateResource extends pulumi.CustomResource {
     /**
      * A list of path that needs to be exported from response body.
      * Setting it to `["*"]` will export the full response body.
-     * Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
+     * Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following HCL object to computed property `output`.
      * ```
      * {
-     * "properties" : {
-     * "loginServer" : "registry1.azurecr.io"
-     * "policies" : {
-     * "quarantinePolicy" = {
-     * "status" = "disabled"
+     * properties = {
+     * loginServer = "registry1.azurecr.io"
+     * policies = {
+     * quarantinePolicy = {
+     * status = "disabled"
      * }
      * }
      * }
@@ -109,6 +112,7 @@ export class UpdateResource extends pulumi.CustomResource {
      * ```
      */
     public readonly responseExportValues!: pulumi.Output<string[] | undefined>;
+    public readonly timeouts!: pulumi.Output<outputs.UpdateResourceTimeouts | undefined>;
     /**
      * It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
      * `<api-version>` is version of the API used to manage this azure resource.
@@ -138,6 +142,7 @@ export class UpdateResource extends pulumi.CustomResource {
             resourceInputs["parentId"] = state ? state.parentId : undefined;
             resourceInputs["resourceId"] = state ? state.resourceId : undefined;
             resourceInputs["responseExportValues"] = state ? state.responseExportValues : undefined;
+            resourceInputs["timeouts"] = state ? state.timeouts : undefined;
             resourceInputs["type"] = state ? state.type : undefined;
         } else {
             const args = argsOrState as UpdateResourceArgs | undefined;
@@ -153,6 +158,7 @@ export class UpdateResource extends pulumi.CustomResource {
             resourceInputs["parentId"] = args ? args.parentId : undefined;
             resourceInputs["resourceId"] = args ? args.resourceId : undefined;
             resourceInputs["responseExportValues"] = args ? args.responseExportValues : undefined;
+            resourceInputs["timeouts"] = args ? args.timeouts : undefined;
             resourceInputs["type"] = args ? args.type : undefined;
             resourceInputs["output"] = undefined /*out*/;
         }
@@ -166,11 +172,11 @@ export class UpdateResource extends pulumi.CustomResource {
  */
 export interface UpdateResourceState {
     /**
-     * A JSON object that contains the request body used to add on an existing azure resource.
+     * A dynamic attribute that contains the request body used to add on an existing azure resource.
      */
-    body?: pulumi.Input<string>;
+    body?: any;
     /**
-     * A list of properties that should be ignored when comparing the `body` with its current state.
+     * @deprecated This feature is deprecated and will be removed in a major release. Please use the `lifecycle.ignore_changes` argument to specify the fields in `body` to ignore.
      */
     ignoreBodyChanges?: pulumi.Input<pulumi.Input<string>[]>;
     /**
@@ -179,6 +185,7 @@ export interface UpdateResourceState {
     ignoreCasing?: pulumi.Input<boolean>;
     /**
      * Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.
+     * It's recommend to enable this option when some sensitive properties are not returned in response body, instead of setting them in `lifecycle.ignore_changes` because it will make the sensitive fields unable to update.
      */
     ignoreMissingProperty?: pulumi.Input<boolean>;
     /**
@@ -190,14 +197,14 @@ export interface UpdateResourceState {
      */
     name?: pulumi.Input<string>;
     /**
-     * The output json containing the properties specified in `responseExportValues`. Here're some examples to decode json and extract the value.
+     * The HCL object containing the properties specified in `responseExportValues`. Here are some examples to use the values.
      * ```
      * // it will output "registry1.azurecr.io"
      * output "loginServer" {
-     * value = jsondecode(azapi_resource.example.output).properties.loginServer
+     * value = azapi_resource.example.output.properties.loginServer
      * }
      */
-    output?: pulumi.Input<string>;
+    output?: any;
     /**
      * The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created. It supports different kinds of deployment scope for **top level** resources: 
      * - resource group scope: `parentId` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.
@@ -218,14 +225,14 @@ export interface UpdateResourceState {
     /**
      * A list of path that needs to be exported from response body.
      * Setting it to `["*"]` will export the full response body.
-     * Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
+     * Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following HCL object to computed property `output`.
      * ```
      * {
-     * "properties" : {
-     * "loginServer" : "registry1.azurecr.io"
-     * "policies" : {
-     * "quarantinePolicy" = {
-     * "status" = "disabled"
+     * properties = {
+     * loginServer = "registry1.azurecr.io"
+     * policies = {
+     * quarantinePolicy = {
+     * status = "disabled"
      * }
      * }
      * }
@@ -233,6 +240,7 @@ export interface UpdateResourceState {
      * ```
      */
     responseExportValues?: pulumi.Input<pulumi.Input<string>[]>;
+    timeouts?: pulumi.Input<inputs.UpdateResourceTimeouts>;
     /**
      * It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
      * `<api-version>` is version of the API used to manage this azure resource.
@@ -245,11 +253,11 @@ export interface UpdateResourceState {
  */
 export interface UpdateResourceArgs {
     /**
-     * A JSON object that contains the request body used to add on an existing azure resource.
+     * A dynamic attribute that contains the request body used to add on an existing azure resource.
      */
-    body?: pulumi.Input<string>;
+    body?: any;
     /**
-     * A list of properties that should be ignored when comparing the `body` with its current state.
+     * @deprecated This feature is deprecated and will be removed in a major release. Please use the `lifecycle.ignore_changes` argument to specify the fields in `body` to ignore.
      */
     ignoreBodyChanges?: pulumi.Input<pulumi.Input<string>[]>;
     /**
@@ -258,6 +266,7 @@ export interface UpdateResourceArgs {
     ignoreCasing?: pulumi.Input<boolean>;
     /**
      * Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.
+     * It's recommend to enable this option when some sensitive properties are not returned in response body, instead of setting them in `lifecycle.ignore_changes` because it will make the sensitive fields unable to update.
      */
     ignoreMissingProperty?: pulumi.Input<boolean>;
     /**
@@ -288,14 +297,14 @@ export interface UpdateResourceArgs {
     /**
      * A list of path that needs to be exported from response body.
      * Setting it to `["*"]` will export the full response body.
-     * Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
+     * Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following HCL object to computed property `output`.
      * ```
      * {
-     * "properties" : {
-     * "loginServer" : "registry1.azurecr.io"
-     * "policies" : {
-     * "quarantinePolicy" = {
-     * "status" = "disabled"
+     * properties = {
+     * loginServer = "registry1.azurecr.io"
+     * policies = {
+     * quarantinePolicy = {
+     * status = "disabled"
      * }
      * }
      * }
@@ -303,6 +312,7 @@ export interface UpdateResourceArgs {
      * ```
      */
     responseExportValues?: pulumi.Input<pulumi.Input<string>[]>;
+    timeouts?: pulumi.Input<inputs.UpdateResourceTimeouts>;
     /**
      * It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
      * `<api-version>` is version of the API used to manage this azure resource.

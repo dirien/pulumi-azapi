@@ -26,8 +26,6 @@ func LookupResource(ctx *pulumi.Context, args *LookupResourceArgs, opts ...pulum
 
 // A collection of arguments for invoking getResource.
 type LookupResourceArgs struct {
-	// An `identity` block as defined below, which contains the Managed Service Identity information for this azure resource.
-	Identity *GetResourceIdentity `pulumi:"identity"`
 	// Specifies the name of the azure resource.
 	Name *string `pulumi:"name"`
 	// The ID of the azure resource in which this resource is created. It supports different kinds of deployment scope for **top level** resources:
@@ -47,8 +45,9 @@ type LookupResourceArgs struct {
 	ResourceId *string `pulumi:"resourceId"`
 	// A list of path that needs to be exported from response body.
 	// Setting it to `["*"]` will export the full response body.
-	// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-	ResponseExportValues []string `pulumi:"responseExportValues"`
+	// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the HCL object to computed property `output`.
+	ResponseExportValues []string             `pulumi:"responseExportValues"`
+	Timeouts             *GetResourceTimeouts `pulumi:"timeouts"`
 	// It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
 	// `<api-version>` is version of the API used to manage this azure resource.
 	Type string `pulumi:"type"`
@@ -56,41 +55,38 @@ type LookupResourceArgs struct {
 
 // A collection of values returned by getResource.
 type LookupResourceResult struct {
-	// The provider-assigned unique ID for this managed resource.
+	// The ID of the azure resource.
 	Id string `pulumi:"id"`
 	// An `identity` block as defined below, which contains the Managed Service Identity information for this azure resource.
-	Identity GetResourceIdentity `pulumi:"identity"`
+	Identities []GetResourceIdentity `pulumi:"identities"`
 	// The Azure Region where the azure resource should exist.
-	Location string  `pulumi:"location"`
-	Name     *string `pulumi:"name"`
-	// The output json containing the properties specified in `responseExportValues`. Here're some examples to decode json and extract the value.
-	Output               string   `pulumi:"output"`
-	ParentId             string   `pulumi:"parentId"`
-	ResourceId           *string  `pulumi:"resourceId"`
-	ResponseExportValues []string `pulumi:"responseExportValues"`
+	Location string `pulumi:"location"`
+	Name     string `pulumi:"name"`
+	// The output containing the properties specified in `responseExportValues`. It supports both JSON and HCL object. By default, it will be in JSON format.
+	// If specifying `enableHclOutputForDataSource` to `true` in the provider block, it will be in HCL format.
+	// Here are some examples to use the values in HCL format:
+	Output               interface{} `pulumi:"output"`
+	ParentId             string      `pulumi:"parentId"`
+	ResourceId           string      `pulumi:"resourceId"`
+	ResponseExportValues []string    `pulumi:"responseExportValues"`
 	// A mapping of tags which should be assigned to the azure resource.
-	Tags map[string]string `pulumi:"tags"`
+	Tags     map[string]string    `pulumi:"tags"`
+	Timeouts *GetResourceTimeouts `pulumi:"timeouts"`
 	// The Type of Identity which should be used for this azure resource. Possible values are `SystemAssigned`, `UserAssigned` and `SystemAssigned,UserAssigned`.
 	Type string `pulumi:"type"`
 }
 
 func LookupResourceOutput(ctx *pulumi.Context, args LookupResourceOutputArgs, opts ...pulumi.InvokeOption) LookupResourceResultOutput {
-	return pulumi.ToOutputWithContext(context.Background(), args).
-		ApplyT(func(v interface{}) (LookupResourceResult, error) {
+	return pulumi.ToOutputWithContext(ctx.Context(), args).
+		ApplyT(func(v interface{}) (LookupResourceResultOutput, error) {
 			args := v.(LookupResourceArgs)
-			r, err := LookupResource(ctx, &args, opts...)
-			var s LookupResourceResult
-			if r != nil {
-				s = *r
-			}
-			return s, err
+			options := pulumi.InvokeOutputOptions{InvokeOptions: internal.PkgInvokeDefaultOpts(opts)}
+			return ctx.InvokeOutput("azapi:index/getResource:getResource", args, LookupResourceResultOutput{}, options).(LookupResourceResultOutput), nil
 		}).(LookupResourceResultOutput)
 }
 
 // A collection of arguments for invoking getResource.
 type LookupResourceOutputArgs struct {
-	// An `identity` block as defined below, which contains the Managed Service Identity information for this azure resource.
-	Identity GetResourceIdentityPtrInput `pulumi:"identity"`
 	// Specifies the name of the azure resource.
 	Name pulumi.StringPtrInput `pulumi:"name"`
 	// The ID of the azure resource in which this resource is created. It supports different kinds of deployment scope for **top level** resources:
@@ -110,8 +106,9 @@ type LookupResourceOutputArgs struct {
 	ResourceId pulumi.StringPtrInput `pulumi:"resourceId"`
 	// A list of path that needs to be exported from response body.
 	// Setting it to `["*"]` will export the full response body.
-	// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-	ResponseExportValues pulumi.StringArrayInput `pulumi:"responseExportValues"`
+	// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the HCL object to computed property `output`.
+	ResponseExportValues pulumi.StringArrayInput     `pulumi:"responseExportValues"`
+	Timeouts             GetResourceTimeoutsPtrInput `pulumi:"timeouts"`
 	// It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
 	// `<api-version>` is version of the API used to manage this azure resource.
 	Type pulumi.StringInput `pulumi:"type"`
@@ -136,14 +133,14 @@ func (o LookupResourceResultOutput) ToLookupResourceResultOutputWithContext(ctx 
 	return o
 }
 
-// The provider-assigned unique ID for this managed resource.
+// The ID of the azure resource.
 func (o LookupResourceResultOutput) Id() pulumi.StringOutput {
 	return o.ApplyT(func(v LookupResourceResult) string { return v.Id }).(pulumi.StringOutput)
 }
 
 // An `identity` block as defined below, which contains the Managed Service Identity information for this azure resource.
-func (o LookupResourceResultOutput) Identity() GetResourceIdentityOutput {
-	return o.ApplyT(func(v LookupResourceResult) GetResourceIdentity { return v.Identity }).(GetResourceIdentityOutput)
+func (o LookupResourceResultOutput) Identities() GetResourceIdentityArrayOutput {
+	return o.ApplyT(func(v LookupResourceResult) []GetResourceIdentity { return v.Identities }).(GetResourceIdentityArrayOutput)
 }
 
 // The Azure Region where the azure resource should exist.
@@ -151,21 +148,23 @@ func (o LookupResourceResultOutput) Location() pulumi.StringOutput {
 	return o.ApplyT(func(v LookupResourceResult) string { return v.Location }).(pulumi.StringOutput)
 }
 
-func (o LookupResourceResultOutput) Name() pulumi.StringPtrOutput {
-	return o.ApplyT(func(v LookupResourceResult) *string { return v.Name }).(pulumi.StringPtrOutput)
+func (o LookupResourceResultOutput) Name() pulumi.StringOutput {
+	return o.ApplyT(func(v LookupResourceResult) string { return v.Name }).(pulumi.StringOutput)
 }
 
-// The output json containing the properties specified in `responseExportValues`. Here're some examples to decode json and extract the value.
-func (o LookupResourceResultOutput) Output() pulumi.StringOutput {
-	return o.ApplyT(func(v LookupResourceResult) string { return v.Output }).(pulumi.StringOutput)
+// The output containing the properties specified in `responseExportValues`. It supports both JSON and HCL object. By default, it will be in JSON format.
+// If specifying `enableHclOutputForDataSource` to `true` in the provider block, it will be in HCL format.
+// Here are some examples to use the values in HCL format:
+func (o LookupResourceResultOutput) Output() pulumi.AnyOutput {
+	return o.ApplyT(func(v LookupResourceResult) interface{} { return v.Output }).(pulumi.AnyOutput)
 }
 
 func (o LookupResourceResultOutput) ParentId() pulumi.StringOutput {
 	return o.ApplyT(func(v LookupResourceResult) string { return v.ParentId }).(pulumi.StringOutput)
 }
 
-func (o LookupResourceResultOutput) ResourceId() pulumi.StringPtrOutput {
-	return o.ApplyT(func(v LookupResourceResult) *string { return v.ResourceId }).(pulumi.StringPtrOutput)
+func (o LookupResourceResultOutput) ResourceId() pulumi.StringOutput {
+	return o.ApplyT(func(v LookupResourceResult) string { return v.ResourceId }).(pulumi.StringOutput)
 }
 
 func (o LookupResourceResultOutput) ResponseExportValues() pulumi.StringArrayOutput {
@@ -175,6 +174,10 @@ func (o LookupResourceResultOutput) ResponseExportValues() pulumi.StringArrayOut
 // A mapping of tags which should be assigned to the azure resource.
 func (o LookupResourceResultOutput) Tags() pulumi.StringMapOutput {
 	return o.ApplyT(func(v LookupResourceResult) map[string]string { return v.Tags }).(pulumi.StringMapOutput)
+}
+
+func (o LookupResourceResultOutput) Timeouts() GetResourceTimeoutsPtrOutput {
+	return o.ApplyT(func(v LookupResourceResult) *GetResourceTimeouts { return v.Timeouts }).(GetResourceTimeoutsPtrOutput)
 }
 
 // The Type of Identity which should be used for this azure resource. Possible values are `SystemAssigned`, `UserAssigned` and `SystemAssigned,UserAssigned`.

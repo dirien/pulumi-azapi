@@ -2,6 +2,8 @@
 // *** Do not edit by hand unless you're certain you know what you are doing! ***
 
 import * as pulumi from "@pulumi/pulumi";
+import * as inputs from "./types/input";
+import * as outputs from "./types/output";
 import * as utilities from "./utilities";
 
 /**
@@ -10,11 +12,11 @@ import * as utilities from "./utilities";
  * ## Example Usage
  */
 export function getResourceList(args: GetResourceListArgs, opts?: pulumi.InvokeOptions): Promise<GetResourceListResult> {
-
     opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts || {});
     return pulumi.runtime.invoke("azapi:index/getResourceList:getResourceList", {
         "parentId": args.parentId,
         "responseExportValues": args.responseExportValues,
+        "timeouts": args.timeouts,
         "type": args.type,
     }, opts);
 }
@@ -30,23 +32,24 @@ export interface GetResourceListArgs {
     /**
      * A list of path that needs to be exported from response body.
      * Setting it to `["*"]` will export the full response body.
-     * Here's an example. If it sets to `["value"]`, it will set the following json to computed property `output`.
+     * Here's an example. If it sets to `["value"]`, it will set the following HCL object to computed property `output`.
      * ```
      * {
-     * "value": [
+     * value = [
      * {
-     * "id": "id1",
-     * "Permissions": "Full"
+     * id = "id1"
+     * Permissions = "Full"
      * },
      * {
-     * "id": "id2",
-     * "Permissions": "Full"
+     * id = "id2"
+     * Permissions = "Full"
      * }
      * ]
      * }
      * ```
      */
     responseExportValues?: string[];
+    timeouts?: inputs.GetResourceListTimeouts;
     /**
      * It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
      * `<api-version>` is version of the API used to manage this azure resource.
@@ -59,15 +62,23 @@ export interface GetResourceListArgs {
  */
 export interface GetResourceListResult {
     /**
-     * The provider-assigned unique ID for this managed resource.
+     * The ID of the azure resource list.
      */
     readonly id: string;
     /**
-     * The output json containing the properties specified in `responseExportValues`. Here are some examples to decode json and extract the value.
+     * The output containing the properties specified in `responseExportValues`. It supports both JSON and HCL object. By default, it will be in JSON format.
+     * If specifying `enableHclOutputForDataSource` to `true` in the provider block, it will be in HCL format.
+     * Here are some examples to use the values in HCL format:
+     * ```hcl
+     * output "value" {
+     * value = data.azapi_resource_list.example.output.value
+     * }
+     * ```
      */
-    readonly output: string;
+    readonly output: any;
     readonly parentId: string;
     readonly responseExportValues?: string[];
+    readonly timeouts?: outputs.GetResourceListTimeouts;
     readonly type: string;
 }
 /**
@@ -75,8 +86,14 @@ export interface GetResourceListResult {
  *
  * ## Example Usage
  */
-export function getResourceListOutput(args: GetResourceListOutputArgs, opts?: pulumi.InvokeOptions): pulumi.Output<GetResourceListResult> {
-    return pulumi.output(args).apply((a: any) => getResourceList(a, opts))
+export function getResourceListOutput(args: GetResourceListOutputArgs, opts?: pulumi.InvokeOutputOptions): pulumi.Output<GetResourceListResult> {
+    opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts || {});
+    return pulumi.runtime.invokeOutput("azapi:index/getResourceList:getResourceList", {
+        "parentId": args.parentId,
+        "responseExportValues": args.responseExportValues,
+        "timeouts": args.timeouts,
+        "type": args.type,
+    }, opts);
 }
 
 /**
@@ -90,23 +107,24 @@ export interface GetResourceListOutputArgs {
     /**
      * A list of path that needs to be exported from response body.
      * Setting it to `["*"]` will export the full response body.
-     * Here's an example. If it sets to `["value"]`, it will set the following json to computed property `output`.
+     * Here's an example. If it sets to `["value"]`, it will set the following HCL object to computed property `output`.
      * ```
      * {
-     * "value": [
+     * value = [
      * {
-     * "id": "id1",
-     * "Permissions": "Full"
+     * id = "id1"
+     * Permissions = "Full"
      * },
      * {
-     * "id": "id2",
-     * "Permissions": "Full"
+     * id = "id2"
+     * Permissions = "Full"
      * }
      * ]
      * }
      * ```
      */
     responseExportValues?: pulumi.Input<pulumi.Input<string>[]>;
+    timeouts?: pulumi.Input<inputs.GetResourceListTimeoutsArgs>;
     /**
      * It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
      * `<api-version>` is version of the API used to manage this azure resource.

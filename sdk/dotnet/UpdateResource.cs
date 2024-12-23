@@ -23,14 +23,11 @@ namespace ediri.Azapi
     public partial class UpdateResource : global::Pulumi.CustomResource
     {
         /// <summary>
-        /// A JSON object that contains the request body used to add on an existing azure resource.
+        /// A dynamic attribute that contains the request body used to add on an existing azure resource.
         /// </summary>
         [Output("body")]
-        public Output<string?> Body { get; private set; } = null!;
+        public Output<object> Body { get; private set; } = null!;
 
-        /// <summary>
-        /// A list of properties that should be ignored when comparing the `body` with its current state.
-        /// </summary>
         [Output("ignoreBodyChanges")]
         public Output<ImmutableArray<string>> IgnoreBodyChanges { get; private set; } = null!;
 
@@ -38,13 +35,14 @@ namespace ediri.Azapi
         /// Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.
         /// </summary>
         [Output("ignoreCasing")]
-        public Output<bool?> IgnoreCasing { get; private set; } = null!;
+        public Output<bool> IgnoreCasing { get; private set; } = null!;
 
         /// <summary>
         /// Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.
+        /// It's recommend to enable this option when some sensitive properties are not returned in response body, instead of setting them in `lifecycle.ignore_changes` because it will make the sensitive fields unable to update.
         /// </summary>
         [Output("ignoreMissingProperty")]
-        public Output<bool?> IgnoreMissingProperty { get; private set; } = null!;
+        public Output<bool> IgnoreMissingProperty { get; private set; } = null!;
 
         /// <summary>
         /// A list of ARM resource IDs which are used to avoid create/modify/delete azapi resources at the same time.
@@ -59,15 +57,15 @@ namespace ediri.Azapi
         public Output<string> Name { get; private set; } = null!;
 
         /// <summary>
-        /// The output json containing the properties specified in `response_export_values`. Here're some examples to decode json and extract the value.
+        /// The HCL object containing the properties specified in `response_export_values`. Here are some examples to use the values.
         /// ```
         /// // it will output "registry1.azurecr.io"
         /// output "login_server" {
-        /// value = jsondecode(azapi_resource.example.output).properties.loginServer
+        /// value = azapi_resource.example.output.properties.loginServer
         /// }
         /// </summary>
         [Output("output")]
-        public Output<string> Output { get; private set; } = null!;
+        public Output<object> Output { get; private set; } = null!;
 
         /// <summary>
         /// The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created. It supports different kinds of deployment scope for **top level** resources: 
@@ -93,14 +91,14 @@ namespace ediri.Azapi
         /// <summary>
         /// A list of path that needs to be exported from response body.
         /// Setting it to `["*"]` will export the full response body.
-        /// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
+        /// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following HCL object to computed property `output`.
         /// ```
         /// {
-        /// "properties" : {
-        /// "loginServer" : "registry1.azurecr.io"
-        /// "policies" : {
-        /// "quarantinePolicy" = {
-        /// "status" = "disabled"
+        /// properties = {
+        /// loginServer = "registry1.azurecr.io"
+        /// policies = {
+        /// quarantinePolicy = {
+        /// status = "disabled"
         /// }
         /// }
         /// }
@@ -109,6 +107,9 @@ namespace ediri.Azapi
         /// </summary>
         [Output("responseExportValues")]
         public Output<ImmutableArray<string>> ResponseExportValues { get; private set; } = null!;
+
+        [Output("timeouts")]
+        public Output<Outputs.UpdateResourceTimeouts?> Timeouts { get; private set; } = null!;
 
         /// <summary>
         /// It is in a format like `&lt;resource-type&gt;@&lt;api-version&gt;`. `&lt;resource-type&gt;` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
@@ -165,17 +166,14 @@ namespace ediri.Azapi
     public sealed class UpdateResourceArgs : global::Pulumi.ResourceArgs
     {
         /// <summary>
-        /// A JSON object that contains the request body used to add on an existing azure resource.
+        /// A dynamic attribute that contains the request body used to add on an existing azure resource.
         /// </summary>
         [Input("body")]
-        public Input<string>? Body { get; set; }
+        public Input<object>? Body { get; set; }
 
         [Input("ignoreBodyChanges")]
         private InputList<string>? _ignoreBodyChanges;
-
-        /// <summary>
-        /// A list of properties that should be ignored when comparing the `body` with its current state.
-        /// </summary>
+        [Obsolete(@"This feature is deprecated and will be removed in a major release. Please use the `lifecycle.ignore_changes` argument to specify the fields in `body` to ignore.")]
         public InputList<string> IgnoreBodyChanges
         {
             get => _ignoreBodyChanges ?? (_ignoreBodyChanges = new InputList<string>());
@@ -190,6 +188,7 @@ namespace ediri.Azapi
 
         /// <summary>
         /// Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.
+        /// It's recommend to enable this option when some sensitive properties are not returned in response body, instead of setting them in `lifecycle.ignore_changes` because it will make the sensitive fields unable to update.
         /// </summary>
         [Input("ignoreMissingProperty")]
         public Input<bool>? IgnoreMissingProperty { get; set; }
@@ -239,14 +238,14 @@ namespace ediri.Azapi
         /// <summary>
         /// A list of path that needs to be exported from response body.
         /// Setting it to `["*"]` will export the full response body.
-        /// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
+        /// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following HCL object to computed property `output`.
         /// ```
         /// {
-        /// "properties" : {
-        /// "loginServer" : "registry1.azurecr.io"
-        /// "policies" : {
-        /// "quarantinePolicy" = {
-        /// "status" = "disabled"
+        /// properties = {
+        /// loginServer = "registry1.azurecr.io"
+        /// policies = {
+        /// quarantinePolicy = {
+        /// status = "disabled"
         /// }
         /// }
         /// }
@@ -258,6 +257,9 @@ namespace ediri.Azapi
             get => _responseExportValues ?? (_responseExportValues = new InputList<string>());
             set => _responseExportValues = value;
         }
+
+        [Input("timeouts")]
+        public Input<Inputs.UpdateResourceTimeoutsArgs>? Timeouts { get; set; }
 
         /// <summary>
         /// It is in a format like `&lt;resource-type&gt;@&lt;api-version&gt;`. `&lt;resource-type&gt;` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
@@ -275,17 +277,14 @@ namespace ediri.Azapi
     public sealed class UpdateResourceState : global::Pulumi.ResourceArgs
     {
         /// <summary>
-        /// A JSON object that contains the request body used to add on an existing azure resource.
+        /// A dynamic attribute that contains the request body used to add on an existing azure resource.
         /// </summary>
         [Input("body")]
-        public Input<string>? Body { get; set; }
+        public Input<object>? Body { get; set; }
 
         [Input("ignoreBodyChanges")]
         private InputList<string>? _ignoreBodyChanges;
-
-        /// <summary>
-        /// A list of properties that should be ignored when comparing the `body` with its current state.
-        /// </summary>
+        [Obsolete(@"This feature is deprecated and will be removed in a major release. Please use the `lifecycle.ignore_changes` argument to specify the fields in `body` to ignore.")]
         public InputList<string> IgnoreBodyChanges
         {
             get => _ignoreBodyChanges ?? (_ignoreBodyChanges = new InputList<string>());
@@ -300,6 +299,7 @@ namespace ediri.Azapi
 
         /// <summary>
         /// Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.
+        /// It's recommend to enable this option when some sensitive properties are not returned in response body, instead of setting them in `lifecycle.ignore_changes` because it will make the sensitive fields unable to update.
         /// </summary>
         [Input("ignoreMissingProperty")]
         public Input<bool>? IgnoreMissingProperty { get; set; }
@@ -323,15 +323,15 @@ namespace ediri.Azapi
         public Input<string>? Name { get; set; }
 
         /// <summary>
-        /// The output json containing the properties specified in `response_export_values`. Here're some examples to decode json and extract the value.
+        /// The HCL object containing the properties specified in `response_export_values`. Here are some examples to use the values.
         /// ```
         /// // it will output "registry1.azurecr.io"
         /// output "login_server" {
-        /// value = jsondecode(azapi_resource.example.output).properties.loginServer
+        /// value = azapi_resource.example.output.properties.loginServer
         /// }
         /// </summary>
         [Input("output")]
-        public Input<string>? Output { get; set; }
+        public Input<object>? Output { get; set; }
 
         /// <summary>
         /// The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created. It supports different kinds of deployment scope for **top level** resources: 
@@ -360,14 +360,14 @@ namespace ediri.Azapi
         /// <summary>
         /// A list of path that needs to be exported from response body.
         /// Setting it to `["*"]` will export the full response body.
-        /// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
+        /// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following HCL object to computed property `output`.
         /// ```
         /// {
-        /// "properties" : {
-        /// "loginServer" : "registry1.azurecr.io"
-        /// "policies" : {
-        /// "quarantinePolicy" = {
-        /// "status" = "disabled"
+        /// properties = {
+        /// loginServer = "registry1.azurecr.io"
+        /// policies = {
+        /// quarantinePolicy = {
+        /// status = "disabled"
         /// }
         /// }
         /// }
@@ -379,6 +379,9 @@ namespace ediri.Azapi
             get => _responseExportValues ?? (_responseExportValues = new InputList<string>());
             set => _responseExportValues = value;
         }
+
+        [Input("timeouts")]
+        public Input<Inputs.UpdateResourceTimeoutsGetArgs>? Timeouts { get; set; }
 
         /// <summary>
         /// It is in a format like `&lt;resource-type&gt;@&lt;api-version&gt;`. `&lt;resource-type&gt;` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.

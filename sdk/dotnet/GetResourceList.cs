@@ -27,6 +27,7 @@ namespace ediri.Azapi
         /// }
         /// 
         /// provider "azapi" {
+        ///   enable_hcl_output_for_data_source = true
         /// }
         /// 
         /// data "azapi_resource_list" "listBySubscription" {
@@ -67,6 +68,7 @@ namespace ediri.Azapi
         /// }
         /// 
         /// provider "azapi" {
+        ///   enable_hcl_output_for_data_source = true
         /// }
         /// 
         /// data "azapi_resource_list" "listBySubscription" {
@@ -91,6 +93,47 @@ namespace ediri.Azapi
         /// </summary>
         public static Output<GetResourceListResult> Invoke(GetResourceListInvokeArgs args, InvokeOptions? options = null)
             => global::Pulumi.Deployment.Instance.Invoke<GetResourceListResult>("azapi:index/getResourceList:getResourceList", args ?? new GetResourceListInvokeArgs(), options.WithDefaults());
+
+        /// <summary>
+        /// This resource can list all resources of a specific type under a scope. If the API supports paging, it will automatically fetch all pages and return the full list.
+        /// 
+        /// ## Example Usage
+        /// 
+        /// ```hcl
+        /// terraform {
+        ///   required_providers {
+        ///     azapi = {
+        ///       source = "Azure/azapi"
+        ///     }
+        ///   }
+        /// }
+        /// 
+        /// provider "azapi" {
+        ///   enable_hcl_output_for_data_source = true
+        /// }
+        /// 
+        /// data "azapi_resource_list" "listBySubscription" {
+        ///   type                   = "Microsoft.Automation/automationAccounts@2021-06-22"
+        ///   parent_id              = "/subscriptions/00000000-0000-0000-0000-000000000000"
+        ///   response_export_values = ["*"]
+        /// }
+        /// 
+        /// data "azapi_resource_list" "listByResourceGroup" {
+        ///   type                   = "Microsoft.Automation/automationAccounts@2021-06-22"
+        ///   parent_id              = "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg1"
+        ///   response_export_values = ["*"]
+        /// }
+        /// 
+        /// data "azapi_resource_list" "listSubnetsByVnet" {
+        ///   type                   = "Microsoft.Network/virtualNetworks/subnets@2021-02-01"
+        ///   parent_id              = "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg1/providers/Microsoft.Network/virtualNetworks/vnet1"
+        ///   response_export_values = ["*"]
+        /// }
+        /// 
+        /// ```
+        /// </summary>
+        public static Output<GetResourceListResult> Invoke(GetResourceListInvokeArgs args, InvokeOutputOptions options)
+            => global::Pulumi.Deployment.Instance.Invoke<GetResourceListResult>("azapi:index/getResourceList:getResourceList", args ?? new GetResourceListInvokeArgs(), options.WithDefaults());
     }
 
 
@@ -108,17 +151,17 @@ namespace ediri.Azapi
         /// <summary>
         /// A list of path that needs to be exported from response body.
         /// Setting it to `["*"]` will export the full response body.
-        /// Here's an example. If it sets to `["value"]`, it will set the following json to computed property `output`.
+        /// Here's an example. If it sets to `["value"]`, it will set the following HCL object to computed property `output`.
         /// ```
         /// {
-        /// "value": [
+        /// value = [
         /// {
-        /// "id": "id1",
-        /// "Permissions": "Full"
+        /// id = "id1"
+        /// Permissions = "Full"
         /// },
         /// {
-        /// "id": "id2",
-        /// "Permissions": "Full"
+        /// id = "id2"
+        /// Permissions = "Full"
         /// }
         /// ]
         /// }
@@ -129,6 +172,9 @@ namespace ediri.Azapi
             get => _responseExportValues ?? (_responseExportValues = new List<string>());
             set => _responseExportValues = value;
         }
+
+        [Input("timeouts")]
+        public Inputs.GetResourceListTimeoutsArgs? Timeouts { get; set; }
 
         /// <summary>
         /// It is in a format like `&lt;resource-type&gt;@&lt;api-version&gt;`. `&lt;resource-type&gt;` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
@@ -157,17 +203,17 @@ namespace ediri.Azapi
         /// <summary>
         /// A list of path that needs to be exported from response body.
         /// Setting it to `["*"]` will export the full response body.
-        /// Here's an example. If it sets to `["value"]`, it will set the following json to computed property `output`.
+        /// Here's an example. If it sets to `["value"]`, it will set the following HCL object to computed property `output`.
         /// ```
         /// {
-        /// "value": [
+        /// value = [
         /// {
-        /// "id": "id1",
-        /// "Permissions": "Full"
+        /// id = "id1"
+        /// Permissions = "Full"
         /// },
         /// {
-        /// "id": "id2",
-        /// "Permissions": "Full"
+        /// id = "id2"
+        /// Permissions = "Full"
         /// }
         /// ]
         /// }
@@ -178,6 +224,9 @@ namespace ediri.Azapi
             get => _responseExportValues ?? (_responseExportValues = new InputList<string>());
             set => _responseExportValues = value;
         }
+
+        [Input("timeouts")]
+        public Input<Inputs.GetResourceListTimeoutsInputArgs>? Timeouts { get; set; }
 
         /// <summary>
         /// It is in a format like `&lt;resource-type&gt;@&lt;api-version&gt;`. `&lt;resource-type&gt;` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
@@ -197,26 +246,36 @@ namespace ediri.Azapi
     public sealed class GetResourceListResult
     {
         /// <summary>
-        /// The provider-assigned unique ID for this managed resource.
+        /// The ID of the azure resource list.
         /// </summary>
         public readonly string Id;
         /// <summary>
-        /// The output json containing the properties specified in `response_export_values`. Here are some examples to decode json and extract the value.
+        /// The output containing the properties specified in `response_export_values`. It supports both JSON and HCL object. By default, it will be in JSON format.
+        /// If specifying `enable_hcl_output_for_data_source` to `true` in the provider block, it will be in HCL format.
+        /// Here are some examples to use the values in HCL format:
+        /// ```hcl
+        /// output "value" {
+        /// value = data.azapi_resource_list.example.output.value
+        /// }
+        /// ```
         /// </summary>
-        public readonly string Output;
+        public readonly object Output;
         public readonly string ParentId;
         public readonly ImmutableArray<string> ResponseExportValues;
+        public readonly Outputs.GetResourceListTimeoutsResult? Timeouts;
         public readonly string Type;
 
         [OutputConstructor]
         private GetResourceListResult(
             string id,
 
-            string output,
+            object output,
 
             string parentId,
 
             ImmutableArray<string> responseExportValues,
+
+            Outputs.GetResourceListTimeoutsResult? timeouts,
 
             string type)
         {
@@ -224,6 +283,7 @@ namespace ediri.Azapi
             Output = output;
             ParentId = parentId;
             ResponseExportValues = responseExportValues;
+            Timeouts = timeouts;
             Type = type;
         }
     }

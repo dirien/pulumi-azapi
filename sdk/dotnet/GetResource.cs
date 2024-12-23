@@ -27,6 +27,7 @@ namespace ediri.Azapi
         /// }
         /// 
         /// provider "azapi" {
+        ///   enable_hcl_output_for_data_source = true
         /// }
         /// 
         /// provider "azurerm" {
@@ -56,12 +57,12 @@ namespace ediri.Azapi
         /// 
         /// // it will output "registry1.azurecr.io"
         /// output "login_server" {
-        ///   value = jsondecode(data.azapi_resource.example.output).properties.loginServer
+        ///   value = data.azapi_resource.example.output.properties.loginServer
         /// }
         /// 
         /// // it will output "disabled"
         /// output "quarantine_policy" {
-        ///   value = jsondecode(data.azapi_resource.example.output).properties.policies.quarantinePolicy.status
+        ///   value = data.azapi_resource.example.output.properties.policies.quarantinePolicy.status
         /// }
         /// ```
         /// </summary>
@@ -83,6 +84,7 @@ namespace ediri.Azapi
         /// }
         /// 
         /// provider "azapi" {
+        ///   enable_hcl_output_for_data_source = true
         /// }
         /// 
         /// provider "azurerm" {
@@ -112,28 +114,79 @@ namespace ediri.Azapi
         /// 
         /// // it will output "registry1.azurecr.io"
         /// output "login_server" {
-        ///   value = jsondecode(data.azapi_resource.example.output).properties.loginServer
+        ///   value = data.azapi_resource.example.output.properties.loginServer
         /// }
         /// 
         /// // it will output "disabled"
         /// output "quarantine_policy" {
-        ///   value = jsondecode(data.azapi_resource.example.output).properties.policies.quarantinePolicy.status
+        ///   value = data.azapi_resource.example.output.properties.policies.quarantinePolicy.status
         /// }
         /// ```
         /// </summary>
         public static Output<GetResourceResult> Invoke(GetResourceInvokeArgs args, InvokeOptions? options = null)
+            => global::Pulumi.Deployment.Instance.Invoke<GetResourceResult>("azapi:index/getResource:getResource", args ?? new GetResourceInvokeArgs(), options.WithDefaults());
+
+        /// <summary>
+        /// This resource can access any existing Azure resource manager resource.
+        /// 
+        /// ## Example Usage
+        /// 
+        /// ```hcl
+        /// terraform {
+        ///   required_providers {
+        ///     azapi = {
+        ///       source = "Azure/azapi"
+        ///     }
+        ///   }
+        /// }
+        /// 
+        /// provider "azapi" {
+        ///   enable_hcl_output_for_data_source = true
+        /// }
+        /// 
+        /// provider "azurerm" {
+        ///   features {}
+        /// }
+        /// 
+        /// resource "azurerm_resource_group" "example" {
+        ///   name     = "example-rg"
+        ///   location = "west europe"
+        /// }
+        /// 
+        /// resource "azurerm_container_registry" "example" {
+        ///   name                = "example"
+        ///   resource_group_name = azurerm_resource_group.example.name
+        ///   location            = azurerm_resource_group.example.location
+        ///   sku                 = "Premium"
+        ///   admin_enabled       = false
+        /// }
+        /// 
+        /// data "azapi_resource" "example" {
+        ///   name      = "example"
+        ///   parent_id = azurerm_resource_group.example.id
+        ///   type      = "Microsoft.ContainerRegistry/registries@2020-11-01-preview"
+        /// 
+        ///   response_export_values = ["properties.loginServer", "properties.policies.quarantinePolicy.status"]
+        /// }
+        /// 
+        /// // it will output "registry1.azurecr.io"
+        /// output "login_server" {
+        ///   value = data.azapi_resource.example.output.properties.loginServer
+        /// }
+        /// 
+        /// // it will output "disabled"
+        /// output "quarantine_policy" {
+        ///   value = data.azapi_resource.example.output.properties.policies.quarantinePolicy.status
+        /// }
+        /// ```
+        /// </summary>
+        public static Output<GetResourceResult> Invoke(GetResourceInvokeArgs args, InvokeOutputOptions options)
             => global::Pulumi.Deployment.Instance.Invoke<GetResourceResult>("azapi:index/getResource:getResource", args ?? new GetResourceInvokeArgs(), options.WithDefaults());
     }
 
 
     public sealed class GetResourceArgs : global::Pulumi.InvokeArgs
     {
-        /// <summary>
-        /// An `identity` block as defined below, which contains the Managed Service Identity information for this azure resource.
-        /// </summary>
-        [Input("identity")]
-        public Inputs.GetResourceIdentityArgs? Identity { get; set; }
-
         /// <summary>
         /// Specifies the name of the azure resource.
         /// </summary>
@@ -169,14 +222,14 @@ namespace ediri.Azapi
         /// <summary>
         /// A list of path that needs to be exported from response body.
         /// Setting it to `["*"]` will export the full response body.
-        /// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
+        /// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the HCL object to computed property `output`.
         /// ```
         /// {
-        /// "properties" : {
-        /// "loginServer" : "registry1.azurecr.io"
-        /// "policies" : {
-        /// "quarantinePolicy" = {
-        /// "status" = "disabled"
+        /// properties = {
+        /// loginServer = "registry1.azurecr.io"
+        /// policies = {
+        /// quarantinePolicy = {
+        /// status = "disabled"
         /// }
         /// }
         /// }
@@ -188,6 +241,9 @@ namespace ediri.Azapi
             get => _responseExportValues ?? (_responseExportValues = new List<string>());
             set => _responseExportValues = value;
         }
+
+        [Input("timeouts")]
+        public Inputs.GetResourceTimeoutsArgs? Timeouts { get; set; }
 
         /// <summary>
         /// It is in a format like `&lt;resource-type&gt;@&lt;api-version&gt;`. `&lt;resource-type&gt;` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
@@ -204,12 +260,6 @@ namespace ediri.Azapi
 
     public sealed class GetResourceInvokeArgs : global::Pulumi.InvokeArgs
     {
-        /// <summary>
-        /// An `identity` block as defined below, which contains the Managed Service Identity information for this azure resource.
-        /// </summary>
-        [Input("identity")]
-        public Input<Inputs.GetResourceIdentityInputArgs>? Identity { get; set; }
-
         /// <summary>
         /// Specifies the name of the azure resource.
         /// </summary>
@@ -245,14 +295,14 @@ namespace ediri.Azapi
         /// <summary>
         /// A list of path that needs to be exported from response body.
         /// Setting it to `["*"]` will export the full response body.
-        /// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
+        /// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the HCL object to computed property `output`.
         /// ```
         /// {
-        /// "properties" : {
-        /// "loginServer" : "registry1.azurecr.io"
-        /// "policies" : {
-        /// "quarantinePolicy" = {
-        /// "status" = "disabled"
+        /// properties = {
+        /// loginServer = "registry1.azurecr.io"
+        /// policies = {
+        /// quarantinePolicy = {
+        /// status = "disabled"
         /// }
         /// }
         /// }
@@ -264,6 +314,9 @@ namespace ediri.Azapi
             get => _responseExportValues ?? (_responseExportValues = new InputList<string>());
             set => _responseExportValues = value;
         }
+
+        [Input("timeouts")]
+        public Input<Inputs.GetResourceTimeoutsInputArgs>? Timeouts { get; set; }
 
         /// <summary>
         /// It is in a format like `&lt;resource-type&gt;@&lt;api-version&gt;`. `&lt;resource-type&gt;` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
@@ -283,34 +336,37 @@ namespace ediri.Azapi
     public sealed class GetResourceResult
     {
         /// <summary>
-        /// The provider-assigned unique ID for this managed resource.
+        /// The ID of the azure resource.
         /// </summary>
         public readonly string Id;
         /// <summary>
         /// An `identity` block as defined below, which contains the Managed Service Identity information for this azure resource.
         /// </summary>
-        public readonly Outputs.GetResourceIdentityResult Identity;
+        public readonly ImmutableArray<Outputs.GetResourceIdentityResult> Identities;
         /// <summary>
         /// The Azure Region where the azure resource should exist.
         /// </summary>
         public readonly string Location;
-        public readonly string? Name;
+        public readonly string Name;
         /// <summary>
-        /// The output json containing the properties specified in `response_export_values`. Here're some examples to decode json and extract the value.
+        /// The output containing the properties specified in `response_export_values`. It supports both JSON and HCL object. By default, it will be in JSON format.
+        /// If specifying `enable_hcl_output_for_data_source` to `true` in the provider block, it will be in HCL format.
+        /// Here are some examples to use the values in HCL format:
         /// ```
         /// // it will output "registry1.azurecr.io"
         /// output "login_server" {
-        /// value = jsondecode(azapi_resource.example.output).properties.loginServer
+        /// value = data.azapi_resource.example.output.properties.loginServer
         /// }
         /// </summary>
-        public readonly string Output;
+        public readonly object Output;
         public readonly string ParentId;
-        public readonly string? ResourceId;
+        public readonly string ResourceId;
         public readonly ImmutableArray<string> ResponseExportValues;
         /// <summary>
         /// A mapping of tags which should be assigned to the azure resource.
         /// </summary>
         public readonly ImmutableDictionary<string, string> Tags;
+        public readonly Outputs.GetResourceTimeoutsResult? Timeouts;
         /// <summary>
         /// The Type of Identity which should be used for this azure resource. Possible values are `SystemAssigned`, `UserAssigned` and `SystemAssigned,UserAssigned`.
         /// </summary>
@@ -320,26 +376,28 @@ namespace ediri.Azapi
         private GetResourceResult(
             string id,
 
-            Outputs.GetResourceIdentityResult identity,
+            ImmutableArray<Outputs.GetResourceIdentityResult> identities,
 
             string location,
 
-            string? name,
+            string name,
 
-            string output,
+            object output,
 
             string parentId,
 
-            string? resourceId,
+            string resourceId,
 
             ImmutableArray<string> responseExportValues,
 
             ImmutableDictionary<string, string> tags,
 
+            Outputs.GetResourceTimeoutsResult? timeouts,
+
             string type)
         {
             Id = id;
-            Identity = identity;
+            Identities = identities;
             Location = location;
             Name = name;
             Output = output;
@@ -347,6 +405,7 @@ namespace ediri.Azapi
             ResourceId = resourceId;
             ResponseExportValues = responseExportValues;
             Tags = tags;
+            Timeouts = timeouts;
             Type = type;
         }
     }

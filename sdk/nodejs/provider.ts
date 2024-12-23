@@ -42,27 +42,46 @@ export class Provider extends pulumi.ProviderResource {
      */
     public readonly clientId!: pulumi.Output<string | undefined>;
     /**
+     * The path to a file containing the Client ID which should be used.
+     */
+    public readonly clientIdFilePath!: pulumi.Output<string | undefined>;
+    /**
      * The Client Secret which should be used. For use When authenticating as a Service Principal using a Client Secret.
      */
     public readonly clientSecret!: pulumi.Output<string | undefined>;
     /**
+     * The path to a file containing the Client Secret which should be used. For use When authenticating as a Service Principal
+     * using a Client Secret.
+     */
+    public readonly clientSecretFilePath!: pulumi.Output<string | undefined>;
+    /**
      * The value of the x-ms-correlation-request-id header (otherwise an auto-generated UUID will be used).
      */
     public readonly customCorrelationRequestId!: pulumi.Output<string | undefined>;
+    /**
+     * The default location which should be used for resources.
+     */
     public readonly defaultLocation!: pulumi.Output<string | undefined>;
+    /**
+     * The default name which should be used for resources.
+     */
     public readonly defaultName!: pulumi.Output<string | undefined>;
     /**
-     * @deprecated It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead.
+     * The default prefix which should be used for resources.
+     *
+     * @deprecated This field is deprecated and will be removed in a major release. Please specify the naming prefix and suffix in the resource's `name` field instead.
      */
     public readonly defaultNamingPrefix!: pulumi.Output<string | undefined>;
     /**
-     * @deprecated It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead.
+     * The default suffix which should be used for resources.
+     *
+     * @deprecated This field is deprecated and will be removed in a major release. Please specify the naming prefix and suffix in the resource's `name` field instead.
      */
     public readonly defaultNamingSuffix!: pulumi.Output<string | undefined>;
     /**
      * The Cloud Environment which should be used. Possible values are public, usgovernment and china. Defaults to public.
      */
-    public readonly environment!: pulumi.Output<string>;
+    public readonly environment!: pulumi.Output<string | undefined>;
     /**
      * The bearer token for the request to the OIDC provider. For use When authenticating as a Service Principal using OpenID
      * Connect.
@@ -101,18 +120,17 @@ export class Provider extends pulumi.ProviderResource {
      * @param args The arguments to use to populate this resource's properties.
      * @param opts A bag of options that control this resource's behavior.
      */
-    constructor(name: string, args: ProviderArgs, opts?: pulumi.ResourceOptions) {
+    constructor(name: string, args?: ProviderArgs, opts?: pulumi.ResourceOptions) {
         let resourceInputs: pulumi.Inputs = {};
         opts = opts || {};
         {
-            if ((!args || args.environment === undefined) && !opts.urn) {
-                throw new Error("Missing required property 'environment'");
-            }
             resourceInputs["auxiliaryTenantIds"] = pulumi.output(args ? args.auxiliaryTenantIds : undefined).apply(JSON.stringify);
             resourceInputs["clientCertificatePassword"] = args ? args.clientCertificatePassword : undefined;
             resourceInputs["clientCertificatePath"] = args ? args.clientCertificatePath : undefined;
             resourceInputs["clientId"] = args ? args.clientId : undefined;
+            resourceInputs["clientIdFilePath"] = args ? args.clientIdFilePath : undefined;
             resourceInputs["clientSecret"] = args ? args.clientSecret : undefined;
+            resourceInputs["clientSecretFilePath"] = args ? args.clientSecretFilePath : undefined;
             resourceInputs["customCorrelationRequestId"] = args ? args.customCorrelationRequestId : undefined;
             resourceInputs["defaultLocation"] = args ? args.defaultLocation : undefined;
             resourceInputs["defaultName"] = args ? args.defaultName : undefined;
@@ -121,7 +139,8 @@ export class Provider extends pulumi.ProviderResource {
             resourceInputs["defaultTags"] = pulumi.output(args ? args.defaultTags : undefined).apply(JSON.stringify);
             resourceInputs["disableCorrelationRequestId"] = pulumi.output(args ? args.disableCorrelationRequestId : undefined).apply(JSON.stringify);
             resourceInputs["disableTerraformPartnerId"] = pulumi.output(args ? args.disableTerraformPartnerId : undefined).apply(JSON.stringify);
-            resourceInputs["endpoint"] = pulumi.output(args ? args.endpoint : undefined).apply(JSON.stringify);
+            resourceInputs["enableHclOutputForDataSource"] = pulumi.output(args ? args.enableHclOutputForDataSource : undefined).apply(JSON.stringify);
+            resourceInputs["endpoints"] = pulumi.output(args ? args.endpoints : undefined).apply(JSON.stringify);
             resourceInputs["environment"] = args ? args.environment : undefined;
             resourceInputs["oidcRequestToken"] = args ? args.oidcRequestToken : undefined;
             resourceInputs["oidcRequestUrl"] = args ? args.oidcRequestUrl : undefined;
@@ -144,6 +163,9 @@ export class Provider extends pulumi.ProviderResource {
  * The set of arguments for constructing a Provider resource.
  */
 export interface ProviderArgs {
+    /**
+     * The Auxiliary Tenant IDs which should be used.
+     */
     auxiliaryTenantIds?: pulumi.Input<pulumi.Input<string>[]>;
     /**
      * The password associated with the Client Certificate. For use when authenticating as a Service Principal using a Client
@@ -160,34 +182,61 @@ export interface ProviderArgs {
      */
     clientId?: pulumi.Input<string>;
     /**
+     * The path to a file containing the Client ID which should be used.
+     */
+    clientIdFilePath?: pulumi.Input<string>;
+    /**
      * The Client Secret which should be used. For use When authenticating as a Service Principal using a Client Secret.
      */
     clientSecret?: pulumi.Input<string>;
     /**
+     * The path to a file containing the Client Secret which should be used. For use When authenticating as a Service Principal
+     * using a Client Secret.
+     */
+    clientSecretFilePath?: pulumi.Input<string>;
+    /**
      * The value of the x-ms-correlation-request-id header (otherwise an auto-generated UUID will be used).
      */
     customCorrelationRequestId?: pulumi.Input<string>;
+    /**
+     * The default location which should be used for resources.
+     */
     defaultLocation?: pulumi.Input<string>;
+    /**
+     * The default name which should be used for resources.
+     */
     defaultName?: pulumi.Input<string>;
     /**
-     * @deprecated It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead.
+     * The default prefix which should be used for resources.
+     *
+     * @deprecated This field is deprecated and will be removed in a major release. Please specify the naming prefix and suffix in the resource's `name` field instead.
      */
     defaultNamingPrefix?: pulumi.Input<string>;
     /**
-     * @deprecated It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead.
+     * The default suffix which should be used for resources.
+     *
+     * @deprecated This field is deprecated and will be removed in a major release. Please specify the naming prefix and suffix in the resource's `name` field instead.
      */
     defaultNamingSuffix?: pulumi.Input<string>;
+    /**
+     * The default tags which should be used for resources.
+     */
     defaultTags?: pulumi.Input<{[key: string]: pulumi.Input<string>}>;
     /**
      * This will disable the x-ms-correlation-request-id header.
      */
     disableCorrelationRequestId?: pulumi.Input<boolean>;
     disableTerraformPartnerId?: pulumi.Input<boolean>;
-    endpoint?: pulumi.Input<inputs.ProviderEndpoint>;
+    /**
+     * Enable HCL output for data sources. The default is false. When set to true, the provider will return HCL output for data
+     * sources. When set to false, the provider will return JSON output for data sources.
+     */
+    enableHclOutputForDataSource?: pulumi.Input<boolean>;
+    endpoints?: pulumi.Input<pulumi.Input<inputs.ProviderEndpoint>[]>;
     /**
      * The Cloud Environment which should be used. Possible values are public, usgovernment and china. Defaults to public.
      */
-    environment: pulumi.Input<string>;
+    environment?: pulumi.Input<string>;
     /**
      * The bearer token for the request to the OIDC provider. For use When authenticating as a Service Principal using OpenID
      * Connect.

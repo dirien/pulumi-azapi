@@ -15,17 +15,15 @@
 package azapi
 
 import (
-	"context"
 	_ "embed"
 	"fmt"
-	pfbridge "github.com/pulumi/pulumi-terraform-bridge/pf/tfbridge"
 	"path/filepath"
 
 	"github.com/Azure/terraform-provider-azapi/shim"
 	"github.com/dirien/pulumi-azapi/provider/pkg/version"
+	pf "github.com/pulumi/pulumi-terraform-bridge/v3/pkg/pf/tfbridge"
 	"github.com/pulumi/pulumi-terraform-bridge/v3/pkg/tfbridge"
 	tfbridgetokens "github.com/pulumi/pulumi-terraform-bridge/v3/pkg/tfbridge/tokens"
-	shimv2 "github.com/pulumi/pulumi-terraform-bridge/v3/pkg/tfshim/sdk-v2"
 )
 
 // all of the token components used below.
@@ -44,13 +42,8 @@ var metadata []byte
 func Provider() tfbridge.ProviderInfo {
 	// Instantiate the Terraform provider
 
-	p := pfbridge.MuxShimWithPF(context.Background(),
-		shimv2.NewProvider(shim.NewProvider()),
-		shim.NewProviderV2(),
-	)
-
 	prov := tfbridge.ProviderInfo{
-		P:       p,
+		P:       pf.ShimProvider(shim.NewProviderV2()),
 		Version: version.Version,
 		Name:    "azapi",
 		// DisplayName is a way to be able to change the casing of the provider

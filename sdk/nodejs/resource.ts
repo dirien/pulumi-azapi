@@ -54,25 +54,26 @@ export class Resource extends pulumi.CustomResource {
     }
 
     /**
-     * A JSON object that contains the request body used to create and update azure resource.
+     * A dynamic attribute that contains the request body used to create and update azure resource.
      */
-    public readonly body!: pulumi.Output<string | undefined>;
+    public readonly body!: pulumi.Output<any>;
     /**
      * A `identity` block as defined below.
      */
-    public readonly identity!: pulumi.Output<outputs.ResourceIdentity>;
+    public readonly identities!: pulumi.Output<outputs.ResourceIdentity[] | undefined>;
     /**
-     * A list of properties that should be ignored when comparing the `body` with its current state.
+     * @deprecated This feature is deprecated and will be removed in a major release. Please use the `lifecycle.ignore_changes` argument to specify the fields in `body` to ignore.
      */
     public readonly ignoreBodyChanges!: pulumi.Output<string[] | undefined>;
     /**
      * Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.
      */
-    public readonly ignoreCasing!: pulumi.Output<boolean | undefined>;
+    public readonly ignoreCasing!: pulumi.Output<boolean>;
     /**
      * Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.
+     * It's recommend to enable this option when some sensitive properties are not returned in response body, instead of setting them in `lifecycle.ignore_changes` because it will make the sensitive fields unable to update.
      */
-    public readonly ignoreMissingProperty!: pulumi.Output<boolean | undefined>;
+    public readonly ignoreMissingProperty!: pulumi.Output<boolean>;
     /**
      * The Azure Region where the azure resource should exist.
      */
@@ -86,14 +87,14 @@ export class Resource extends pulumi.CustomResource {
      */
     public readonly name!: pulumi.Output<string>;
     /**
-     * The output json containing the properties specified in `responseExportValues`. Here're some examples to decode json and extract the value.
+     * The output HCL object containing the properties specified in `responseExportValues`. Here are some examples use the values.
      * ```
      * // it will output "registry1.azurecr.io"
      * output "loginServer" {
-     * value = jsondecode(azapi_resource.example.output).properties.loginServer
+     * value = azapi_resource.example.output.properties.loginServer
      * }
      */
-    public /*out*/ readonly output!: pulumi.Output<string>;
+    public /*out*/ readonly output!: pulumi.Output<any>;
     /**
      * The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created. It supports different kinds of deployment scope for **top level** resources: 
      * - resource group scope: `parentId` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.
@@ -110,20 +111,20 @@ export class Resource extends pulumi.CustomResource {
     /**
      * Whether to remove special characters in resource name. Defaults to `false`.
      *
-     * @deprecated It will not work in the next minor release and will be removed in the next major release. Please specify the `name` field and remove the special characters in the `name` field instead.
+     * @deprecated This feature is deprecated and will be removed in a major release. Please use the `name` argument to specify the name of the resource.
      */
-    public readonly removingSpecialChars!: pulumi.Output<boolean | undefined>;
+    public readonly removingSpecialChars!: pulumi.Output<boolean>;
     /**
      * A list of path that needs to be exported from response body.
      * Setting it to `["*"]` will export the full response body.
-     * Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
+     * Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following HCL object to computed property `output`.
      * ```
      * {
-     * "properties" : {
-     * "loginServer" : "registry1.azurecr.io"
-     * "policies" : {
-     * "quarantinePolicy" = {
-     * "status" = "disabled"
+     * properties = {
+     * loginServer = "registry1.azurecr.io"
+     * policies = {
+     * quarantinePolicy = {
+     * status = "disabled"
      * }
      * }
      * }
@@ -134,11 +135,12 @@ export class Resource extends pulumi.CustomResource {
     /**
      * Whether enabled the validation on `type` and `body` with embedded schema. Defaults to `true`.
      */
-    public readonly schemaValidationEnabled!: pulumi.Output<boolean | undefined>;
+    public readonly schemaValidationEnabled!: pulumi.Output<boolean>;
     /**
      * A mapping of tags which should be assigned to the azure resource.
      */
     public readonly tags!: pulumi.Output<{[key: string]: string}>;
+    public readonly timeouts!: pulumi.Output<outputs.ResourceTimeouts | undefined>;
     /**
      * It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
      * `<api-version>` is version of the API used to manage this azure resource.
@@ -159,7 +161,7 @@ export class Resource extends pulumi.CustomResource {
         if (opts.id) {
             const state = argsOrState as ResourceState | undefined;
             resourceInputs["body"] = state ? state.body : undefined;
-            resourceInputs["identity"] = state ? state.identity : undefined;
+            resourceInputs["identities"] = state ? state.identities : undefined;
             resourceInputs["ignoreBodyChanges"] = state ? state.ignoreBodyChanges : undefined;
             resourceInputs["ignoreCasing"] = state ? state.ignoreCasing : undefined;
             resourceInputs["ignoreMissingProperty"] = state ? state.ignoreMissingProperty : undefined;
@@ -172,6 +174,7 @@ export class Resource extends pulumi.CustomResource {
             resourceInputs["responseExportValues"] = state ? state.responseExportValues : undefined;
             resourceInputs["schemaValidationEnabled"] = state ? state.schemaValidationEnabled : undefined;
             resourceInputs["tags"] = state ? state.tags : undefined;
+            resourceInputs["timeouts"] = state ? state.timeouts : undefined;
             resourceInputs["type"] = state ? state.type : undefined;
         } else {
             const args = argsOrState as ResourceArgs | undefined;
@@ -179,7 +182,7 @@ export class Resource extends pulumi.CustomResource {
                 throw new Error("Missing required property 'type'");
             }
             resourceInputs["body"] = args ? args.body : undefined;
-            resourceInputs["identity"] = args ? args.identity : undefined;
+            resourceInputs["identities"] = args ? args.identities : undefined;
             resourceInputs["ignoreBodyChanges"] = args ? args.ignoreBodyChanges : undefined;
             resourceInputs["ignoreCasing"] = args ? args.ignoreCasing : undefined;
             resourceInputs["ignoreMissingProperty"] = args ? args.ignoreMissingProperty : undefined;
@@ -191,6 +194,7 @@ export class Resource extends pulumi.CustomResource {
             resourceInputs["responseExportValues"] = args ? args.responseExportValues : undefined;
             resourceInputs["schemaValidationEnabled"] = args ? args.schemaValidationEnabled : undefined;
             resourceInputs["tags"] = args ? args.tags : undefined;
+            resourceInputs["timeouts"] = args ? args.timeouts : undefined;
             resourceInputs["type"] = args ? args.type : undefined;
             resourceInputs["output"] = undefined /*out*/;
         }
@@ -204,15 +208,15 @@ export class Resource extends pulumi.CustomResource {
  */
 export interface ResourceState {
     /**
-     * A JSON object that contains the request body used to create and update azure resource.
+     * A dynamic attribute that contains the request body used to create and update azure resource.
      */
-    body?: pulumi.Input<string>;
+    body?: any;
     /**
      * A `identity` block as defined below.
      */
-    identity?: pulumi.Input<inputs.ResourceIdentity>;
+    identities?: pulumi.Input<pulumi.Input<inputs.ResourceIdentity>[]>;
     /**
-     * A list of properties that should be ignored when comparing the `body` with its current state.
+     * @deprecated This feature is deprecated and will be removed in a major release. Please use the `lifecycle.ignore_changes` argument to specify the fields in `body` to ignore.
      */
     ignoreBodyChanges?: pulumi.Input<pulumi.Input<string>[]>;
     /**
@@ -221,6 +225,7 @@ export interface ResourceState {
     ignoreCasing?: pulumi.Input<boolean>;
     /**
      * Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.
+     * It's recommend to enable this option when some sensitive properties are not returned in response body, instead of setting them in `lifecycle.ignore_changes` because it will make the sensitive fields unable to update.
      */
     ignoreMissingProperty?: pulumi.Input<boolean>;
     /**
@@ -236,14 +241,14 @@ export interface ResourceState {
      */
     name?: pulumi.Input<string>;
     /**
-     * The output json containing the properties specified in `responseExportValues`. Here're some examples to decode json and extract the value.
+     * The output HCL object containing the properties specified in `responseExportValues`. Here are some examples use the values.
      * ```
      * // it will output "registry1.azurecr.io"
      * output "loginServer" {
-     * value = jsondecode(azapi_resource.example.output).properties.loginServer
+     * value = azapi_resource.example.output.properties.loginServer
      * }
      */
-    output?: pulumi.Input<string>;
+    output?: any;
     /**
      * The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created. It supports different kinds of deployment scope for **top level** resources: 
      * - resource group scope: `parentId` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.
@@ -260,20 +265,20 @@ export interface ResourceState {
     /**
      * Whether to remove special characters in resource name. Defaults to `false`.
      *
-     * @deprecated It will not work in the next minor release and will be removed in the next major release. Please specify the `name` field and remove the special characters in the `name` field instead.
+     * @deprecated This feature is deprecated and will be removed in a major release. Please use the `name` argument to specify the name of the resource.
      */
     removingSpecialChars?: pulumi.Input<boolean>;
     /**
      * A list of path that needs to be exported from response body.
      * Setting it to `["*"]` will export the full response body.
-     * Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
+     * Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following HCL object to computed property `output`.
      * ```
      * {
-     * "properties" : {
-     * "loginServer" : "registry1.azurecr.io"
-     * "policies" : {
-     * "quarantinePolicy" = {
-     * "status" = "disabled"
+     * properties = {
+     * loginServer = "registry1.azurecr.io"
+     * policies = {
+     * quarantinePolicy = {
+     * status = "disabled"
      * }
      * }
      * }
@@ -289,6 +294,7 @@ export interface ResourceState {
      * A mapping of tags which should be assigned to the azure resource.
      */
     tags?: pulumi.Input<{[key: string]: pulumi.Input<string>}>;
+    timeouts?: pulumi.Input<inputs.ResourceTimeouts>;
     /**
      * It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
      * `<api-version>` is version of the API used to manage this azure resource.
@@ -301,15 +307,15 @@ export interface ResourceState {
  */
 export interface ResourceArgs {
     /**
-     * A JSON object that contains the request body used to create and update azure resource.
+     * A dynamic attribute that contains the request body used to create and update azure resource.
      */
-    body?: pulumi.Input<string>;
+    body?: any;
     /**
      * A `identity` block as defined below.
      */
-    identity?: pulumi.Input<inputs.ResourceIdentity>;
+    identities?: pulumi.Input<pulumi.Input<inputs.ResourceIdentity>[]>;
     /**
-     * A list of properties that should be ignored when comparing the `body` with its current state.
+     * @deprecated This feature is deprecated and will be removed in a major release. Please use the `lifecycle.ignore_changes` argument to specify the fields in `body` to ignore.
      */
     ignoreBodyChanges?: pulumi.Input<pulumi.Input<string>[]>;
     /**
@@ -318,6 +324,7 @@ export interface ResourceArgs {
     ignoreCasing?: pulumi.Input<boolean>;
     /**
      * Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.
+     * It's recommend to enable this option when some sensitive properties are not returned in response body, instead of setting them in `lifecycle.ignore_changes` because it will make the sensitive fields unable to update.
      */
     ignoreMissingProperty?: pulumi.Input<boolean>;
     /**
@@ -348,20 +355,20 @@ export interface ResourceArgs {
     /**
      * Whether to remove special characters in resource name. Defaults to `false`.
      *
-     * @deprecated It will not work in the next minor release and will be removed in the next major release. Please specify the `name` field and remove the special characters in the `name` field instead.
+     * @deprecated This feature is deprecated and will be removed in a major release. Please use the `name` argument to specify the name of the resource.
      */
     removingSpecialChars?: pulumi.Input<boolean>;
     /**
      * A list of path that needs to be exported from response body.
      * Setting it to `["*"]` will export the full response body.
-     * Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
+     * Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following HCL object to computed property `output`.
      * ```
      * {
-     * "properties" : {
-     * "loginServer" : "registry1.azurecr.io"
-     * "policies" : {
-     * "quarantinePolicy" = {
-     * "status" = "disabled"
+     * properties = {
+     * loginServer = "registry1.azurecr.io"
+     * policies = {
+     * quarantinePolicy = {
+     * status = "disabled"
      * }
      * }
      * }
@@ -377,6 +384,7 @@ export interface ResourceArgs {
      * A mapping of tags which should be assigned to the azure resource.
      */
     tags?: pulumi.Input<{[key: string]: pulumi.Input<string>}>;
+    timeouts?: pulumi.Input<inputs.ResourceTimeouts>;
     /**
      * It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
      * `<api-version>` is version of the API used to manage this azure resource.

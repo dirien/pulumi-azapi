@@ -4,10 +4,17 @@
 
 import copy
 import warnings
+import sys
 import pulumi
 import pulumi.runtime
 from typing import Any, Mapping, Optional, Sequence, Union, overload
+if sys.version_info >= (3, 11):
+    from typing import NotRequired, TypedDict, TypeAlias
+else:
+    from typing_extensions import NotRequired, TypedDict, TypeAlias
 from . import _utilities
+from . import outputs
+from ._inputs import *
 
 __all__ = [
     'GetResourceActionResult',
@@ -21,12 +28,12 @@ class GetResourceActionResult:
     """
     A collection of values returned by getResourceAction.
     """
-    def __init__(__self__, action=None, body=None, id=None, method=None, output=None, resource_id=None, response_export_values=None, type=None):
+    def __init__(__self__, action=None, body=None, id=None, method=None, output=None, resource_id=None, response_export_values=None, timeouts=None, type=None):
         if action and not isinstance(action, str):
             raise TypeError("Expected argument 'action' to be a str")
         pulumi.set(__self__, "action", action)
-        if body and not isinstance(body, str):
-            raise TypeError("Expected argument 'body' to be a str")
+        if body and not isinstance(body, dict):
+            raise TypeError("Expected argument 'body' to be a dict")
         pulumi.set(__self__, "body", body)
         if id and not isinstance(id, str):
             raise TypeError("Expected argument 'id' to be a str")
@@ -34,8 +41,8 @@ class GetResourceActionResult:
         if method and not isinstance(method, str):
             raise TypeError("Expected argument 'method' to be a str")
         pulumi.set(__self__, "method", method)
-        if output and not isinstance(output, str):
-            raise TypeError("Expected argument 'output' to be a str")
+        if output and not isinstance(output, dict):
+            raise TypeError("Expected argument 'output' to be a dict")
         pulumi.set(__self__, "output", output)
         if resource_id and not isinstance(resource_id, str):
             raise TypeError("Expected argument 'resource_id' to be a str")
@@ -43,6 +50,9 @@ class GetResourceActionResult:
         if response_export_values and not isinstance(response_export_values, list):
             raise TypeError("Expected argument 'response_export_values' to be a list")
         pulumi.set(__self__, "response_export_values", response_export_values)
+        if timeouts and not isinstance(timeouts, dict):
+            raise TypeError("Expected argument 'timeouts' to be a dict")
+        pulumi.set(__self__, "timeouts", timeouts)
         if type and not isinstance(type, str):
             raise TypeError("Expected argument 'type' to be a str")
         pulumi.set(__self__, "type", type)
@@ -54,31 +64,33 @@ class GetResourceActionResult:
 
     @property
     @pulumi.getter
-    def body(self) -> Optional[str]:
+    def body(self) -> Optional[Any]:
         return pulumi.get(self, "body")
 
     @property
     @pulumi.getter
     def id(self) -> str:
         """
-        The provider-assigned unique ID for this managed resource.
+        The ID of the azure resource action.
         """
         return pulumi.get(self, "id")
 
     @property
     @pulumi.getter
-    def method(self) -> Optional[str]:
+    def method(self) -> str:
         return pulumi.get(self, "method")
 
     @property
     @pulumi.getter
-    def output(self) -> str:
+    def output(self) -> Any:
         """
-        The output json containing the properties specified in `response_export_values`. Here are some examples to decode json and extract the value.
+        The output containing the properties specified in `response_export_values`. It supports both JSON and HCL object. By default, it will be in JSON format.
+        If specifying `enable_hcl_output_for_data_source` to `true` in the provider block, it will be in HCL format.
+        Here are some examples to use the values in HCL format:
         ```hcl
         // it will output "nHGYNd******i4wdug=="
         output "primary_key" {
-        value = jsondecode(azapi_resource_action.test.output).keys.0.Value
+        value = azapi_resource_action.test.output.keys.0.Value
         }
         """
         return pulumi.get(self, "output")
@@ -92,6 +104,11 @@ class GetResourceActionResult:
     @pulumi.getter(name="responseExportValues")
     def response_export_values(self) -> Optional[Sequence[str]]:
         return pulumi.get(self, "response_export_values")
+
+    @property
+    @pulumi.getter
+    def timeouts(self) -> Optional['outputs.GetResourceActionTimeoutsResult']:
+        return pulumi.get(self, "timeouts")
 
     @property
     @pulumi.getter
@@ -112,14 +129,16 @@ class AwaitableGetResourceActionResult(GetResourceActionResult):
             output=self.output,
             resource_id=self.resource_id,
             response_export_values=self.response_export_values,
+            timeouts=self.timeouts,
             type=self.type)
 
 
 def get_resource_action(action: Optional[str] = None,
-                        body: Optional[str] = None,
+                        body: Optional[Any] = None,
                         method: Optional[str] = None,
                         resource_id: Optional[str] = None,
                         response_export_values: Optional[Sequence[str]] = None,
+                        timeouts: Optional[Union['GetResourceActionTimeoutsArgs', 'GetResourceActionTimeoutsArgsDict']] = None,
                         type: Optional[str] = None,
                         opts: Optional[pulumi.InvokeOptions] = None) -> AwaitableGetResourceActionResult:
     """
@@ -135,24 +154,24 @@ def get_resource_action(action: Optional[str] = None,
 
 
     :param str action: The name of the resource action. It's also possible to make Http requests towards the resource ID if leave this field empty.
-    :param str body: A JSON object that contains the request body.
+    :param Any body: A dynamic attribute that contains the request body.
     :param str method: Specifies the Http method of the azure resource action. Allowed values are `POST` and `GET`. Defaults to `POST`.
     :param str resource_id: The ID of an existing azure source.
     :param Sequence[str] response_export_values: A list of path that needs to be exported from response body.
            Setting it to `["*"]` will export the full response body.
-           Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
+           Here's an example. If it sets to `["keys"]`, it will set the following HCL object to computed property `output`.
            ```
            {
-           "keys": [
+           keys = [
            {
-           "KeyName": "Primary",
-           "Permissions": "Full",
-           "Value": "nHGYNd******i4wdug=="
+           KeyName = "Primary"
+           Permissions = "Full"
+           Value = "nHGYNd******i4wdug=="
            },
            {
-           "KeyName": "Secondary",
-           "Permissions": "Full",
-           "Value": "6yoCad******SLzKzg=="
+           KeyName = "Secondary"
+           Permissions = "Full"
+           Value = "6yoCad******SLzKzg=="
            }
            ]
            }
@@ -166,6 +185,7 @@ def get_resource_action(action: Optional[str] = None,
     __args__['method'] = method
     __args__['resourceId'] = resource_id
     __args__['responseExportValues'] = response_export_values
+    __args__['timeouts'] = timeouts
     __args__['type'] = type
     opts = pulumi.InvokeOptions.merge(_utilities.get_invoke_opts_defaults(), opts)
     __ret__ = pulumi.runtime.invoke('azapi:index/getResourceAction:getResourceAction', __args__, opts=opts, typ=GetResourceActionResult).value
@@ -178,17 +198,16 @@ def get_resource_action(action: Optional[str] = None,
         output=pulumi.get(__ret__, 'output'),
         resource_id=pulumi.get(__ret__, 'resource_id'),
         response_export_values=pulumi.get(__ret__, 'response_export_values'),
+        timeouts=pulumi.get(__ret__, 'timeouts'),
         type=pulumi.get(__ret__, 'type'))
-
-
-@_utilities.lift_output_func(get_resource_action)
 def get_resource_action_output(action: Optional[pulumi.Input[Optional[str]]] = None,
-                               body: Optional[pulumi.Input[Optional[str]]] = None,
+                               body: Optional[pulumi.Input[Optional[Any]]] = None,
                                method: Optional[pulumi.Input[Optional[str]]] = None,
                                resource_id: Optional[pulumi.Input[Optional[str]]] = None,
                                response_export_values: Optional[pulumi.Input[Optional[Sequence[str]]]] = None,
+                               timeouts: Optional[pulumi.Input[Optional[Union['GetResourceActionTimeoutsArgs', 'GetResourceActionTimeoutsArgsDict']]]] = None,
                                type: Optional[pulumi.Input[str]] = None,
-                               opts: Optional[pulumi.InvokeOptions] = None) -> pulumi.Output[GetResourceActionResult]:
+                               opts: Optional[Union[pulumi.InvokeOptions, pulumi.InvokeOutputOptions]] = None) -> pulumi.Output[GetResourceActionResult]:
     """
     This resource can perform resource action which gets information from an existing resource.
     It's recommended to use `ResourceAction` data source to perform readonly action, please use `ResourceAction` resource,
@@ -202,24 +221,24 @@ def get_resource_action_output(action: Optional[pulumi.Input[Optional[str]]] = N
 
 
     :param str action: The name of the resource action. It's also possible to make Http requests towards the resource ID if leave this field empty.
-    :param str body: A JSON object that contains the request body.
+    :param Any body: A dynamic attribute that contains the request body.
     :param str method: Specifies the Http method of the azure resource action. Allowed values are `POST` and `GET`. Defaults to `POST`.
     :param str resource_id: The ID of an existing azure source.
     :param Sequence[str] response_export_values: A list of path that needs to be exported from response body.
            Setting it to `["*"]` will export the full response body.
-           Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
+           Here's an example. If it sets to `["keys"]`, it will set the following HCL object to computed property `output`.
            ```
            {
-           "keys": [
+           keys = [
            {
-           "KeyName": "Primary",
-           "Permissions": "Full",
-           "Value": "nHGYNd******i4wdug=="
+           KeyName = "Primary"
+           Permissions = "Full"
+           Value = "nHGYNd******i4wdug=="
            },
            {
-           "KeyName": "Secondary",
-           "Permissions": "Full",
-           "Value": "6yoCad******SLzKzg=="
+           KeyName = "Secondary"
+           Permissions = "Full"
+           Value = "6yoCad******SLzKzg=="
            }
            ]
            }
@@ -227,4 +246,23 @@ def get_resource_action_output(action: Optional[pulumi.Input[Optional[str]]] = N
     :param str type: It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
            `<api-version>` is version of the API used to manage this azure resource.
     """
-    ...
+    __args__ = dict()
+    __args__['action'] = action
+    __args__['body'] = body
+    __args__['method'] = method
+    __args__['resourceId'] = resource_id
+    __args__['responseExportValues'] = response_export_values
+    __args__['timeouts'] = timeouts
+    __args__['type'] = type
+    opts = pulumi.InvokeOutputOptions.merge(_utilities.get_invoke_opts_defaults(), opts)
+    __ret__ = pulumi.runtime.invoke_output('azapi:index/getResourceAction:getResourceAction', __args__, opts=opts, typ=GetResourceActionResult)
+    return __ret__.apply(lambda __response__: GetResourceActionResult(
+        action=pulumi.get(__response__, 'action'),
+        body=pulumi.get(__response__, 'body'),
+        id=pulumi.get(__response__, 'id'),
+        method=pulumi.get(__response__, 'method'),
+        output=pulumi.get(__response__, 'output'),
+        resource_id=pulumi.get(__response__, 'resource_id'),
+        response_export_values=pulumi.get(__response__, 'response_export_values'),
+        timeouts=pulumi.get(__response__, 'timeouts'),
+        type=pulumi.get(__response__, 'type')))

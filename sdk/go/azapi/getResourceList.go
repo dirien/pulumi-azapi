@@ -30,8 +30,9 @@ type GetResourceListArgs struct {
 	ParentId string `pulumi:"parentId"`
 	// A list of path that needs to be exported from response body.
 	// Setting it to `["*"]` will export the full response body.
-	// Here's an example. If it sets to `["value"]`, it will set the following json to computed property `output`.
-	ResponseExportValues []string `pulumi:"responseExportValues"`
+	// Here's an example. If it sets to `["value"]`, it will set the following HCL object to computed property `output`.
+	ResponseExportValues []string                 `pulumi:"responseExportValues"`
+	Timeouts             *GetResourceListTimeouts `pulumi:"timeouts"`
 	// It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
 	// `<api-version>` is version of the API used to manage this azure resource.
 	Type string `pulumi:"type"`
@@ -39,25 +40,24 @@ type GetResourceListArgs struct {
 
 // A collection of values returned by getResourceList.
 type GetResourceListResult struct {
-	// The provider-assigned unique ID for this managed resource.
+	// The ID of the azure resource list.
 	Id string `pulumi:"id"`
-	// The output json containing the properties specified in `responseExportValues`. Here are some examples to decode json and extract the value.
-	Output               string   `pulumi:"output"`
-	ParentId             string   `pulumi:"parentId"`
-	ResponseExportValues []string `pulumi:"responseExportValues"`
-	Type                 string   `pulumi:"type"`
+	// The output containing the properties specified in `responseExportValues`. It supports both JSON and HCL object. By default, it will be in JSON format.
+	// If specifying `enableHclOutputForDataSource` to `true` in the provider block, it will be in HCL format.
+	// Here are some examples to use the values in HCL format:
+	Output               interface{}              `pulumi:"output"`
+	ParentId             string                   `pulumi:"parentId"`
+	ResponseExportValues []string                 `pulumi:"responseExportValues"`
+	Timeouts             *GetResourceListTimeouts `pulumi:"timeouts"`
+	Type                 string                   `pulumi:"type"`
 }
 
 func GetResourceListOutput(ctx *pulumi.Context, args GetResourceListOutputArgs, opts ...pulumi.InvokeOption) GetResourceListResultOutput {
-	return pulumi.ToOutputWithContext(context.Background(), args).
-		ApplyT(func(v interface{}) (GetResourceListResult, error) {
+	return pulumi.ToOutputWithContext(ctx.Context(), args).
+		ApplyT(func(v interface{}) (GetResourceListResultOutput, error) {
 			args := v.(GetResourceListArgs)
-			r, err := GetResourceList(ctx, &args, opts...)
-			var s GetResourceListResult
-			if r != nil {
-				s = *r
-			}
-			return s, err
+			options := pulumi.InvokeOutputOptions{InvokeOptions: internal.PkgInvokeDefaultOpts(opts)}
+			return ctx.InvokeOutput("azapi:index/getResourceList:getResourceList", args, GetResourceListResultOutput{}, options).(GetResourceListResultOutput), nil
 		}).(GetResourceListResultOutput)
 }
 
@@ -67,8 +67,9 @@ type GetResourceListOutputArgs struct {
 	ParentId pulumi.StringInput `pulumi:"parentId"`
 	// A list of path that needs to be exported from response body.
 	// Setting it to `["*"]` will export the full response body.
-	// Here's an example. If it sets to `["value"]`, it will set the following json to computed property `output`.
-	ResponseExportValues pulumi.StringArrayInput `pulumi:"responseExportValues"`
+	// Here's an example. If it sets to `["value"]`, it will set the following HCL object to computed property `output`.
+	ResponseExportValues pulumi.StringArrayInput         `pulumi:"responseExportValues"`
+	Timeouts             GetResourceListTimeoutsPtrInput `pulumi:"timeouts"`
 	// It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
 	// `<api-version>` is version of the API used to manage this azure resource.
 	Type pulumi.StringInput `pulumi:"type"`
@@ -93,14 +94,16 @@ func (o GetResourceListResultOutput) ToGetResourceListResultOutputWithContext(ct
 	return o
 }
 
-// The provider-assigned unique ID for this managed resource.
+// The ID of the azure resource list.
 func (o GetResourceListResultOutput) Id() pulumi.StringOutput {
 	return o.ApplyT(func(v GetResourceListResult) string { return v.Id }).(pulumi.StringOutput)
 }
 
-// The output json containing the properties specified in `responseExportValues`. Here are some examples to decode json and extract the value.
-func (o GetResourceListResultOutput) Output() pulumi.StringOutput {
-	return o.ApplyT(func(v GetResourceListResult) string { return v.Output }).(pulumi.StringOutput)
+// The output containing the properties specified in `responseExportValues`. It supports both JSON and HCL object. By default, it will be in JSON format.
+// If specifying `enableHclOutputForDataSource` to `true` in the provider block, it will be in HCL format.
+// Here are some examples to use the values in HCL format:
+func (o GetResourceListResultOutput) Output() pulumi.AnyOutput {
+	return o.ApplyT(func(v GetResourceListResult) interface{} { return v.Output }).(pulumi.AnyOutput)
 }
 
 func (o GetResourceListResultOutput) ParentId() pulumi.StringOutput {
@@ -109,6 +112,10 @@ func (o GetResourceListResultOutput) ParentId() pulumi.StringOutput {
 
 func (o GetResourceListResultOutput) ResponseExportValues() pulumi.StringArrayOutput {
 	return o.ApplyT(func(v GetResourceListResult) []string { return v.ResponseExportValues }).(pulumi.StringArrayOutput)
+}
+
+func (o GetResourceListResultOutput) Timeouts() GetResourceListTimeoutsPtrOutput {
+	return o.ApplyT(func(v GetResourceListResult) *GetResourceListTimeouts { return v.Timeouts }).(GetResourceListTimeoutsPtrOutput)
 }
 
 func (o GetResourceListResultOutput) Type() pulumi.StringOutput {

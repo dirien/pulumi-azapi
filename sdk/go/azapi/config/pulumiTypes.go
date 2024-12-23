@@ -13,7 +13,7 @@ import (
 
 var _ = internal.GetEnvOrDefault
 
-type Endpoint struct {
+type Endpoints struct {
 	// The Active Directory login endpoint which should be used.
 	ActiveDirectoryAuthorityHost *string `pulumi:"activeDirectoryAuthorityHost"`
 	// The resource ID to obtain AD tokens for.
@@ -22,18 +22,18 @@ type Endpoint struct {
 	ResourceManagerEndpoint *string `pulumi:"resourceManagerEndpoint"`
 }
 
-// EndpointInput is an input type that accepts EndpointArgs and EndpointOutput values.
-// You can construct a concrete instance of `EndpointInput` via:
+// EndpointsInput is an input type that accepts EndpointsArgs and EndpointsOutput values.
+// You can construct a concrete instance of `EndpointsInput` via:
 //
-//	EndpointArgs{...}
-type EndpointInput interface {
+//	EndpointsArgs{...}
+type EndpointsInput interface {
 	pulumi.Input
 
-	ToEndpointOutput() EndpointOutput
-	ToEndpointOutputWithContext(context.Context) EndpointOutput
+	ToEndpointsOutput() EndpointsOutput
+	ToEndpointsOutputWithContext(context.Context) EndpointsOutput
 }
 
-type EndpointArgs struct {
+type EndpointsArgs struct {
 	// The Active Directory login endpoint which should be used.
 	ActiveDirectoryAuthorityHost pulumi.StringPtrInput `pulumi:"activeDirectoryAuthorityHost"`
 	// The resource ID to obtain AD tokens for.
@@ -42,48 +42,95 @@ type EndpointArgs struct {
 	ResourceManagerEndpoint pulumi.StringPtrInput `pulumi:"resourceManagerEndpoint"`
 }
 
-func (EndpointArgs) ElementType() reflect.Type {
-	return reflect.TypeOf((*Endpoint)(nil)).Elem()
+func (EndpointsArgs) ElementType() reflect.Type {
+	return reflect.TypeOf((*Endpoints)(nil)).Elem()
 }
 
-func (i EndpointArgs) ToEndpointOutput() EndpointOutput {
-	return i.ToEndpointOutputWithContext(context.Background())
+func (i EndpointsArgs) ToEndpointsOutput() EndpointsOutput {
+	return i.ToEndpointsOutputWithContext(context.Background())
 }
 
-func (i EndpointArgs) ToEndpointOutputWithContext(ctx context.Context) EndpointOutput {
-	return pulumi.ToOutputWithContext(ctx, i).(EndpointOutput)
+func (i EndpointsArgs) ToEndpointsOutputWithContext(ctx context.Context) EndpointsOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(EndpointsOutput)
 }
 
-type EndpointOutput struct{ *pulumi.OutputState }
+// EndpointsArrayInput is an input type that accepts EndpointsArray and EndpointsArrayOutput values.
+// You can construct a concrete instance of `EndpointsArrayInput` via:
+//
+//	EndpointsArray{ EndpointsArgs{...} }
+type EndpointsArrayInput interface {
+	pulumi.Input
 
-func (EndpointOutput) ElementType() reflect.Type {
-	return reflect.TypeOf((*Endpoint)(nil)).Elem()
+	ToEndpointsArrayOutput() EndpointsArrayOutput
+	ToEndpointsArrayOutputWithContext(context.Context) EndpointsArrayOutput
 }
 
-func (o EndpointOutput) ToEndpointOutput() EndpointOutput {
+type EndpointsArray []EndpointsInput
+
+func (EndpointsArray) ElementType() reflect.Type {
+	return reflect.TypeOf((*[]Endpoints)(nil)).Elem()
+}
+
+func (i EndpointsArray) ToEndpointsArrayOutput() EndpointsArrayOutput {
+	return i.ToEndpointsArrayOutputWithContext(context.Background())
+}
+
+func (i EndpointsArray) ToEndpointsArrayOutputWithContext(ctx context.Context) EndpointsArrayOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(EndpointsArrayOutput)
+}
+
+type EndpointsOutput struct{ *pulumi.OutputState }
+
+func (EndpointsOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*Endpoints)(nil)).Elem()
+}
+
+func (o EndpointsOutput) ToEndpointsOutput() EndpointsOutput {
 	return o
 }
 
-func (o EndpointOutput) ToEndpointOutputWithContext(ctx context.Context) EndpointOutput {
+func (o EndpointsOutput) ToEndpointsOutputWithContext(ctx context.Context) EndpointsOutput {
 	return o
 }
 
 // The Active Directory login endpoint which should be used.
-func (o EndpointOutput) ActiveDirectoryAuthorityHost() pulumi.StringPtrOutput {
-	return o.ApplyT(func(v Endpoint) *string { return v.ActiveDirectoryAuthorityHost }).(pulumi.StringPtrOutput)
+func (o EndpointsOutput) ActiveDirectoryAuthorityHost() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v Endpoints) *string { return v.ActiveDirectoryAuthorityHost }).(pulumi.StringPtrOutput)
 }
 
 // The resource ID to obtain AD tokens for.
-func (o EndpointOutput) ResourceManagerAudience() pulumi.StringPtrOutput {
-	return o.ApplyT(func(v Endpoint) *string { return v.ResourceManagerAudience }).(pulumi.StringPtrOutput)
+func (o EndpointsOutput) ResourceManagerAudience() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v Endpoints) *string { return v.ResourceManagerAudience }).(pulumi.StringPtrOutput)
 }
 
 // The Resource Manager Endpoint which should be used.
-func (o EndpointOutput) ResourceManagerEndpoint() pulumi.StringPtrOutput {
-	return o.ApplyT(func(v Endpoint) *string { return v.ResourceManagerEndpoint }).(pulumi.StringPtrOutput)
+func (o EndpointsOutput) ResourceManagerEndpoint() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v Endpoints) *string { return v.ResourceManagerEndpoint }).(pulumi.StringPtrOutput)
+}
+
+type EndpointsArrayOutput struct{ *pulumi.OutputState }
+
+func (EndpointsArrayOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*[]Endpoints)(nil)).Elem()
+}
+
+func (o EndpointsArrayOutput) ToEndpointsArrayOutput() EndpointsArrayOutput {
+	return o
+}
+
+func (o EndpointsArrayOutput) ToEndpointsArrayOutputWithContext(ctx context.Context) EndpointsArrayOutput {
+	return o
+}
+
+func (o EndpointsArrayOutput) Index(i pulumi.IntInput) EndpointsOutput {
+	return pulumi.All(o, i).ApplyT(func(vs []interface{}) Endpoints {
+		return vs[0].([]Endpoints)[vs[1].(int)]
+	}).(EndpointsOutput)
 }
 
 func init() {
-	pulumi.RegisterInputType(reflect.TypeOf((*EndpointInput)(nil)).Elem(), EndpointArgs{})
-	pulumi.RegisterOutputType(EndpointOutput{})
+	pulumi.RegisterInputType(reflect.TypeOf((*EndpointsInput)(nil)).Elem(), EndpointsArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*EndpointsArrayInput)(nil)).Elem(), EndpointsArray{})
+	pulumi.RegisterOutputType(EndpointsOutput{})
+	pulumi.RegisterOutputType(EndpointsArrayOutput{})
 }

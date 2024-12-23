@@ -29,6 +29,7 @@ namespace ediri.Azapi
         /// }
         /// 
         /// provider "azapi" {
+        ///   enable_hcl_output_for_data_source = true
         /// }
         /// 
         /// provider "azurerm" {
@@ -58,8 +59,20 @@ namespace ediri.Azapi
         /// Here's an example to use the `azapi.ResourceAction` data source to get a provider's permissions.
         /// 
         /// ```hcl
+        /// terraform {
+        ///   required_providers {
+        ///     azapi = {
+        ///       source = "Azure/azapi"
+        ///     }
+        ///   }
+        /// }
+        /// 
         /// provider "azurerm" {
         ///   features {}
+        /// }
+        /// 
+        /// provider "azapi" {
+        ///   enable_hcl_output_for_data_source = true
         /// }
         /// 
         /// data "azurerm_client_config" "current" {}
@@ -83,14 +96,18 @@ namespace ediri.Azapi
         ///   }
         /// }
         /// 
+        /// provider "azapi" {
+        ///   enable_hcl_output_for_data_source = true
+        /// }
+        /// 
         /// resource "azapi_resource_action" "test" {
         ///   type        = "Microsoft.Cache@2023-04-01"
         ///   resource_id = "/subscriptions/00000000-0000-0000-0000-000000000000/providers/Microsoft.Cache"
         ///   action      = "CheckNameAvailability"
-        ///   body = jsonencode({
+        ///   body = {
         ///     type = "Microsoft.Cache/Redis"
         ///     name = "cacheName"
-        ///   })
+        ///   }
         /// }
         /// ```
         /// </summary>
@@ -114,6 +131,7 @@ namespace ediri.Azapi
         /// }
         /// 
         /// provider "azapi" {
+        ///   enable_hcl_output_for_data_source = true
         /// }
         /// 
         /// provider "azurerm" {
@@ -143,8 +161,20 @@ namespace ediri.Azapi
         /// Here's an example to use the `azapi.ResourceAction` data source to get a provider's permissions.
         /// 
         /// ```hcl
+        /// terraform {
+        ///   required_providers {
+        ///     azapi = {
+        ///       source = "Azure/azapi"
+        ///     }
+        ///   }
+        /// }
+        /// 
         /// provider "azurerm" {
         ///   features {}
+        /// }
+        /// 
+        /// provider "azapi" {
+        ///   enable_hcl_output_for_data_source = true
         /// }
         /// 
         /// data "azurerm_client_config" "current" {}
@@ -168,18 +198,124 @@ namespace ediri.Azapi
         ///   }
         /// }
         /// 
+        /// provider "azapi" {
+        ///   enable_hcl_output_for_data_source = true
+        /// }
+        /// 
         /// resource "azapi_resource_action" "test" {
         ///   type        = "Microsoft.Cache@2023-04-01"
         ///   resource_id = "/subscriptions/00000000-0000-0000-0000-000000000000/providers/Microsoft.Cache"
         ///   action      = "CheckNameAvailability"
-        ///   body = jsonencode({
+        ///   body = {
         ///     type = "Microsoft.Cache/Redis"
         ///     name = "cacheName"
-        ///   })
+        ///   }
         /// }
         /// ```
         /// </summary>
         public static Output<GetResourceActionResult> Invoke(GetResourceActionInvokeArgs args, InvokeOptions? options = null)
+            => global::Pulumi.Deployment.Instance.Invoke<GetResourceActionResult>("azapi:index/getResourceAction:getResourceAction", args ?? new GetResourceActionInvokeArgs(), options.WithDefaults());
+
+        /// <summary>
+        /// This resource can perform resource action which gets information from an existing resource.
+        /// It's recommended to use `azapi.ResourceAction` data source to perform readonly action, please use `azapi.ResourceAction` resource,
+        /// if user wants to perform actions which change a resource's state.
+        /// 
+        /// ## Example Usage
+        /// 
+        /// ```hcl
+        /// terraform {
+        ///   required_providers {
+        ///     azapi = {
+        ///       source = "Azure/azapi"
+        ///     }
+        ///   }
+        /// }
+        /// 
+        /// provider "azapi" {
+        ///   enable_hcl_output_for_data_source = true
+        /// }
+        /// 
+        /// provider "azurerm" {
+        ///   features {}
+        /// }
+        /// 
+        /// resource "azurerm_resource_group" "example" {
+        ///   name     = "example-rg"
+        ///   location = "west europe"
+        /// }
+        /// 
+        /// resource "azurerm_automation_account" "example" {
+        ///   name                = "example-account"
+        ///   resource_group_name = azurerm_resource_group.example.name
+        ///   location            = azurerm_resource_group.example.location
+        ///   sku_name            = "Basic"
+        /// }
+        /// 
+        /// data "azapi_resource_action" "example" {
+        ///   type                   = "Microsoft.Automation/automationAccounts@2021-06-22"
+        ///   resource_id            = azurerm_automation_account.example.id
+        ///   action                 = "listKeys"
+        ///   response_export_values = ["*"]
+        /// }
+        /// ```
+        /// 
+        /// Here's an example to use the `azapi.ResourceAction` data source to get a provider's permissions.
+        /// 
+        /// ```hcl
+        /// terraform {
+        ///   required_providers {
+        ///     azapi = {
+        ///       source = "Azure/azapi"
+        ///     }
+        ///   }
+        /// }
+        /// 
+        /// provider "azurerm" {
+        ///   features {}
+        /// }
+        /// 
+        /// provider "azapi" {
+        ///   enable_hcl_output_for_data_source = true
+        /// }
+        /// 
+        /// data "azurerm_client_config" "current" {}
+        /// 
+        /// data "azapi_resource_action" "test" {
+        ///   type        = "Microsoft.Resources/providers@2021-04-01"
+        ///   resource_id = "/subscriptions/${data.azurerm_client_config.current.subscription_id}/providers/Microsoft.Network"
+        ///   action      = "providerPermissions"
+        ///   method      = "GET"
+        /// }
+        /// ```
+        /// 
+        /// Here's an example to use the `azapi.ResourceAction` data source to perform a provider action.
+        /// 
+        /// ```hcl
+        /// terraform {
+        ///   required_providers {
+        ///     azapi = {
+        ///       source = "Azure/azapi"
+        ///     }
+        ///   }
+        /// }
+        /// 
+        /// provider "azapi" {
+        ///   enable_hcl_output_for_data_source = true
+        /// }
+        /// 
+        /// resource "azapi_resource_action" "test" {
+        ///   type        = "Microsoft.Cache@2023-04-01"
+        ///   resource_id = "/subscriptions/00000000-0000-0000-0000-000000000000/providers/Microsoft.Cache"
+        ///   action      = "CheckNameAvailability"
+        ///   body = {
+        ///     type = "Microsoft.Cache/Redis"
+        ///     name = "cacheName"
+        ///   }
+        /// }
+        /// ```
+        /// </summary>
+        public static Output<GetResourceActionResult> Invoke(GetResourceActionInvokeArgs args, InvokeOutputOptions options)
             => global::Pulumi.Deployment.Instance.Invoke<GetResourceActionResult>("azapi:index/getResourceAction:getResourceAction", args ?? new GetResourceActionInvokeArgs(), options.WithDefaults());
     }
 
@@ -193,10 +329,10 @@ namespace ediri.Azapi
         public string? Action { get; set; }
 
         /// <summary>
-        /// A JSON object that contains the request body.
+        /// A dynamic attribute that contains the request body.
         /// </summary>
         [Input("body")]
-        public string? Body { get; set; }
+        public object? Body { get; set; }
 
         /// <summary>
         /// Specifies the Http method of the azure resource action. Allowed values are `POST` and `GET`. Defaults to `POST`.
@@ -216,19 +352,19 @@ namespace ediri.Azapi
         /// <summary>
         /// A list of path that needs to be exported from response body.
         /// Setting it to `["*"]` will export the full response body.
-        /// Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
+        /// Here's an example. If it sets to `["keys"]`, it will set the following HCL object to computed property `output`.
         /// ```
         /// {
-        /// "keys": [
+        /// keys = [
         /// {
-        /// "KeyName": "Primary",
-        /// "Permissions": "Full",
-        /// "Value": "nHGYNd******i4wdug=="
+        /// KeyName = "Primary"
+        /// Permissions = "Full"
+        /// Value = "nHGYNd******i4wdug=="
         /// },
         /// {
-        /// "KeyName": "Secondary",
-        /// "Permissions": "Full",
-        /// "Value": "6yoCad******SLzKzg=="
+        /// KeyName = "Secondary"
+        /// Permissions = "Full"
+        /// Value = "6yoCad******SLzKzg=="
         /// }
         /// ]
         /// }
@@ -239,6 +375,9 @@ namespace ediri.Azapi
             get => _responseExportValues ?? (_responseExportValues = new List<string>());
             set => _responseExportValues = value;
         }
+
+        [Input("timeouts")]
+        public Inputs.GetResourceActionTimeoutsArgs? Timeouts { get; set; }
 
         /// <summary>
         /// It is in a format like `&lt;resource-type&gt;@&lt;api-version&gt;`. `&lt;resource-type&gt;` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
@@ -262,10 +401,10 @@ namespace ediri.Azapi
         public Input<string>? Action { get; set; }
 
         /// <summary>
-        /// A JSON object that contains the request body.
+        /// A dynamic attribute that contains the request body.
         /// </summary>
         [Input("body")]
-        public Input<string>? Body { get; set; }
+        public Input<object>? Body { get; set; }
 
         /// <summary>
         /// Specifies the Http method of the azure resource action. Allowed values are `POST` and `GET`. Defaults to `POST`.
@@ -285,19 +424,19 @@ namespace ediri.Azapi
         /// <summary>
         /// A list of path that needs to be exported from response body.
         /// Setting it to `["*"]` will export the full response body.
-        /// Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
+        /// Here's an example. If it sets to `["keys"]`, it will set the following HCL object to computed property `output`.
         /// ```
         /// {
-        /// "keys": [
+        /// keys = [
         /// {
-        /// "KeyName": "Primary",
-        /// "Permissions": "Full",
-        /// "Value": "nHGYNd******i4wdug=="
+        /// KeyName = "Primary"
+        /// Permissions = "Full"
+        /// Value = "nHGYNd******i4wdug=="
         /// },
         /// {
-        /// "KeyName": "Secondary",
-        /// "Permissions": "Full",
-        /// "Value": "6yoCad******SLzKzg=="
+        /// KeyName = "Secondary"
+        /// Permissions = "Full"
+        /// Value = "6yoCad******SLzKzg=="
         /// }
         /// ]
         /// }
@@ -308,6 +447,9 @@ namespace ediri.Azapi
             get => _responseExportValues ?? (_responseExportValues = new InputList<string>());
             set => _responseExportValues = value;
         }
+
+        [Input("timeouts")]
+        public Input<Inputs.GetResourceActionTimeoutsInputArgs>? Timeouts { get; set; }
 
         /// <summary>
         /// It is in a format like `&lt;resource-type&gt;@&lt;api-version&gt;`. `&lt;resource-type&gt;` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
@@ -327,40 +469,45 @@ namespace ediri.Azapi
     public sealed class GetResourceActionResult
     {
         public readonly string? Action;
-        public readonly string? Body;
+        public readonly object? Body;
         /// <summary>
-        /// The provider-assigned unique ID for this managed resource.
+        /// The ID of the azure resource action.
         /// </summary>
         public readonly string Id;
-        public readonly string? Method;
+        public readonly string Method;
         /// <summary>
-        /// The output json containing the properties specified in `response_export_values`. Here are some examples to decode json and extract the value.
+        /// The output containing the properties specified in `response_export_values`. It supports both JSON and HCL object. By default, it will be in JSON format.
+        /// If specifying `enable_hcl_output_for_data_source` to `true` in the provider block, it will be in HCL format.
+        /// Here are some examples to use the values in HCL format:
         /// ```hcl
         /// // it will output "nHGYNd******i4wdug=="
         /// output "primary_key" {
-        /// value = jsondecode(azapi_resource_action.test.output).keys.0.Value
+        /// value = azapi_resource_action.test.output.keys.0.Value
         /// }
         /// </summary>
-        public readonly string Output;
+        public readonly object Output;
         public readonly string? ResourceId;
         public readonly ImmutableArray<string> ResponseExportValues;
+        public readonly Outputs.GetResourceActionTimeoutsResult? Timeouts;
         public readonly string Type;
 
         [OutputConstructor]
         private GetResourceActionResult(
             string? action,
 
-            string? body,
+            object? body,
 
             string id,
 
-            string? method,
+            string method,
 
-            string output,
+            object output,
 
             string? resourceId,
 
             ImmutableArray<string> responseExportValues,
+
+            Outputs.GetResourceActionTimeoutsResult? timeouts,
 
             string type)
         {
@@ -371,6 +518,7 @@ namespace ediri.Azapi
             Output = output;
             ResourceId = resourceId;
             ResponseExportValues = responseExportValues;
+            Timeouts = timeouts;
             Type = type;
         }
     }

@@ -28,25 +28,26 @@ type ResourceAction struct {
 
 	// The name of the resource action. It's also possible to make Http requests towards the resource ID if leave this field empty.
 	Action pulumi.StringPtrOutput `pulumi:"action"`
-	// A JSON object that contains the request body.
-	Body pulumi.StringPtrOutput `pulumi:"body"`
+	// A dynamic attribute that contains the request body.
+	Body pulumi.AnyOutput `pulumi:"body"`
 	// A list of ARM resource IDs which are used to avoid modify azapi resources at the same time.
 	Locks pulumi.StringArrayOutput `pulumi:"locks"`
 	// Specifies the Http method of the azure resource action. Allowed values are `POST`, `PATCH`, `PUT` and `DELETE`. Defaults to `POST`.
-	Method pulumi.StringPtrOutput `pulumi:"method"`
-	// The output json containing the properties specified in `responseExportValues`. Here are some examples to decode json and extract the value.
-	Output pulumi.StringOutput `pulumi:"output"`
+	Method pulumi.StringOutput `pulumi:"method"`
+	// The HCL object containing the properties specified in `responseExportValues`. Here are some examples to use the values.
+	Output pulumi.AnyOutput `pulumi:"output"`
 	// The ID of an existing azure source.
 	ResourceId pulumi.StringOutput `pulumi:"resourceId"`
 	// A list of path that needs to be exported from response body.
 	// Setting it to `["*"]` will export the full response body.
-	// Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
-	ResponseExportValues pulumi.StringArrayOutput `pulumi:"responseExportValues"`
+	// Here's an example. If it sets to `["keys"]`, it will set the following HCL object to computed property `output`.
+	ResponseExportValues pulumi.StringArrayOutput        `pulumi:"responseExportValues"`
+	Timeouts             ResourceActionTimeoutsPtrOutput `pulumi:"timeouts"`
 	// It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
 	// `<api-version>` is version of the API used to manage this azure resource.
 	Type pulumi.StringOutput `pulumi:"type"`
 	// When to perform the action, value must be one of: `apply`, `destroy`. Default is `apply`.
-	When pulumi.StringPtrOutput `pulumi:"when"`
+	When pulumi.StringOutput `pulumi:"when"`
 }
 
 // NewResourceAction registers a new resource with the given unique name, arguments, and options.
@@ -87,20 +88,21 @@ func GetResourceAction(ctx *pulumi.Context,
 type resourceActionState struct {
 	// The name of the resource action. It's also possible to make Http requests towards the resource ID if leave this field empty.
 	Action *string `pulumi:"action"`
-	// A JSON object that contains the request body.
-	Body *string `pulumi:"body"`
+	// A dynamic attribute that contains the request body.
+	Body interface{} `pulumi:"body"`
 	// A list of ARM resource IDs which are used to avoid modify azapi resources at the same time.
 	Locks []string `pulumi:"locks"`
 	// Specifies the Http method of the azure resource action. Allowed values are `POST`, `PATCH`, `PUT` and `DELETE`. Defaults to `POST`.
 	Method *string `pulumi:"method"`
-	// The output json containing the properties specified in `responseExportValues`. Here are some examples to decode json and extract the value.
-	Output *string `pulumi:"output"`
+	// The HCL object containing the properties specified in `responseExportValues`. Here are some examples to use the values.
+	Output interface{} `pulumi:"output"`
 	// The ID of an existing azure source.
 	ResourceId *string `pulumi:"resourceId"`
 	// A list of path that needs to be exported from response body.
 	// Setting it to `["*"]` will export the full response body.
-	// Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
-	ResponseExportValues []string `pulumi:"responseExportValues"`
+	// Here's an example. If it sets to `["keys"]`, it will set the following HCL object to computed property `output`.
+	ResponseExportValues []string                `pulumi:"responseExportValues"`
+	Timeouts             *ResourceActionTimeouts `pulumi:"timeouts"`
 	// It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
 	// `<api-version>` is version of the API used to manage this azure resource.
 	Type *string `pulumi:"type"`
@@ -111,20 +113,21 @@ type resourceActionState struct {
 type ResourceActionState struct {
 	// The name of the resource action. It's also possible to make Http requests towards the resource ID if leave this field empty.
 	Action pulumi.StringPtrInput
-	// A JSON object that contains the request body.
-	Body pulumi.StringPtrInput
+	// A dynamic attribute that contains the request body.
+	Body pulumi.Input
 	// A list of ARM resource IDs which are used to avoid modify azapi resources at the same time.
 	Locks pulumi.StringArrayInput
 	// Specifies the Http method of the azure resource action. Allowed values are `POST`, `PATCH`, `PUT` and `DELETE`. Defaults to `POST`.
 	Method pulumi.StringPtrInput
-	// The output json containing the properties specified in `responseExportValues`. Here are some examples to decode json and extract the value.
-	Output pulumi.StringPtrInput
+	// The HCL object containing the properties specified in `responseExportValues`. Here are some examples to use the values.
+	Output pulumi.Input
 	// The ID of an existing azure source.
 	ResourceId pulumi.StringPtrInput
 	// A list of path that needs to be exported from response body.
 	// Setting it to `["*"]` will export the full response body.
-	// Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
+	// Here's an example. If it sets to `["keys"]`, it will set the following HCL object to computed property `output`.
 	ResponseExportValues pulumi.StringArrayInput
+	Timeouts             ResourceActionTimeoutsPtrInput
 	// It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
 	// `<api-version>` is version of the API used to manage this azure resource.
 	Type pulumi.StringPtrInput
@@ -139,8 +142,8 @@ func (ResourceActionState) ElementType() reflect.Type {
 type resourceActionArgs struct {
 	// The name of the resource action. It's also possible to make Http requests towards the resource ID if leave this field empty.
 	Action *string `pulumi:"action"`
-	// A JSON object that contains the request body.
-	Body *string `pulumi:"body"`
+	// A dynamic attribute that contains the request body.
+	Body interface{} `pulumi:"body"`
 	// A list of ARM resource IDs which are used to avoid modify azapi resources at the same time.
 	Locks []string `pulumi:"locks"`
 	// Specifies the Http method of the azure resource action. Allowed values are `POST`, `PATCH`, `PUT` and `DELETE`. Defaults to `POST`.
@@ -149,8 +152,9 @@ type resourceActionArgs struct {
 	ResourceId string `pulumi:"resourceId"`
 	// A list of path that needs to be exported from response body.
 	// Setting it to `["*"]` will export the full response body.
-	// Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
-	ResponseExportValues []string `pulumi:"responseExportValues"`
+	// Here's an example. If it sets to `["keys"]`, it will set the following HCL object to computed property `output`.
+	ResponseExportValues []string                `pulumi:"responseExportValues"`
+	Timeouts             *ResourceActionTimeouts `pulumi:"timeouts"`
 	// It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
 	// `<api-version>` is version of the API used to manage this azure resource.
 	Type string `pulumi:"type"`
@@ -162,8 +166,8 @@ type resourceActionArgs struct {
 type ResourceActionArgs struct {
 	// The name of the resource action. It's also possible to make Http requests towards the resource ID if leave this field empty.
 	Action pulumi.StringPtrInput
-	// A JSON object that contains the request body.
-	Body pulumi.StringPtrInput
+	// A dynamic attribute that contains the request body.
+	Body pulumi.Input
 	// A list of ARM resource IDs which are used to avoid modify azapi resources at the same time.
 	Locks pulumi.StringArrayInput
 	// Specifies the Http method of the azure resource action. Allowed values are `POST`, `PATCH`, `PUT` and `DELETE`. Defaults to `POST`.
@@ -172,8 +176,9 @@ type ResourceActionArgs struct {
 	ResourceId pulumi.StringInput
 	// A list of path that needs to be exported from response body.
 	// Setting it to `["*"]` will export the full response body.
-	// Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
+	// Here's an example. If it sets to `["keys"]`, it will set the following HCL object to computed property `output`.
 	ResponseExportValues pulumi.StringArrayInput
+	Timeouts             ResourceActionTimeoutsPtrInput
 	// It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
 	// `<api-version>` is version of the API used to manage this azure resource.
 	Type pulumi.StringInput
@@ -273,9 +278,9 @@ func (o ResourceActionOutput) Action() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *ResourceAction) pulumi.StringPtrOutput { return v.Action }).(pulumi.StringPtrOutput)
 }
 
-// A JSON object that contains the request body.
-func (o ResourceActionOutput) Body() pulumi.StringPtrOutput {
-	return o.ApplyT(func(v *ResourceAction) pulumi.StringPtrOutput { return v.Body }).(pulumi.StringPtrOutput)
+// A dynamic attribute that contains the request body.
+func (o ResourceActionOutput) Body() pulumi.AnyOutput {
+	return o.ApplyT(func(v *ResourceAction) pulumi.AnyOutput { return v.Body }).(pulumi.AnyOutput)
 }
 
 // A list of ARM resource IDs which are used to avoid modify azapi resources at the same time.
@@ -284,13 +289,13 @@ func (o ResourceActionOutput) Locks() pulumi.StringArrayOutput {
 }
 
 // Specifies the Http method of the azure resource action. Allowed values are `POST`, `PATCH`, `PUT` and `DELETE`. Defaults to `POST`.
-func (o ResourceActionOutput) Method() pulumi.StringPtrOutput {
-	return o.ApplyT(func(v *ResourceAction) pulumi.StringPtrOutput { return v.Method }).(pulumi.StringPtrOutput)
+func (o ResourceActionOutput) Method() pulumi.StringOutput {
+	return o.ApplyT(func(v *ResourceAction) pulumi.StringOutput { return v.Method }).(pulumi.StringOutput)
 }
 
-// The output json containing the properties specified in `responseExportValues`. Here are some examples to decode json and extract the value.
-func (o ResourceActionOutput) Output() pulumi.StringOutput {
-	return o.ApplyT(func(v *ResourceAction) pulumi.StringOutput { return v.Output }).(pulumi.StringOutput)
+// The HCL object containing the properties specified in `responseExportValues`. Here are some examples to use the values.
+func (o ResourceActionOutput) Output() pulumi.AnyOutput {
+	return o.ApplyT(func(v *ResourceAction) pulumi.AnyOutput { return v.Output }).(pulumi.AnyOutput)
 }
 
 // The ID of an existing azure source.
@@ -300,9 +305,13 @@ func (o ResourceActionOutput) ResourceId() pulumi.StringOutput {
 
 // A list of path that needs to be exported from response body.
 // Setting it to `["*"]` will export the full response body.
-// Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
+// Here's an example. If it sets to `["keys"]`, it will set the following HCL object to computed property `output`.
 func (o ResourceActionOutput) ResponseExportValues() pulumi.StringArrayOutput {
 	return o.ApplyT(func(v *ResourceAction) pulumi.StringArrayOutput { return v.ResponseExportValues }).(pulumi.StringArrayOutput)
+}
+
+func (o ResourceActionOutput) Timeouts() ResourceActionTimeoutsPtrOutput {
+	return o.ApplyT(func(v *ResourceAction) ResourceActionTimeoutsPtrOutput { return v.Timeouts }).(ResourceActionTimeoutsPtrOutput)
 }
 
 // It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
@@ -312,8 +321,8 @@ func (o ResourceActionOutput) Type() pulumi.StringOutput {
 }
 
 // When to perform the action, value must be one of: `apply`, `destroy`. Default is `apply`.
-func (o ResourceActionOutput) When() pulumi.StringPtrOutput {
-	return o.ApplyT(func(v *ResourceAction) pulumi.StringPtrOutput { return v.When }).(pulumi.StringPtrOutput)
+func (o ResourceActionOutput) When() pulumi.StringOutput {
+	return o.ApplyT(func(v *ResourceAction) pulumi.StringOutput { return v.When }).(pulumi.StringOutput)
 }
 
 type ResourceActionArrayOutput struct{ *pulumi.OutputState }
