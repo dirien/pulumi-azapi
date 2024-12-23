@@ -21,11 +21,11 @@ func main() {
 		}
 
 		appServicePlan, err := azapi.NewResource(ctx, "app-service-plan", &azapi.ResourceArgs{
-			Type:     pulumi.String("Microsoft.Web/serverfarms@2020-06-01"),
-			Name:     pulumi.String("app-service-plan"),
-			ParentId: resourceGroup.ID(),
-
+			Type:         pulumi.String("Microsoft.Web/serverfarms@2024-04-01"),
+			Name:         pulumi.String("app-service-plan"),
+			ParentId:     resourceGroup.ID(),
 			IgnoreCasing: pulumi.Bool(true),
+			Location:     location,
 			Body: pulumi.JSONMarshal(pulumi.Map{
 				"sku": pulumi.Map{
 					"name": pulumi.String("F1"),
@@ -33,8 +33,7 @@ func main() {
 				"properties": pulumi.Map{
 					"reserved": pulumi.Bool(true),
 				},
-				"kind":     pulumi.String("linux"),
-				"location": location,
+				"kind": pulumi.String("linux"),
 			}),
 			ResponseExportValues: pulumi.StringArray{
 				pulumi.String("*"),
@@ -59,8 +58,10 @@ func main() {
 				"kind":     pulumi.String("app,linux"),
 				"location": location,
 			}),
-			Identity: &azapi.ResourceIdentityArgs{
-				Type: pulumi.String("SystemAssigned"),
+			Identities: &azapi.ResourceIdentityArray{
+				&azapi.ResourceIdentityArgs{
+					Type: pulumi.String("SystemAssigned"),
+				},
 			},
 			ResponseExportValues: pulumi.StringArray{
 				pulumi.String("*"),
