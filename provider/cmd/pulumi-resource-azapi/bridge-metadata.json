@@ -1,16 +1,1 @@
-{
-    "mux": {
-        "resources": {
-            "azapi:index/dataPlaneResource:DataPlaneResource": 0,
-            "azapi:index/resource:Resource": 0,
-            "azapi:index/resourceAction:ResourceAction": 0,
-            "azapi:index/updateResource:UpdateResource": 0
-        },
-        "functions": {
-            "azapi:index/getResource:getResource": 0,
-            "azapi:index/getResourceAction:getResourceAction": 0,
-            "azapi:index/getResourceId:getResourceId": 0,
-            "azapi:index/getResourceList:getResourceList": 0
-        }
-    }
-}
+{}

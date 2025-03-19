@@ -12,47 +12,109 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package azapi
+package provider
 
 import (
-	"context"
 	_ "embed"
 	"fmt"
-	pfbridge "github.com/pulumi/pulumi-terraform-bridge/pf/tfbridge"
 	"path/filepath"
+	"strings"
+	"unicode"
 
-	"github.com/Azure/terraform-provider-azapi/shim"
+	shimprovider "github.com/Azure/terraform-provider-azapi/shim"
 	"github.com/dirien/pulumi-azapi/provider/pkg/version"
+	"github.com/ettle/strcase"
+	pf "github.com/pulumi/pulumi-terraform-bridge/v3/pkg/pf/tfbridge"
 	"github.com/pulumi/pulumi-terraform-bridge/v3/pkg/tfbridge"
-	tfbridgetokens "github.com/pulumi/pulumi-terraform-bridge/v3/pkg/tfbridge/tokens"
-	shimv2 "github.com/pulumi/pulumi-terraform-bridge/v3/pkg/tfshim/sdk-v2"
+	shim "github.com/pulumi/pulumi-terraform-bridge/v3/pkg/tfshim"
+	"github.com/pulumi/pulumi/sdk/v3/go/common/resource"
+	"github.com/pulumi/pulumi/sdk/v3/go/common/tokens"
+	"github.com/pulumi/pulumi/sdk/v3/go/common/util/contract"
 )
+
+//go:embed cmd/pulumi-resource-azapi/bridge-metadata.json
+var bridgeMetadata []byte
 
 // all of the token components used below.
 const (
 	// This variable controls the default name of the package in the package
-	// registries for nodejs and python:
-	mainPkg = "azapi"
-	// modules:
 	mainMod = "index" // the azapi module
 )
 
-//go:embed cmd/pulumi-resource-azapi/bridge-metadata.json
-var metadata []byte
+var module_overrides = map[string]string{}
+
+var name_overrides = map[string]string{}
+
+func convertName(tfname string) (module string, name string) {
+	tfNameItems := strings.Split(tfname, "_")
+	contract.Assertf(len(tfNameItems) >= 2, "Invalid snake case name %s", tfname)
+	contract.Assertf(tfNameItems[0] == "azapi", "Invalid snake case name %s. Does not start with azapi", tfname)
+	// if len(tfNameItems) == 2 {
+	// 	module = mainMod
+	// 	name = tfNameItems[1]
+	// } else {
+	// 	module = strcase.ToPascal(strings.Join(tfNameItems[1:len(tfNameItems)-1], "_"))
+	// 	name = tfNameItems[len(tfNameItems)-1]
+
+	// 	if v, ok := module_overrides[module]; ok {
+	// 		module = v
+	// 	}
+	// }
+	// contract.Assertf(!unicode.IsDigit(rune(module[0])), "Pulumi namespace must not start with a digit: %s", name)
+	module = mainMod
+	name = strings.Join(tfNameItems[1:], "_")
+	name = strcase.ToPascal(name)
+	if v, ok := name_overrides[name]; ok {
+		name = v
+	}
+	contract.Assertf(!unicode.IsDigit(rune(name[0])), "Pulumi name must not start with a digit: %s", name)
+	return
+}
+
+func makeDataSource(ds string) tokens.ModuleMember {
+	mod, name := convertName(ds)
+	return tfbridge.MakeDataSource("azapi", mod, "get"+name)
+}
+
+func makeResource(res string) tokens.Type {
+	mod, name := convertName(res)
+	return tfbridge.MakeResource("azapi", mod, name)
+}
+
+func moduleComputeStrategy() tfbridge.Strategy {
+	return tfbridge.Strategy{
+		Resource: func(tfToken string, elem *tfbridge.ResourceInfo) error {
+			if elem.Tok == "" {
+				elem.Tok = makeResource(tfToken)
+			}
+			return nil
+		},
+		DataSource: func(tfToken string, elem *tfbridge.DataSourceInfo) error {
+			if elem.Tok == "" {
+				elem.Tok = makeDataSource(tfToken)
+			}
+			return nil
+		},
+	}
+}
+
+// preConfigureCallback is called before the providerConfigure function of the underlying provider.
+// It should validate that the provider can be configured, and provide actionable errors in the case
+// it cannot be. Configuration variables can be read from `vars` using the `stringValue` function -
+// for example `stringValue(vars, "accessKey")`.
+func preConfigureCallback(vars resource.PropertyMap, c shim.ResourceConfig) error {
+	return nil
+}
 
 // Provider returns additional overlaid schema and metadata associated with the provider..
 func Provider() tfbridge.ProviderInfo {
 	// Instantiate the Terraform provider
+	p := pf.ShimProvider(shimprovider.NewProvider())
 
-	p := pfbridge.MuxShimWithPF(context.Background(),
-		shimv2.NewProvider(shim.NewProvider()),
-		shim.Framework()(),
-	)
-
+	// Create a Pulumi provider mapping
 	prov := tfbridge.ProviderInfo{
-		P:       p,
-		Version: version.Version,
-		Name:    "azapi",
+		P:    p,
+		Name: "azapi",
 		// DisplayName is a way to be able to change the casing of the provider
 		// name when being displayed on the Pulumi registry
 		DisplayName: "AzAPI",
@@ -66,7 +128,7 @@ func Provider() tfbridge.ProviderInfo {
 		//
 		// You may host a logo on a domain you control or add an SVG logo for your package
 		// in your repository and use the raw content URL for that file as your logo URL.
-		LogoURL: "",
+		LogoURL: "https://raw.githubusercontent.com/dirien/pulumi-azapi/img/azure.svg",
 		// PluginDownloadURL is an optional URL used to download the Provider
 		// for use in Pulumi programs
 		// e.g https://github.com/org/pulumi-provider-name/releases/
@@ -80,42 +142,20 @@ func Provider() tfbridge.ProviderInfo {
 			"azapi",
 			"category/cloud",
 		},
-		License:      "Apache-2.0",
-		Homepage:     "https://github.com/dirien/pulumi-azapi",
-		Repository:   "https://github.com/dirien/pulumi-azapi",
-		MetadataInfo: tfbridge.NewProviderMetadata(metadata),
+		License:    "Apache-2.0",
+		Homepage:   "https://github.com/dirien/pulumi-azapi",
+		Repository: "https://github.com/dirien/pulumi-azapi",
 		// The GitHub Org for the provider - defaults to `terraform-providers`. Note that this
 		// should match the TF provider module's require directive, not any replace directives.
-		GitHubOrg: "Azure",
-		Config:    map[string]*tfbridge.SchemaInfo{
-			// Add any required configuration here, or remove the example below if
-			// no additional points are required.
-			// "region": {
-			// 	Type: tfbridge.MakeType("region", "Region"),
-			// 	Default: &tfbridge.DefaultInfo{
-			// 		EnvVars: []string{"AWS_REGION", "AWS_DEFAULT_REGION"},
-			// 	},
-			// },
-		},
-		Resources: map[string]*tfbridge.ResourceInfo{
-			// Map each resource in the Terraform provider to a Pulumi type. Two examples
-			// are below - the single line form is the common case. The multi-line form is
-			// needed only if you wish to override types or other default options.
-			//
-			// "aws_iam_role": {Tok: tfbridge.MakeResource(mainPkg, mainMod, "IamRole")}
-			//
-			// "aws_acm_certificate": {
-			// 	Tok: tfbridge.MakeResource(mainPkg, mainMod, "Certificate"),
-			// 	Fields: map[string]*tfbridge.SchemaInfo{
-			// 		"tags": {Type: tfbridge.MakeType(mainPkg, "Tags")},
-			// 	},
-			// },
-		},
-		DataSources: map[string]*tfbridge.DataSourceInfo{
-			// Map each resource in the Terraform provider to a Pulumi function. An example
-			// is below.
-			// "aws_ami": {Tok: tfbridge.MakeDataSource(mainPkg, mainMod, "getAmi")},
-		},
+		Version:              version.Version,
+		GitHubOrg:            "Azure",
+		MetadataInfo:         tfbridge.NewProviderMetadata(bridgeMetadata),
+		TFProviderVersion:    "2.3.0",
+		UpstreamRepoPath:     "./upstream",
+		Config:               map[string]*tfbridge.SchemaInfo{},
+		PreConfigureCallback: preConfigureCallback,
+		Resources:            map[string]*tfbridge.ResourceInfo{},
+		DataSources:          map[string]*tfbridge.DataSourceInfo{},
 		JavaScript: &tfbridge.JavaScriptInfo{
 			PackageName: "@ediri/azapi",
 
@@ -142,10 +182,10 @@ func Provider() tfbridge.ProviderInfo {
 		},
 		Golang: &tfbridge.GolangInfo{
 			ImportBasePath: filepath.Join(
-				fmt.Sprintf("github.com/dirien/pulumi-%[1]s/sdk/", mainPkg),
+				fmt.Sprintf("github.com/dirien/pulumi-%[1]s/sdk/", "azapi"),
 				tfbridge.GetModuleMajorVersion(version.Version),
 				"go",
-				mainPkg,
+				"azapi",
 			),
 			GenerateResourceContainerTypes: true,
 		},
@@ -161,9 +201,7 @@ func Provider() tfbridge.ProviderInfo {
 		},
 	}
 
-	prov.MustComputeTokens(tfbridgetokens.SingleModule("azapi_", mainMod,
-		tfbridgetokens.MakeStandard(mainPkg)))
-
+	prov.MustComputeTokens(moduleComputeStrategy())
 	prov.SetAutonaming(255, "-")
 
 	return prov

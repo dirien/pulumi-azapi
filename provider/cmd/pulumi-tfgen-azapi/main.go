@@ -20,5 +20,5 @@ import (
 )
 
 func main() {
-	tfgen.MainWithMuxer("azapi", azapi.Provider())
+	tfgen.Main("azapi", azapi.Provider())
 }

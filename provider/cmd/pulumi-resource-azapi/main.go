@@ -19,14 +19,15 @@ package main
 import (
 	"context"
 	_ "embed"
+
+	"github.com/pulumi/pulumi-terraform-bridge/pf/tfbridge"
 	azapi "github.com/dirien/pulumi-azapi/provider"
-	pfbridge "github.com/pulumi/pulumi-terraform-bridge/pf/tfbridge"
 )
 
 //go:embed schema-embed.json
 var pulumiSchema []byte
 
 func main() {
-	pfbridge.MainWithMuxer(context.Background(), "azapi", azapi.Provider(), pulumiSchema)
-
+	meta := tfbridge.ProviderMetadata{PackageSchema: pulumiSchema}
+	tfbridge.Main(context.Background(), "azapi", azapi.Provider(), meta)
 }
