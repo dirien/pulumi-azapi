@@ -5,59 +5,311 @@ import * as pulumi from "@pulumi/pulumi";
 import * as inputs from "../types/input";
 import * as outputs from "../types/output";
 
-export interface GetResourceIdentity {
+export interface DataPlaneResourceRetry {
     /**
-     * A list of User Managed Identity ID's which should be assigned to the azure resource.
+     * A list of regular expressions to match against error messages. If any of the regular expressions match, the request will be retried.
      */
-    identityIds?: string[];
+    errorMessageRegexes: pulumi.Input<pulumi.Input<string>[]>;
     /**
-     * The Principal ID for the Service Principal associated with the Managed Service Identity of this azure resource.
+     * The base number of seconds to wait between retries. Default is `10`.
      */
-    principalId?: string;
+    intervalSeconds?: pulumi.Input<number>;
     /**
-     * The Tenant ID for the Service Principal associated with the Managed Service Identity of this azure resource.
+     * The maximum number of seconds to wait between retries. Default is `180`.
      */
-    tenantId?: string;
+    maxIntervalSeconds?: pulumi.Input<number>;
     /**
-     * It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
-     * `<api-version>` is version of the API used to manage this azure resource.
+     * The multiplier to apply to the interval between retries. Default is `1.5`.
      */
-    type?: string;
+    multiplier?: pulumi.Input<number>;
+    /**
+     * The randomization factor to apply to the interval between retries. The formula for the randomized interval is: `RetryInterval * (random value in range [1 - RandomizationFactor, 1 + RandomizationFactor])`. Therefore set to zero `0.0` for no randomization. Default is `0.5`.
+     */
+    randomizationFactor?: pulumi.Input<number>;
 }
 
-export interface GetResourceIdentityArgs {
+export interface DataPlaneResourceTimeouts {
     /**
-     * A list of User Managed Identity ID's which should be assigned to the azure resource.
+     * A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
      */
-    identityIds?: pulumi.Input<pulumi.Input<string>[]>;
+    create?: pulumi.Input<string>;
     /**
-     * The Principal ID for the Service Principal associated with the Managed Service Identity of this azure resource.
+     * A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Setting a timeout for a Delete operation is only applicable if changes are saved into state before the destroy operation occurs.
      */
-    principalId?: pulumi.Input<string>;
+    delete?: pulumi.Input<string>;
     /**
-     * The Tenant ID for the Service Principal associated with the Managed Service Identity of this azure resource.
+     * A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
      */
-    tenantId?: pulumi.Input<string>;
+    read?: pulumi.Input<string>;
     /**
-     * It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
-     * `<api-version>` is version of the API used to manage this azure resource.
+     * A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
      */
-    type?: pulumi.Input<string>;
+    update?: pulumi.Input<string>;
+}
+
+export interface GetClientConfigTimeouts {
+    /**
+     * A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+     */
+    read?: string;
+}
+
+export interface GetClientConfigTimeoutsArgs {
+    /**
+     * A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+     */
+    read?: pulumi.Input<string>;
+}
+
+export interface GetResourceActionRetry {
+    /**
+     * A list of regular expressions to match against error messages. If any of the regular expressions match, the request will be retried.
+     */
+    errorMessageRegexes: string[];
+    /**
+     * The base number of seconds to wait between retries. Default is `10`.
+     */
+    intervalSeconds?: number;
+    /**
+     * The maximum number of seconds to wait between retries. Default is `180`.
+     */
+    maxIntervalSeconds?: number;
+    /**
+     * The multiplier to apply to the interval between retries. Default is `1.5`.
+     */
+    multiplier?: number;
+    /**
+     * The randomization factor to apply to the interval between retries. The formula for the randomized interval is: `RetryInterval * (random value in range [1 - RandomizationFactor, 1 + RandomizationFactor])`. Therefore set to zero `0.0` for no randomization. Default is `0.5`.
+     */
+    randomizationFactor?: number;
+}
+
+export interface GetResourceActionRetryArgs {
+    /**
+     * A list of regular expressions to match against error messages. If any of the regular expressions match, the request will be retried.
+     */
+    errorMessageRegexes: pulumi.Input<pulumi.Input<string>[]>;
+    /**
+     * The base number of seconds to wait between retries. Default is `10`.
+     */
+    intervalSeconds?: pulumi.Input<number>;
+    /**
+     * The maximum number of seconds to wait between retries. Default is `180`.
+     */
+    maxIntervalSeconds?: pulumi.Input<number>;
+    /**
+     * The multiplier to apply to the interval between retries. Default is `1.5`.
+     */
+    multiplier?: pulumi.Input<number>;
+    /**
+     * The randomization factor to apply to the interval between retries. The formula for the randomized interval is: `RetryInterval * (random value in range [1 - RandomizationFactor, 1 + RandomizationFactor])`. Therefore set to zero `0.0` for no randomization. Default is `0.5`.
+     */
+    randomizationFactor?: pulumi.Input<number>;
+}
+
+export interface GetResourceActionTimeouts {
+    /**
+     * A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+     */
+    read?: string;
+}
+
+export interface GetResourceActionTimeoutsArgs {
+    /**
+     * A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+     */
+    read?: pulumi.Input<string>;
+}
+
+export interface GetResourceIdTimeouts {
+    /**
+     * A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+     */
+    read?: string;
+}
+
+export interface GetResourceIdTimeoutsArgs {
+    /**
+     * A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+     */
+    read?: pulumi.Input<string>;
+}
+
+export interface GetResourceListRetry {
+    /**
+     * A list of regular expressions to match against error messages. If any of the regular expressions match, the request will be retried.
+     */
+    errorMessageRegexes: string[];
+    /**
+     * The base number of seconds to wait between retries. Default is `10`.
+     */
+    intervalSeconds?: number;
+    /**
+     * The maximum number of seconds to wait between retries. Default is `180`.
+     */
+    maxIntervalSeconds?: number;
+    /**
+     * The multiplier to apply to the interval between retries. Default is `1.5`.
+     */
+    multiplier?: number;
+    /**
+     * The randomization factor to apply to the interval between retries. The formula for the randomized interval is: `RetryInterval * (random value in range [1 - RandomizationFactor, 1 + RandomizationFactor])`. Therefore set to zero `0.0` for no randomization. Default is `0.5`.
+     */
+    randomizationFactor?: number;
+}
+
+export interface GetResourceListRetryArgs {
+    /**
+     * A list of regular expressions to match against error messages. If any of the regular expressions match, the request will be retried.
+     */
+    errorMessageRegexes: pulumi.Input<pulumi.Input<string>[]>;
+    /**
+     * The base number of seconds to wait between retries. Default is `10`.
+     */
+    intervalSeconds?: pulumi.Input<number>;
+    /**
+     * The maximum number of seconds to wait between retries. Default is `180`.
+     */
+    maxIntervalSeconds?: pulumi.Input<number>;
+    /**
+     * The multiplier to apply to the interval between retries. Default is `1.5`.
+     */
+    multiplier?: pulumi.Input<number>;
+    /**
+     * The randomization factor to apply to the interval between retries. The formula for the randomized interval is: `RetryInterval * (random value in range [1 - RandomizationFactor, 1 + RandomizationFactor])`. Therefore set to zero `0.0` for no randomization. Default is `0.5`.
+     */
+    randomizationFactor?: pulumi.Input<number>;
+}
+
+export interface GetResourceListTimeouts {
+    /**
+     * A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+     */
+    read?: string;
+}
+
+export interface GetResourceListTimeoutsArgs {
+    /**
+     * A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+     */
+    read?: pulumi.Input<string>;
+}
+
+export interface GetResourceRetry {
+    /**
+     * A list of regular expressions to match against error messages. If any of the regular expressions match, the request will be retried.
+     */
+    errorMessageRegexes: string[];
+    /**
+     * The base number of seconds to wait between retries. Default is `10`.
+     */
+    intervalSeconds?: number;
+    /**
+     * The maximum number of seconds to wait between retries. Default is `180`.
+     */
+    maxIntervalSeconds?: number;
+    /**
+     * The multiplier to apply to the interval between retries. Default is `1.5`.
+     */
+    multiplier?: number;
+    /**
+     * The randomization factor to apply to the interval between retries. The formula for the randomized interval is: `RetryInterval * (random value in range [1 - RandomizationFactor, 1 + RandomizationFactor])`. Therefore set to zero `0.0` for no randomization. Default is `0.5`.
+     */
+    randomizationFactor?: number;
+}
+
+export interface GetResourceRetryArgs {
+    /**
+     * A list of regular expressions to match against error messages. If any of the regular expressions match, the request will be retried.
+     */
+    errorMessageRegexes: pulumi.Input<pulumi.Input<string>[]>;
+    /**
+     * The base number of seconds to wait between retries. Default is `10`.
+     */
+    intervalSeconds?: pulumi.Input<number>;
+    /**
+     * The maximum number of seconds to wait between retries. Default is `180`.
+     */
+    maxIntervalSeconds?: pulumi.Input<number>;
+    /**
+     * The multiplier to apply to the interval between retries. Default is `1.5`.
+     */
+    multiplier?: pulumi.Input<number>;
+    /**
+     * The randomization factor to apply to the interval between retries. The formula for the randomized interval is: `RetryInterval * (random value in range [1 - RandomizationFactor, 1 + RandomizationFactor])`. Therefore set to zero `0.0` for no randomization. Default is `0.5`.
+     */
+    randomizationFactor?: pulumi.Input<number>;
+}
+
+export interface GetResourceTimeouts {
+    /**
+     * A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+     */
+    read?: string;
+}
+
+export interface GetResourceTimeoutsArgs {
+    /**
+     * A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+     */
+    read?: pulumi.Input<string>;
 }
 
 export interface ProviderEndpoint {
     /**
-     * The Active Directory login endpoint which should be used.
+     * The Azure Resource Manager endpoint to use. This can also be sourced from the `ARM_RESOURCE_MANAGER_ENDPOINT` Environment Variable. Defaults to `https://management.azure.com/` for public cloud.
      */
     activeDirectoryAuthorityHost?: pulumi.Input<string>;
     /**
-     * The resource ID to obtain AD tokens for.
+     * The Azure Active Directory login endpoint to use. This can also be sourced from the `ARM_ACTIVE_DIRECTORY_AUTHORITY_HOST` Environment Variable. Defaults to `https://login.microsoftonline.com/` for public cloud.
      */
     resourceManagerAudience?: pulumi.Input<string>;
     /**
-     * The Resource Manager Endpoint which should be used.
+     * The resource ID to obtain AD tokens for. This can also be sourced from the `ARM_RESOURCE_MANAGER_AUDIENCE` Environment Variable. Defaults to `https://management.core.windows.net/` for public cloud.
      */
     resourceManagerEndpoint?: pulumi.Input<string>;
+}
+
+export interface ResourceActionRetry {
+    /**
+     * A list of regular expressions to match against error messages. If any of the regular expressions match, the request will be retried.
+     */
+    errorMessageRegexes: pulumi.Input<pulumi.Input<string>[]>;
+    /**
+     * The base number of seconds to wait between retries. Default is `10`.
+     */
+    intervalSeconds?: pulumi.Input<number>;
+    /**
+     * The maximum number of seconds to wait between retries. Default is `180`.
+     */
+    maxIntervalSeconds?: pulumi.Input<number>;
+    /**
+     * The multiplier to apply to the interval between retries. Default is `1.5`.
+     */
+    multiplier?: pulumi.Input<number>;
+    /**
+     * The randomization factor to apply to the interval between retries. The formula for the randomized interval is: `RetryInterval * (random value in range [1 - RandomizationFactor, 1 + RandomizationFactor])`. Therefore set to zero `0.0` for no randomization. Default is `0.5`.
+     */
+    randomizationFactor?: pulumi.Input<number>;
+}
+
+export interface ResourceActionTimeouts {
+    /**
+     * A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+     */
+    create?: pulumi.Input<string>;
+    /**
+     * A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Setting a timeout for a Delete operation is only applicable if changes are saved into state before the destroy operation occurs.
+     */
+    delete?: pulumi.Input<string>;
+    /**
+     * A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+     */
+    read?: pulumi.Input<string>;
+    /**
+     * A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+     */
+    update?: pulumi.Input<string>;
 }
 
 export interface ResourceIdentity {
@@ -66,17 +318,101 @@ export interface ResourceIdentity {
      */
     identityIds?: pulumi.Input<pulumi.Input<string>[]>;
     /**
-     * The Principal ID for the Service Principal associated with the Managed Service Identity of this azure resource.
+     * The Principal ID for the Service Principal associated with the Managed Service Identity of this Azure resource.
      */
     principalId?: pulumi.Input<string>;
     /**
-     * The Tenant ID for the Service Principal associated with the Managed Service Identity of this azure resource.
+     * The Tenant ID for the Service Principal associated with the Managed Service Identity of this Azure resource.
      */
     tenantId?: pulumi.Input<string>;
     /**
-     * The Type of Identity which should be used for this azure resource. Possible values are `SystemAssigned`, `UserAssigned` and `SystemAssigned,UserAssigned`.
+     * The Type of Identity which should be used for this azure resource. Possible values are `SystemAssigned`, `UserAssigned` and `SystemAssigned,UserAssigned`
      */
     type: pulumi.Input<string>;
+}
+
+export interface ResourceRetry {
+    /**
+     * A list of regular expressions to match against error messages. If any of the regular expressions match, the request will be retried.
+     */
+    errorMessageRegexes: pulumi.Input<pulumi.Input<string>[]>;
+    /**
+     * The base number of seconds to wait between retries. Default is `10`.
+     */
+    intervalSeconds?: pulumi.Input<number>;
+    /**
+     * The maximum number of seconds to wait between retries. Default is `180`.
+     */
+    maxIntervalSeconds?: pulumi.Input<number>;
+    /**
+     * The multiplier to apply to the interval between retries. Default is `1.5`.
+     */
+    multiplier?: pulumi.Input<number>;
+    /**
+     * The randomization factor to apply to the interval between retries. The formula for the randomized interval is: `RetryInterval * (random value in range [1 - RandomizationFactor, 1 + RandomizationFactor])`. Therefore set to zero `0.0` for no randomization. Default is `0.5`.
+     */
+    randomizationFactor?: pulumi.Input<number>;
+}
+
+export interface ResourceTimeouts {
+    /**
+     * A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+     */
+    create?: pulumi.Input<string>;
+    /**
+     * A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Setting a timeout for a Delete operation is only applicable if changes are saved into state before the destroy operation occurs.
+     */
+    delete?: pulumi.Input<string>;
+    /**
+     * A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+     */
+    read?: pulumi.Input<string>;
+    /**
+     * A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+     */
+    update?: pulumi.Input<string>;
+}
+
+export interface UpdateResourceRetry {
+    /**
+     * A list of regular expressions to match against error messages. If any of the regular expressions match, the request will be retried.
+     */
+    errorMessageRegexes: pulumi.Input<pulumi.Input<string>[]>;
+    /**
+     * The base number of seconds to wait between retries. Default is `10`.
+     */
+    intervalSeconds?: pulumi.Input<number>;
+    /**
+     * The maximum number of seconds to wait between retries. Default is `180`.
+     */
+    maxIntervalSeconds?: pulumi.Input<number>;
+    /**
+     * The multiplier to apply to the interval between retries. Default is `1.5`.
+     */
+    multiplier?: pulumi.Input<number>;
+    /**
+     * The randomization factor to apply to the interval between retries. The formula for the randomized interval is: `RetryInterval * (random value in range [1 - RandomizationFactor, 1 + RandomizationFactor])`. Therefore set to zero `0.0` for no randomization. Default is `0.5`.
+     */
+    randomizationFactor?: pulumi.Input<number>;
+}
+
+export interface UpdateResourceTimeouts {
+    /**
+     * A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+     */
+    create?: pulumi.Input<string>;
+    /**
+     * A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Setting a timeout for a Delete operation is only applicable if changes are saved into state before the destroy operation occurs.
+     */
+    delete?: pulumi.Input<string>;
+    /**
+     * A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+     */
+    read?: pulumi.Input<string>;
+    /**
+     * A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+     */
+    update?: pulumi.Input<string>;
 }
 export namespace config {
 }

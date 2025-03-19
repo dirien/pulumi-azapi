@@ -10,6 +10,11 @@ export type DataPlaneResource = import("./dataPlaneResource").DataPlaneResource;
 export const DataPlaneResource: typeof import("./dataPlaneResource").DataPlaneResource = null as any;
 utilities.lazyLoad(exports, ["DataPlaneResource"], () => require("./dataPlaneResource"));
 
+export { GetClientConfigArgs, GetClientConfigResult, GetClientConfigOutputArgs } from "./getClientConfig";
+export const getClientConfig: typeof import("./getClientConfig").getClientConfig = null as any;
+export const getClientConfigOutput: typeof import("./getClientConfig").getClientConfigOutput = null as any;
+utilities.lazyLoad(exports, ["getClientConfig","getClientConfigOutput"], () => require("./getClientConfig"));
+
 export { GetResourceArgs, GetResourceResult, GetResourceOutputArgs } from "./getResource";
 export const getResource: typeof import("./getResource").getResource = null as any;
 export const getResourceOutput: typeof import("./getResource").getResourceOutput = null as any;

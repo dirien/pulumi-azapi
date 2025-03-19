@@ -4,7 +4,7 @@
 using System;
 using System.Collections.Immutable;
 
-namespace ediri.Azapi
+namespace Pulumiverse.Azapi
 {
     public static class Config
     {
@@ -33,16 +33,31 @@ namespace ediri.Azapi
         private static readonly global::Pulumi.Config __config = new global::Pulumi.Config("azapi");
 
         private static readonly __Value<ImmutableArray<string>> _auxiliaryTenantIds = new __Value<ImmutableArray<string>>(() => __config.GetObject<ImmutableArray<string>>("auxiliaryTenantIds"));
+        /// <summary>
+        /// List of auxiliary Tenant IDs required for multi-tenancy and cross-tenant scenarios. This can also be sourced from the
+        /// `ARM_AUXILIARY_TENANT_IDS` Environment Variable.
+        /// </summary>
         public static ImmutableArray<string> AuxiliaryTenantIds
         {
             get => _auxiliaryTenantIds.Get();
             set => _auxiliaryTenantIds.Set(value);
         }
 
+        private static readonly __Value<string?> _clientCertificate = new __Value<string?>(() => __config.Get("clientCertificate"));
+        /// <summary>
+        /// A base64-encoded PKCS#12 bundle to be used as the client certificate for authentication. This can also be sourced from
+        /// the `ARM_CLIENT_CERTIFICATE` environment variable.
+        /// </summary>
+        public static string? ClientCertificate
+        {
+            get => _clientCertificate.Get();
+            set => _clientCertificate.Set(value);
+        }
+
         private static readonly __Value<string?> _clientCertificatePassword = new __Value<string?>(() => __config.Get("clientCertificatePassword"));
         /// <summary>
-        /// The password associated with the Client Certificate. For use when authenticating as a Service Principal using a Client
-        /// Certificate
+        /// The password associated with the Client Certificate. This can also be sourced from the `ARM_CLIENT_CERTIFICATE_PASSWORD`
+        /// Environment Variable.
         /// </summary>
         public static string? ClientCertificatePassword
         {
@@ -52,8 +67,8 @@ namespace ediri.Azapi
 
         private static readonly __Value<string?> _clientCertificatePath = new __Value<string?>(() => __config.Get("clientCertificatePath"));
         /// <summary>
-        /// The path to the Client Certificate associated with the Service Principal for use when authenticating as a Service
-        /// Principal using a Client Certificate.
+        /// The path to the Client Certificate associated with the Service Principal which should be used. This can also be sourced
+        /// from the `ARM_CLIENT_CERTIFICATE_PATH` Environment Variable.
         /// </summary>
         public static string? ClientCertificatePath
         {
@@ -63,7 +78,7 @@ namespace ediri.Azapi
 
         private static readonly __Value<string?> _clientId = new __Value<string?>(() => __config.Get("clientId"));
         /// <summary>
-        /// The Client ID which should be used.
+        /// The Client ID which should be used. This can also be sourced from the `ARM_CLIENT_ID` Environment Variable.
         /// </summary>
         public static string? ClientId
         {
@@ -71,9 +86,20 @@ namespace ediri.Azapi
             set => _clientId.Set(value);
         }
 
+        private static readonly __Value<string?> _clientIdFilePath = new __Value<string?>(() => __config.Get("clientIdFilePath"));
+        /// <summary>
+        /// The path to a file containing the Client ID which should be used. This can also be sourced from the
+        /// `ARM_CLIENT_ID_FILE_PATH` Environment Variable.
+        /// </summary>
+        public static string? ClientIdFilePath
+        {
+            get => _clientIdFilePath.Get();
+            set => _clientIdFilePath.Set(value);
+        }
+
         private static readonly __Value<string?> _clientSecret = new __Value<string?>(() => __config.Get("clientSecret"));
         /// <summary>
-        /// The Client Secret which should be used. For use When authenticating as a Service Principal using a Client Secret.
+        /// The Client Secret which should be used. This can also be sourced from the `ARM_CLIENT_SECRET` Environment Variable.
         /// </summary>
         public static string? ClientSecret
         {
@@ -81,9 +107,21 @@ namespace ediri.Azapi
             set => _clientSecret.Set(value);
         }
 
+        private static readonly __Value<string?> _clientSecretFilePath = new __Value<string?>(() => __config.Get("clientSecretFilePath"));
+        /// <summary>
+        /// The path to a file containing the Client Secret which should be used. For use When authenticating as a Service Principal
+        /// using a Client Secret. This can also be sourced from the `ARM_CLIENT_SECRET_FILE_PATH` Environment Variable.
+        /// </summary>
+        public static string? ClientSecretFilePath
+        {
+            get => _clientSecretFilePath.Get();
+            set => _clientSecretFilePath.Set(value);
+        }
+
         private static readonly __Value<string?> _customCorrelationRequestId = new __Value<string?>(() => __config.Get("customCorrelationRequestId"));
         /// <summary>
-        /// The value of the x-ms-correlation-request-id header (otherwise an auto-generated UUID will be used).
+        /// The value of the `x-ms-correlation-request-id` header, otherwise an auto-generated UUID will be used. This can also be
+        /// sourced from the `ARM_CORRELATION_REQUEST_ID` environment variable.
         /// </summary>
         public static string? CustomCorrelationRequestId
         {
@@ -92,6 +130,10 @@ namespace ediri.Azapi
         }
 
         private static readonly __Value<string?> _defaultLocation = new __Value<string?>(() => __config.Get("defaultLocation"));
+        /// <summary>
+        /// The default Azure Region where the azure resource should exist. The `location` in each resource block can override the
+        /// `default_location`. Changing this forces new resources to be created.
+        /// </summary>
         public static string? DefaultLocation
         {
             get => _defaultLocation.Get();
@@ -99,27 +141,21 @@ namespace ediri.Azapi
         }
 
         private static readonly __Value<string?> _defaultName = new __Value<string?>(() => __config.Get("defaultName"));
+        /// <summary>
+        /// The default name to create the azure resource. The `name` in each resource block can override the `default_name`.
+        /// Changing this forces new resources to be created.
+        /// </summary>
         public static string? DefaultName
         {
             get => _defaultName.Get();
             set => _defaultName.Set(value);
         }
 
-        private static readonly __Value<string?> _defaultNamingPrefix = new __Value<string?>(() => __config.Get("defaultNamingPrefix"));
-        public static string? DefaultNamingPrefix
-        {
-            get => _defaultNamingPrefix.Get();
-            set => _defaultNamingPrefix.Set(value);
-        }
-
-        private static readonly __Value<string?> _defaultNamingSuffix = new __Value<string?>(() => __config.Get("defaultNamingSuffix"));
-        public static string? DefaultNamingSuffix
-        {
-            get => _defaultNamingSuffix.Get();
-            set => _defaultNamingSuffix.Set(value);
-        }
-
         private static readonly __Value<ImmutableDictionary<string, string>?> _defaultTags = new __Value<ImmutableDictionary<string, string>?>(() => __config.GetObject<ImmutableDictionary<string, string>>("defaultTags"));
+        /// <summary>
+        /// A mapping of tags which should be assigned to the azure resource as default tags. The`tags` in each resource block can
+        /// override the `default_tags`.
+        /// </summary>
         public static ImmutableDictionary<string, string>? DefaultTags
         {
             get => _defaultTags.Get();
@@ -136,6 +172,18 @@ namespace ediri.Azapi
             set => _disableCorrelationRequestId.Set(value);
         }
 
+        private static readonly __Value<bool?> _disableDefaultOutput = new __Value<bool?>(() => __config.GetBoolean("disableDefaultOutput"));
+        /// <summary>
+        /// Disable default output. The default is false. When set to false, the provider will output the read-only properties if
+        /// `response_export_values` is not specified in the resource block. When set to true, the provider will disable this
+        /// output. This can also be sourced from the `ARM_DISABLE_DEFAULT_OUTPUT` Environment Variable.
+        /// </summary>
+        public static bool? DisableDefaultOutput
+        {
+            get => _disableDefaultOutput.Get();
+            set => _disableDefaultOutput.Set(value);
+        }
+
         private static readonly __Value<bool?> _disableTerraformPartnerId = new __Value<bool?>(() => __config.GetBoolean("disableTerraformPartnerId"));
         public static bool? DisableTerraformPartnerId
         {
@@ -143,16 +191,32 @@ namespace ediri.Azapi
             set => _disableTerraformPartnerId.Set(value);
         }
 
-        private static readonly __Value<ediri.Azapi.Config.Types.Endpoint?> _endpoint = new __Value<ediri.Azapi.Config.Types.Endpoint?>(() => __config.GetObject<ediri.Azapi.Config.Types.Endpoint>("endpoint"));
-        public static ediri.Azapi.Config.Types.Endpoint? Endpoint
+        private static readonly __Value<bool?> _enablePreflight = new __Value<bool?>(() => __config.GetBoolean("enablePreflight"));
+        /// <summary>
+        /// Enable Preflight Validation. The default is false. When set to true, the provider will use Preflight to do static
+        /// validation before really deploying a new resource. When set to false, the provider will disable this validation. This
+        /// can also be sourced from the `ARM_ENABLE_PREFLIGHT` Environment Variable.
+        /// </summary>
+        public static bool? EnablePreflight
         {
-            get => _endpoint.Get();
-            set => _endpoint.Set(value);
+            get => _enablePreflight.Get();
+            set => _enablePreflight.Set(value);
+        }
+
+        private static readonly __Value<ImmutableArray<Pulumiverse.Azapi.Config.Types.Endpoints>> _endpoints = new __Value<ImmutableArray<Pulumiverse.Azapi.Config.Types.Endpoints>>(() => __config.GetObject<ImmutableArray<Pulumiverse.Azapi.Config.Types.Endpoints>>("endpoints"));
+        /// <summary>
+        /// The Azure API Endpoint Configuration.
+        /// </summary>
+        public static ImmutableArray<Pulumiverse.Azapi.Config.Types.Endpoints> Endpoints
+        {
+            get => _endpoints.Get();
+            set => _endpoints.Set(value);
         }
 
         private static readonly __Value<string?> _environment = new __Value<string?>(() => __config.Get("environment"));
         /// <summary>
-        /// The Cloud Environment which should be used. Possible values are public, usgovernment and china. Defaults to public.
+        /// The Cloud Environment which should be used. Possible values are `public`, `usgovernment` and `china`. Defaults to
+        /// `public`. This can also be sourced from the `ARM_ENVIRONMENT` Environment Variable.
         /// </summary>
         public static string? Environment
         {
@@ -160,10 +224,33 @@ namespace ediri.Azapi
             set => _environment.Set(value);
         }
 
+        private static readonly __Value<int?> _maximumBusyRetryAttempts = new __Value<int?>(() => __config.GetInt32("maximumBusyRetryAttempts"));
+        /// <summary>
+        /// The maximum number of retries to attempt if the Azure API returns an HTTP 408, 429, 500, 502, 503, or 504 response. The
+        /// default is `3`. The resource-specific retry configuration may additionally be used to retry on other errors and
+        /// conditions.
+        /// </summary>
+        public static int? MaximumBusyRetryAttempts
+        {
+            get => _maximumBusyRetryAttempts.Get();
+            set => _maximumBusyRetryAttempts.Set(value);
+        }
+
+        private static readonly __Value<string?> _oidcAzureServiceConnectionId = new __Value<string?>(() => __config.Get("oidcAzureServiceConnectionId"));
+        /// <summary>
+        /// The Azure Pipelines Service Connection ID to use for authentication. This can also be sourced from the
+        /// `ARM_ADO_PIPELINE_SERVICE_CONNECTION_ID` or `ARM_OIDC_AZURE_SERVICE_CONNECTION_ID` Environment Variables.
+        /// </summary>
+        public static string? OidcAzureServiceConnectionId
+        {
+            get => _oidcAzureServiceConnectionId.Get();
+            set => _oidcAzureServiceConnectionId.Set(value);
+        }
+
         private static readonly __Value<string?> _oidcRequestToken = new __Value<string?>(() => __config.Get("oidcRequestToken"));
         /// <summary>
-        /// The bearer token for the request to the OIDC provider. For use When authenticating as a Service Principal using OpenID
-        /// Connect.
+        /// The bearer token for the request to the OIDC provider. This can also be sourced from the `ARM_OIDC_REQUEST_TOKEN` or
+        /// `ACTIONS_ID_TOKEN_REQUEST_TOKEN` Environment Variables.
         /// </summary>
         public static string? OidcRequestToken
         {
@@ -173,8 +260,8 @@ namespace ediri.Azapi
 
         private static readonly __Value<string?> _oidcRequestUrl = new __Value<string?>(() => __config.Get("oidcRequestUrl"));
         /// <summary>
-        /// The URL for the OIDC provider from which to request an ID token. For use When authenticating as a Service Principal
-        /// using OpenID Connect.
+        /// The URL for the OIDC provider from which to request an ID token. This can also be sourced from the
+        /// `ARM_OIDC_REQUEST_URL` or `ACTIONS_ID_TOKEN_REQUEST_URL` Environment Variables.
         /// </summary>
         public static string? OidcRequestUrl
         {
@@ -184,7 +271,8 @@ namespace ediri.Azapi
 
         private static readonly __Value<string?> _oidcToken = new __Value<string?>(() => __config.Get("oidcToken"));
         /// <summary>
-        /// The OIDC ID token for use when authenticating as a Service Principal using OpenID Connect.
+        /// The ID token when authenticating using OpenID Connect (OIDC). This can also be sourced from the `ARM_OIDC_TOKEN`
+        /// environment Variable.
         /// </summary>
         public static string? OidcToken
         {
@@ -194,7 +282,8 @@ namespace ediri.Azapi
 
         private static readonly __Value<string?> _oidcTokenFilePath = new __Value<string?>(() => __config.Get("oidcTokenFilePath"));
         /// <summary>
-        /// The path to a file containing an OIDC ID token for use when authenticating as a Service Principal using OpenID Connect.
+        /// The path to a file containing an ID token when authenticating using OpenID Connect (OIDC). This can also be sourced from
+        /// the `ARM_OIDC_TOKEN_FILE_PATH` environment Variable.
         /// </summary>
         public static string? OidcTokenFilePath
         {
@@ -204,7 +293,10 @@ namespace ediri.Azapi
 
         private static readonly __Value<string?> _partnerId = new __Value<string?>(() => __config.Get("partnerId"));
         /// <summary>
-        /// A GUID/UUID that is registered with Microsoft to facilitate partner resource usage attribution.
+        /// A GUID/UUID that is
+        /// [registered](https://docs.microsoft.com/azure/marketplace/azure-partner-customer-usage-attribution#register-guids-and-offers)
+        /// with Microsoft to facilitate partner resource usage attribution. This can also be sourced from the `ARM_PARTNER_ID`
+        /// Environment Variable.
         /// </summary>
         public static string? PartnerId
         {
@@ -214,7 +306,8 @@ namespace ediri.Azapi
 
         private static readonly __Value<bool?> _skipProviderRegistration = new __Value<bool?>(() => __config.GetBoolean("skipProviderRegistration"));
         /// <summary>
-        /// Should the Provider skip registering all of the Resource Providers that it supports, if they're not already registered?
+        /// Should the Provider skip registering the Resource Providers it supports? This can also be sourced from the
+        /// `ARM_SKIP_PROVIDER_REGISTRATION` Environment Variable. Defaults to `false`.
         /// </summary>
         public static bool? SkipProviderRegistration
         {
@@ -224,7 +317,7 @@ namespace ediri.Azapi
 
         private static readonly __Value<string?> _subscriptionId = new __Value<string?>(() => __config.Get("subscriptionId"));
         /// <summary>
-        /// The Subscription ID which should be used.
+        /// The Subscription ID which should be used. This can also be sourced from the `ARM_SUBSCRIPTION_ID` Environment Variable.
         /// </summary>
         public static string? SubscriptionId
         {
@@ -234,7 +327,7 @@ namespace ediri.Azapi
 
         private static readonly __Value<string?> _tenantId = new __Value<string?>(() => __config.Get("tenantId"));
         /// <summary>
-        /// The Tenant ID which should be used.
+        /// The Tenant ID should be used. This can also be sourced from the `ARM_TENANT_ID` Environment Variable.
         /// </summary>
         public static string? TenantId
         {
@@ -242,9 +335,22 @@ namespace ediri.Azapi
             set => _tenantId.Set(value);
         }
 
+        private static readonly __Value<bool?> _useAksWorkloadIdentity = new __Value<bool?>(() => __config.GetBoolean("useAksWorkloadIdentity"));
+        /// <summary>
+        /// Should AKS Workload Identity be used for Authentication? This can also be sourced from the
+        /// `ARM_USE_AKS_WORKLOAD_IDENTITY` Environment Variable. Defaults to `false`. When set, `client_id`, `tenant_id` and
+        /// `oidc_token_file_path` will be detected from the environment and do not need to be specified.
+        /// </summary>
+        public static bool? UseAksWorkloadIdentity
+        {
+            get => _useAksWorkloadIdentity.Get();
+            set => _useAksWorkloadIdentity.Set(value);
+        }
+
         private static readonly __Value<bool?> _useCli = new __Value<bool?>(() => __config.GetBoolean("useCli"));
         /// <summary>
-        /// Allow Azure CLI to be used for Authentication.
+        /// Should Azure CLI be used for authentication? This can also be sourced from the `ARM_USE_CLI` environment variable.
+        /// Defaults to `true`.
         /// </summary>
         public static bool? UseCli
         {
@@ -254,7 +360,8 @@ namespace ediri.Azapi
 
         private static readonly __Value<bool?> _useMsi = new __Value<bool?>(() => __config.GetBoolean("useMsi"));
         /// <summary>
-        /// Allow Managed Service Identity to be used for Authentication.
+        /// Should Managed Identity be used for Authentication? This can also be sourced from the `ARM_USE_MSI` Environment
+        /// Variable. Defaults to `false`.
         /// </summary>
         public static bool? UseMsi
         {
@@ -264,7 +371,8 @@ namespace ediri.Azapi
 
         private static readonly __Value<bool?> _useOidc = new __Value<bool?>(() => __config.GetBoolean("useOidc"));
         /// <summary>
-        /// Allow OpenID Connect to be used for authentication
+        /// Should OIDC be used for Authentication? This can also be sourced from the `ARM_USE_OIDC` Environment Variable. Defaults
+        /// to `false`.
         /// </summary>
         public static bool? UseOidc
         {
@@ -275,18 +383,18 @@ namespace ediri.Azapi
         public static class Types
         {
 
-             public class Endpoint
+             public class Endpoints
              {
             /// <summary>
-            /// The Active Directory login endpoint which should be used.
+            /// The Azure Resource Manager endpoint to use. This can also be sourced from the `ARM_RESOURCE_MANAGER_ENDPOINT` Environment Variable. Defaults to `https://management.azure.com/` for public cloud.
             /// </summary>
                 public string? ActiveDirectoryAuthorityHost { get; set; } = null!;
             /// <summary>
-            /// The resource ID to obtain AD tokens for.
+            /// The Azure Active Directory login endpoint to use. This can also be sourced from the `ARM_ACTIVE_DIRECTORY_AUTHORITY_HOST` Environment Variable. Defaults to `https://login.microsoftonline.com/` for public cloud.
             /// </summary>
                 public string? ResourceManagerAudience { get; set; } = null!;
             /// <summary>
-            /// The Resource Manager Endpoint which should be used.
+            /// The resource ID to obtain AD tokens for. This can also be sourced from the `ARM_RESOURCE_MANAGER_AUDIENCE` Environment Variable. Defaults to `https://management.core.windows.net/` for public cloud.
             /// </summary>
                 public string? ResourceManagerEndpoint { get; set; } = null!;
             }

@@ -8,242 +8,177 @@ using System.Threading.Tasks;
 using Pulumi.Serialization;
 using Pulumi;
 
-namespace ediri.Azapi
+namespace Pulumiverse.Azapi
 {
     public static class GetResourceAction
     {
         /// <summary>
-        /// This resource can perform resource action which gets information from an existing resource.
-        /// It's recommended to use `azapi.ResourceAction` data source to perform readonly action, please use `azapi.ResourceAction` resource,
-        /// if user wants to perform actions which change a resource's state.
-        /// 
         /// ## Example Usage
         /// 
-        /// ```hcl
-        /// terraform {
-        ///   required_providers {
-        ///     azapi = {
-        ///       source = "Azure/azapi"
-        ///     }
-        ///   }
-        /// }
+        /// ```csharp
+        /// using System.Collections.Generic;
+        /// using System.Linq;
+        /// using Pulumi;
+        /// using Azapi = Pulumi.Azapi;
+        /// using Azure = Pulumi.Azure;
         /// 
-        /// provider "azapi" {
-        /// }
+        /// return await Deployment.RunAsync(() =&gt; 
+        /// {
+        ///     var exampleResourceGroup = new Azure.Core.ResourceGroup("exampleResourceGroup", new()
+        ///     {
+        ///         Location = "west europe",
+        ///     });
         /// 
-        /// provider "azurerm" {
-        ///   features {}
-        /// }
+        ///     var exampleAccount = new Azure.Automation.Account("exampleAccount", new()
+        ///     {
+        ///         ResourceGroupName = exampleResourceGroup.Name,
+        ///         Location = exampleResourceGroup.Location,
+        ///         SkuName = "Basic",
+        ///     });
         /// 
-        /// resource "azurerm_resource_group" "example" {
-        ///   name     = "example-rg"
-        ///   location = "west europe"
-        /// }
+        ///     var exampleResourceAction = Azapi.GetResourceAction.Invoke(new()
+        ///     {
+        ///         Type = "Microsoft.Automation/automationAccounts@2021-06-22",
+        ///         ResourceId = exampleAccount.Id,
+        ///         Action = "listKeys",
+        ///         ResponseExportValues = new[]
+        ///         {
+        ///             "*",
+        ///         },
+        ///     });
         /// 
-        /// resource "azurerm_automation_account" "example" {
-        ///   name                = "example-account"
-        ///   resource_group_name = azurerm_resource_group.example.name
-        ///   location            = azurerm_resource_group.example.location
-        ///   sku_name            = "Basic"
-        /// }
-        /// 
-        /// data "azapi_resource_action" "example" {
-        ///   type                   = "Microsoft.Automation/automationAccounts@2021-06-22"
-        ///   resource_id            = azurerm_automation_account.example.id
-        ///   action                 = "listKeys"
-        ///   response_export_values = ["*"]
-        /// }
-        /// ```
-        /// 
-        /// Here's an example to use the `azapi.ResourceAction` data source to get a provider's permissions.
-        /// 
-        /// ```hcl
-        /// provider "azurerm" {
-        ///   features {}
-        /// }
-        /// 
-        /// data "azurerm_client_config" "current" {}
-        /// 
-        /// data "azapi_resource_action" "test" {
-        ///   type        = "Microsoft.Resources/providers@2021-04-01"
-        ///   resource_id = "/subscriptions/${data.azurerm_client_config.current.subscription_id}/providers/Microsoft.Network"
-        ///   action      = "providerPermissions"
-        ///   method      = "GET"
-        /// }
-        /// ```
-        /// 
-        /// Here's an example to use the `azapi.ResourceAction` data source to perform a provider action.
-        /// 
-        /// ```hcl
-        /// terraform {
-        ///   required_providers {
-        ///     azapi = {
-        ///       source = "Azure/azapi"
-        ///     }
-        ///   }
-        /// }
-        /// 
-        /// resource "azapi_resource_action" "test" {
-        ///   type        = "Microsoft.Cache@2023-04-01"
-        ///   resource_id = "/subscriptions/00000000-0000-0000-0000-000000000000/providers/Microsoft.Cache"
-        ///   action      = "CheckNameAvailability"
-        ///   body = jsonencode({
-        ///     type = "Microsoft.Cache/Redis"
-        ///     name = "cacheName"
-        ///   })
-        /// }
+        /// });
         /// ```
         /// </summary>
         public static Task<GetResourceActionResult> InvokeAsync(GetResourceActionArgs args, InvokeOptions? options = null)
             => global::Pulumi.Deployment.Instance.InvokeAsync<GetResourceActionResult>("azapi:index/getResourceAction:getResourceAction", args ?? new GetResourceActionArgs(), options.WithDefaults());
 
         /// <summary>
-        /// This resource can perform resource action which gets information from an existing resource.
-        /// It's recommended to use `azapi.ResourceAction` data source to perform readonly action, please use `azapi.ResourceAction` resource,
-        /// if user wants to perform actions which change a resource's state.
-        /// 
         /// ## Example Usage
         /// 
-        /// ```hcl
-        /// terraform {
-        ///   required_providers {
-        ///     azapi = {
-        ///       source = "Azure/azapi"
-        ///     }
-        ///   }
-        /// }
+        /// ```csharp
+        /// using System.Collections.Generic;
+        /// using System.Linq;
+        /// using Pulumi;
+        /// using Azapi = Pulumi.Azapi;
+        /// using Azure = Pulumi.Azure;
         /// 
-        /// provider "azapi" {
-        /// }
+        /// return await Deployment.RunAsync(() =&gt; 
+        /// {
+        ///     var exampleResourceGroup = new Azure.Core.ResourceGroup("exampleResourceGroup", new()
+        ///     {
+        ///         Location = "west europe",
+        ///     });
         /// 
-        /// provider "azurerm" {
-        ///   features {}
-        /// }
+        ///     var exampleAccount = new Azure.Automation.Account("exampleAccount", new()
+        ///     {
+        ///         ResourceGroupName = exampleResourceGroup.Name,
+        ///         Location = exampleResourceGroup.Location,
+        ///         SkuName = "Basic",
+        ///     });
         /// 
-        /// resource "azurerm_resource_group" "example" {
-        ///   name     = "example-rg"
-        ///   location = "west europe"
-        /// }
+        ///     var exampleResourceAction = Azapi.GetResourceAction.Invoke(new()
+        ///     {
+        ///         Type = "Microsoft.Automation/automationAccounts@2021-06-22",
+        ///         ResourceId = exampleAccount.Id,
+        ///         Action = "listKeys",
+        ///         ResponseExportValues = new[]
+        ///         {
+        ///             "*",
+        ///         },
+        ///     });
         /// 
-        /// resource "azurerm_automation_account" "example" {
-        ///   name                = "example-account"
-        ///   resource_group_name = azurerm_resource_group.example.name
-        ///   location            = azurerm_resource_group.example.location
-        ///   sku_name            = "Basic"
-        /// }
-        /// 
-        /// data "azapi_resource_action" "example" {
-        ///   type                   = "Microsoft.Automation/automationAccounts@2021-06-22"
-        ///   resource_id            = azurerm_automation_account.example.id
-        ///   action                 = "listKeys"
-        ///   response_export_values = ["*"]
-        /// }
-        /// ```
-        /// 
-        /// Here's an example to use the `azapi.ResourceAction` data source to get a provider's permissions.
-        /// 
-        /// ```hcl
-        /// provider "azurerm" {
-        ///   features {}
-        /// }
-        /// 
-        /// data "azurerm_client_config" "current" {}
-        /// 
-        /// data "azapi_resource_action" "test" {
-        ///   type        = "Microsoft.Resources/providers@2021-04-01"
-        ///   resource_id = "/subscriptions/${data.azurerm_client_config.current.subscription_id}/providers/Microsoft.Network"
-        ///   action      = "providerPermissions"
-        ///   method      = "GET"
-        /// }
-        /// ```
-        /// 
-        /// Here's an example to use the `azapi.ResourceAction` data source to perform a provider action.
-        /// 
-        /// ```hcl
-        /// terraform {
-        ///   required_providers {
-        ///     azapi = {
-        ///       source = "Azure/azapi"
-        ///     }
-        ///   }
-        /// }
-        /// 
-        /// resource "azapi_resource_action" "test" {
-        ///   type        = "Microsoft.Cache@2023-04-01"
-        ///   resource_id = "/subscriptions/00000000-0000-0000-0000-000000000000/providers/Microsoft.Cache"
-        ///   action      = "CheckNameAvailability"
-        ///   body = jsonencode({
-        ///     type = "Microsoft.Cache/Redis"
-        ///     name = "cacheName"
-        ///   })
-        /// }
+        /// });
         /// ```
         /// </summary>
         public static Output<GetResourceActionResult> Invoke(GetResourceActionInvokeArgs args, InvokeOptions? options = null)
+            => global::Pulumi.Deployment.Instance.Invoke<GetResourceActionResult>("azapi:index/getResourceAction:getResourceAction", args ?? new GetResourceActionInvokeArgs(), options.WithDefaults());
+
+        /// <summary>
+        /// ## Example Usage
+        /// 
+        /// ```csharp
+        /// using System.Collections.Generic;
+        /// using System.Linq;
+        /// using Pulumi;
+        /// using Azapi = Pulumi.Azapi;
+        /// using Azure = Pulumi.Azure;
+        /// 
+        /// return await Deployment.RunAsync(() =&gt; 
+        /// {
+        ///     var exampleResourceGroup = new Azure.Core.ResourceGroup("exampleResourceGroup", new()
+        ///     {
+        ///         Location = "west europe",
+        ///     });
+        /// 
+        ///     var exampleAccount = new Azure.Automation.Account("exampleAccount", new()
+        ///     {
+        ///         ResourceGroupName = exampleResourceGroup.Name,
+        ///         Location = exampleResourceGroup.Location,
+        ///         SkuName = "Basic",
+        ///     });
+        /// 
+        ///     var exampleResourceAction = Azapi.GetResourceAction.Invoke(new()
+        ///     {
+        ///         Type = "Microsoft.Automation/automationAccounts@2021-06-22",
+        ///         ResourceId = exampleAccount.Id,
+        ///         Action = "listKeys",
+        ///         ResponseExportValues = new[]
+        ///         {
+        ///             "*",
+        ///         },
+        ///     });
+        /// 
+        /// });
+        /// ```
+        /// </summary>
+        public static Output<GetResourceActionResult> Invoke(GetResourceActionInvokeArgs args, InvokeOutputOptions options)
             => global::Pulumi.Deployment.Instance.Invoke<GetResourceActionResult>("azapi:index/getResourceAction:getResourceAction", args ?? new GetResourceActionInvokeArgs(), options.WithDefaults());
     }
 
 
     public sealed class GetResourceActionArgs : global::Pulumi.InvokeArgs
     {
-        /// <summary>
-        /// The name of the resource action. It's also possible to make Http requests towards the resource ID if leave this field empty.
-        /// </summary>
         [Input("action")]
         public string? Action { get; set; }
 
-        /// <summary>
-        /// A JSON object that contains the request body.
-        /// </summary>
         [Input("body")]
-        public string? Body { get; set; }
+        public object? Body { get; set; }
 
-        /// <summary>
-        /// Specifies the Http method of the azure resource action. Allowed values are `POST` and `GET`. Defaults to `POST`.
-        /// </summary>
+        [Input("headers")]
+        private Dictionary<string, string>? _headers;
+        public Dictionary<string, string> Headers
+        {
+            get => _headers ?? (_headers = new Dictionary<string, string>());
+            set => _headers = value;
+        }
+
         [Input("method")]
         public string? Method { get; set; }
 
-        /// <summary>
-        /// The ID of an existing azure source.
-        /// </summary>
+        [Input("queryParameters")]
+        private Dictionary<string, ImmutableArray<string>>? _queryParameters;
+        public Dictionary<string, ImmutableArray<string>> QueryParameters
+        {
+            get => _queryParameters ?? (_queryParameters = new Dictionary<string, ImmutableArray<string>>());
+            set => _queryParameters = value;
+        }
+
         [Input("resourceId")]
         public string? ResourceId { get; set; }
 
         [Input("responseExportValues")]
-        private List<string>? _responseExportValues;
+        public object? ResponseExportValues { get; set; }
 
-        /// <summary>
-        /// A list of path that needs to be exported from response body.
-        /// Setting it to `["*"]` will export the full response body.
-        /// Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
-        /// ```
-        /// {
-        /// "keys": [
-        /// {
-        /// "KeyName": "Primary",
-        /// "Permissions": "Full",
-        /// "Value": "nHGYNd******i4wdug=="
-        /// },
-        /// {
-        /// "KeyName": "Secondary",
-        /// "Permissions": "Full",
-        /// "Value": "6yoCad******SLzKzg=="
-        /// }
-        /// ]
-        /// }
-        /// ```
-        /// </summary>
-        public List<string> ResponseExportValues
-        {
-            get => _responseExportValues ?? (_responseExportValues = new List<string>());
-            set => _responseExportValues = value;
-        }
+        [Input("retry")]
+        public Inputs.GetResourceActionRetryArgs? Retry { get; set; }
 
-        /// <summary>
-        /// It is in a format like `&lt;resource-type&gt;@&lt;api-version&gt;`. `&lt;resource-type&gt;` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
-        /// `&lt;api-version&gt;` is version of the API used to manage this azure resource.
-        /// </summary>
+        [Input("sensitiveResponseExportValues")]
+        public object? SensitiveResponseExportValues { get; set; }
+
+        [Input("timeouts")]
+        public Inputs.GetResourceActionTimeoutsArgs? Timeouts { get; set; }
+
         [Input("type", required: true)]
         public string Type { get; set; } = null!;
 
@@ -255,64 +190,46 @@ namespace ediri.Azapi
 
     public sealed class GetResourceActionInvokeArgs : global::Pulumi.InvokeArgs
     {
-        /// <summary>
-        /// The name of the resource action. It's also possible to make Http requests towards the resource ID if leave this field empty.
-        /// </summary>
         [Input("action")]
         public Input<string>? Action { get; set; }
 
-        /// <summary>
-        /// A JSON object that contains the request body.
-        /// </summary>
         [Input("body")]
-        public Input<string>? Body { get; set; }
+        public Input<object>? Body { get; set; }
 
-        /// <summary>
-        /// Specifies the Http method of the azure resource action. Allowed values are `POST` and `GET`. Defaults to `POST`.
-        /// </summary>
+        [Input("headers")]
+        private InputMap<string>? _headers;
+        public InputMap<string> Headers
+        {
+            get => _headers ?? (_headers = new InputMap<string>());
+            set => _headers = value;
+        }
+
         [Input("method")]
         public Input<string>? Method { get; set; }
 
-        /// <summary>
-        /// The ID of an existing azure source.
-        /// </summary>
+        [Input("queryParameters")]
+        private InputMap<ImmutableArray<string>>? _queryParameters;
+        public InputMap<ImmutableArray<string>> QueryParameters
+        {
+            get => _queryParameters ?? (_queryParameters = new InputMap<ImmutableArray<string>>());
+            set => _queryParameters = value;
+        }
+
         [Input("resourceId")]
         public Input<string>? ResourceId { get; set; }
 
         [Input("responseExportValues")]
-        private InputList<string>? _responseExportValues;
+        public Input<object>? ResponseExportValues { get; set; }
 
-        /// <summary>
-        /// A list of path that needs to be exported from response body.
-        /// Setting it to `["*"]` will export the full response body.
-        /// Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
-        /// ```
-        /// {
-        /// "keys": [
-        /// {
-        /// "KeyName": "Primary",
-        /// "Permissions": "Full",
-        /// "Value": "nHGYNd******i4wdug=="
-        /// },
-        /// {
-        /// "KeyName": "Secondary",
-        /// "Permissions": "Full",
-        /// "Value": "6yoCad******SLzKzg=="
-        /// }
-        /// ]
-        /// }
-        /// ```
-        /// </summary>
-        public InputList<string> ResponseExportValues
-        {
-            get => _responseExportValues ?? (_responseExportValues = new InputList<string>());
-            set => _responseExportValues = value;
-        }
+        [Input("retry")]
+        public Input<Inputs.GetResourceActionRetryInputArgs>? Retry { get; set; }
 
-        /// <summary>
-        /// It is in a format like `&lt;resource-type&gt;@&lt;api-version&gt;`. `&lt;resource-type&gt;` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
-        /// `&lt;api-version&gt;` is version of the API used to manage this azure resource.
-        /// </summary>
+        [Input("sensitiveResponseExportValues")]
+        public Input<object>? SensitiveResponseExportValues { get; set; }
+
+        [Input("timeouts")]
+        public Input<Inputs.GetResourceActionTimeoutsInputArgs>? Timeouts { get; set; }
+
         [Input("type", required: true)]
         public Input<string> Type { get; set; } = null!;
 
@@ -327,50 +244,63 @@ namespace ediri.Azapi
     public sealed class GetResourceActionResult
     {
         public readonly string? Action;
-        public readonly string? Body;
-        /// <summary>
-        /// The provider-assigned unique ID for this managed resource.
-        /// </summary>
+        public readonly object? Body;
+        public readonly ImmutableDictionary<string, string>? Headers;
         public readonly string Id;
-        public readonly string? Method;
-        /// <summary>
-        /// The output json containing the properties specified in `response_export_values`. Here are some examples to decode json and extract the value.
-        /// ```hcl
-        /// // it will output "nHGYNd******i4wdug=="
-        /// output "primary_key" {
-        /// value = jsondecode(azapi_resource_action.test.output).keys.0.Value
-        /// }
-        /// </summary>
-        public readonly string Output;
+        public readonly string Method;
+        public readonly object Output;
+        public readonly ImmutableDictionary<string, ImmutableArray<string>>? QueryParameters;
         public readonly string? ResourceId;
-        public readonly ImmutableArray<string> ResponseExportValues;
+        public readonly object? ResponseExportValues;
+        public readonly Outputs.GetResourceActionRetryResult? Retry;
+        public readonly object SensitiveOutput;
+        public readonly object? SensitiveResponseExportValues;
+        public readonly Outputs.GetResourceActionTimeoutsResult? Timeouts;
         public readonly string Type;
 
         [OutputConstructor]
         private GetResourceActionResult(
             string? action,
 
-            string? body,
+            object? body,
+
+            ImmutableDictionary<string, string>? headers,
 
             string id,
 
-            string? method,
+            string method,
 
-            string output,
+            object output,
+
+            ImmutableDictionary<string, ImmutableArray<string>>? queryParameters,
 
             string? resourceId,
 
-            ImmutableArray<string> responseExportValues,
+            object? responseExportValues,
+
+            Outputs.GetResourceActionRetryResult? retry,
+
+            object sensitiveOutput,
+
+            object? sensitiveResponseExportValues,
+
+            Outputs.GetResourceActionTimeoutsResult? timeouts,
 
             string type)
         {
             Action = action;
             Body = body;
+            Headers = headers;
             Id = id;
             Method = method;
             Output = output;
+            QueryParameters = queryParameters;
             ResourceId = resourceId;
             ResponseExportValues = responseExportValues;
+            Retry = retry;
+            SensitiveOutput = sensitiveOutput;
+            SensitiveResponseExportValues = sensitiveResponseExportValues;
+            Timeouts = timeouts;
             Type = type;
         }
     }

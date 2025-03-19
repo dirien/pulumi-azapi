@@ -12,41 +12,65 @@ import (
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
-// This resource can perform any Azure resource manager resource action.
-// It's recommended to use `ResourceAction` resource to perform actions which change a resource's state, please use `ResourceAction` data source,
-// if user wants to perform readonly action.
-//
-// > **Note** The action can be performed on either apply or destroy. The default is apply, see `when` argument for more details.
-//
 // ## Example Usage
-//
-// Here's an example to use the `ResourceAction` resource to register a provider.
-//
-// Here's an example to use the `ResourceAction` resource to perform a provider action.
 type ResourceAction struct {
 	pulumi.CustomResourceState
 
-	// The name of the resource action. It's also possible to make Http requests towards the resource ID if leave this field empty.
+	// The name of the resource action. It's also possible to make HTTP requests towards the resource ID if leave this field
+	// empty.
 	Action pulumi.StringPtrOutput `pulumi:"action"`
-	// A JSON object that contains the request body.
-	Body pulumi.StringPtrOutput `pulumi:"body"`
-	// A list of ARM resource IDs which are used to avoid modify azapi resources at the same time.
+	// A dynamic attribute that contains the request body.
+	Body pulumi.AnyOutput `pulumi:"body"`
+	// A map of headers to include in the request
+	Headers pulumi.StringMapOutput `pulumi:"headers"`
+	// A list of ARM resource IDs which are used to avoid create/modify/delete azapi resources at the same time.
 	Locks pulumi.StringArrayOutput `pulumi:"locks"`
-	// Specifies the Http method of the azure resource action. Allowed values are `POST`, `PATCH`, `PUT` and `DELETE`. Defaults to `POST`.
-	Method pulumi.StringPtrOutput `pulumi:"method"`
-	// The output json containing the properties specified in `responseExportValues`. Here are some examples to decode json and extract the value.
-	Output pulumi.StringOutput `pulumi:"output"`
-	// The ID of an existing azure source.
+	// Specifies the HTTP method of the azure resource action. Allowed values are `POST`, `PATCH`, `PUT` and `DELETE`. Defaults
+	// to `POST`.
+	Method pulumi.StringOutput `pulumi:"method"`
+	// The output HCL object containing the properties specified in `responseExportValues`. Here are some examples to use the
+	// values. ```terraform // it will output "registry1.azurecr.io" output "login_server" { value =
+	// azapi_resource_action.example.output.properties.loginServer } // it will output "disabled" output "quarantine_policy" {
+	// value = azapi_resource_action.example.output.properties.policies.quarantinePolicy.status } ```
+	Output pulumi.AnyOutput `pulumi:"output"`
+	// A map of query parameters to include in the request
+	QueryParameters pulumi.StringArrayMapOutput `pulumi:"queryParameters"`
+	// The ID of an existing Azure source.
 	ResourceId pulumi.StringOutput `pulumi:"resourceId"`
-	// A list of path that needs to be exported from response body.
-	// Setting it to `["*"]` will export the full response body.
-	// Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
-	ResponseExportValues pulumi.StringArrayOutput `pulumi:"responseExportValues"`
-	// It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
-	// `<api-version>` is version of the API used to manage this azure resource.
+	// The attribute can accept either a list or a map. - **List**: A list of paths that need to be exported from the response
+	// body. Setting it to `["*"]` will export the full response body. Here's an example. If it sets to
+	// `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following HCL object to the
+	// computed property output. ```text { properties = { loginServer = "registry1.azurecr.io" policies = { quarantinePolicy =
+	// { status = "disabled" } } } } ``` - **Map**: A map where the key is the name for the result and the value is a JMESPath
+	// query string to filter the response. Here's an example. If it sets to `{"loginServer": "properties.loginServer",
+	// "quarantineStatus": "properties.policies.quarantinePolicy.status"}`, it will set the following HCL object to the
+	// computed property output. ``` text { "login_server" = "registry1.azurecr.io" "quarantine_status" = "disabled" }  ``` To
+	// learn more about JMESPath, visit [JMESPath](https://jmespath.org/).
+	ResponseExportValues pulumi.AnyOutput `pulumi:"responseExportValues"`
+	// The retry object supports the following attributes:
+	Retry ResourceActionRetryPtrOutput `pulumi:"retry"`
+	// The output HCL object containing the properties specified in `sensitiveResponseExportValues`. Here are some examples to
+	// use the values. ```terraform // it will output "registry1.azurecr.io" output "login_server" { value =
+	// azapi_resource_action.example.sensitive_output.properties.loginServer sensitive = true } // it will output "disabled"
+	// output "quarantine_policy" { value =
+	// azapi_resource_action.example.sensitive_output.properties.policies.quarantinePolicy.status sensitive = true } ```
+	SensitiveOutput pulumi.AnyOutput `pulumi:"sensitiveOutput"`
+	// The attribute can accept either a list or a map. - **List**: A list of paths that need to be exported from the response
+	// body. Setting it to `["*"]` will export the full response body. Here's an example. If it sets to
+	// `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following HCL object to the
+	// computed property output. ```text { properties = { loginServer = "registry1.azurecr.io" policies = { quarantinePolicy =
+	// { status = "disabled" } } } } ``` - **Map**: A map where the key is the name for the result and the value is a JMESPath
+	// query string to filter the response. Here's an example. If it sets to `{"loginServer": "properties.loginServer",
+	// "quarantineStatus": "properties.policies.quarantinePolicy.status"}`, it will set the following HCL object to the
+	// computed property output. ``` text { "login_server" = "registry1.azurecr.io" "quarantine_status" = "disabled" }  ``` To
+	// learn more about JMESPath, visit [JMESPath](https://jmespath.org/).
+	SensitiveResponseExportValues pulumi.AnyOutput                `pulumi:"sensitiveResponseExportValues"`
+	Timeouts                      ResourceActionTimeoutsPtrOutput `pulumi:"timeouts"`
+	// In a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example,
+	// `Microsoft.Storage/storageAccounts`. `<api-version>` is version of the API used to manage this azure resource.
 	Type pulumi.StringOutput `pulumi:"type"`
 	// When to perform the action, value must be one of: `apply`, `destroy`. Default is `apply`.
-	When pulumi.StringPtrOutput `pulumi:"when"`
+	When pulumi.StringOutput `pulumi:"when"`
 }
 
 // NewResourceAction registers a new resource with the given unique name, arguments, and options.
@@ -62,6 +86,10 @@ func NewResourceAction(ctx *pulumi.Context,
 	if args.Type == nil {
 		return nil, errors.New("invalid value for required argument 'Type'")
 	}
+	secrets := pulumi.AdditionalSecretOutputs([]string{
+		"sensitiveOutput",
+	})
+	opts = append(opts, secrets)
 	opts = internal.PkgResourceDefaultOpts(opts)
 	var resource ResourceAction
 	err := ctx.RegisterResource("azapi:index/resourceAction:ResourceAction", name, args, &resource, opts...)
@@ -85,48 +113,116 @@ func GetResourceAction(ctx *pulumi.Context,
 
 // Input properties used for looking up and filtering ResourceAction resources.
 type resourceActionState struct {
-	// The name of the resource action. It's also possible to make Http requests towards the resource ID if leave this field empty.
+	// The name of the resource action. It's also possible to make HTTP requests towards the resource ID if leave this field
+	// empty.
 	Action *string `pulumi:"action"`
-	// A JSON object that contains the request body.
-	Body *string `pulumi:"body"`
-	// A list of ARM resource IDs which are used to avoid modify azapi resources at the same time.
+	// A dynamic attribute that contains the request body.
+	Body interface{} `pulumi:"body"`
+	// A map of headers to include in the request
+	Headers map[string]string `pulumi:"headers"`
+	// A list of ARM resource IDs which are used to avoid create/modify/delete azapi resources at the same time.
 	Locks []string `pulumi:"locks"`
-	// Specifies the Http method of the azure resource action. Allowed values are `POST`, `PATCH`, `PUT` and `DELETE`. Defaults to `POST`.
+	// Specifies the HTTP method of the azure resource action. Allowed values are `POST`, `PATCH`, `PUT` and `DELETE`. Defaults
+	// to `POST`.
 	Method *string `pulumi:"method"`
-	// The output json containing the properties specified in `responseExportValues`. Here are some examples to decode json and extract the value.
-	Output *string `pulumi:"output"`
-	// The ID of an existing azure source.
+	// The output HCL object containing the properties specified in `responseExportValues`. Here are some examples to use the
+	// values. ```terraform // it will output "registry1.azurecr.io" output "login_server" { value =
+	// azapi_resource_action.example.output.properties.loginServer } // it will output "disabled" output "quarantine_policy" {
+	// value = azapi_resource_action.example.output.properties.policies.quarantinePolicy.status } ```
+	Output interface{} `pulumi:"output"`
+	// A map of query parameters to include in the request
+	QueryParameters map[string][]string `pulumi:"queryParameters"`
+	// The ID of an existing Azure source.
 	ResourceId *string `pulumi:"resourceId"`
-	// A list of path that needs to be exported from response body.
-	// Setting it to `["*"]` will export the full response body.
-	// Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
-	ResponseExportValues []string `pulumi:"responseExportValues"`
-	// It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
-	// `<api-version>` is version of the API used to manage this azure resource.
+	// The attribute can accept either a list or a map. - **List**: A list of paths that need to be exported from the response
+	// body. Setting it to `["*"]` will export the full response body. Here's an example. If it sets to
+	// `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following HCL object to the
+	// computed property output. ```text { properties = { loginServer = "registry1.azurecr.io" policies = { quarantinePolicy =
+	// { status = "disabled" } } } } ``` - **Map**: A map where the key is the name for the result and the value is a JMESPath
+	// query string to filter the response. Here's an example. If it sets to `{"loginServer": "properties.loginServer",
+	// "quarantineStatus": "properties.policies.quarantinePolicy.status"}`, it will set the following HCL object to the
+	// computed property output. ``` text { "login_server" = "registry1.azurecr.io" "quarantine_status" = "disabled" }  ``` To
+	// learn more about JMESPath, visit [JMESPath](https://jmespath.org/).
+	ResponseExportValues interface{} `pulumi:"responseExportValues"`
+	// The retry object supports the following attributes:
+	Retry *ResourceActionRetry `pulumi:"retry"`
+	// The output HCL object containing the properties specified in `sensitiveResponseExportValues`. Here are some examples to
+	// use the values. ```terraform // it will output "registry1.azurecr.io" output "login_server" { value =
+	// azapi_resource_action.example.sensitive_output.properties.loginServer sensitive = true } // it will output "disabled"
+	// output "quarantine_policy" { value =
+	// azapi_resource_action.example.sensitive_output.properties.policies.quarantinePolicy.status sensitive = true } ```
+	SensitiveOutput interface{} `pulumi:"sensitiveOutput"`
+	// The attribute can accept either a list or a map. - **List**: A list of paths that need to be exported from the response
+	// body. Setting it to `["*"]` will export the full response body. Here's an example. If it sets to
+	// `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following HCL object to the
+	// computed property output. ```text { properties = { loginServer = "registry1.azurecr.io" policies = { quarantinePolicy =
+	// { status = "disabled" } } } } ``` - **Map**: A map where the key is the name for the result and the value is a JMESPath
+	// query string to filter the response. Here's an example. If it sets to `{"loginServer": "properties.loginServer",
+	// "quarantineStatus": "properties.policies.quarantinePolicy.status"}`, it will set the following HCL object to the
+	// computed property output. ``` text { "login_server" = "registry1.azurecr.io" "quarantine_status" = "disabled" }  ``` To
+	// learn more about JMESPath, visit [JMESPath](https://jmespath.org/).
+	SensitiveResponseExportValues interface{}             `pulumi:"sensitiveResponseExportValues"`
+	Timeouts                      *ResourceActionTimeouts `pulumi:"timeouts"`
+	// In a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example,
+	// `Microsoft.Storage/storageAccounts`. `<api-version>` is version of the API used to manage this azure resource.
 	Type *string `pulumi:"type"`
 	// When to perform the action, value must be one of: `apply`, `destroy`. Default is `apply`.
 	When *string `pulumi:"when"`
 }
 
 type ResourceActionState struct {
-	// The name of the resource action. It's also possible to make Http requests towards the resource ID if leave this field empty.
+	// The name of the resource action. It's also possible to make HTTP requests towards the resource ID if leave this field
+	// empty.
 	Action pulumi.StringPtrInput
-	// A JSON object that contains the request body.
-	Body pulumi.StringPtrInput
-	// A list of ARM resource IDs which are used to avoid modify azapi resources at the same time.
+	// A dynamic attribute that contains the request body.
+	Body pulumi.Input
+	// A map of headers to include in the request
+	Headers pulumi.StringMapInput
+	// A list of ARM resource IDs which are used to avoid create/modify/delete azapi resources at the same time.
 	Locks pulumi.StringArrayInput
-	// Specifies the Http method of the azure resource action. Allowed values are `POST`, `PATCH`, `PUT` and `DELETE`. Defaults to `POST`.
+	// Specifies the HTTP method of the azure resource action. Allowed values are `POST`, `PATCH`, `PUT` and `DELETE`. Defaults
+	// to `POST`.
 	Method pulumi.StringPtrInput
-	// The output json containing the properties specified in `responseExportValues`. Here are some examples to decode json and extract the value.
-	Output pulumi.StringPtrInput
-	// The ID of an existing azure source.
+	// The output HCL object containing the properties specified in `responseExportValues`. Here are some examples to use the
+	// values. ```terraform // it will output "registry1.azurecr.io" output "login_server" { value =
+	// azapi_resource_action.example.output.properties.loginServer } // it will output "disabled" output "quarantine_policy" {
+	// value = azapi_resource_action.example.output.properties.policies.quarantinePolicy.status } ```
+	Output pulumi.Input
+	// A map of query parameters to include in the request
+	QueryParameters pulumi.StringArrayMapInput
+	// The ID of an existing Azure source.
 	ResourceId pulumi.StringPtrInput
-	// A list of path that needs to be exported from response body.
-	// Setting it to `["*"]` will export the full response body.
-	// Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
-	ResponseExportValues pulumi.StringArrayInput
-	// It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
-	// `<api-version>` is version of the API used to manage this azure resource.
+	// The attribute can accept either a list or a map. - **List**: A list of paths that need to be exported from the response
+	// body. Setting it to `["*"]` will export the full response body. Here's an example. If it sets to
+	// `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following HCL object to the
+	// computed property output. ```text { properties = { loginServer = "registry1.azurecr.io" policies = { quarantinePolicy =
+	// { status = "disabled" } } } } ``` - **Map**: A map where the key is the name for the result and the value is a JMESPath
+	// query string to filter the response. Here's an example. If it sets to `{"loginServer": "properties.loginServer",
+	// "quarantineStatus": "properties.policies.quarantinePolicy.status"}`, it will set the following HCL object to the
+	// computed property output. ``` text { "login_server" = "registry1.azurecr.io" "quarantine_status" = "disabled" }  ``` To
+	// learn more about JMESPath, visit [JMESPath](https://jmespath.org/).
+	ResponseExportValues pulumi.Input
+	// The retry object supports the following attributes:
+	Retry ResourceActionRetryPtrInput
+	// The output HCL object containing the properties specified in `sensitiveResponseExportValues`. Here are some examples to
+	// use the values. ```terraform // it will output "registry1.azurecr.io" output "login_server" { value =
+	// azapi_resource_action.example.sensitive_output.properties.loginServer sensitive = true } // it will output "disabled"
+	// output "quarantine_policy" { value =
+	// azapi_resource_action.example.sensitive_output.properties.policies.quarantinePolicy.status sensitive = true } ```
+	SensitiveOutput pulumi.Input
+	// The attribute can accept either a list or a map. - **List**: A list of paths that need to be exported from the response
+	// body. Setting it to `["*"]` will export the full response body. Here's an example. If it sets to
+	// `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following HCL object to the
+	// computed property output. ```text { properties = { loginServer = "registry1.azurecr.io" policies = { quarantinePolicy =
+	// { status = "disabled" } } } } ``` - **Map**: A map where the key is the name for the result and the value is a JMESPath
+	// query string to filter the response. Here's an example. If it sets to `{"loginServer": "properties.loginServer",
+	// "quarantineStatus": "properties.policies.quarantinePolicy.status"}`, it will set the following HCL object to the
+	// computed property output. ``` text { "login_server" = "registry1.azurecr.io" "quarantine_status" = "disabled" }  ``` To
+	// learn more about JMESPath, visit [JMESPath](https://jmespath.org/).
+	SensitiveResponseExportValues pulumi.Input
+	Timeouts                      ResourceActionTimeoutsPtrInput
+	// In a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example,
+	// `Microsoft.Storage/storageAccounts`. `<api-version>` is version of the API used to manage this azure resource.
 	Type pulumi.StringPtrInput
 	// When to perform the action, value must be one of: `apply`, `destroy`. Default is `apply`.
 	When pulumi.StringPtrInput
@@ -137,22 +233,47 @@ func (ResourceActionState) ElementType() reflect.Type {
 }
 
 type resourceActionArgs struct {
-	// The name of the resource action. It's also possible to make Http requests towards the resource ID if leave this field empty.
+	// The name of the resource action. It's also possible to make HTTP requests towards the resource ID if leave this field
+	// empty.
 	Action *string `pulumi:"action"`
-	// A JSON object that contains the request body.
-	Body *string `pulumi:"body"`
-	// A list of ARM resource IDs which are used to avoid modify azapi resources at the same time.
+	// A dynamic attribute that contains the request body.
+	Body interface{} `pulumi:"body"`
+	// A map of headers to include in the request
+	Headers map[string]string `pulumi:"headers"`
+	// A list of ARM resource IDs which are used to avoid create/modify/delete azapi resources at the same time.
 	Locks []string `pulumi:"locks"`
-	// Specifies the Http method of the azure resource action. Allowed values are `POST`, `PATCH`, `PUT` and `DELETE`. Defaults to `POST`.
+	// Specifies the HTTP method of the azure resource action. Allowed values are `POST`, `PATCH`, `PUT` and `DELETE`. Defaults
+	// to `POST`.
 	Method *string `pulumi:"method"`
-	// The ID of an existing azure source.
+	// A map of query parameters to include in the request
+	QueryParameters map[string][]string `pulumi:"queryParameters"`
+	// The ID of an existing Azure source.
 	ResourceId string `pulumi:"resourceId"`
-	// A list of path that needs to be exported from response body.
-	// Setting it to `["*"]` will export the full response body.
-	// Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
-	ResponseExportValues []string `pulumi:"responseExportValues"`
-	// It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
-	// `<api-version>` is version of the API used to manage this azure resource.
+	// The attribute can accept either a list or a map. - **List**: A list of paths that need to be exported from the response
+	// body. Setting it to `["*"]` will export the full response body. Here's an example. If it sets to
+	// `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following HCL object to the
+	// computed property output. ```text { properties = { loginServer = "registry1.azurecr.io" policies = { quarantinePolicy =
+	// { status = "disabled" } } } } ``` - **Map**: A map where the key is the name for the result and the value is a JMESPath
+	// query string to filter the response. Here's an example. If it sets to `{"loginServer": "properties.loginServer",
+	// "quarantineStatus": "properties.policies.quarantinePolicy.status"}`, it will set the following HCL object to the
+	// computed property output. ``` text { "login_server" = "registry1.azurecr.io" "quarantine_status" = "disabled" }  ``` To
+	// learn more about JMESPath, visit [JMESPath](https://jmespath.org/).
+	ResponseExportValues interface{} `pulumi:"responseExportValues"`
+	// The retry object supports the following attributes:
+	Retry *ResourceActionRetry `pulumi:"retry"`
+	// The attribute can accept either a list or a map. - **List**: A list of paths that need to be exported from the response
+	// body. Setting it to `["*"]` will export the full response body. Here's an example. If it sets to
+	// `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following HCL object to the
+	// computed property output. ```text { properties = { loginServer = "registry1.azurecr.io" policies = { quarantinePolicy =
+	// { status = "disabled" } } } } ``` - **Map**: A map where the key is the name for the result and the value is a JMESPath
+	// query string to filter the response. Here's an example. If it sets to `{"loginServer": "properties.loginServer",
+	// "quarantineStatus": "properties.policies.quarantinePolicy.status"}`, it will set the following HCL object to the
+	// computed property output. ``` text { "login_server" = "registry1.azurecr.io" "quarantine_status" = "disabled" }  ``` To
+	// learn more about JMESPath, visit [JMESPath](https://jmespath.org/).
+	SensitiveResponseExportValues interface{}             `pulumi:"sensitiveResponseExportValues"`
+	Timeouts                      *ResourceActionTimeouts `pulumi:"timeouts"`
+	// In a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example,
+	// `Microsoft.Storage/storageAccounts`. `<api-version>` is version of the API used to manage this azure resource.
 	Type string `pulumi:"type"`
 	// When to perform the action, value must be one of: `apply`, `destroy`. Default is `apply`.
 	When *string `pulumi:"when"`
@@ -160,22 +281,47 @@ type resourceActionArgs struct {
 
 // The set of arguments for constructing a ResourceAction resource.
 type ResourceActionArgs struct {
-	// The name of the resource action. It's also possible to make Http requests towards the resource ID if leave this field empty.
+	// The name of the resource action. It's also possible to make HTTP requests towards the resource ID if leave this field
+	// empty.
 	Action pulumi.StringPtrInput
-	// A JSON object that contains the request body.
-	Body pulumi.StringPtrInput
-	// A list of ARM resource IDs which are used to avoid modify azapi resources at the same time.
+	// A dynamic attribute that contains the request body.
+	Body pulumi.Input
+	// A map of headers to include in the request
+	Headers pulumi.StringMapInput
+	// A list of ARM resource IDs which are used to avoid create/modify/delete azapi resources at the same time.
 	Locks pulumi.StringArrayInput
-	// Specifies the Http method of the azure resource action. Allowed values are `POST`, `PATCH`, `PUT` and `DELETE`. Defaults to `POST`.
+	// Specifies the HTTP method of the azure resource action. Allowed values are `POST`, `PATCH`, `PUT` and `DELETE`. Defaults
+	// to `POST`.
 	Method pulumi.StringPtrInput
-	// The ID of an existing azure source.
+	// A map of query parameters to include in the request
+	QueryParameters pulumi.StringArrayMapInput
+	// The ID of an existing Azure source.
 	ResourceId pulumi.StringInput
-	// A list of path that needs to be exported from response body.
-	// Setting it to `["*"]` will export the full response body.
-	// Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
-	ResponseExportValues pulumi.StringArrayInput
-	// It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
-	// `<api-version>` is version of the API used to manage this azure resource.
+	// The attribute can accept either a list or a map. - **List**: A list of paths that need to be exported from the response
+	// body. Setting it to `["*"]` will export the full response body. Here's an example. If it sets to
+	// `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following HCL object to the
+	// computed property output. ```text { properties = { loginServer = "registry1.azurecr.io" policies = { quarantinePolicy =
+	// { status = "disabled" } } } } ``` - **Map**: A map where the key is the name for the result and the value is a JMESPath
+	// query string to filter the response. Here's an example. If it sets to `{"loginServer": "properties.loginServer",
+	// "quarantineStatus": "properties.policies.quarantinePolicy.status"}`, it will set the following HCL object to the
+	// computed property output. ``` text { "login_server" = "registry1.azurecr.io" "quarantine_status" = "disabled" }  ``` To
+	// learn more about JMESPath, visit [JMESPath](https://jmespath.org/).
+	ResponseExportValues pulumi.Input
+	// The retry object supports the following attributes:
+	Retry ResourceActionRetryPtrInput
+	// The attribute can accept either a list or a map. - **List**: A list of paths that need to be exported from the response
+	// body. Setting it to `["*"]` will export the full response body. Here's an example. If it sets to
+	// `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following HCL object to the
+	// computed property output. ```text { properties = { loginServer = "registry1.azurecr.io" policies = { quarantinePolicy =
+	// { status = "disabled" } } } } ``` - **Map**: A map where the key is the name for the result and the value is a JMESPath
+	// query string to filter the response. Here's an example. If it sets to `{"loginServer": "properties.loginServer",
+	// "quarantineStatus": "properties.policies.quarantinePolicy.status"}`, it will set the following HCL object to the
+	// computed property output. ``` text { "login_server" = "registry1.azurecr.io" "quarantine_status" = "disabled" }  ``` To
+	// learn more about JMESPath, visit [JMESPath](https://jmespath.org/).
+	SensitiveResponseExportValues pulumi.Input
+	Timeouts                      ResourceActionTimeoutsPtrInput
+	// In a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example,
+	// `Microsoft.Storage/storageAccounts`. `<api-version>` is version of the API used to manage this azure resource.
 	Type pulumi.StringInput
 	// When to perform the action, value must be one of: `apply`, `destroy`. Default is `apply`.
 	When pulumi.StringPtrInput
@@ -268,52 +414,104 @@ func (o ResourceActionOutput) ToResourceActionOutputWithContext(ctx context.Cont
 	return o
 }
 
-// The name of the resource action. It's also possible to make Http requests towards the resource ID if leave this field empty.
+// The name of the resource action. It's also possible to make HTTP requests towards the resource ID if leave this field
+// empty.
 func (o ResourceActionOutput) Action() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *ResourceAction) pulumi.StringPtrOutput { return v.Action }).(pulumi.StringPtrOutput)
 }
 
-// A JSON object that contains the request body.
-func (o ResourceActionOutput) Body() pulumi.StringPtrOutput {
-	return o.ApplyT(func(v *ResourceAction) pulumi.StringPtrOutput { return v.Body }).(pulumi.StringPtrOutput)
+// A dynamic attribute that contains the request body.
+func (o ResourceActionOutput) Body() pulumi.AnyOutput {
+	return o.ApplyT(func(v *ResourceAction) pulumi.AnyOutput { return v.Body }).(pulumi.AnyOutput)
 }
 
-// A list of ARM resource IDs which are used to avoid modify azapi resources at the same time.
+// A map of headers to include in the request
+func (o ResourceActionOutput) Headers() pulumi.StringMapOutput {
+	return o.ApplyT(func(v *ResourceAction) pulumi.StringMapOutput { return v.Headers }).(pulumi.StringMapOutput)
+}
+
+// A list of ARM resource IDs which are used to avoid create/modify/delete azapi resources at the same time.
 func (o ResourceActionOutput) Locks() pulumi.StringArrayOutput {
 	return o.ApplyT(func(v *ResourceAction) pulumi.StringArrayOutput { return v.Locks }).(pulumi.StringArrayOutput)
 }
 
-// Specifies the Http method of the azure resource action. Allowed values are `POST`, `PATCH`, `PUT` and `DELETE`. Defaults to `POST`.
-func (o ResourceActionOutput) Method() pulumi.StringPtrOutput {
-	return o.ApplyT(func(v *ResourceAction) pulumi.StringPtrOutput { return v.Method }).(pulumi.StringPtrOutput)
+// Specifies the HTTP method of the azure resource action. Allowed values are `POST`, `PATCH`, `PUT` and `DELETE`. Defaults
+// to `POST`.
+func (o ResourceActionOutput) Method() pulumi.StringOutput {
+	return o.ApplyT(func(v *ResourceAction) pulumi.StringOutput { return v.Method }).(pulumi.StringOutput)
 }
 
-// The output json containing the properties specified in `responseExportValues`. Here are some examples to decode json and extract the value.
-func (o ResourceActionOutput) Output() pulumi.StringOutput {
-	return o.ApplyT(func(v *ResourceAction) pulumi.StringOutput { return v.Output }).(pulumi.StringOutput)
+// The output HCL object containing the properties specified in `responseExportValues`. Here are some examples to use the
+// values. ```terraform // it will output "registry1.azurecr.io" output "login_server" { value =
+// azapi_resource_action.example.output.properties.loginServer } // it will output "disabled" output "quarantine_policy" {
+// value = azapi_resource_action.example.output.properties.policies.quarantinePolicy.status } ```
+func (o ResourceActionOutput) Output() pulumi.AnyOutput {
+	return o.ApplyT(func(v *ResourceAction) pulumi.AnyOutput { return v.Output }).(pulumi.AnyOutput)
 }
 
-// The ID of an existing azure source.
+// A map of query parameters to include in the request
+func (o ResourceActionOutput) QueryParameters() pulumi.StringArrayMapOutput {
+	return o.ApplyT(func(v *ResourceAction) pulumi.StringArrayMapOutput { return v.QueryParameters }).(pulumi.StringArrayMapOutput)
+}
+
+// The ID of an existing Azure source.
 func (o ResourceActionOutput) ResourceId() pulumi.StringOutput {
 	return o.ApplyT(func(v *ResourceAction) pulumi.StringOutput { return v.ResourceId }).(pulumi.StringOutput)
 }
 
-// A list of path that needs to be exported from response body.
-// Setting it to `["*"]` will export the full response body.
-// Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
-func (o ResourceActionOutput) ResponseExportValues() pulumi.StringArrayOutput {
-	return o.ApplyT(func(v *ResourceAction) pulumi.StringArrayOutput { return v.ResponseExportValues }).(pulumi.StringArrayOutput)
+// The attribute can accept either a list or a map. - **List**: A list of paths that need to be exported from the response
+// body. Setting it to `["*"]` will export the full response body. Here's an example. If it sets to
+// `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following HCL object to the
+// computed property output. ```text { properties = { loginServer = "registry1.azurecr.io" policies = { quarantinePolicy =
+// { status = "disabled" } } } } ``` - **Map**: A map where the key is the name for the result and the value is a JMESPath
+// query string to filter the response. Here's an example. If it sets to `{"loginServer": "properties.loginServer",
+// "quarantineStatus": "properties.policies.quarantinePolicy.status"}`, it will set the following HCL object to the
+// computed property output. ``` text { "login_server" = "registry1.azurecr.io" "quarantine_status" = "disabled" }  ``` To
+// learn more about JMESPath, visit [JMESPath](https://jmespath.org/).
+func (o ResourceActionOutput) ResponseExportValues() pulumi.AnyOutput {
+	return o.ApplyT(func(v *ResourceAction) pulumi.AnyOutput { return v.ResponseExportValues }).(pulumi.AnyOutput)
 }
 
-// It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
-// `<api-version>` is version of the API used to manage this azure resource.
+// The retry object supports the following attributes:
+func (o ResourceActionOutput) Retry() ResourceActionRetryPtrOutput {
+	return o.ApplyT(func(v *ResourceAction) ResourceActionRetryPtrOutput { return v.Retry }).(ResourceActionRetryPtrOutput)
+}
+
+// The output HCL object containing the properties specified in `sensitiveResponseExportValues`. Here are some examples to
+// use the values. ```terraform // it will output "registry1.azurecr.io" output "login_server" { value =
+// azapi_resource_action.example.sensitive_output.properties.loginServer sensitive = true } // it will output "disabled"
+// output "quarantine_policy" { value =
+// azapi_resource_action.example.sensitive_output.properties.policies.quarantinePolicy.status sensitive = true } ```
+func (o ResourceActionOutput) SensitiveOutput() pulumi.AnyOutput {
+	return o.ApplyT(func(v *ResourceAction) pulumi.AnyOutput { return v.SensitiveOutput }).(pulumi.AnyOutput)
+}
+
+// The attribute can accept either a list or a map. - **List**: A list of paths that need to be exported from the response
+// body. Setting it to `["*"]` will export the full response body. Here's an example. If it sets to
+// `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following HCL object to the
+// computed property output. ```text { properties = { loginServer = "registry1.azurecr.io" policies = { quarantinePolicy =
+// { status = "disabled" } } } } ``` - **Map**: A map where the key is the name for the result and the value is a JMESPath
+// query string to filter the response. Here's an example. If it sets to `{"loginServer": "properties.loginServer",
+// "quarantineStatus": "properties.policies.quarantinePolicy.status"}`, it will set the following HCL object to the
+// computed property output. ``` text { "login_server" = "registry1.azurecr.io" "quarantine_status" = "disabled" }  ``` To
+// learn more about JMESPath, visit [JMESPath](https://jmespath.org/).
+func (o ResourceActionOutput) SensitiveResponseExportValues() pulumi.AnyOutput {
+	return o.ApplyT(func(v *ResourceAction) pulumi.AnyOutput { return v.SensitiveResponseExportValues }).(pulumi.AnyOutput)
+}
+
+func (o ResourceActionOutput) Timeouts() ResourceActionTimeoutsPtrOutput {
+	return o.ApplyT(func(v *ResourceAction) ResourceActionTimeoutsPtrOutput { return v.Timeouts }).(ResourceActionTimeoutsPtrOutput)
+}
+
+// In a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example,
+// `Microsoft.Storage/storageAccounts`. `<api-version>` is version of the API used to manage this azure resource.
 func (o ResourceActionOutput) Type() pulumi.StringOutput {
 	return o.ApplyT(func(v *ResourceAction) pulumi.StringOutput { return v.Type }).(pulumi.StringOutput)
 }
 
 // When to perform the action, value must be one of: `apply`, `destroy`. Default is `apply`.
-func (o ResourceActionOutput) When() pulumi.StringPtrOutput {
-	return o.ApplyT(func(v *ResourceAction) pulumi.StringPtrOutput { return v.When }).(pulumi.StringPtrOutput)
+func (o ResourceActionOutput) When() pulumi.StringOutput {
+	return o.ApplyT(func(v *ResourceAction) pulumi.StringOutput { return v.When }).(pulumi.StringOutput)
 }
 
 type ResourceActionArrayOutput struct{ *pulumi.OutputState }

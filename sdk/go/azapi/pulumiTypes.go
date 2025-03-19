@@ -13,12 +13,419 @@ import (
 
 var _ = internal.GetEnvOrDefault
 
+type DataPlaneResourceRetry struct {
+	// A list of regular expressions to match against error messages. If any of the regular expressions match, the request will be retried.
+	ErrorMessageRegexes []string `pulumi:"errorMessageRegexes"`
+	// The base number of seconds to wait between retries. Default is `10`.
+	IntervalSeconds *int `pulumi:"intervalSeconds"`
+	// The maximum number of seconds to wait between retries. Default is `180`.
+	MaxIntervalSeconds *int `pulumi:"maxIntervalSeconds"`
+	// The multiplier to apply to the interval between retries. Default is `1.5`.
+	Multiplier *float64 `pulumi:"multiplier"`
+	// The randomization factor to apply to the interval between retries. The formula for the randomized interval is: `RetryInterval * (random value in range [1 - RandomizationFactor, 1 + RandomizationFactor])`. Therefore set to zero `0.0` for no randomization. Default is `0.5`.
+	RandomizationFactor *float64 `pulumi:"randomizationFactor"`
+}
+
+// DataPlaneResourceRetryInput is an input type that accepts DataPlaneResourceRetryArgs and DataPlaneResourceRetryOutput values.
+// You can construct a concrete instance of `DataPlaneResourceRetryInput` via:
+//
+//	DataPlaneResourceRetryArgs{...}
+type DataPlaneResourceRetryInput interface {
+	pulumi.Input
+
+	ToDataPlaneResourceRetryOutput() DataPlaneResourceRetryOutput
+	ToDataPlaneResourceRetryOutputWithContext(context.Context) DataPlaneResourceRetryOutput
+}
+
+type DataPlaneResourceRetryArgs struct {
+	// A list of regular expressions to match against error messages. If any of the regular expressions match, the request will be retried.
+	ErrorMessageRegexes pulumi.StringArrayInput `pulumi:"errorMessageRegexes"`
+	// The base number of seconds to wait between retries. Default is `10`.
+	IntervalSeconds pulumi.IntPtrInput `pulumi:"intervalSeconds"`
+	// The maximum number of seconds to wait between retries. Default is `180`.
+	MaxIntervalSeconds pulumi.IntPtrInput `pulumi:"maxIntervalSeconds"`
+	// The multiplier to apply to the interval between retries. Default is `1.5`.
+	Multiplier pulumi.Float64PtrInput `pulumi:"multiplier"`
+	// The randomization factor to apply to the interval between retries. The formula for the randomized interval is: `RetryInterval * (random value in range [1 - RandomizationFactor, 1 + RandomizationFactor])`. Therefore set to zero `0.0` for no randomization. Default is `0.5`.
+	RandomizationFactor pulumi.Float64PtrInput `pulumi:"randomizationFactor"`
+}
+
+func (DataPlaneResourceRetryArgs) ElementType() reflect.Type {
+	return reflect.TypeOf((*DataPlaneResourceRetry)(nil)).Elem()
+}
+
+func (i DataPlaneResourceRetryArgs) ToDataPlaneResourceRetryOutput() DataPlaneResourceRetryOutput {
+	return i.ToDataPlaneResourceRetryOutputWithContext(context.Background())
+}
+
+func (i DataPlaneResourceRetryArgs) ToDataPlaneResourceRetryOutputWithContext(ctx context.Context) DataPlaneResourceRetryOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(DataPlaneResourceRetryOutput)
+}
+
+func (i DataPlaneResourceRetryArgs) ToDataPlaneResourceRetryPtrOutput() DataPlaneResourceRetryPtrOutput {
+	return i.ToDataPlaneResourceRetryPtrOutputWithContext(context.Background())
+}
+
+func (i DataPlaneResourceRetryArgs) ToDataPlaneResourceRetryPtrOutputWithContext(ctx context.Context) DataPlaneResourceRetryPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(DataPlaneResourceRetryOutput).ToDataPlaneResourceRetryPtrOutputWithContext(ctx)
+}
+
+// DataPlaneResourceRetryPtrInput is an input type that accepts DataPlaneResourceRetryArgs, DataPlaneResourceRetryPtr and DataPlaneResourceRetryPtrOutput values.
+// You can construct a concrete instance of `DataPlaneResourceRetryPtrInput` via:
+//
+//	        DataPlaneResourceRetryArgs{...}
+//
+//	or:
+//
+//	        nil
+type DataPlaneResourceRetryPtrInput interface {
+	pulumi.Input
+
+	ToDataPlaneResourceRetryPtrOutput() DataPlaneResourceRetryPtrOutput
+	ToDataPlaneResourceRetryPtrOutputWithContext(context.Context) DataPlaneResourceRetryPtrOutput
+}
+
+type dataPlaneResourceRetryPtrType DataPlaneResourceRetryArgs
+
+func DataPlaneResourceRetryPtr(v *DataPlaneResourceRetryArgs) DataPlaneResourceRetryPtrInput {
+	return (*dataPlaneResourceRetryPtrType)(v)
+}
+
+func (*dataPlaneResourceRetryPtrType) ElementType() reflect.Type {
+	return reflect.TypeOf((**DataPlaneResourceRetry)(nil)).Elem()
+}
+
+func (i *dataPlaneResourceRetryPtrType) ToDataPlaneResourceRetryPtrOutput() DataPlaneResourceRetryPtrOutput {
+	return i.ToDataPlaneResourceRetryPtrOutputWithContext(context.Background())
+}
+
+func (i *dataPlaneResourceRetryPtrType) ToDataPlaneResourceRetryPtrOutputWithContext(ctx context.Context) DataPlaneResourceRetryPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(DataPlaneResourceRetryPtrOutput)
+}
+
+type DataPlaneResourceRetryOutput struct{ *pulumi.OutputState }
+
+func (DataPlaneResourceRetryOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*DataPlaneResourceRetry)(nil)).Elem()
+}
+
+func (o DataPlaneResourceRetryOutput) ToDataPlaneResourceRetryOutput() DataPlaneResourceRetryOutput {
+	return o
+}
+
+func (o DataPlaneResourceRetryOutput) ToDataPlaneResourceRetryOutputWithContext(ctx context.Context) DataPlaneResourceRetryOutput {
+	return o
+}
+
+func (o DataPlaneResourceRetryOutput) ToDataPlaneResourceRetryPtrOutput() DataPlaneResourceRetryPtrOutput {
+	return o.ToDataPlaneResourceRetryPtrOutputWithContext(context.Background())
+}
+
+func (o DataPlaneResourceRetryOutput) ToDataPlaneResourceRetryPtrOutputWithContext(ctx context.Context) DataPlaneResourceRetryPtrOutput {
+	return o.ApplyTWithContext(ctx, func(_ context.Context, v DataPlaneResourceRetry) *DataPlaneResourceRetry {
+		return &v
+	}).(DataPlaneResourceRetryPtrOutput)
+}
+
+// A list of regular expressions to match against error messages. If any of the regular expressions match, the request will be retried.
+func (o DataPlaneResourceRetryOutput) ErrorMessageRegexes() pulumi.StringArrayOutput {
+	return o.ApplyT(func(v DataPlaneResourceRetry) []string { return v.ErrorMessageRegexes }).(pulumi.StringArrayOutput)
+}
+
+// The base number of seconds to wait between retries. Default is `10`.
+func (o DataPlaneResourceRetryOutput) IntervalSeconds() pulumi.IntPtrOutput {
+	return o.ApplyT(func(v DataPlaneResourceRetry) *int { return v.IntervalSeconds }).(pulumi.IntPtrOutput)
+}
+
+// The maximum number of seconds to wait between retries. Default is `180`.
+func (o DataPlaneResourceRetryOutput) MaxIntervalSeconds() pulumi.IntPtrOutput {
+	return o.ApplyT(func(v DataPlaneResourceRetry) *int { return v.MaxIntervalSeconds }).(pulumi.IntPtrOutput)
+}
+
+// The multiplier to apply to the interval between retries. Default is `1.5`.
+func (o DataPlaneResourceRetryOutput) Multiplier() pulumi.Float64PtrOutput {
+	return o.ApplyT(func(v DataPlaneResourceRetry) *float64 { return v.Multiplier }).(pulumi.Float64PtrOutput)
+}
+
+// The randomization factor to apply to the interval between retries. The formula for the randomized interval is: `RetryInterval * (random value in range [1 - RandomizationFactor, 1 + RandomizationFactor])`. Therefore set to zero `0.0` for no randomization. Default is `0.5`.
+func (o DataPlaneResourceRetryOutput) RandomizationFactor() pulumi.Float64PtrOutput {
+	return o.ApplyT(func(v DataPlaneResourceRetry) *float64 { return v.RandomizationFactor }).(pulumi.Float64PtrOutput)
+}
+
+type DataPlaneResourceRetryPtrOutput struct{ *pulumi.OutputState }
+
+func (DataPlaneResourceRetryPtrOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((**DataPlaneResourceRetry)(nil)).Elem()
+}
+
+func (o DataPlaneResourceRetryPtrOutput) ToDataPlaneResourceRetryPtrOutput() DataPlaneResourceRetryPtrOutput {
+	return o
+}
+
+func (o DataPlaneResourceRetryPtrOutput) ToDataPlaneResourceRetryPtrOutputWithContext(ctx context.Context) DataPlaneResourceRetryPtrOutput {
+	return o
+}
+
+func (o DataPlaneResourceRetryPtrOutput) Elem() DataPlaneResourceRetryOutput {
+	return o.ApplyT(func(v *DataPlaneResourceRetry) DataPlaneResourceRetry {
+		if v != nil {
+			return *v
+		}
+		var ret DataPlaneResourceRetry
+		return ret
+	}).(DataPlaneResourceRetryOutput)
+}
+
+// A list of regular expressions to match against error messages. If any of the regular expressions match, the request will be retried.
+func (o DataPlaneResourceRetryPtrOutput) ErrorMessageRegexes() pulumi.StringArrayOutput {
+	return o.ApplyT(func(v *DataPlaneResourceRetry) []string {
+		if v == nil {
+			return nil
+		}
+		return v.ErrorMessageRegexes
+	}).(pulumi.StringArrayOutput)
+}
+
+// The base number of seconds to wait between retries. Default is `10`.
+func (o DataPlaneResourceRetryPtrOutput) IntervalSeconds() pulumi.IntPtrOutput {
+	return o.ApplyT(func(v *DataPlaneResourceRetry) *int {
+		if v == nil {
+			return nil
+		}
+		return v.IntervalSeconds
+	}).(pulumi.IntPtrOutput)
+}
+
+// The maximum number of seconds to wait between retries. Default is `180`.
+func (o DataPlaneResourceRetryPtrOutput) MaxIntervalSeconds() pulumi.IntPtrOutput {
+	return o.ApplyT(func(v *DataPlaneResourceRetry) *int {
+		if v == nil {
+			return nil
+		}
+		return v.MaxIntervalSeconds
+	}).(pulumi.IntPtrOutput)
+}
+
+// The multiplier to apply to the interval between retries. Default is `1.5`.
+func (o DataPlaneResourceRetryPtrOutput) Multiplier() pulumi.Float64PtrOutput {
+	return o.ApplyT(func(v *DataPlaneResourceRetry) *float64 {
+		if v == nil {
+			return nil
+		}
+		return v.Multiplier
+	}).(pulumi.Float64PtrOutput)
+}
+
+// The randomization factor to apply to the interval between retries. The formula for the randomized interval is: `RetryInterval * (random value in range [1 - RandomizationFactor, 1 + RandomizationFactor])`. Therefore set to zero `0.0` for no randomization. Default is `0.5`.
+func (o DataPlaneResourceRetryPtrOutput) RandomizationFactor() pulumi.Float64PtrOutput {
+	return o.ApplyT(func(v *DataPlaneResourceRetry) *float64 {
+		if v == nil {
+			return nil
+		}
+		return v.RandomizationFactor
+	}).(pulumi.Float64PtrOutput)
+}
+
+type DataPlaneResourceTimeouts struct {
+	// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+	Create *string `pulumi:"create"`
+	// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Setting a timeout for a Delete operation is only applicable if changes are saved into state before the destroy operation occurs.
+	Delete *string `pulumi:"delete"`
+	// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+	Read *string `pulumi:"read"`
+	// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+	Update *string `pulumi:"update"`
+}
+
+// DataPlaneResourceTimeoutsInput is an input type that accepts DataPlaneResourceTimeoutsArgs and DataPlaneResourceTimeoutsOutput values.
+// You can construct a concrete instance of `DataPlaneResourceTimeoutsInput` via:
+//
+//	DataPlaneResourceTimeoutsArgs{...}
+type DataPlaneResourceTimeoutsInput interface {
+	pulumi.Input
+
+	ToDataPlaneResourceTimeoutsOutput() DataPlaneResourceTimeoutsOutput
+	ToDataPlaneResourceTimeoutsOutputWithContext(context.Context) DataPlaneResourceTimeoutsOutput
+}
+
+type DataPlaneResourceTimeoutsArgs struct {
+	// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+	Create pulumi.StringPtrInput `pulumi:"create"`
+	// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Setting a timeout for a Delete operation is only applicable if changes are saved into state before the destroy operation occurs.
+	Delete pulumi.StringPtrInput `pulumi:"delete"`
+	// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+	Read pulumi.StringPtrInput `pulumi:"read"`
+	// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+	Update pulumi.StringPtrInput `pulumi:"update"`
+}
+
+func (DataPlaneResourceTimeoutsArgs) ElementType() reflect.Type {
+	return reflect.TypeOf((*DataPlaneResourceTimeouts)(nil)).Elem()
+}
+
+func (i DataPlaneResourceTimeoutsArgs) ToDataPlaneResourceTimeoutsOutput() DataPlaneResourceTimeoutsOutput {
+	return i.ToDataPlaneResourceTimeoutsOutputWithContext(context.Background())
+}
+
+func (i DataPlaneResourceTimeoutsArgs) ToDataPlaneResourceTimeoutsOutputWithContext(ctx context.Context) DataPlaneResourceTimeoutsOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(DataPlaneResourceTimeoutsOutput)
+}
+
+func (i DataPlaneResourceTimeoutsArgs) ToDataPlaneResourceTimeoutsPtrOutput() DataPlaneResourceTimeoutsPtrOutput {
+	return i.ToDataPlaneResourceTimeoutsPtrOutputWithContext(context.Background())
+}
+
+func (i DataPlaneResourceTimeoutsArgs) ToDataPlaneResourceTimeoutsPtrOutputWithContext(ctx context.Context) DataPlaneResourceTimeoutsPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(DataPlaneResourceTimeoutsOutput).ToDataPlaneResourceTimeoutsPtrOutputWithContext(ctx)
+}
+
+// DataPlaneResourceTimeoutsPtrInput is an input type that accepts DataPlaneResourceTimeoutsArgs, DataPlaneResourceTimeoutsPtr and DataPlaneResourceTimeoutsPtrOutput values.
+// You can construct a concrete instance of `DataPlaneResourceTimeoutsPtrInput` via:
+//
+//	        DataPlaneResourceTimeoutsArgs{...}
+//
+//	or:
+//
+//	        nil
+type DataPlaneResourceTimeoutsPtrInput interface {
+	pulumi.Input
+
+	ToDataPlaneResourceTimeoutsPtrOutput() DataPlaneResourceTimeoutsPtrOutput
+	ToDataPlaneResourceTimeoutsPtrOutputWithContext(context.Context) DataPlaneResourceTimeoutsPtrOutput
+}
+
+type dataPlaneResourceTimeoutsPtrType DataPlaneResourceTimeoutsArgs
+
+func DataPlaneResourceTimeoutsPtr(v *DataPlaneResourceTimeoutsArgs) DataPlaneResourceTimeoutsPtrInput {
+	return (*dataPlaneResourceTimeoutsPtrType)(v)
+}
+
+func (*dataPlaneResourceTimeoutsPtrType) ElementType() reflect.Type {
+	return reflect.TypeOf((**DataPlaneResourceTimeouts)(nil)).Elem()
+}
+
+func (i *dataPlaneResourceTimeoutsPtrType) ToDataPlaneResourceTimeoutsPtrOutput() DataPlaneResourceTimeoutsPtrOutput {
+	return i.ToDataPlaneResourceTimeoutsPtrOutputWithContext(context.Background())
+}
+
+func (i *dataPlaneResourceTimeoutsPtrType) ToDataPlaneResourceTimeoutsPtrOutputWithContext(ctx context.Context) DataPlaneResourceTimeoutsPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(DataPlaneResourceTimeoutsPtrOutput)
+}
+
+type DataPlaneResourceTimeoutsOutput struct{ *pulumi.OutputState }
+
+func (DataPlaneResourceTimeoutsOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*DataPlaneResourceTimeouts)(nil)).Elem()
+}
+
+func (o DataPlaneResourceTimeoutsOutput) ToDataPlaneResourceTimeoutsOutput() DataPlaneResourceTimeoutsOutput {
+	return o
+}
+
+func (o DataPlaneResourceTimeoutsOutput) ToDataPlaneResourceTimeoutsOutputWithContext(ctx context.Context) DataPlaneResourceTimeoutsOutput {
+	return o
+}
+
+func (o DataPlaneResourceTimeoutsOutput) ToDataPlaneResourceTimeoutsPtrOutput() DataPlaneResourceTimeoutsPtrOutput {
+	return o.ToDataPlaneResourceTimeoutsPtrOutputWithContext(context.Background())
+}
+
+func (o DataPlaneResourceTimeoutsOutput) ToDataPlaneResourceTimeoutsPtrOutputWithContext(ctx context.Context) DataPlaneResourceTimeoutsPtrOutput {
+	return o.ApplyTWithContext(ctx, func(_ context.Context, v DataPlaneResourceTimeouts) *DataPlaneResourceTimeouts {
+		return &v
+	}).(DataPlaneResourceTimeoutsPtrOutput)
+}
+
+// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+func (o DataPlaneResourceTimeoutsOutput) Create() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v DataPlaneResourceTimeouts) *string { return v.Create }).(pulumi.StringPtrOutput)
+}
+
+// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Setting a timeout for a Delete operation is only applicable if changes are saved into state before the destroy operation occurs.
+func (o DataPlaneResourceTimeoutsOutput) Delete() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v DataPlaneResourceTimeouts) *string { return v.Delete }).(pulumi.StringPtrOutput)
+}
+
+// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+func (o DataPlaneResourceTimeoutsOutput) Read() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v DataPlaneResourceTimeouts) *string { return v.Read }).(pulumi.StringPtrOutput)
+}
+
+// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+func (o DataPlaneResourceTimeoutsOutput) Update() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v DataPlaneResourceTimeouts) *string { return v.Update }).(pulumi.StringPtrOutput)
+}
+
+type DataPlaneResourceTimeoutsPtrOutput struct{ *pulumi.OutputState }
+
+func (DataPlaneResourceTimeoutsPtrOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((**DataPlaneResourceTimeouts)(nil)).Elem()
+}
+
+func (o DataPlaneResourceTimeoutsPtrOutput) ToDataPlaneResourceTimeoutsPtrOutput() DataPlaneResourceTimeoutsPtrOutput {
+	return o
+}
+
+func (o DataPlaneResourceTimeoutsPtrOutput) ToDataPlaneResourceTimeoutsPtrOutputWithContext(ctx context.Context) DataPlaneResourceTimeoutsPtrOutput {
+	return o
+}
+
+func (o DataPlaneResourceTimeoutsPtrOutput) Elem() DataPlaneResourceTimeoutsOutput {
+	return o.ApplyT(func(v *DataPlaneResourceTimeouts) DataPlaneResourceTimeouts {
+		if v != nil {
+			return *v
+		}
+		var ret DataPlaneResourceTimeouts
+		return ret
+	}).(DataPlaneResourceTimeoutsOutput)
+}
+
+// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+func (o DataPlaneResourceTimeoutsPtrOutput) Create() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *DataPlaneResourceTimeouts) *string {
+		if v == nil {
+			return nil
+		}
+		return v.Create
+	}).(pulumi.StringPtrOutput)
+}
+
+// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Setting a timeout for a Delete operation is only applicable if changes are saved into state before the destroy operation occurs.
+func (o DataPlaneResourceTimeoutsPtrOutput) Delete() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *DataPlaneResourceTimeouts) *string {
+		if v == nil {
+			return nil
+		}
+		return v.Delete
+	}).(pulumi.StringPtrOutput)
+}
+
+// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+func (o DataPlaneResourceTimeoutsPtrOutput) Read() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *DataPlaneResourceTimeouts) *string {
+		if v == nil {
+			return nil
+		}
+		return v.Read
+	}).(pulumi.StringPtrOutput)
+}
+
+// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+func (o DataPlaneResourceTimeoutsPtrOutput) Update() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *DataPlaneResourceTimeouts) *string {
+		if v == nil {
+			return nil
+		}
+		return v.Update
+	}).(pulumi.StringPtrOutput)
+}
+
 type ProviderEndpoint struct {
-	// The Active Directory login endpoint which should be used.
+	// The Azure Resource Manager endpoint to use. This can also be sourced from the `ARM_RESOURCE_MANAGER_ENDPOINT` Environment Variable. Defaults to `https://management.azure.com/` for public cloud.
 	ActiveDirectoryAuthorityHost *string `pulumi:"activeDirectoryAuthorityHost"`
-	// The resource ID to obtain AD tokens for.
+	// The Azure Active Directory login endpoint to use. This can also be sourced from the `ARM_ACTIVE_DIRECTORY_AUTHORITY_HOST` Environment Variable. Defaults to `https://login.microsoftonline.com/` for public cloud.
 	ResourceManagerAudience *string `pulumi:"resourceManagerAudience"`
-	// The Resource Manager Endpoint which should be used.
+	// The resource ID to obtain AD tokens for. This can also be sourced from the `ARM_RESOURCE_MANAGER_AUDIENCE` Environment Variable. Defaults to `https://management.core.windows.net/` for public cloud.
 	ResourceManagerEndpoint *string `pulumi:"resourceManagerEndpoint"`
 }
 
@@ -34,11 +441,11 @@ type ProviderEndpointInput interface {
 }
 
 type ProviderEndpointArgs struct {
-	// The Active Directory login endpoint which should be used.
+	// The Azure Resource Manager endpoint to use. This can also be sourced from the `ARM_RESOURCE_MANAGER_ENDPOINT` Environment Variable. Defaults to `https://management.azure.com/` for public cloud.
 	ActiveDirectoryAuthorityHost pulumi.StringPtrInput `pulumi:"activeDirectoryAuthorityHost"`
-	// The resource ID to obtain AD tokens for.
+	// The Azure Active Directory login endpoint to use. This can also be sourced from the `ARM_ACTIVE_DIRECTORY_AUTHORITY_HOST` Environment Variable. Defaults to `https://login.microsoftonline.com/` for public cloud.
 	ResourceManagerAudience pulumi.StringPtrInput `pulumi:"resourceManagerAudience"`
-	// The Resource Manager Endpoint which should be used.
+	// The resource ID to obtain AD tokens for. This can also be sourced from the `ARM_RESOURCE_MANAGER_AUDIENCE` Environment Variable. Defaults to `https://management.core.windows.net/` for public cloud.
 	ResourceManagerEndpoint pulumi.StringPtrInput `pulumi:"resourceManagerEndpoint"`
 }
 
@@ -54,45 +461,29 @@ func (i ProviderEndpointArgs) ToProviderEndpointOutputWithContext(ctx context.Co
 	return pulumi.ToOutputWithContext(ctx, i).(ProviderEndpointOutput)
 }
 
-func (i ProviderEndpointArgs) ToProviderEndpointPtrOutput() ProviderEndpointPtrOutput {
-	return i.ToProviderEndpointPtrOutputWithContext(context.Background())
-}
-
-func (i ProviderEndpointArgs) ToProviderEndpointPtrOutputWithContext(ctx context.Context) ProviderEndpointPtrOutput {
-	return pulumi.ToOutputWithContext(ctx, i).(ProviderEndpointOutput).ToProviderEndpointPtrOutputWithContext(ctx)
-}
-
-// ProviderEndpointPtrInput is an input type that accepts ProviderEndpointArgs, ProviderEndpointPtr and ProviderEndpointPtrOutput values.
-// You can construct a concrete instance of `ProviderEndpointPtrInput` via:
+// ProviderEndpointArrayInput is an input type that accepts ProviderEndpointArray and ProviderEndpointArrayOutput values.
+// You can construct a concrete instance of `ProviderEndpointArrayInput` via:
 //
-//	        ProviderEndpointArgs{...}
-//
-//	or:
-//
-//	        nil
-type ProviderEndpointPtrInput interface {
+//	ProviderEndpointArray{ ProviderEndpointArgs{...} }
+type ProviderEndpointArrayInput interface {
 	pulumi.Input
 
-	ToProviderEndpointPtrOutput() ProviderEndpointPtrOutput
-	ToProviderEndpointPtrOutputWithContext(context.Context) ProviderEndpointPtrOutput
+	ToProviderEndpointArrayOutput() ProviderEndpointArrayOutput
+	ToProviderEndpointArrayOutputWithContext(context.Context) ProviderEndpointArrayOutput
 }
 
-type providerEndpointPtrType ProviderEndpointArgs
+type ProviderEndpointArray []ProviderEndpointInput
 
-func ProviderEndpointPtr(v *ProviderEndpointArgs) ProviderEndpointPtrInput {
-	return (*providerEndpointPtrType)(v)
+func (ProviderEndpointArray) ElementType() reflect.Type {
+	return reflect.TypeOf((*[]ProviderEndpoint)(nil)).Elem()
 }
 
-func (*providerEndpointPtrType) ElementType() reflect.Type {
-	return reflect.TypeOf((**ProviderEndpoint)(nil)).Elem()
+func (i ProviderEndpointArray) ToProviderEndpointArrayOutput() ProviderEndpointArrayOutput {
+	return i.ToProviderEndpointArrayOutputWithContext(context.Background())
 }
 
-func (i *providerEndpointPtrType) ToProviderEndpointPtrOutput() ProviderEndpointPtrOutput {
-	return i.ToProviderEndpointPtrOutputWithContext(context.Background())
-}
-
-func (i *providerEndpointPtrType) ToProviderEndpointPtrOutputWithContext(ctx context.Context) ProviderEndpointPtrOutput {
-	return pulumi.ToOutputWithContext(ctx, i).(ProviderEndpointPtrOutput)
+func (i ProviderEndpointArray) ToProviderEndpointArrayOutputWithContext(ctx context.Context) ProviderEndpointArrayOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(ProviderEndpointArrayOutput)
 }
 
 type ProviderEndpointOutput struct{ *pulumi.OutputState }
@@ -109,93 +500,456 @@ func (o ProviderEndpointOutput) ToProviderEndpointOutputWithContext(ctx context.
 	return o
 }
 
-func (o ProviderEndpointOutput) ToProviderEndpointPtrOutput() ProviderEndpointPtrOutput {
-	return o.ToProviderEndpointPtrOutputWithContext(context.Background())
-}
-
-func (o ProviderEndpointOutput) ToProviderEndpointPtrOutputWithContext(ctx context.Context) ProviderEndpointPtrOutput {
-	return o.ApplyTWithContext(ctx, func(_ context.Context, v ProviderEndpoint) *ProviderEndpoint {
-		return &v
-	}).(ProviderEndpointPtrOutput)
-}
-
-// The Active Directory login endpoint which should be used.
+// The Azure Resource Manager endpoint to use. This can also be sourced from the `ARM_RESOURCE_MANAGER_ENDPOINT` Environment Variable. Defaults to `https://management.azure.com/` for public cloud.
 func (o ProviderEndpointOutput) ActiveDirectoryAuthorityHost() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v ProviderEndpoint) *string { return v.ActiveDirectoryAuthorityHost }).(pulumi.StringPtrOutput)
 }
 
-// The resource ID to obtain AD tokens for.
+// The Azure Active Directory login endpoint to use. This can also be sourced from the `ARM_ACTIVE_DIRECTORY_AUTHORITY_HOST` Environment Variable. Defaults to `https://login.microsoftonline.com/` for public cloud.
 func (o ProviderEndpointOutput) ResourceManagerAudience() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v ProviderEndpoint) *string { return v.ResourceManagerAudience }).(pulumi.StringPtrOutput)
 }
 
-// The Resource Manager Endpoint which should be used.
+// The resource ID to obtain AD tokens for. This can also be sourced from the `ARM_RESOURCE_MANAGER_AUDIENCE` Environment Variable. Defaults to `https://management.core.windows.net/` for public cloud.
 func (o ProviderEndpointOutput) ResourceManagerEndpoint() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v ProviderEndpoint) *string { return v.ResourceManagerEndpoint }).(pulumi.StringPtrOutput)
 }
 
-type ProviderEndpointPtrOutput struct{ *pulumi.OutputState }
+type ProviderEndpointArrayOutput struct{ *pulumi.OutputState }
 
-func (ProviderEndpointPtrOutput) ElementType() reflect.Type {
-	return reflect.TypeOf((**ProviderEndpoint)(nil)).Elem()
+func (ProviderEndpointArrayOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*[]ProviderEndpoint)(nil)).Elem()
 }
 
-func (o ProviderEndpointPtrOutput) ToProviderEndpointPtrOutput() ProviderEndpointPtrOutput {
+func (o ProviderEndpointArrayOutput) ToProviderEndpointArrayOutput() ProviderEndpointArrayOutput {
 	return o
 }
 
-func (o ProviderEndpointPtrOutput) ToProviderEndpointPtrOutputWithContext(ctx context.Context) ProviderEndpointPtrOutput {
+func (o ProviderEndpointArrayOutput) ToProviderEndpointArrayOutputWithContext(ctx context.Context) ProviderEndpointArrayOutput {
 	return o
 }
 
-func (o ProviderEndpointPtrOutput) Elem() ProviderEndpointOutput {
-	return o.ApplyT(func(v *ProviderEndpoint) ProviderEndpoint {
-		if v != nil {
-			return *v
-		}
-		var ret ProviderEndpoint
-		return ret
+func (o ProviderEndpointArrayOutput) Index(i pulumi.IntInput) ProviderEndpointOutput {
+	return pulumi.All(o, i).ApplyT(func(vs []interface{}) ProviderEndpoint {
+		return vs[0].([]ProviderEndpoint)[vs[1].(int)]
 	}).(ProviderEndpointOutput)
 }
 
-// The Active Directory login endpoint which should be used.
-func (o ProviderEndpointPtrOutput) ActiveDirectoryAuthorityHost() pulumi.StringPtrOutput {
-	return o.ApplyT(func(v *ProviderEndpoint) *string {
+type ResourceActionRetry struct {
+	// A list of regular expressions to match against error messages. If any of the regular expressions match, the request will be retried.
+	ErrorMessageRegexes []string `pulumi:"errorMessageRegexes"`
+	// The base number of seconds to wait between retries. Default is `10`.
+	IntervalSeconds *int `pulumi:"intervalSeconds"`
+	// The maximum number of seconds to wait between retries. Default is `180`.
+	MaxIntervalSeconds *int `pulumi:"maxIntervalSeconds"`
+	// The multiplier to apply to the interval between retries. Default is `1.5`.
+	Multiplier *float64 `pulumi:"multiplier"`
+	// The randomization factor to apply to the interval between retries. The formula for the randomized interval is: `RetryInterval * (random value in range [1 - RandomizationFactor, 1 + RandomizationFactor])`. Therefore set to zero `0.0` for no randomization. Default is `0.5`.
+	RandomizationFactor *float64 `pulumi:"randomizationFactor"`
+}
+
+// ResourceActionRetryInput is an input type that accepts ResourceActionRetryArgs and ResourceActionRetryOutput values.
+// You can construct a concrete instance of `ResourceActionRetryInput` via:
+//
+//	ResourceActionRetryArgs{...}
+type ResourceActionRetryInput interface {
+	pulumi.Input
+
+	ToResourceActionRetryOutput() ResourceActionRetryOutput
+	ToResourceActionRetryOutputWithContext(context.Context) ResourceActionRetryOutput
+}
+
+type ResourceActionRetryArgs struct {
+	// A list of regular expressions to match against error messages. If any of the regular expressions match, the request will be retried.
+	ErrorMessageRegexes pulumi.StringArrayInput `pulumi:"errorMessageRegexes"`
+	// The base number of seconds to wait between retries. Default is `10`.
+	IntervalSeconds pulumi.IntPtrInput `pulumi:"intervalSeconds"`
+	// The maximum number of seconds to wait between retries. Default is `180`.
+	MaxIntervalSeconds pulumi.IntPtrInput `pulumi:"maxIntervalSeconds"`
+	// The multiplier to apply to the interval between retries. Default is `1.5`.
+	Multiplier pulumi.Float64PtrInput `pulumi:"multiplier"`
+	// The randomization factor to apply to the interval between retries. The formula for the randomized interval is: `RetryInterval * (random value in range [1 - RandomizationFactor, 1 + RandomizationFactor])`. Therefore set to zero `0.0` for no randomization. Default is `0.5`.
+	RandomizationFactor pulumi.Float64PtrInput `pulumi:"randomizationFactor"`
+}
+
+func (ResourceActionRetryArgs) ElementType() reflect.Type {
+	return reflect.TypeOf((*ResourceActionRetry)(nil)).Elem()
+}
+
+func (i ResourceActionRetryArgs) ToResourceActionRetryOutput() ResourceActionRetryOutput {
+	return i.ToResourceActionRetryOutputWithContext(context.Background())
+}
+
+func (i ResourceActionRetryArgs) ToResourceActionRetryOutputWithContext(ctx context.Context) ResourceActionRetryOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(ResourceActionRetryOutput)
+}
+
+func (i ResourceActionRetryArgs) ToResourceActionRetryPtrOutput() ResourceActionRetryPtrOutput {
+	return i.ToResourceActionRetryPtrOutputWithContext(context.Background())
+}
+
+func (i ResourceActionRetryArgs) ToResourceActionRetryPtrOutputWithContext(ctx context.Context) ResourceActionRetryPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(ResourceActionRetryOutput).ToResourceActionRetryPtrOutputWithContext(ctx)
+}
+
+// ResourceActionRetryPtrInput is an input type that accepts ResourceActionRetryArgs, ResourceActionRetryPtr and ResourceActionRetryPtrOutput values.
+// You can construct a concrete instance of `ResourceActionRetryPtrInput` via:
+//
+//	        ResourceActionRetryArgs{...}
+//
+//	or:
+//
+//	        nil
+type ResourceActionRetryPtrInput interface {
+	pulumi.Input
+
+	ToResourceActionRetryPtrOutput() ResourceActionRetryPtrOutput
+	ToResourceActionRetryPtrOutputWithContext(context.Context) ResourceActionRetryPtrOutput
+}
+
+type resourceActionRetryPtrType ResourceActionRetryArgs
+
+func ResourceActionRetryPtr(v *ResourceActionRetryArgs) ResourceActionRetryPtrInput {
+	return (*resourceActionRetryPtrType)(v)
+}
+
+func (*resourceActionRetryPtrType) ElementType() reflect.Type {
+	return reflect.TypeOf((**ResourceActionRetry)(nil)).Elem()
+}
+
+func (i *resourceActionRetryPtrType) ToResourceActionRetryPtrOutput() ResourceActionRetryPtrOutput {
+	return i.ToResourceActionRetryPtrOutputWithContext(context.Background())
+}
+
+func (i *resourceActionRetryPtrType) ToResourceActionRetryPtrOutputWithContext(ctx context.Context) ResourceActionRetryPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(ResourceActionRetryPtrOutput)
+}
+
+type ResourceActionRetryOutput struct{ *pulumi.OutputState }
+
+func (ResourceActionRetryOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*ResourceActionRetry)(nil)).Elem()
+}
+
+func (o ResourceActionRetryOutput) ToResourceActionRetryOutput() ResourceActionRetryOutput {
+	return o
+}
+
+func (o ResourceActionRetryOutput) ToResourceActionRetryOutputWithContext(ctx context.Context) ResourceActionRetryOutput {
+	return o
+}
+
+func (o ResourceActionRetryOutput) ToResourceActionRetryPtrOutput() ResourceActionRetryPtrOutput {
+	return o.ToResourceActionRetryPtrOutputWithContext(context.Background())
+}
+
+func (o ResourceActionRetryOutput) ToResourceActionRetryPtrOutputWithContext(ctx context.Context) ResourceActionRetryPtrOutput {
+	return o.ApplyTWithContext(ctx, func(_ context.Context, v ResourceActionRetry) *ResourceActionRetry {
+		return &v
+	}).(ResourceActionRetryPtrOutput)
+}
+
+// A list of regular expressions to match against error messages. If any of the regular expressions match, the request will be retried.
+func (o ResourceActionRetryOutput) ErrorMessageRegexes() pulumi.StringArrayOutput {
+	return o.ApplyT(func(v ResourceActionRetry) []string { return v.ErrorMessageRegexes }).(pulumi.StringArrayOutput)
+}
+
+// The base number of seconds to wait between retries. Default is `10`.
+func (o ResourceActionRetryOutput) IntervalSeconds() pulumi.IntPtrOutput {
+	return o.ApplyT(func(v ResourceActionRetry) *int { return v.IntervalSeconds }).(pulumi.IntPtrOutput)
+}
+
+// The maximum number of seconds to wait between retries. Default is `180`.
+func (o ResourceActionRetryOutput) MaxIntervalSeconds() pulumi.IntPtrOutput {
+	return o.ApplyT(func(v ResourceActionRetry) *int { return v.MaxIntervalSeconds }).(pulumi.IntPtrOutput)
+}
+
+// The multiplier to apply to the interval between retries. Default is `1.5`.
+func (o ResourceActionRetryOutput) Multiplier() pulumi.Float64PtrOutput {
+	return o.ApplyT(func(v ResourceActionRetry) *float64 { return v.Multiplier }).(pulumi.Float64PtrOutput)
+}
+
+// The randomization factor to apply to the interval between retries. The formula for the randomized interval is: `RetryInterval * (random value in range [1 - RandomizationFactor, 1 + RandomizationFactor])`. Therefore set to zero `0.0` for no randomization. Default is `0.5`.
+func (o ResourceActionRetryOutput) RandomizationFactor() pulumi.Float64PtrOutput {
+	return o.ApplyT(func(v ResourceActionRetry) *float64 { return v.RandomizationFactor }).(pulumi.Float64PtrOutput)
+}
+
+type ResourceActionRetryPtrOutput struct{ *pulumi.OutputState }
+
+func (ResourceActionRetryPtrOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((**ResourceActionRetry)(nil)).Elem()
+}
+
+func (o ResourceActionRetryPtrOutput) ToResourceActionRetryPtrOutput() ResourceActionRetryPtrOutput {
+	return o
+}
+
+func (o ResourceActionRetryPtrOutput) ToResourceActionRetryPtrOutputWithContext(ctx context.Context) ResourceActionRetryPtrOutput {
+	return o
+}
+
+func (o ResourceActionRetryPtrOutput) Elem() ResourceActionRetryOutput {
+	return o.ApplyT(func(v *ResourceActionRetry) ResourceActionRetry {
+		if v != nil {
+			return *v
+		}
+		var ret ResourceActionRetry
+		return ret
+	}).(ResourceActionRetryOutput)
+}
+
+// A list of regular expressions to match against error messages. If any of the regular expressions match, the request will be retried.
+func (o ResourceActionRetryPtrOutput) ErrorMessageRegexes() pulumi.StringArrayOutput {
+	return o.ApplyT(func(v *ResourceActionRetry) []string {
 		if v == nil {
 			return nil
 		}
-		return v.ActiveDirectoryAuthorityHost
+		return v.ErrorMessageRegexes
+	}).(pulumi.StringArrayOutput)
+}
+
+// The base number of seconds to wait between retries. Default is `10`.
+func (o ResourceActionRetryPtrOutput) IntervalSeconds() pulumi.IntPtrOutput {
+	return o.ApplyT(func(v *ResourceActionRetry) *int {
+		if v == nil {
+			return nil
+		}
+		return v.IntervalSeconds
+	}).(pulumi.IntPtrOutput)
+}
+
+// The maximum number of seconds to wait between retries. Default is `180`.
+func (o ResourceActionRetryPtrOutput) MaxIntervalSeconds() pulumi.IntPtrOutput {
+	return o.ApplyT(func(v *ResourceActionRetry) *int {
+		if v == nil {
+			return nil
+		}
+		return v.MaxIntervalSeconds
+	}).(pulumi.IntPtrOutput)
+}
+
+// The multiplier to apply to the interval between retries. Default is `1.5`.
+func (o ResourceActionRetryPtrOutput) Multiplier() pulumi.Float64PtrOutput {
+	return o.ApplyT(func(v *ResourceActionRetry) *float64 {
+		if v == nil {
+			return nil
+		}
+		return v.Multiplier
+	}).(pulumi.Float64PtrOutput)
+}
+
+// The randomization factor to apply to the interval between retries. The formula for the randomized interval is: `RetryInterval * (random value in range [1 - RandomizationFactor, 1 + RandomizationFactor])`. Therefore set to zero `0.0` for no randomization. Default is `0.5`.
+func (o ResourceActionRetryPtrOutput) RandomizationFactor() pulumi.Float64PtrOutput {
+	return o.ApplyT(func(v *ResourceActionRetry) *float64 {
+		if v == nil {
+			return nil
+		}
+		return v.RandomizationFactor
+	}).(pulumi.Float64PtrOutput)
+}
+
+type ResourceActionTimeouts struct {
+	// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+	Create *string `pulumi:"create"`
+	// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Setting a timeout for a Delete operation is only applicable if changes are saved into state before the destroy operation occurs.
+	Delete *string `pulumi:"delete"`
+	// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+	Read *string `pulumi:"read"`
+	// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+	Update *string `pulumi:"update"`
+}
+
+// ResourceActionTimeoutsInput is an input type that accepts ResourceActionTimeoutsArgs and ResourceActionTimeoutsOutput values.
+// You can construct a concrete instance of `ResourceActionTimeoutsInput` via:
+//
+//	ResourceActionTimeoutsArgs{...}
+type ResourceActionTimeoutsInput interface {
+	pulumi.Input
+
+	ToResourceActionTimeoutsOutput() ResourceActionTimeoutsOutput
+	ToResourceActionTimeoutsOutputWithContext(context.Context) ResourceActionTimeoutsOutput
+}
+
+type ResourceActionTimeoutsArgs struct {
+	// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+	Create pulumi.StringPtrInput `pulumi:"create"`
+	// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Setting a timeout for a Delete operation is only applicable if changes are saved into state before the destroy operation occurs.
+	Delete pulumi.StringPtrInput `pulumi:"delete"`
+	// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+	Read pulumi.StringPtrInput `pulumi:"read"`
+	// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+	Update pulumi.StringPtrInput `pulumi:"update"`
+}
+
+func (ResourceActionTimeoutsArgs) ElementType() reflect.Type {
+	return reflect.TypeOf((*ResourceActionTimeouts)(nil)).Elem()
+}
+
+func (i ResourceActionTimeoutsArgs) ToResourceActionTimeoutsOutput() ResourceActionTimeoutsOutput {
+	return i.ToResourceActionTimeoutsOutputWithContext(context.Background())
+}
+
+func (i ResourceActionTimeoutsArgs) ToResourceActionTimeoutsOutputWithContext(ctx context.Context) ResourceActionTimeoutsOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(ResourceActionTimeoutsOutput)
+}
+
+func (i ResourceActionTimeoutsArgs) ToResourceActionTimeoutsPtrOutput() ResourceActionTimeoutsPtrOutput {
+	return i.ToResourceActionTimeoutsPtrOutputWithContext(context.Background())
+}
+
+func (i ResourceActionTimeoutsArgs) ToResourceActionTimeoutsPtrOutputWithContext(ctx context.Context) ResourceActionTimeoutsPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(ResourceActionTimeoutsOutput).ToResourceActionTimeoutsPtrOutputWithContext(ctx)
+}
+
+// ResourceActionTimeoutsPtrInput is an input type that accepts ResourceActionTimeoutsArgs, ResourceActionTimeoutsPtr and ResourceActionTimeoutsPtrOutput values.
+// You can construct a concrete instance of `ResourceActionTimeoutsPtrInput` via:
+//
+//	        ResourceActionTimeoutsArgs{...}
+//
+//	or:
+//
+//	        nil
+type ResourceActionTimeoutsPtrInput interface {
+	pulumi.Input
+
+	ToResourceActionTimeoutsPtrOutput() ResourceActionTimeoutsPtrOutput
+	ToResourceActionTimeoutsPtrOutputWithContext(context.Context) ResourceActionTimeoutsPtrOutput
+}
+
+type resourceActionTimeoutsPtrType ResourceActionTimeoutsArgs
+
+func ResourceActionTimeoutsPtr(v *ResourceActionTimeoutsArgs) ResourceActionTimeoutsPtrInput {
+	return (*resourceActionTimeoutsPtrType)(v)
+}
+
+func (*resourceActionTimeoutsPtrType) ElementType() reflect.Type {
+	return reflect.TypeOf((**ResourceActionTimeouts)(nil)).Elem()
+}
+
+func (i *resourceActionTimeoutsPtrType) ToResourceActionTimeoutsPtrOutput() ResourceActionTimeoutsPtrOutput {
+	return i.ToResourceActionTimeoutsPtrOutputWithContext(context.Background())
+}
+
+func (i *resourceActionTimeoutsPtrType) ToResourceActionTimeoutsPtrOutputWithContext(ctx context.Context) ResourceActionTimeoutsPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(ResourceActionTimeoutsPtrOutput)
+}
+
+type ResourceActionTimeoutsOutput struct{ *pulumi.OutputState }
+
+func (ResourceActionTimeoutsOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*ResourceActionTimeouts)(nil)).Elem()
+}
+
+func (o ResourceActionTimeoutsOutput) ToResourceActionTimeoutsOutput() ResourceActionTimeoutsOutput {
+	return o
+}
+
+func (o ResourceActionTimeoutsOutput) ToResourceActionTimeoutsOutputWithContext(ctx context.Context) ResourceActionTimeoutsOutput {
+	return o
+}
+
+func (o ResourceActionTimeoutsOutput) ToResourceActionTimeoutsPtrOutput() ResourceActionTimeoutsPtrOutput {
+	return o.ToResourceActionTimeoutsPtrOutputWithContext(context.Background())
+}
+
+func (o ResourceActionTimeoutsOutput) ToResourceActionTimeoutsPtrOutputWithContext(ctx context.Context) ResourceActionTimeoutsPtrOutput {
+	return o.ApplyTWithContext(ctx, func(_ context.Context, v ResourceActionTimeouts) *ResourceActionTimeouts {
+		return &v
+	}).(ResourceActionTimeoutsPtrOutput)
+}
+
+// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+func (o ResourceActionTimeoutsOutput) Create() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v ResourceActionTimeouts) *string { return v.Create }).(pulumi.StringPtrOutput)
+}
+
+// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Setting a timeout for a Delete operation is only applicable if changes are saved into state before the destroy operation occurs.
+func (o ResourceActionTimeoutsOutput) Delete() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v ResourceActionTimeouts) *string { return v.Delete }).(pulumi.StringPtrOutput)
+}
+
+// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+func (o ResourceActionTimeoutsOutput) Read() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v ResourceActionTimeouts) *string { return v.Read }).(pulumi.StringPtrOutput)
+}
+
+// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+func (o ResourceActionTimeoutsOutput) Update() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v ResourceActionTimeouts) *string { return v.Update }).(pulumi.StringPtrOutput)
+}
+
+type ResourceActionTimeoutsPtrOutput struct{ *pulumi.OutputState }
+
+func (ResourceActionTimeoutsPtrOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((**ResourceActionTimeouts)(nil)).Elem()
+}
+
+func (o ResourceActionTimeoutsPtrOutput) ToResourceActionTimeoutsPtrOutput() ResourceActionTimeoutsPtrOutput {
+	return o
+}
+
+func (o ResourceActionTimeoutsPtrOutput) ToResourceActionTimeoutsPtrOutputWithContext(ctx context.Context) ResourceActionTimeoutsPtrOutput {
+	return o
+}
+
+func (o ResourceActionTimeoutsPtrOutput) Elem() ResourceActionTimeoutsOutput {
+	return o.ApplyT(func(v *ResourceActionTimeouts) ResourceActionTimeouts {
+		if v != nil {
+			return *v
+		}
+		var ret ResourceActionTimeouts
+		return ret
+	}).(ResourceActionTimeoutsOutput)
+}
+
+// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+func (o ResourceActionTimeoutsPtrOutput) Create() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *ResourceActionTimeouts) *string {
+		if v == nil {
+			return nil
+		}
+		return v.Create
 	}).(pulumi.StringPtrOutput)
 }
 
-// The resource ID to obtain AD tokens for.
-func (o ProviderEndpointPtrOutput) ResourceManagerAudience() pulumi.StringPtrOutput {
-	return o.ApplyT(func(v *ProviderEndpoint) *string {
+// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Setting a timeout for a Delete operation is only applicable if changes are saved into state before the destroy operation occurs.
+func (o ResourceActionTimeoutsPtrOutput) Delete() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *ResourceActionTimeouts) *string {
 		if v == nil {
 			return nil
 		}
-		return v.ResourceManagerAudience
+		return v.Delete
 	}).(pulumi.StringPtrOutput)
 }
 
-// The Resource Manager Endpoint which should be used.
-func (o ProviderEndpointPtrOutput) ResourceManagerEndpoint() pulumi.StringPtrOutput {
-	return o.ApplyT(func(v *ProviderEndpoint) *string {
+// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+func (o ResourceActionTimeoutsPtrOutput) Read() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *ResourceActionTimeouts) *string {
 		if v == nil {
 			return nil
 		}
-		return v.ResourceManagerEndpoint
+		return v.Read
+	}).(pulumi.StringPtrOutput)
+}
+
+// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+func (o ResourceActionTimeoutsPtrOutput) Update() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *ResourceActionTimeouts) *string {
+		if v == nil {
+			return nil
+		}
+		return v.Update
 	}).(pulumi.StringPtrOutput)
 }
 
 type ResourceIdentity struct {
 	// A list of User Managed Identity ID's which should be assigned to the azure resource.
 	IdentityIds []string `pulumi:"identityIds"`
-	// The Principal ID for the Service Principal associated with the Managed Service Identity of this azure resource.
+	// The Principal ID for the Service Principal associated with the Managed Service Identity of this Azure resource.
 	PrincipalId *string `pulumi:"principalId"`
-	// The Tenant ID for the Service Principal associated with the Managed Service Identity of this azure resource.
+	// The Tenant ID for the Service Principal associated with the Managed Service Identity of this Azure resource.
 	TenantId *string `pulumi:"tenantId"`
-	// The Type of Identity which should be used for this azure resource. Possible values are `SystemAssigned`, `UserAssigned` and `SystemAssigned,UserAssigned`.
+	// The Type of Identity which should be used for this azure resource. Possible values are `SystemAssigned`, `UserAssigned` and `SystemAssigned,UserAssigned`
 	Type string `pulumi:"type"`
 }
 
@@ -213,11 +967,11 @@ type ResourceIdentityInput interface {
 type ResourceIdentityArgs struct {
 	// A list of User Managed Identity ID's which should be assigned to the azure resource.
 	IdentityIds pulumi.StringArrayInput `pulumi:"identityIds"`
-	// The Principal ID for the Service Principal associated with the Managed Service Identity of this azure resource.
+	// The Principal ID for the Service Principal associated with the Managed Service Identity of this Azure resource.
 	PrincipalId pulumi.StringPtrInput `pulumi:"principalId"`
-	// The Tenant ID for the Service Principal associated with the Managed Service Identity of this azure resource.
+	// The Tenant ID for the Service Principal associated with the Managed Service Identity of this Azure resource.
 	TenantId pulumi.StringPtrInput `pulumi:"tenantId"`
-	// The Type of Identity which should be used for this azure resource. Possible values are `SystemAssigned`, `UserAssigned` and `SystemAssigned,UserAssigned`.
+	// The Type of Identity which should be used for this azure resource. Possible values are `SystemAssigned`, `UserAssigned` and `SystemAssigned,UserAssigned`
 	Type pulumi.StringInput `pulumi:"type"`
 }
 
@@ -233,45 +987,29 @@ func (i ResourceIdentityArgs) ToResourceIdentityOutputWithContext(ctx context.Co
 	return pulumi.ToOutputWithContext(ctx, i).(ResourceIdentityOutput)
 }
 
-func (i ResourceIdentityArgs) ToResourceIdentityPtrOutput() ResourceIdentityPtrOutput {
-	return i.ToResourceIdentityPtrOutputWithContext(context.Background())
-}
-
-func (i ResourceIdentityArgs) ToResourceIdentityPtrOutputWithContext(ctx context.Context) ResourceIdentityPtrOutput {
-	return pulumi.ToOutputWithContext(ctx, i).(ResourceIdentityOutput).ToResourceIdentityPtrOutputWithContext(ctx)
-}
-
-// ResourceIdentityPtrInput is an input type that accepts ResourceIdentityArgs, ResourceIdentityPtr and ResourceIdentityPtrOutput values.
-// You can construct a concrete instance of `ResourceIdentityPtrInput` via:
+// ResourceIdentityArrayInput is an input type that accepts ResourceIdentityArray and ResourceIdentityArrayOutput values.
+// You can construct a concrete instance of `ResourceIdentityArrayInput` via:
 //
-//	        ResourceIdentityArgs{...}
-//
-//	or:
-//
-//	        nil
-type ResourceIdentityPtrInput interface {
+//	ResourceIdentityArray{ ResourceIdentityArgs{...} }
+type ResourceIdentityArrayInput interface {
 	pulumi.Input
 
-	ToResourceIdentityPtrOutput() ResourceIdentityPtrOutput
-	ToResourceIdentityPtrOutputWithContext(context.Context) ResourceIdentityPtrOutput
+	ToResourceIdentityArrayOutput() ResourceIdentityArrayOutput
+	ToResourceIdentityArrayOutputWithContext(context.Context) ResourceIdentityArrayOutput
 }
 
-type resourceIdentityPtrType ResourceIdentityArgs
+type ResourceIdentityArray []ResourceIdentityInput
 
-func ResourceIdentityPtr(v *ResourceIdentityArgs) ResourceIdentityPtrInput {
-	return (*resourceIdentityPtrType)(v)
+func (ResourceIdentityArray) ElementType() reflect.Type {
+	return reflect.TypeOf((*[]ResourceIdentity)(nil)).Elem()
 }
 
-func (*resourceIdentityPtrType) ElementType() reflect.Type {
-	return reflect.TypeOf((**ResourceIdentity)(nil)).Elem()
+func (i ResourceIdentityArray) ToResourceIdentityArrayOutput() ResourceIdentityArrayOutput {
+	return i.ToResourceIdentityArrayOutputWithContext(context.Background())
 }
 
-func (i *resourceIdentityPtrType) ToResourceIdentityPtrOutput() ResourceIdentityPtrOutput {
-	return i.ToResourceIdentityPtrOutputWithContext(context.Background())
-}
-
-func (i *resourceIdentityPtrType) ToResourceIdentityPtrOutputWithContext(ctx context.Context) ResourceIdentityPtrOutput {
-	return pulumi.ToOutputWithContext(ctx, i).(ResourceIdentityPtrOutput)
+func (i ResourceIdentityArray) ToResourceIdentityArrayOutputWithContext(ctx context.Context) ResourceIdentityArrayOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(ResourceIdentityArrayOutput)
 }
 
 type ResourceIdentityOutput struct{ *pulumi.OutputState }
@@ -288,109 +1026,1492 @@ func (o ResourceIdentityOutput) ToResourceIdentityOutputWithContext(ctx context.
 	return o
 }
 
-func (o ResourceIdentityOutput) ToResourceIdentityPtrOutput() ResourceIdentityPtrOutput {
-	return o.ToResourceIdentityPtrOutputWithContext(context.Background())
-}
-
-func (o ResourceIdentityOutput) ToResourceIdentityPtrOutputWithContext(ctx context.Context) ResourceIdentityPtrOutput {
-	return o.ApplyTWithContext(ctx, func(_ context.Context, v ResourceIdentity) *ResourceIdentity {
-		return &v
-	}).(ResourceIdentityPtrOutput)
-}
-
 // A list of User Managed Identity ID's which should be assigned to the azure resource.
 func (o ResourceIdentityOutput) IdentityIds() pulumi.StringArrayOutput {
 	return o.ApplyT(func(v ResourceIdentity) []string { return v.IdentityIds }).(pulumi.StringArrayOutput)
 }
 
-// The Principal ID for the Service Principal associated with the Managed Service Identity of this azure resource.
+// The Principal ID for the Service Principal associated with the Managed Service Identity of this Azure resource.
 func (o ResourceIdentityOutput) PrincipalId() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v ResourceIdentity) *string { return v.PrincipalId }).(pulumi.StringPtrOutput)
 }
 
-// The Tenant ID for the Service Principal associated with the Managed Service Identity of this azure resource.
+// The Tenant ID for the Service Principal associated with the Managed Service Identity of this Azure resource.
 func (o ResourceIdentityOutput) TenantId() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v ResourceIdentity) *string { return v.TenantId }).(pulumi.StringPtrOutput)
 }
 
-// The Type of Identity which should be used for this azure resource. Possible values are `SystemAssigned`, `UserAssigned` and `SystemAssigned,UserAssigned`.
+// The Type of Identity which should be used for this azure resource. Possible values are `SystemAssigned`, `UserAssigned` and `SystemAssigned,UserAssigned`
 func (o ResourceIdentityOutput) Type() pulumi.StringOutput {
 	return o.ApplyT(func(v ResourceIdentity) string { return v.Type }).(pulumi.StringOutput)
 }
 
-type ResourceIdentityPtrOutput struct{ *pulumi.OutputState }
+type ResourceIdentityArrayOutput struct{ *pulumi.OutputState }
 
-func (ResourceIdentityPtrOutput) ElementType() reflect.Type {
-	return reflect.TypeOf((**ResourceIdentity)(nil)).Elem()
+func (ResourceIdentityArrayOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*[]ResourceIdentity)(nil)).Elem()
 }
 
-func (o ResourceIdentityPtrOutput) ToResourceIdentityPtrOutput() ResourceIdentityPtrOutput {
+func (o ResourceIdentityArrayOutput) ToResourceIdentityArrayOutput() ResourceIdentityArrayOutput {
 	return o
 }
 
-func (o ResourceIdentityPtrOutput) ToResourceIdentityPtrOutputWithContext(ctx context.Context) ResourceIdentityPtrOutput {
+func (o ResourceIdentityArrayOutput) ToResourceIdentityArrayOutputWithContext(ctx context.Context) ResourceIdentityArrayOutput {
 	return o
 }
 
-func (o ResourceIdentityPtrOutput) Elem() ResourceIdentityOutput {
-	return o.ApplyT(func(v *ResourceIdentity) ResourceIdentity {
-		if v != nil {
-			return *v
-		}
-		var ret ResourceIdentity
-		return ret
+func (o ResourceIdentityArrayOutput) Index(i pulumi.IntInput) ResourceIdentityOutput {
+	return pulumi.All(o, i).ApplyT(func(vs []interface{}) ResourceIdentity {
+		return vs[0].([]ResourceIdentity)[vs[1].(int)]
 	}).(ResourceIdentityOutput)
 }
 
-// A list of User Managed Identity ID's which should be assigned to the azure resource.
-func (o ResourceIdentityPtrOutput) IdentityIds() pulumi.StringArrayOutput {
-	return o.ApplyT(func(v *ResourceIdentity) []string {
+type ResourceRetry struct {
+	// A list of regular expressions to match against error messages. If any of the regular expressions match, the request will be retried.
+	ErrorMessageRegexes []string `pulumi:"errorMessageRegexes"`
+	// The base number of seconds to wait between retries. Default is `10`.
+	IntervalSeconds *int `pulumi:"intervalSeconds"`
+	// The maximum number of seconds to wait between retries. Default is `180`.
+	MaxIntervalSeconds *int `pulumi:"maxIntervalSeconds"`
+	// The multiplier to apply to the interval between retries. Default is `1.5`.
+	Multiplier *float64 `pulumi:"multiplier"`
+	// The randomization factor to apply to the interval between retries. The formula for the randomized interval is: `RetryInterval * (random value in range [1 - RandomizationFactor, 1 + RandomizationFactor])`. Therefore set to zero `0.0` for no randomization. Default is `0.5`.
+	RandomizationFactor *float64 `pulumi:"randomizationFactor"`
+}
+
+// ResourceRetryInput is an input type that accepts ResourceRetryArgs and ResourceRetryOutput values.
+// You can construct a concrete instance of `ResourceRetryInput` via:
+//
+//	ResourceRetryArgs{...}
+type ResourceRetryInput interface {
+	pulumi.Input
+
+	ToResourceRetryOutput() ResourceRetryOutput
+	ToResourceRetryOutputWithContext(context.Context) ResourceRetryOutput
+}
+
+type ResourceRetryArgs struct {
+	// A list of regular expressions to match against error messages. If any of the regular expressions match, the request will be retried.
+	ErrorMessageRegexes pulumi.StringArrayInput `pulumi:"errorMessageRegexes"`
+	// The base number of seconds to wait between retries. Default is `10`.
+	IntervalSeconds pulumi.IntPtrInput `pulumi:"intervalSeconds"`
+	// The maximum number of seconds to wait between retries. Default is `180`.
+	MaxIntervalSeconds pulumi.IntPtrInput `pulumi:"maxIntervalSeconds"`
+	// The multiplier to apply to the interval between retries. Default is `1.5`.
+	Multiplier pulumi.Float64PtrInput `pulumi:"multiplier"`
+	// The randomization factor to apply to the interval between retries. The formula for the randomized interval is: `RetryInterval * (random value in range [1 - RandomizationFactor, 1 + RandomizationFactor])`. Therefore set to zero `0.0` for no randomization. Default is `0.5`.
+	RandomizationFactor pulumi.Float64PtrInput `pulumi:"randomizationFactor"`
+}
+
+func (ResourceRetryArgs) ElementType() reflect.Type {
+	return reflect.TypeOf((*ResourceRetry)(nil)).Elem()
+}
+
+func (i ResourceRetryArgs) ToResourceRetryOutput() ResourceRetryOutput {
+	return i.ToResourceRetryOutputWithContext(context.Background())
+}
+
+func (i ResourceRetryArgs) ToResourceRetryOutputWithContext(ctx context.Context) ResourceRetryOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(ResourceRetryOutput)
+}
+
+func (i ResourceRetryArgs) ToResourceRetryPtrOutput() ResourceRetryPtrOutput {
+	return i.ToResourceRetryPtrOutputWithContext(context.Background())
+}
+
+func (i ResourceRetryArgs) ToResourceRetryPtrOutputWithContext(ctx context.Context) ResourceRetryPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(ResourceRetryOutput).ToResourceRetryPtrOutputWithContext(ctx)
+}
+
+// ResourceRetryPtrInput is an input type that accepts ResourceRetryArgs, ResourceRetryPtr and ResourceRetryPtrOutput values.
+// You can construct a concrete instance of `ResourceRetryPtrInput` via:
+//
+//	        ResourceRetryArgs{...}
+//
+//	or:
+//
+//	        nil
+type ResourceRetryPtrInput interface {
+	pulumi.Input
+
+	ToResourceRetryPtrOutput() ResourceRetryPtrOutput
+	ToResourceRetryPtrOutputWithContext(context.Context) ResourceRetryPtrOutput
+}
+
+type resourceRetryPtrType ResourceRetryArgs
+
+func ResourceRetryPtr(v *ResourceRetryArgs) ResourceRetryPtrInput {
+	return (*resourceRetryPtrType)(v)
+}
+
+func (*resourceRetryPtrType) ElementType() reflect.Type {
+	return reflect.TypeOf((**ResourceRetry)(nil)).Elem()
+}
+
+func (i *resourceRetryPtrType) ToResourceRetryPtrOutput() ResourceRetryPtrOutput {
+	return i.ToResourceRetryPtrOutputWithContext(context.Background())
+}
+
+func (i *resourceRetryPtrType) ToResourceRetryPtrOutputWithContext(ctx context.Context) ResourceRetryPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(ResourceRetryPtrOutput)
+}
+
+type ResourceRetryOutput struct{ *pulumi.OutputState }
+
+func (ResourceRetryOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*ResourceRetry)(nil)).Elem()
+}
+
+func (o ResourceRetryOutput) ToResourceRetryOutput() ResourceRetryOutput {
+	return o
+}
+
+func (o ResourceRetryOutput) ToResourceRetryOutputWithContext(ctx context.Context) ResourceRetryOutput {
+	return o
+}
+
+func (o ResourceRetryOutput) ToResourceRetryPtrOutput() ResourceRetryPtrOutput {
+	return o.ToResourceRetryPtrOutputWithContext(context.Background())
+}
+
+func (o ResourceRetryOutput) ToResourceRetryPtrOutputWithContext(ctx context.Context) ResourceRetryPtrOutput {
+	return o.ApplyTWithContext(ctx, func(_ context.Context, v ResourceRetry) *ResourceRetry {
+		return &v
+	}).(ResourceRetryPtrOutput)
+}
+
+// A list of regular expressions to match against error messages. If any of the regular expressions match, the request will be retried.
+func (o ResourceRetryOutput) ErrorMessageRegexes() pulumi.StringArrayOutput {
+	return o.ApplyT(func(v ResourceRetry) []string { return v.ErrorMessageRegexes }).(pulumi.StringArrayOutput)
+}
+
+// The base number of seconds to wait between retries. Default is `10`.
+func (o ResourceRetryOutput) IntervalSeconds() pulumi.IntPtrOutput {
+	return o.ApplyT(func(v ResourceRetry) *int { return v.IntervalSeconds }).(pulumi.IntPtrOutput)
+}
+
+// The maximum number of seconds to wait between retries. Default is `180`.
+func (o ResourceRetryOutput) MaxIntervalSeconds() pulumi.IntPtrOutput {
+	return o.ApplyT(func(v ResourceRetry) *int { return v.MaxIntervalSeconds }).(pulumi.IntPtrOutput)
+}
+
+// The multiplier to apply to the interval between retries. Default is `1.5`.
+func (o ResourceRetryOutput) Multiplier() pulumi.Float64PtrOutput {
+	return o.ApplyT(func(v ResourceRetry) *float64 { return v.Multiplier }).(pulumi.Float64PtrOutput)
+}
+
+// The randomization factor to apply to the interval between retries. The formula for the randomized interval is: `RetryInterval * (random value in range [1 - RandomizationFactor, 1 + RandomizationFactor])`. Therefore set to zero `0.0` for no randomization. Default is `0.5`.
+func (o ResourceRetryOutput) RandomizationFactor() pulumi.Float64PtrOutput {
+	return o.ApplyT(func(v ResourceRetry) *float64 { return v.RandomizationFactor }).(pulumi.Float64PtrOutput)
+}
+
+type ResourceRetryPtrOutput struct{ *pulumi.OutputState }
+
+func (ResourceRetryPtrOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((**ResourceRetry)(nil)).Elem()
+}
+
+func (o ResourceRetryPtrOutput) ToResourceRetryPtrOutput() ResourceRetryPtrOutput {
+	return o
+}
+
+func (o ResourceRetryPtrOutput) ToResourceRetryPtrOutputWithContext(ctx context.Context) ResourceRetryPtrOutput {
+	return o
+}
+
+func (o ResourceRetryPtrOutput) Elem() ResourceRetryOutput {
+	return o.ApplyT(func(v *ResourceRetry) ResourceRetry {
+		if v != nil {
+			return *v
+		}
+		var ret ResourceRetry
+		return ret
+	}).(ResourceRetryOutput)
+}
+
+// A list of regular expressions to match against error messages. If any of the regular expressions match, the request will be retried.
+func (o ResourceRetryPtrOutput) ErrorMessageRegexes() pulumi.StringArrayOutput {
+	return o.ApplyT(func(v *ResourceRetry) []string {
 		if v == nil {
 			return nil
 		}
-		return v.IdentityIds
+		return v.ErrorMessageRegexes
 	}).(pulumi.StringArrayOutput)
 }
 
-// The Principal ID for the Service Principal associated with the Managed Service Identity of this azure resource.
-func (o ResourceIdentityPtrOutput) PrincipalId() pulumi.StringPtrOutput {
-	return o.ApplyT(func(v *ResourceIdentity) *string {
+// The base number of seconds to wait between retries. Default is `10`.
+func (o ResourceRetryPtrOutput) IntervalSeconds() pulumi.IntPtrOutput {
+	return o.ApplyT(func(v *ResourceRetry) *int {
 		if v == nil {
 			return nil
 		}
-		return v.PrincipalId
+		return v.IntervalSeconds
+	}).(pulumi.IntPtrOutput)
+}
+
+// The maximum number of seconds to wait between retries. Default is `180`.
+func (o ResourceRetryPtrOutput) MaxIntervalSeconds() pulumi.IntPtrOutput {
+	return o.ApplyT(func(v *ResourceRetry) *int {
+		if v == nil {
+			return nil
+		}
+		return v.MaxIntervalSeconds
+	}).(pulumi.IntPtrOutput)
+}
+
+// The multiplier to apply to the interval between retries. Default is `1.5`.
+func (o ResourceRetryPtrOutput) Multiplier() pulumi.Float64PtrOutput {
+	return o.ApplyT(func(v *ResourceRetry) *float64 {
+		if v == nil {
+			return nil
+		}
+		return v.Multiplier
+	}).(pulumi.Float64PtrOutput)
+}
+
+// The randomization factor to apply to the interval between retries. The formula for the randomized interval is: `RetryInterval * (random value in range [1 - RandomizationFactor, 1 + RandomizationFactor])`. Therefore set to zero `0.0` for no randomization. Default is `0.5`.
+func (o ResourceRetryPtrOutput) RandomizationFactor() pulumi.Float64PtrOutput {
+	return o.ApplyT(func(v *ResourceRetry) *float64 {
+		if v == nil {
+			return nil
+		}
+		return v.RandomizationFactor
+	}).(pulumi.Float64PtrOutput)
+}
+
+type ResourceTimeouts struct {
+	// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+	Create *string `pulumi:"create"`
+	// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Setting a timeout for a Delete operation is only applicable if changes are saved into state before the destroy operation occurs.
+	Delete *string `pulumi:"delete"`
+	// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+	Read *string `pulumi:"read"`
+	// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+	Update *string `pulumi:"update"`
+}
+
+// ResourceTimeoutsInput is an input type that accepts ResourceTimeoutsArgs and ResourceTimeoutsOutput values.
+// You can construct a concrete instance of `ResourceTimeoutsInput` via:
+//
+//	ResourceTimeoutsArgs{...}
+type ResourceTimeoutsInput interface {
+	pulumi.Input
+
+	ToResourceTimeoutsOutput() ResourceTimeoutsOutput
+	ToResourceTimeoutsOutputWithContext(context.Context) ResourceTimeoutsOutput
+}
+
+type ResourceTimeoutsArgs struct {
+	// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+	Create pulumi.StringPtrInput `pulumi:"create"`
+	// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Setting a timeout for a Delete operation is only applicable if changes are saved into state before the destroy operation occurs.
+	Delete pulumi.StringPtrInput `pulumi:"delete"`
+	// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+	Read pulumi.StringPtrInput `pulumi:"read"`
+	// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+	Update pulumi.StringPtrInput `pulumi:"update"`
+}
+
+func (ResourceTimeoutsArgs) ElementType() reflect.Type {
+	return reflect.TypeOf((*ResourceTimeouts)(nil)).Elem()
+}
+
+func (i ResourceTimeoutsArgs) ToResourceTimeoutsOutput() ResourceTimeoutsOutput {
+	return i.ToResourceTimeoutsOutputWithContext(context.Background())
+}
+
+func (i ResourceTimeoutsArgs) ToResourceTimeoutsOutputWithContext(ctx context.Context) ResourceTimeoutsOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(ResourceTimeoutsOutput)
+}
+
+func (i ResourceTimeoutsArgs) ToResourceTimeoutsPtrOutput() ResourceTimeoutsPtrOutput {
+	return i.ToResourceTimeoutsPtrOutputWithContext(context.Background())
+}
+
+func (i ResourceTimeoutsArgs) ToResourceTimeoutsPtrOutputWithContext(ctx context.Context) ResourceTimeoutsPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(ResourceTimeoutsOutput).ToResourceTimeoutsPtrOutputWithContext(ctx)
+}
+
+// ResourceTimeoutsPtrInput is an input type that accepts ResourceTimeoutsArgs, ResourceTimeoutsPtr and ResourceTimeoutsPtrOutput values.
+// You can construct a concrete instance of `ResourceTimeoutsPtrInput` via:
+//
+//	        ResourceTimeoutsArgs{...}
+//
+//	or:
+//
+//	        nil
+type ResourceTimeoutsPtrInput interface {
+	pulumi.Input
+
+	ToResourceTimeoutsPtrOutput() ResourceTimeoutsPtrOutput
+	ToResourceTimeoutsPtrOutputWithContext(context.Context) ResourceTimeoutsPtrOutput
+}
+
+type resourceTimeoutsPtrType ResourceTimeoutsArgs
+
+func ResourceTimeoutsPtr(v *ResourceTimeoutsArgs) ResourceTimeoutsPtrInput {
+	return (*resourceTimeoutsPtrType)(v)
+}
+
+func (*resourceTimeoutsPtrType) ElementType() reflect.Type {
+	return reflect.TypeOf((**ResourceTimeouts)(nil)).Elem()
+}
+
+func (i *resourceTimeoutsPtrType) ToResourceTimeoutsPtrOutput() ResourceTimeoutsPtrOutput {
+	return i.ToResourceTimeoutsPtrOutputWithContext(context.Background())
+}
+
+func (i *resourceTimeoutsPtrType) ToResourceTimeoutsPtrOutputWithContext(ctx context.Context) ResourceTimeoutsPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(ResourceTimeoutsPtrOutput)
+}
+
+type ResourceTimeoutsOutput struct{ *pulumi.OutputState }
+
+func (ResourceTimeoutsOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*ResourceTimeouts)(nil)).Elem()
+}
+
+func (o ResourceTimeoutsOutput) ToResourceTimeoutsOutput() ResourceTimeoutsOutput {
+	return o
+}
+
+func (o ResourceTimeoutsOutput) ToResourceTimeoutsOutputWithContext(ctx context.Context) ResourceTimeoutsOutput {
+	return o
+}
+
+func (o ResourceTimeoutsOutput) ToResourceTimeoutsPtrOutput() ResourceTimeoutsPtrOutput {
+	return o.ToResourceTimeoutsPtrOutputWithContext(context.Background())
+}
+
+func (o ResourceTimeoutsOutput) ToResourceTimeoutsPtrOutputWithContext(ctx context.Context) ResourceTimeoutsPtrOutput {
+	return o.ApplyTWithContext(ctx, func(_ context.Context, v ResourceTimeouts) *ResourceTimeouts {
+		return &v
+	}).(ResourceTimeoutsPtrOutput)
+}
+
+// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+func (o ResourceTimeoutsOutput) Create() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v ResourceTimeouts) *string { return v.Create }).(pulumi.StringPtrOutput)
+}
+
+// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Setting a timeout for a Delete operation is only applicable if changes are saved into state before the destroy operation occurs.
+func (o ResourceTimeoutsOutput) Delete() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v ResourceTimeouts) *string { return v.Delete }).(pulumi.StringPtrOutput)
+}
+
+// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+func (o ResourceTimeoutsOutput) Read() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v ResourceTimeouts) *string { return v.Read }).(pulumi.StringPtrOutput)
+}
+
+// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+func (o ResourceTimeoutsOutput) Update() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v ResourceTimeouts) *string { return v.Update }).(pulumi.StringPtrOutput)
+}
+
+type ResourceTimeoutsPtrOutput struct{ *pulumi.OutputState }
+
+func (ResourceTimeoutsPtrOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((**ResourceTimeouts)(nil)).Elem()
+}
+
+func (o ResourceTimeoutsPtrOutput) ToResourceTimeoutsPtrOutput() ResourceTimeoutsPtrOutput {
+	return o
+}
+
+func (o ResourceTimeoutsPtrOutput) ToResourceTimeoutsPtrOutputWithContext(ctx context.Context) ResourceTimeoutsPtrOutput {
+	return o
+}
+
+func (o ResourceTimeoutsPtrOutput) Elem() ResourceTimeoutsOutput {
+	return o.ApplyT(func(v *ResourceTimeouts) ResourceTimeouts {
+		if v != nil {
+			return *v
+		}
+		var ret ResourceTimeouts
+		return ret
+	}).(ResourceTimeoutsOutput)
+}
+
+// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+func (o ResourceTimeoutsPtrOutput) Create() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *ResourceTimeouts) *string {
+		if v == nil {
+			return nil
+		}
+		return v.Create
 	}).(pulumi.StringPtrOutput)
 }
 
-// The Tenant ID for the Service Principal associated with the Managed Service Identity of this azure resource.
-func (o ResourceIdentityPtrOutput) TenantId() pulumi.StringPtrOutput {
-	return o.ApplyT(func(v *ResourceIdentity) *string {
+// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Setting a timeout for a Delete operation is only applicable if changes are saved into state before the destroy operation occurs.
+func (o ResourceTimeoutsPtrOutput) Delete() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *ResourceTimeouts) *string {
 		if v == nil {
 			return nil
 		}
-		return v.TenantId
+		return v.Delete
 	}).(pulumi.StringPtrOutput)
 }
 
-// The Type of Identity which should be used for this azure resource. Possible values are `SystemAssigned`, `UserAssigned` and `SystemAssigned,UserAssigned`.
-func (o ResourceIdentityPtrOutput) Type() pulumi.StringPtrOutput {
-	return o.ApplyT(func(v *ResourceIdentity) *string {
+// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+func (o ResourceTimeoutsPtrOutput) Read() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *ResourceTimeouts) *string {
 		if v == nil {
 			return nil
 		}
-		return &v.Type
+		return v.Read
+	}).(pulumi.StringPtrOutput)
+}
+
+// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+func (o ResourceTimeoutsPtrOutput) Update() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *ResourceTimeouts) *string {
+		if v == nil {
+			return nil
+		}
+		return v.Update
+	}).(pulumi.StringPtrOutput)
+}
+
+type UpdateResourceRetry struct {
+	// A list of regular expressions to match against error messages. If any of the regular expressions match, the request will be retried.
+	ErrorMessageRegexes []string `pulumi:"errorMessageRegexes"`
+	// The base number of seconds to wait between retries. Default is `10`.
+	IntervalSeconds *int `pulumi:"intervalSeconds"`
+	// The maximum number of seconds to wait between retries. Default is `180`.
+	MaxIntervalSeconds *int `pulumi:"maxIntervalSeconds"`
+	// The multiplier to apply to the interval between retries. Default is `1.5`.
+	Multiplier *float64 `pulumi:"multiplier"`
+	// The randomization factor to apply to the interval between retries. The formula for the randomized interval is: `RetryInterval * (random value in range [1 - RandomizationFactor, 1 + RandomizationFactor])`. Therefore set to zero `0.0` for no randomization. Default is `0.5`.
+	RandomizationFactor *float64 `pulumi:"randomizationFactor"`
+}
+
+// UpdateResourceRetryInput is an input type that accepts UpdateResourceRetryArgs and UpdateResourceRetryOutput values.
+// You can construct a concrete instance of `UpdateResourceRetryInput` via:
+//
+//	UpdateResourceRetryArgs{...}
+type UpdateResourceRetryInput interface {
+	pulumi.Input
+
+	ToUpdateResourceRetryOutput() UpdateResourceRetryOutput
+	ToUpdateResourceRetryOutputWithContext(context.Context) UpdateResourceRetryOutput
+}
+
+type UpdateResourceRetryArgs struct {
+	// A list of regular expressions to match against error messages. If any of the regular expressions match, the request will be retried.
+	ErrorMessageRegexes pulumi.StringArrayInput `pulumi:"errorMessageRegexes"`
+	// The base number of seconds to wait between retries. Default is `10`.
+	IntervalSeconds pulumi.IntPtrInput `pulumi:"intervalSeconds"`
+	// The maximum number of seconds to wait between retries. Default is `180`.
+	MaxIntervalSeconds pulumi.IntPtrInput `pulumi:"maxIntervalSeconds"`
+	// The multiplier to apply to the interval between retries. Default is `1.5`.
+	Multiplier pulumi.Float64PtrInput `pulumi:"multiplier"`
+	// The randomization factor to apply to the interval between retries. The formula for the randomized interval is: `RetryInterval * (random value in range [1 - RandomizationFactor, 1 + RandomizationFactor])`. Therefore set to zero `0.0` for no randomization. Default is `0.5`.
+	RandomizationFactor pulumi.Float64PtrInput `pulumi:"randomizationFactor"`
+}
+
+func (UpdateResourceRetryArgs) ElementType() reflect.Type {
+	return reflect.TypeOf((*UpdateResourceRetry)(nil)).Elem()
+}
+
+func (i UpdateResourceRetryArgs) ToUpdateResourceRetryOutput() UpdateResourceRetryOutput {
+	return i.ToUpdateResourceRetryOutputWithContext(context.Background())
+}
+
+func (i UpdateResourceRetryArgs) ToUpdateResourceRetryOutputWithContext(ctx context.Context) UpdateResourceRetryOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(UpdateResourceRetryOutput)
+}
+
+func (i UpdateResourceRetryArgs) ToUpdateResourceRetryPtrOutput() UpdateResourceRetryPtrOutput {
+	return i.ToUpdateResourceRetryPtrOutputWithContext(context.Background())
+}
+
+func (i UpdateResourceRetryArgs) ToUpdateResourceRetryPtrOutputWithContext(ctx context.Context) UpdateResourceRetryPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(UpdateResourceRetryOutput).ToUpdateResourceRetryPtrOutputWithContext(ctx)
+}
+
+// UpdateResourceRetryPtrInput is an input type that accepts UpdateResourceRetryArgs, UpdateResourceRetryPtr and UpdateResourceRetryPtrOutput values.
+// You can construct a concrete instance of `UpdateResourceRetryPtrInput` via:
+//
+//	        UpdateResourceRetryArgs{...}
+//
+//	or:
+//
+//	        nil
+type UpdateResourceRetryPtrInput interface {
+	pulumi.Input
+
+	ToUpdateResourceRetryPtrOutput() UpdateResourceRetryPtrOutput
+	ToUpdateResourceRetryPtrOutputWithContext(context.Context) UpdateResourceRetryPtrOutput
+}
+
+type updateResourceRetryPtrType UpdateResourceRetryArgs
+
+func UpdateResourceRetryPtr(v *UpdateResourceRetryArgs) UpdateResourceRetryPtrInput {
+	return (*updateResourceRetryPtrType)(v)
+}
+
+func (*updateResourceRetryPtrType) ElementType() reflect.Type {
+	return reflect.TypeOf((**UpdateResourceRetry)(nil)).Elem()
+}
+
+func (i *updateResourceRetryPtrType) ToUpdateResourceRetryPtrOutput() UpdateResourceRetryPtrOutput {
+	return i.ToUpdateResourceRetryPtrOutputWithContext(context.Background())
+}
+
+func (i *updateResourceRetryPtrType) ToUpdateResourceRetryPtrOutputWithContext(ctx context.Context) UpdateResourceRetryPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(UpdateResourceRetryPtrOutput)
+}
+
+type UpdateResourceRetryOutput struct{ *pulumi.OutputState }
+
+func (UpdateResourceRetryOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*UpdateResourceRetry)(nil)).Elem()
+}
+
+func (o UpdateResourceRetryOutput) ToUpdateResourceRetryOutput() UpdateResourceRetryOutput {
+	return o
+}
+
+func (o UpdateResourceRetryOutput) ToUpdateResourceRetryOutputWithContext(ctx context.Context) UpdateResourceRetryOutput {
+	return o
+}
+
+func (o UpdateResourceRetryOutput) ToUpdateResourceRetryPtrOutput() UpdateResourceRetryPtrOutput {
+	return o.ToUpdateResourceRetryPtrOutputWithContext(context.Background())
+}
+
+func (o UpdateResourceRetryOutput) ToUpdateResourceRetryPtrOutputWithContext(ctx context.Context) UpdateResourceRetryPtrOutput {
+	return o.ApplyTWithContext(ctx, func(_ context.Context, v UpdateResourceRetry) *UpdateResourceRetry {
+		return &v
+	}).(UpdateResourceRetryPtrOutput)
+}
+
+// A list of regular expressions to match against error messages. If any of the regular expressions match, the request will be retried.
+func (o UpdateResourceRetryOutput) ErrorMessageRegexes() pulumi.StringArrayOutput {
+	return o.ApplyT(func(v UpdateResourceRetry) []string { return v.ErrorMessageRegexes }).(pulumi.StringArrayOutput)
+}
+
+// The base number of seconds to wait between retries. Default is `10`.
+func (o UpdateResourceRetryOutput) IntervalSeconds() pulumi.IntPtrOutput {
+	return o.ApplyT(func(v UpdateResourceRetry) *int { return v.IntervalSeconds }).(pulumi.IntPtrOutput)
+}
+
+// The maximum number of seconds to wait between retries. Default is `180`.
+func (o UpdateResourceRetryOutput) MaxIntervalSeconds() pulumi.IntPtrOutput {
+	return o.ApplyT(func(v UpdateResourceRetry) *int { return v.MaxIntervalSeconds }).(pulumi.IntPtrOutput)
+}
+
+// The multiplier to apply to the interval between retries. Default is `1.5`.
+func (o UpdateResourceRetryOutput) Multiplier() pulumi.Float64PtrOutput {
+	return o.ApplyT(func(v UpdateResourceRetry) *float64 { return v.Multiplier }).(pulumi.Float64PtrOutput)
+}
+
+// The randomization factor to apply to the interval between retries. The formula for the randomized interval is: `RetryInterval * (random value in range [1 - RandomizationFactor, 1 + RandomizationFactor])`. Therefore set to zero `0.0` for no randomization. Default is `0.5`.
+func (o UpdateResourceRetryOutput) RandomizationFactor() pulumi.Float64PtrOutput {
+	return o.ApplyT(func(v UpdateResourceRetry) *float64 { return v.RandomizationFactor }).(pulumi.Float64PtrOutput)
+}
+
+type UpdateResourceRetryPtrOutput struct{ *pulumi.OutputState }
+
+func (UpdateResourceRetryPtrOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((**UpdateResourceRetry)(nil)).Elem()
+}
+
+func (o UpdateResourceRetryPtrOutput) ToUpdateResourceRetryPtrOutput() UpdateResourceRetryPtrOutput {
+	return o
+}
+
+func (o UpdateResourceRetryPtrOutput) ToUpdateResourceRetryPtrOutputWithContext(ctx context.Context) UpdateResourceRetryPtrOutput {
+	return o
+}
+
+func (o UpdateResourceRetryPtrOutput) Elem() UpdateResourceRetryOutput {
+	return o.ApplyT(func(v *UpdateResourceRetry) UpdateResourceRetry {
+		if v != nil {
+			return *v
+		}
+		var ret UpdateResourceRetry
+		return ret
+	}).(UpdateResourceRetryOutput)
+}
+
+// A list of regular expressions to match against error messages. If any of the regular expressions match, the request will be retried.
+func (o UpdateResourceRetryPtrOutput) ErrorMessageRegexes() pulumi.StringArrayOutput {
+	return o.ApplyT(func(v *UpdateResourceRetry) []string {
+		if v == nil {
+			return nil
+		}
+		return v.ErrorMessageRegexes
+	}).(pulumi.StringArrayOutput)
+}
+
+// The base number of seconds to wait between retries. Default is `10`.
+func (o UpdateResourceRetryPtrOutput) IntervalSeconds() pulumi.IntPtrOutput {
+	return o.ApplyT(func(v *UpdateResourceRetry) *int {
+		if v == nil {
+			return nil
+		}
+		return v.IntervalSeconds
+	}).(pulumi.IntPtrOutput)
+}
+
+// The maximum number of seconds to wait between retries. Default is `180`.
+func (o UpdateResourceRetryPtrOutput) MaxIntervalSeconds() pulumi.IntPtrOutput {
+	return o.ApplyT(func(v *UpdateResourceRetry) *int {
+		if v == nil {
+			return nil
+		}
+		return v.MaxIntervalSeconds
+	}).(pulumi.IntPtrOutput)
+}
+
+// The multiplier to apply to the interval between retries. Default is `1.5`.
+func (o UpdateResourceRetryPtrOutput) Multiplier() pulumi.Float64PtrOutput {
+	return o.ApplyT(func(v *UpdateResourceRetry) *float64 {
+		if v == nil {
+			return nil
+		}
+		return v.Multiplier
+	}).(pulumi.Float64PtrOutput)
+}
+
+// The randomization factor to apply to the interval between retries. The formula for the randomized interval is: `RetryInterval * (random value in range [1 - RandomizationFactor, 1 + RandomizationFactor])`. Therefore set to zero `0.0` for no randomization. Default is `0.5`.
+func (o UpdateResourceRetryPtrOutput) RandomizationFactor() pulumi.Float64PtrOutput {
+	return o.ApplyT(func(v *UpdateResourceRetry) *float64 {
+		if v == nil {
+			return nil
+		}
+		return v.RandomizationFactor
+	}).(pulumi.Float64PtrOutput)
+}
+
+type UpdateResourceTimeouts struct {
+	// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+	Create *string `pulumi:"create"`
+	// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Setting a timeout for a Delete operation is only applicable if changes are saved into state before the destroy operation occurs.
+	Delete *string `pulumi:"delete"`
+	// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+	Read *string `pulumi:"read"`
+	// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+	Update *string `pulumi:"update"`
+}
+
+// UpdateResourceTimeoutsInput is an input type that accepts UpdateResourceTimeoutsArgs and UpdateResourceTimeoutsOutput values.
+// You can construct a concrete instance of `UpdateResourceTimeoutsInput` via:
+//
+//	UpdateResourceTimeoutsArgs{...}
+type UpdateResourceTimeoutsInput interface {
+	pulumi.Input
+
+	ToUpdateResourceTimeoutsOutput() UpdateResourceTimeoutsOutput
+	ToUpdateResourceTimeoutsOutputWithContext(context.Context) UpdateResourceTimeoutsOutput
+}
+
+type UpdateResourceTimeoutsArgs struct {
+	// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+	Create pulumi.StringPtrInput `pulumi:"create"`
+	// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Setting a timeout for a Delete operation is only applicable if changes are saved into state before the destroy operation occurs.
+	Delete pulumi.StringPtrInput `pulumi:"delete"`
+	// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+	Read pulumi.StringPtrInput `pulumi:"read"`
+	// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+	Update pulumi.StringPtrInput `pulumi:"update"`
+}
+
+func (UpdateResourceTimeoutsArgs) ElementType() reflect.Type {
+	return reflect.TypeOf((*UpdateResourceTimeouts)(nil)).Elem()
+}
+
+func (i UpdateResourceTimeoutsArgs) ToUpdateResourceTimeoutsOutput() UpdateResourceTimeoutsOutput {
+	return i.ToUpdateResourceTimeoutsOutputWithContext(context.Background())
+}
+
+func (i UpdateResourceTimeoutsArgs) ToUpdateResourceTimeoutsOutputWithContext(ctx context.Context) UpdateResourceTimeoutsOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(UpdateResourceTimeoutsOutput)
+}
+
+func (i UpdateResourceTimeoutsArgs) ToUpdateResourceTimeoutsPtrOutput() UpdateResourceTimeoutsPtrOutput {
+	return i.ToUpdateResourceTimeoutsPtrOutputWithContext(context.Background())
+}
+
+func (i UpdateResourceTimeoutsArgs) ToUpdateResourceTimeoutsPtrOutputWithContext(ctx context.Context) UpdateResourceTimeoutsPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(UpdateResourceTimeoutsOutput).ToUpdateResourceTimeoutsPtrOutputWithContext(ctx)
+}
+
+// UpdateResourceTimeoutsPtrInput is an input type that accepts UpdateResourceTimeoutsArgs, UpdateResourceTimeoutsPtr and UpdateResourceTimeoutsPtrOutput values.
+// You can construct a concrete instance of `UpdateResourceTimeoutsPtrInput` via:
+//
+//	        UpdateResourceTimeoutsArgs{...}
+//
+//	or:
+//
+//	        nil
+type UpdateResourceTimeoutsPtrInput interface {
+	pulumi.Input
+
+	ToUpdateResourceTimeoutsPtrOutput() UpdateResourceTimeoutsPtrOutput
+	ToUpdateResourceTimeoutsPtrOutputWithContext(context.Context) UpdateResourceTimeoutsPtrOutput
+}
+
+type updateResourceTimeoutsPtrType UpdateResourceTimeoutsArgs
+
+func UpdateResourceTimeoutsPtr(v *UpdateResourceTimeoutsArgs) UpdateResourceTimeoutsPtrInput {
+	return (*updateResourceTimeoutsPtrType)(v)
+}
+
+func (*updateResourceTimeoutsPtrType) ElementType() reflect.Type {
+	return reflect.TypeOf((**UpdateResourceTimeouts)(nil)).Elem()
+}
+
+func (i *updateResourceTimeoutsPtrType) ToUpdateResourceTimeoutsPtrOutput() UpdateResourceTimeoutsPtrOutput {
+	return i.ToUpdateResourceTimeoutsPtrOutputWithContext(context.Background())
+}
+
+func (i *updateResourceTimeoutsPtrType) ToUpdateResourceTimeoutsPtrOutputWithContext(ctx context.Context) UpdateResourceTimeoutsPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(UpdateResourceTimeoutsPtrOutput)
+}
+
+type UpdateResourceTimeoutsOutput struct{ *pulumi.OutputState }
+
+func (UpdateResourceTimeoutsOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*UpdateResourceTimeouts)(nil)).Elem()
+}
+
+func (o UpdateResourceTimeoutsOutput) ToUpdateResourceTimeoutsOutput() UpdateResourceTimeoutsOutput {
+	return o
+}
+
+func (o UpdateResourceTimeoutsOutput) ToUpdateResourceTimeoutsOutputWithContext(ctx context.Context) UpdateResourceTimeoutsOutput {
+	return o
+}
+
+func (o UpdateResourceTimeoutsOutput) ToUpdateResourceTimeoutsPtrOutput() UpdateResourceTimeoutsPtrOutput {
+	return o.ToUpdateResourceTimeoutsPtrOutputWithContext(context.Background())
+}
+
+func (o UpdateResourceTimeoutsOutput) ToUpdateResourceTimeoutsPtrOutputWithContext(ctx context.Context) UpdateResourceTimeoutsPtrOutput {
+	return o.ApplyTWithContext(ctx, func(_ context.Context, v UpdateResourceTimeouts) *UpdateResourceTimeouts {
+		return &v
+	}).(UpdateResourceTimeoutsPtrOutput)
+}
+
+// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+func (o UpdateResourceTimeoutsOutput) Create() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v UpdateResourceTimeouts) *string { return v.Create }).(pulumi.StringPtrOutput)
+}
+
+// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Setting a timeout for a Delete operation is only applicable if changes are saved into state before the destroy operation occurs.
+func (o UpdateResourceTimeoutsOutput) Delete() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v UpdateResourceTimeouts) *string { return v.Delete }).(pulumi.StringPtrOutput)
+}
+
+// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+func (o UpdateResourceTimeoutsOutput) Read() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v UpdateResourceTimeouts) *string { return v.Read }).(pulumi.StringPtrOutput)
+}
+
+// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+func (o UpdateResourceTimeoutsOutput) Update() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v UpdateResourceTimeouts) *string { return v.Update }).(pulumi.StringPtrOutput)
+}
+
+type UpdateResourceTimeoutsPtrOutput struct{ *pulumi.OutputState }
+
+func (UpdateResourceTimeoutsPtrOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((**UpdateResourceTimeouts)(nil)).Elem()
+}
+
+func (o UpdateResourceTimeoutsPtrOutput) ToUpdateResourceTimeoutsPtrOutput() UpdateResourceTimeoutsPtrOutput {
+	return o
+}
+
+func (o UpdateResourceTimeoutsPtrOutput) ToUpdateResourceTimeoutsPtrOutputWithContext(ctx context.Context) UpdateResourceTimeoutsPtrOutput {
+	return o
+}
+
+func (o UpdateResourceTimeoutsPtrOutput) Elem() UpdateResourceTimeoutsOutput {
+	return o.ApplyT(func(v *UpdateResourceTimeouts) UpdateResourceTimeouts {
+		if v != nil {
+			return *v
+		}
+		var ret UpdateResourceTimeouts
+		return ret
+	}).(UpdateResourceTimeoutsOutput)
+}
+
+// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+func (o UpdateResourceTimeoutsPtrOutput) Create() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *UpdateResourceTimeouts) *string {
+		if v == nil {
+			return nil
+		}
+		return v.Create
+	}).(pulumi.StringPtrOutput)
+}
+
+// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Setting a timeout for a Delete operation is only applicable if changes are saved into state before the destroy operation occurs.
+func (o UpdateResourceTimeoutsPtrOutput) Delete() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *UpdateResourceTimeouts) *string {
+		if v == nil {
+			return nil
+		}
+		return v.Delete
+	}).(pulumi.StringPtrOutput)
+}
+
+// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+func (o UpdateResourceTimeoutsPtrOutput) Read() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *UpdateResourceTimeouts) *string {
+		if v == nil {
+			return nil
+		}
+		return v.Read
+	}).(pulumi.StringPtrOutput)
+}
+
+// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+func (o UpdateResourceTimeoutsPtrOutput) Update() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *UpdateResourceTimeouts) *string {
+		if v == nil {
+			return nil
+		}
+		return v.Update
+	}).(pulumi.StringPtrOutput)
+}
+
+type GetClientConfigTimeouts struct {
+	// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+	Read *string `pulumi:"read"`
+}
+
+// GetClientConfigTimeoutsInput is an input type that accepts GetClientConfigTimeoutsArgs and GetClientConfigTimeoutsOutput values.
+// You can construct a concrete instance of `GetClientConfigTimeoutsInput` via:
+//
+//	GetClientConfigTimeoutsArgs{...}
+type GetClientConfigTimeoutsInput interface {
+	pulumi.Input
+
+	ToGetClientConfigTimeoutsOutput() GetClientConfigTimeoutsOutput
+	ToGetClientConfigTimeoutsOutputWithContext(context.Context) GetClientConfigTimeoutsOutput
+}
+
+type GetClientConfigTimeoutsArgs struct {
+	// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+	Read pulumi.StringPtrInput `pulumi:"read"`
+}
+
+func (GetClientConfigTimeoutsArgs) ElementType() reflect.Type {
+	return reflect.TypeOf((*GetClientConfigTimeouts)(nil)).Elem()
+}
+
+func (i GetClientConfigTimeoutsArgs) ToGetClientConfigTimeoutsOutput() GetClientConfigTimeoutsOutput {
+	return i.ToGetClientConfigTimeoutsOutputWithContext(context.Background())
+}
+
+func (i GetClientConfigTimeoutsArgs) ToGetClientConfigTimeoutsOutputWithContext(ctx context.Context) GetClientConfigTimeoutsOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(GetClientConfigTimeoutsOutput)
+}
+
+func (i GetClientConfigTimeoutsArgs) ToGetClientConfigTimeoutsPtrOutput() GetClientConfigTimeoutsPtrOutput {
+	return i.ToGetClientConfigTimeoutsPtrOutputWithContext(context.Background())
+}
+
+func (i GetClientConfigTimeoutsArgs) ToGetClientConfigTimeoutsPtrOutputWithContext(ctx context.Context) GetClientConfigTimeoutsPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(GetClientConfigTimeoutsOutput).ToGetClientConfigTimeoutsPtrOutputWithContext(ctx)
+}
+
+// GetClientConfigTimeoutsPtrInput is an input type that accepts GetClientConfigTimeoutsArgs, GetClientConfigTimeoutsPtr and GetClientConfigTimeoutsPtrOutput values.
+// You can construct a concrete instance of `GetClientConfigTimeoutsPtrInput` via:
+//
+//	        GetClientConfigTimeoutsArgs{...}
+//
+//	or:
+//
+//	        nil
+type GetClientConfigTimeoutsPtrInput interface {
+	pulumi.Input
+
+	ToGetClientConfigTimeoutsPtrOutput() GetClientConfigTimeoutsPtrOutput
+	ToGetClientConfigTimeoutsPtrOutputWithContext(context.Context) GetClientConfigTimeoutsPtrOutput
+}
+
+type getClientConfigTimeoutsPtrType GetClientConfigTimeoutsArgs
+
+func GetClientConfigTimeoutsPtr(v *GetClientConfigTimeoutsArgs) GetClientConfigTimeoutsPtrInput {
+	return (*getClientConfigTimeoutsPtrType)(v)
+}
+
+func (*getClientConfigTimeoutsPtrType) ElementType() reflect.Type {
+	return reflect.TypeOf((**GetClientConfigTimeouts)(nil)).Elem()
+}
+
+func (i *getClientConfigTimeoutsPtrType) ToGetClientConfigTimeoutsPtrOutput() GetClientConfigTimeoutsPtrOutput {
+	return i.ToGetClientConfigTimeoutsPtrOutputWithContext(context.Background())
+}
+
+func (i *getClientConfigTimeoutsPtrType) ToGetClientConfigTimeoutsPtrOutputWithContext(ctx context.Context) GetClientConfigTimeoutsPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(GetClientConfigTimeoutsPtrOutput)
+}
+
+type GetClientConfigTimeoutsOutput struct{ *pulumi.OutputState }
+
+func (GetClientConfigTimeoutsOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*GetClientConfigTimeouts)(nil)).Elem()
+}
+
+func (o GetClientConfigTimeoutsOutput) ToGetClientConfigTimeoutsOutput() GetClientConfigTimeoutsOutput {
+	return o
+}
+
+func (o GetClientConfigTimeoutsOutput) ToGetClientConfigTimeoutsOutputWithContext(ctx context.Context) GetClientConfigTimeoutsOutput {
+	return o
+}
+
+func (o GetClientConfigTimeoutsOutput) ToGetClientConfigTimeoutsPtrOutput() GetClientConfigTimeoutsPtrOutput {
+	return o.ToGetClientConfigTimeoutsPtrOutputWithContext(context.Background())
+}
+
+func (o GetClientConfigTimeoutsOutput) ToGetClientConfigTimeoutsPtrOutputWithContext(ctx context.Context) GetClientConfigTimeoutsPtrOutput {
+	return o.ApplyTWithContext(ctx, func(_ context.Context, v GetClientConfigTimeouts) *GetClientConfigTimeouts {
+		return &v
+	}).(GetClientConfigTimeoutsPtrOutput)
+}
+
+// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+func (o GetClientConfigTimeoutsOutput) Read() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v GetClientConfigTimeouts) *string { return v.Read }).(pulumi.StringPtrOutput)
+}
+
+type GetClientConfigTimeoutsPtrOutput struct{ *pulumi.OutputState }
+
+func (GetClientConfigTimeoutsPtrOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((**GetClientConfigTimeouts)(nil)).Elem()
+}
+
+func (o GetClientConfigTimeoutsPtrOutput) ToGetClientConfigTimeoutsPtrOutput() GetClientConfigTimeoutsPtrOutput {
+	return o
+}
+
+func (o GetClientConfigTimeoutsPtrOutput) ToGetClientConfigTimeoutsPtrOutputWithContext(ctx context.Context) GetClientConfigTimeoutsPtrOutput {
+	return o
+}
+
+func (o GetClientConfigTimeoutsPtrOutput) Elem() GetClientConfigTimeoutsOutput {
+	return o.ApplyT(func(v *GetClientConfigTimeouts) GetClientConfigTimeouts {
+		if v != nil {
+			return *v
+		}
+		var ret GetClientConfigTimeouts
+		return ret
+	}).(GetClientConfigTimeoutsOutput)
+}
+
+// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+func (o GetClientConfigTimeoutsPtrOutput) Read() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *GetClientConfigTimeouts) *string {
+		if v == nil {
+			return nil
+		}
+		return v.Read
+	}).(pulumi.StringPtrOutput)
+}
+
+type GetResourceActionRetry struct {
+	// A list of regular expressions to match against error messages. If any of the regular expressions match, the request will be retried.
+	ErrorMessageRegexes []string `pulumi:"errorMessageRegexes"`
+	// The base number of seconds to wait between retries. Default is `10`.
+	IntervalSeconds int `pulumi:"intervalSeconds"`
+	// The maximum number of seconds to wait between retries. Default is `180`.
+	MaxIntervalSeconds int `pulumi:"maxIntervalSeconds"`
+	// The multiplier to apply to the interval between retries. Default is `1.5`.
+	Multiplier float64 `pulumi:"multiplier"`
+	// The randomization factor to apply to the interval between retries. The formula for the randomized interval is: `RetryInterval * (random value in range [1 - RandomizationFactor, 1 + RandomizationFactor])`. Therefore set to zero `0.0` for no randomization. Default is `0.5`.
+	RandomizationFactor float64 `pulumi:"randomizationFactor"`
+}
+
+// GetResourceActionRetryInput is an input type that accepts GetResourceActionRetryArgs and GetResourceActionRetryOutput values.
+// You can construct a concrete instance of `GetResourceActionRetryInput` via:
+//
+//	GetResourceActionRetryArgs{...}
+type GetResourceActionRetryInput interface {
+	pulumi.Input
+
+	ToGetResourceActionRetryOutput() GetResourceActionRetryOutput
+	ToGetResourceActionRetryOutputWithContext(context.Context) GetResourceActionRetryOutput
+}
+
+type GetResourceActionRetryArgs struct {
+	// A list of regular expressions to match against error messages. If any of the regular expressions match, the request will be retried.
+	ErrorMessageRegexes pulumi.StringArrayInput `pulumi:"errorMessageRegexes"`
+	// The base number of seconds to wait between retries. Default is `10`.
+	IntervalSeconds pulumi.IntInput `pulumi:"intervalSeconds"`
+	// The maximum number of seconds to wait between retries. Default is `180`.
+	MaxIntervalSeconds pulumi.IntInput `pulumi:"maxIntervalSeconds"`
+	// The multiplier to apply to the interval between retries. Default is `1.5`.
+	Multiplier pulumi.Float64Input `pulumi:"multiplier"`
+	// The randomization factor to apply to the interval between retries. The formula for the randomized interval is: `RetryInterval * (random value in range [1 - RandomizationFactor, 1 + RandomizationFactor])`. Therefore set to zero `0.0` for no randomization. Default is `0.5`.
+	RandomizationFactor pulumi.Float64Input `pulumi:"randomizationFactor"`
+}
+
+func (GetResourceActionRetryArgs) ElementType() reflect.Type {
+	return reflect.TypeOf((*GetResourceActionRetry)(nil)).Elem()
+}
+
+func (i GetResourceActionRetryArgs) ToGetResourceActionRetryOutput() GetResourceActionRetryOutput {
+	return i.ToGetResourceActionRetryOutputWithContext(context.Background())
+}
+
+func (i GetResourceActionRetryArgs) ToGetResourceActionRetryOutputWithContext(ctx context.Context) GetResourceActionRetryOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(GetResourceActionRetryOutput)
+}
+
+func (i GetResourceActionRetryArgs) ToGetResourceActionRetryPtrOutput() GetResourceActionRetryPtrOutput {
+	return i.ToGetResourceActionRetryPtrOutputWithContext(context.Background())
+}
+
+func (i GetResourceActionRetryArgs) ToGetResourceActionRetryPtrOutputWithContext(ctx context.Context) GetResourceActionRetryPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(GetResourceActionRetryOutput).ToGetResourceActionRetryPtrOutputWithContext(ctx)
+}
+
+// GetResourceActionRetryPtrInput is an input type that accepts GetResourceActionRetryArgs, GetResourceActionRetryPtr and GetResourceActionRetryPtrOutput values.
+// You can construct a concrete instance of `GetResourceActionRetryPtrInput` via:
+//
+//	        GetResourceActionRetryArgs{...}
+//
+//	or:
+//
+//	        nil
+type GetResourceActionRetryPtrInput interface {
+	pulumi.Input
+
+	ToGetResourceActionRetryPtrOutput() GetResourceActionRetryPtrOutput
+	ToGetResourceActionRetryPtrOutputWithContext(context.Context) GetResourceActionRetryPtrOutput
+}
+
+type getResourceActionRetryPtrType GetResourceActionRetryArgs
+
+func GetResourceActionRetryPtr(v *GetResourceActionRetryArgs) GetResourceActionRetryPtrInput {
+	return (*getResourceActionRetryPtrType)(v)
+}
+
+func (*getResourceActionRetryPtrType) ElementType() reflect.Type {
+	return reflect.TypeOf((**GetResourceActionRetry)(nil)).Elem()
+}
+
+func (i *getResourceActionRetryPtrType) ToGetResourceActionRetryPtrOutput() GetResourceActionRetryPtrOutput {
+	return i.ToGetResourceActionRetryPtrOutputWithContext(context.Background())
+}
+
+func (i *getResourceActionRetryPtrType) ToGetResourceActionRetryPtrOutputWithContext(ctx context.Context) GetResourceActionRetryPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(GetResourceActionRetryPtrOutput)
+}
+
+type GetResourceActionRetryOutput struct{ *pulumi.OutputState }
+
+func (GetResourceActionRetryOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*GetResourceActionRetry)(nil)).Elem()
+}
+
+func (o GetResourceActionRetryOutput) ToGetResourceActionRetryOutput() GetResourceActionRetryOutput {
+	return o
+}
+
+func (o GetResourceActionRetryOutput) ToGetResourceActionRetryOutputWithContext(ctx context.Context) GetResourceActionRetryOutput {
+	return o
+}
+
+func (o GetResourceActionRetryOutput) ToGetResourceActionRetryPtrOutput() GetResourceActionRetryPtrOutput {
+	return o.ToGetResourceActionRetryPtrOutputWithContext(context.Background())
+}
+
+func (o GetResourceActionRetryOutput) ToGetResourceActionRetryPtrOutputWithContext(ctx context.Context) GetResourceActionRetryPtrOutput {
+	return o.ApplyTWithContext(ctx, func(_ context.Context, v GetResourceActionRetry) *GetResourceActionRetry {
+		return &v
+	}).(GetResourceActionRetryPtrOutput)
+}
+
+// A list of regular expressions to match against error messages. If any of the regular expressions match, the request will be retried.
+func (o GetResourceActionRetryOutput) ErrorMessageRegexes() pulumi.StringArrayOutput {
+	return o.ApplyT(func(v GetResourceActionRetry) []string { return v.ErrorMessageRegexes }).(pulumi.StringArrayOutput)
+}
+
+// The base number of seconds to wait between retries. Default is `10`.
+func (o GetResourceActionRetryOutput) IntervalSeconds() pulumi.IntOutput {
+	return o.ApplyT(func(v GetResourceActionRetry) int { return v.IntervalSeconds }).(pulumi.IntOutput)
+}
+
+// The maximum number of seconds to wait between retries. Default is `180`.
+func (o GetResourceActionRetryOutput) MaxIntervalSeconds() pulumi.IntOutput {
+	return o.ApplyT(func(v GetResourceActionRetry) int { return v.MaxIntervalSeconds }).(pulumi.IntOutput)
+}
+
+// The multiplier to apply to the interval between retries. Default is `1.5`.
+func (o GetResourceActionRetryOutput) Multiplier() pulumi.Float64Output {
+	return o.ApplyT(func(v GetResourceActionRetry) float64 { return v.Multiplier }).(pulumi.Float64Output)
+}
+
+// The randomization factor to apply to the interval between retries. The formula for the randomized interval is: `RetryInterval * (random value in range [1 - RandomizationFactor, 1 + RandomizationFactor])`. Therefore set to zero `0.0` for no randomization. Default is `0.5`.
+func (o GetResourceActionRetryOutput) RandomizationFactor() pulumi.Float64Output {
+	return o.ApplyT(func(v GetResourceActionRetry) float64 { return v.RandomizationFactor }).(pulumi.Float64Output)
+}
+
+type GetResourceActionRetryPtrOutput struct{ *pulumi.OutputState }
+
+func (GetResourceActionRetryPtrOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((**GetResourceActionRetry)(nil)).Elem()
+}
+
+func (o GetResourceActionRetryPtrOutput) ToGetResourceActionRetryPtrOutput() GetResourceActionRetryPtrOutput {
+	return o
+}
+
+func (o GetResourceActionRetryPtrOutput) ToGetResourceActionRetryPtrOutputWithContext(ctx context.Context) GetResourceActionRetryPtrOutput {
+	return o
+}
+
+func (o GetResourceActionRetryPtrOutput) Elem() GetResourceActionRetryOutput {
+	return o.ApplyT(func(v *GetResourceActionRetry) GetResourceActionRetry {
+		if v != nil {
+			return *v
+		}
+		var ret GetResourceActionRetry
+		return ret
+	}).(GetResourceActionRetryOutput)
+}
+
+// A list of regular expressions to match against error messages. If any of the regular expressions match, the request will be retried.
+func (o GetResourceActionRetryPtrOutput) ErrorMessageRegexes() pulumi.StringArrayOutput {
+	return o.ApplyT(func(v *GetResourceActionRetry) []string {
+		if v == nil {
+			return nil
+		}
+		return v.ErrorMessageRegexes
+	}).(pulumi.StringArrayOutput)
+}
+
+// The base number of seconds to wait between retries. Default is `10`.
+func (o GetResourceActionRetryPtrOutput) IntervalSeconds() pulumi.IntPtrOutput {
+	return o.ApplyT(func(v *GetResourceActionRetry) *int {
+		if v == nil {
+			return nil
+		}
+		return &v.IntervalSeconds
+	}).(pulumi.IntPtrOutput)
+}
+
+// The maximum number of seconds to wait between retries. Default is `180`.
+func (o GetResourceActionRetryPtrOutput) MaxIntervalSeconds() pulumi.IntPtrOutput {
+	return o.ApplyT(func(v *GetResourceActionRetry) *int {
+		if v == nil {
+			return nil
+		}
+		return &v.MaxIntervalSeconds
+	}).(pulumi.IntPtrOutput)
+}
+
+// The multiplier to apply to the interval between retries. Default is `1.5`.
+func (o GetResourceActionRetryPtrOutput) Multiplier() pulumi.Float64PtrOutput {
+	return o.ApplyT(func(v *GetResourceActionRetry) *float64 {
+		if v == nil {
+			return nil
+		}
+		return &v.Multiplier
+	}).(pulumi.Float64PtrOutput)
+}
+
+// The randomization factor to apply to the interval between retries. The formula for the randomized interval is: `RetryInterval * (random value in range [1 - RandomizationFactor, 1 + RandomizationFactor])`. Therefore set to zero `0.0` for no randomization. Default is `0.5`.
+func (o GetResourceActionRetryPtrOutput) RandomizationFactor() pulumi.Float64PtrOutput {
+	return o.ApplyT(func(v *GetResourceActionRetry) *float64 {
+		if v == nil {
+			return nil
+		}
+		return &v.RandomizationFactor
+	}).(pulumi.Float64PtrOutput)
+}
+
+type GetResourceActionTimeouts struct {
+	// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+	Read *string `pulumi:"read"`
+}
+
+// GetResourceActionTimeoutsInput is an input type that accepts GetResourceActionTimeoutsArgs and GetResourceActionTimeoutsOutput values.
+// You can construct a concrete instance of `GetResourceActionTimeoutsInput` via:
+//
+//	GetResourceActionTimeoutsArgs{...}
+type GetResourceActionTimeoutsInput interface {
+	pulumi.Input
+
+	ToGetResourceActionTimeoutsOutput() GetResourceActionTimeoutsOutput
+	ToGetResourceActionTimeoutsOutputWithContext(context.Context) GetResourceActionTimeoutsOutput
+}
+
+type GetResourceActionTimeoutsArgs struct {
+	// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+	Read pulumi.StringPtrInput `pulumi:"read"`
+}
+
+func (GetResourceActionTimeoutsArgs) ElementType() reflect.Type {
+	return reflect.TypeOf((*GetResourceActionTimeouts)(nil)).Elem()
+}
+
+func (i GetResourceActionTimeoutsArgs) ToGetResourceActionTimeoutsOutput() GetResourceActionTimeoutsOutput {
+	return i.ToGetResourceActionTimeoutsOutputWithContext(context.Background())
+}
+
+func (i GetResourceActionTimeoutsArgs) ToGetResourceActionTimeoutsOutputWithContext(ctx context.Context) GetResourceActionTimeoutsOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(GetResourceActionTimeoutsOutput)
+}
+
+func (i GetResourceActionTimeoutsArgs) ToGetResourceActionTimeoutsPtrOutput() GetResourceActionTimeoutsPtrOutput {
+	return i.ToGetResourceActionTimeoutsPtrOutputWithContext(context.Background())
+}
+
+func (i GetResourceActionTimeoutsArgs) ToGetResourceActionTimeoutsPtrOutputWithContext(ctx context.Context) GetResourceActionTimeoutsPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(GetResourceActionTimeoutsOutput).ToGetResourceActionTimeoutsPtrOutputWithContext(ctx)
+}
+
+// GetResourceActionTimeoutsPtrInput is an input type that accepts GetResourceActionTimeoutsArgs, GetResourceActionTimeoutsPtr and GetResourceActionTimeoutsPtrOutput values.
+// You can construct a concrete instance of `GetResourceActionTimeoutsPtrInput` via:
+//
+//	        GetResourceActionTimeoutsArgs{...}
+//
+//	or:
+//
+//	        nil
+type GetResourceActionTimeoutsPtrInput interface {
+	pulumi.Input
+
+	ToGetResourceActionTimeoutsPtrOutput() GetResourceActionTimeoutsPtrOutput
+	ToGetResourceActionTimeoutsPtrOutputWithContext(context.Context) GetResourceActionTimeoutsPtrOutput
+}
+
+type getResourceActionTimeoutsPtrType GetResourceActionTimeoutsArgs
+
+func GetResourceActionTimeoutsPtr(v *GetResourceActionTimeoutsArgs) GetResourceActionTimeoutsPtrInput {
+	return (*getResourceActionTimeoutsPtrType)(v)
+}
+
+func (*getResourceActionTimeoutsPtrType) ElementType() reflect.Type {
+	return reflect.TypeOf((**GetResourceActionTimeouts)(nil)).Elem()
+}
+
+func (i *getResourceActionTimeoutsPtrType) ToGetResourceActionTimeoutsPtrOutput() GetResourceActionTimeoutsPtrOutput {
+	return i.ToGetResourceActionTimeoutsPtrOutputWithContext(context.Background())
+}
+
+func (i *getResourceActionTimeoutsPtrType) ToGetResourceActionTimeoutsPtrOutputWithContext(ctx context.Context) GetResourceActionTimeoutsPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(GetResourceActionTimeoutsPtrOutput)
+}
+
+type GetResourceActionTimeoutsOutput struct{ *pulumi.OutputState }
+
+func (GetResourceActionTimeoutsOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*GetResourceActionTimeouts)(nil)).Elem()
+}
+
+func (o GetResourceActionTimeoutsOutput) ToGetResourceActionTimeoutsOutput() GetResourceActionTimeoutsOutput {
+	return o
+}
+
+func (o GetResourceActionTimeoutsOutput) ToGetResourceActionTimeoutsOutputWithContext(ctx context.Context) GetResourceActionTimeoutsOutput {
+	return o
+}
+
+func (o GetResourceActionTimeoutsOutput) ToGetResourceActionTimeoutsPtrOutput() GetResourceActionTimeoutsPtrOutput {
+	return o.ToGetResourceActionTimeoutsPtrOutputWithContext(context.Background())
+}
+
+func (o GetResourceActionTimeoutsOutput) ToGetResourceActionTimeoutsPtrOutputWithContext(ctx context.Context) GetResourceActionTimeoutsPtrOutput {
+	return o.ApplyTWithContext(ctx, func(_ context.Context, v GetResourceActionTimeouts) *GetResourceActionTimeouts {
+		return &v
+	}).(GetResourceActionTimeoutsPtrOutput)
+}
+
+// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+func (o GetResourceActionTimeoutsOutput) Read() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v GetResourceActionTimeouts) *string { return v.Read }).(pulumi.StringPtrOutput)
+}
+
+type GetResourceActionTimeoutsPtrOutput struct{ *pulumi.OutputState }
+
+func (GetResourceActionTimeoutsPtrOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((**GetResourceActionTimeouts)(nil)).Elem()
+}
+
+func (o GetResourceActionTimeoutsPtrOutput) ToGetResourceActionTimeoutsPtrOutput() GetResourceActionTimeoutsPtrOutput {
+	return o
+}
+
+func (o GetResourceActionTimeoutsPtrOutput) ToGetResourceActionTimeoutsPtrOutputWithContext(ctx context.Context) GetResourceActionTimeoutsPtrOutput {
+	return o
+}
+
+func (o GetResourceActionTimeoutsPtrOutput) Elem() GetResourceActionTimeoutsOutput {
+	return o.ApplyT(func(v *GetResourceActionTimeouts) GetResourceActionTimeouts {
+		if v != nil {
+			return *v
+		}
+		var ret GetResourceActionTimeouts
+		return ret
+	}).(GetResourceActionTimeoutsOutput)
+}
+
+// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+func (o GetResourceActionTimeoutsPtrOutput) Read() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *GetResourceActionTimeouts) *string {
+		if v == nil {
+			return nil
+		}
+		return v.Read
+	}).(pulumi.StringPtrOutput)
+}
+
+type GetResourceIdTimeouts struct {
+	// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+	Read *string `pulumi:"read"`
+}
+
+// GetResourceIdTimeoutsInput is an input type that accepts GetResourceIdTimeoutsArgs and GetResourceIdTimeoutsOutput values.
+// You can construct a concrete instance of `GetResourceIdTimeoutsInput` via:
+//
+//	GetResourceIdTimeoutsArgs{...}
+type GetResourceIdTimeoutsInput interface {
+	pulumi.Input
+
+	ToGetResourceIdTimeoutsOutput() GetResourceIdTimeoutsOutput
+	ToGetResourceIdTimeoutsOutputWithContext(context.Context) GetResourceIdTimeoutsOutput
+}
+
+type GetResourceIdTimeoutsArgs struct {
+	// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+	Read pulumi.StringPtrInput `pulumi:"read"`
+}
+
+func (GetResourceIdTimeoutsArgs) ElementType() reflect.Type {
+	return reflect.TypeOf((*GetResourceIdTimeouts)(nil)).Elem()
+}
+
+func (i GetResourceIdTimeoutsArgs) ToGetResourceIdTimeoutsOutput() GetResourceIdTimeoutsOutput {
+	return i.ToGetResourceIdTimeoutsOutputWithContext(context.Background())
+}
+
+func (i GetResourceIdTimeoutsArgs) ToGetResourceIdTimeoutsOutputWithContext(ctx context.Context) GetResourceIdTimeoutsOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(GetResourceIdTimeoutsOutput)
+}
+
+func (i GetResourceIdTimeoutsArgs) ToGetResourceIdTimeoutsPtrOutput() GetResourceIdTimeoutsPtrOutput {
+	return i.ToGetResourceIdTimeoutsPtrOutputWithContext(context.Background())
+}
+
+func (i GetResourceIdTimeoutsArgs) ToGetResourceIdTimeoutsPtrOutputWithContext(ctx context.Context) GetResourceIdTimeoutsPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(GetResourceIdTimeoutsOutput).ToGetResourceIdTimeoutsPtrOutputWithContext(ctx)
+}
+
+// GetResourceIdTimeoutsPtrInput is an input type that accepts GetResourceIdTimeoutsArgs, GetResourceIdTimeoutsPtr and GetResourceIdTimeoutsPtrOutput values.
+// You can construct a concrete instance of `GetResourceIdTimeoutsPtrInput` via:
+//
+//	        GetResourceIdTimeoutsArgs{...}
+//
+//	or:
+//
+//	        nil
+type GetResourceIdTimeoutsPtrInput interface {
+	pulumi.Input
+
+	ToGetResourceIdTimeoutsPtrOutput() GetResourceIdTimeoutsPtrOutput
+	ToGetResourceIdTimeoutsPtrOutputWithContext(context.Context) GetResourceIdTimeoutsPtrOutput
+}
+
+type getResourceIdTimeoutsPtrType GetResourceIdTimeoutsArgs
+
+func GetResourceIdTimeoutsPtr(v *GetResourceIdTimeoutsArgs) GetResourceIdTimeoutsPtrInput {
+	return (*getResourceIdTimeoutsPtrType)(v)
+}
+
+func (*getResourceIdTimeoutsPtrType) ElementType() reflect.Type {
+	return reflect.TypeOf((**GetResourceIdTimeouts)(nil)).Elem()
+}
+
+func (i *getResourceIdTimeoutsPtrType) ToGetResourceIdTimeoutsPtrOutput() GetResourceIdTimeoutsPtrOutput {
+	return i.ToGetResourceIdTimeoutsPtrOutputWithContext(context.Background())
+}
+
+func (i *getResourceIdTimeoutsPtrType) ToGetResourceIdTimeoutsPtrOutputWithContext(ctx context.Context) GetResourceIdTimeoutsPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(GetResourceIdTimeoutsPtrOutput)
+}
+
+type GetResourceIdTimeoutsOutput struct{ *pulumi.OutputState }
+
+func (GetResourceIdTimeoutsOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*GetResourceIdTimeouts)(nil)).Elem()
+}
+
+func (o GetResourceIdTimeoutsOutput) ToGetResourceIdTimeoutsOutput() GetResourceIdTimeoutsOutput {
+	return o
+}
+
+func (o GetResourceIdTimeoutsOutput) ToGetResourceIdTimeoutsOutputWithContext(ctx context.Context) GetResourceIdTimeoutsOutput {
+	return o
+}
+
+func (o GetResourceIdTimeoutsOutput) ToGetResourceIdTimeoutsPtrOutput() GetResourceIdTimeoutsPtrOutput {
+	return o.ToGetResourceIdTimeoutsPtrOutputWithContext(context.Background())
+}
+
+func (o GetResourceIdTimeoutsOutput) ToGetResourceIdTimeoutsPtrOutputWithContext(ctx context.Context) GetResourceIdTimeoutsPtrOutput {
+	return o.ApplyTWithContext(ctx, func(_ context.Context, v GetResourceIdTimeouts) *GetResourceIdTimeouts {
+		return &v
+	}).(GetResourceIdTimeoutsPtrOutput)
+}
+
+// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+func (o GetResourceIdTimeoutsOutput) Read() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v GetResourceIdTimeouts) *string { return v.Read }).(pulumi.StringPtrOutput)
+}
+
+type GetResourceIdTimeoutsPtrOutput struct{ *pulumi.OutputState }
+
+func (GetResourceIdTimeoutsPtrOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((**GetResourceIdTimeouts)(nil)).Elem()
+}
+
+func (o GetResourceIdTimeoutsPtrOutput) ToGetResourceIdTimeoutsPtrOutput() GetResourceIdTimeoutsPtrOutput {
+	return o
+}
+
+func (o GetResourceIdTimeoutsPtrOutput) ToGetResourceIdTimeoutsPtrOutputWithContext(ctx context.Context) GetResourceIdTimeoutsPtrOutput {
+	return o
+}
+
+func (o GetResourceIdTimeoutsPtrOutput) Elem() GetResourceIdTimeoutsOutput {
+	return o.ApplyT(func(v *GetResourceIdTimeouts) GetResourceIdTimeouts {
+		if v != nil {
+			return *v
+		}
+		var ret GetResourceIdTimeouts
+		return ret
+	}).(GetResourceIdTimeoutsOutput)
+}
+
+// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+func (o GetResourceIdTimeoutsPtrOutput) Read() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *GetResourceIdTimeouts) *string {
+		if v == nil {
+			return nil
+		}
+		return v.Read
 	}).(pulumi.StringPtrOutput)
 }
 
 type GetResourceIdentity struct {
 	// A list of User Managed Identity ID's which should be assigned to the azure resource.
 	IdentityIds []string `pulumi:"identityIds"`
-	// The Principal ID for the Service Principal associated with the Managed Service Identity of this azure resource.
+	// The Principal ID for the Service Principal associated with the Managed Service Identity of this Azure resource.
 	PrincipalId string `pulumi:"principalId"`
-	// The Tenant ID for the Service Principal associated with the Managed Service Identity of this azure resource.
+	// The Tenant ID for the Service Principal associated with the Managed Service Identity of this Azure resource.
 	TenantId string `pulumi:"tenantId"`
-	// It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
-	// `<api-version>` is version of the API used to manage this azure resource.
+	// The Type of Identity which should be used for this azure resource. Possible values are `SystemAssigned`, `UserAssigned` and `SystemAssigned,UserAssigned`
 	Type string `pulumi:"type"`
 }
 
@@ -408,12 +2529,11 @@ type GetResourceIdentityInput interface {
 type GetResourceIdentityArgs struct {
 	// A list of User Managed Identity ID's which should be assigned to the azure resource.
 	IdentityIds pulumi.StringArrayInput `pulumi:"identityIds"`
-	// The Principal ID for the Service Principal associated with the Managed Service Identity of this azure resource.
+	// The Principal ID for the Service Principal associated with the Managed Service Identity of this Azure resource.
 	PrincipalId pulumi.StringInput `pulumi:"principalId"`
-	// The Tenant ID for the Service Principal associated with the Managed Service Identity of this azure resource.
+	// The Tenant ID for the Service Principal associated with the Managed Service Identity of this Azure resource.
 	TenantId pulumi.StringInput `pulumi:"tenantId"`
-	// It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
-	// `<api-version>` is version of the API used to manage this azure resource.
+	// The Type of Identity which should be used for this azure resource. Possible values are `SystemAssigned`, `UserAssigned` and `SystemAssigned,UserAssigned`
 	Type pulumi.StringInput `pulumi:"type"`
 }
 
@@ -429,45 +2549,29 @@ func (i GetResourceIdentityArgs) ToGetResourceIdentityOutputWithContext(ctx cont
 	return pulumi.ToOutputWithContext(ctx, i).(GetResourceIdentityOutput)
 }
 
-func (i GetResourceIdentityArgs) ToGetResourceIdentityPtrOutput() GetResourceIdentityPtrOutput {
-	return i.ToGetResourceIdentityPtrOutputWithContext(context.Background())
-}
-
-func (i GetResourceIdentityArgs) ToGetResourceIdentityPtrOutputWithContext(ctx context.Context) GetResourceIdentityPtrOutput {
-	return pulumi.ToOutputWithContext(ctx, i).(GetResourceIdentityOutput).ToGetResourceIdentityPtrOutputWithContext(ctx)
-}
-
-// GetResourceIdentityPtrInput is an input type that accepts GetResourceIdentityArgs, GetResourceIdentityPtr and GetResourceIdentityPtrOutput values.
-// You can construct a concrete instance of `GetResourceIdentityPtrInput` via:
+// GetResourceIdentityArrayInput is an input type that accepts GetResourceIdentityArray and GetResourceIdentityArrayOutput values.
+// You can construct a concrete instance of `GetResourceIdentityArrayInput` via:
 //
-//	        GetResourceIdentityArgs{...}
-//
-//	or:
-//
-//	        nil
-type GetResourceIdentityPtrInput interface {
+//	GetResourceIdentityArray{ GetResourceIdentityArgs{...} }
+type GetResourceIdentityArrayInput interface {
 	pulumi.Input
 
-	ToGetResourceIdentityPtrOutput() GetResourceIdentityPtrOutput
-	ToGetResourceIdentityPtrOutputWithContext(context.Context) GetResourceIdentityPtrOutput
+	ToGetResourceIdentityArrayOutput() GetResourceIdentityArrayOutput
+	ToGetResourceIdentityArrayOutputWithContext(context.Context) GetResourceIdentityArrayOutput
 }
 
-type getResourceIdentityPtrType GetResourceIdentityArgs
+type GetResourceIdentityArray []GetResourceIdentityInput
 
-func GetResourceIdentityPtr(v *GetResourceIdentityArgs) GetResourceIdentityPtrInput {
-	return (*getResourceIdentityPtrType)(v)
+func (GetResourceIdentityArray) ElementType() reflect.Type {
+	return reflect.TypeOf((*[]GetResourceIdentity)(nil)).Elem()
 }
 
-func (*getResourceIdentityPtrType) ElementType() reflect.Type {
-	return reflect.TypeOf((**GetResourceIdentity)(nil)).Elem()
+func (i GetResourceIdentityArray) ToGetResourceIdentityArrayOutput() GetResourceIdentityArrayOutput {
+	return i.ToGetResourceIdentityArrayOutputWithContext(context.Background())
 }
 
-func (i *getResourceIdentityPtrType) ToGetResourceIdentityPtrOutput() GetResourceIdentityPtrOutput {
-	return i.ToGetResourceIdentityPtrOutputWithContext(context.Background())
-}
-
-func (i *getResourceIdentityPtrType) ToGetResourceIdentityPtrOutputWithContext(ctx context.Context) GetResourceIdentityPtrOutput {
-	return pulumi.ToOutputWithContext(ctx, i).(GetResourceIdentityPtrOutput)
+func (i GetResourceIdentityArray) ToGetResourceIdentityArrayOutputWithContext(ctx context.Context) GetResourceIdentityArrayOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(GetResourceIdentityArrayOutput)
 }
 
 type GetResourceIdentityOutput struct{ *pulumi.OutputState }
@@ -484,113 +2588,821 @@ func (o GetResourceIdentityOutput) ToGetResourceIdentityOutputWithContext(ctx co
 	return o
 }
 
-func (o GetResourceIdentityOutput) ToGetResourceIdentityPtrOutput() GetResourceIdentityPtrOutput {
-	return o.ToGetResourceIdentityPtrOutputWithContext(context.Background())
-}
-
-func (o GetResourceIdentityOutput) ToGetResourceIdentityPtrOutputWithContext(ctx context.Context) GetResourceIdentityPtrOutput {
-	return o.ApplyTWithContext(ctx, func(_ context.Context, v GetResourceIdentity) *GetResourceIdentity {
-		return &v
-	}).(GetResourceIdentityPtrOutput)
-}
-
 // A list of User Managed Identity ID's which should be assigned to the azure resource.
 func (o GetResourceIdentityOutput) IdentityIds() pulumi.StringArrayOutput {
 	return o.ApplyT(func(v GetResourceIdentity) []string { return v.IdentityIds }).(pulumi.StringArrayOutput)
 }
 
-// The Principal ID for the Service Principal associated with the Managed Service Identity of this azure resource.
+// The Principal ID for the Service Principal associated with the Managed Service Identity of this Azure resource.
 func (o GetResourceIdentityOutput) PrincipalId() pulumi.StringOutput {
 	return o.ApplyT(func(v GetResourceIdentity) string { return v.PrincipalId }).(pulumi.StringOutput)
 }
 
-// The Tenant ID for the Service Principal associated with the Managed Service Identity of this azure resource.
+// The Tenant ID for the Service Principal associated with the Managed Service Identity of this Azure resource.
 func (o GetResourceIdentityOutput) TenantId() pulumi.StringOutput {
 	return o.ApplyT(func(v GetResourceIdentity) string { return v.TenantId }).(pulumi.StringOutput)
 }
 
-// It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
-// `<api-version>` is version of the API used to manage this azure resource.
+// The Type of Identity which should be used for this azure resource. Possible values are `SystemAssigned`, `UserAssigned` and `SystemAssigned,UserAssigned`
 func (o GetResourceIdentityOutput) Type() pulumi.StringOutput {
 	return o.ApplyT(func(v GetResourceIdentity) string { return v.Type }).(pulumi.StringOutput)
 }
 
-type GetResourceIdentityPtrOutput struct{ *pulumi.OutputState }
+type GetResourceIdentityArrayOutput struct{ *pulumi.OutputState }
 
-func (GetResourceIdentityPtrOutput) ElementType() reflect.Type {
-	return reflect.TypeOf((**GetResourceIdentity)(nil)).Elem()
+func (GetResourceIdentityArrayOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*[]GetResourceIdentity)(nil)).Elem()
 }
 
-func (o GetResourceIdentityPtrOutput) ToGetResourceIdentityPtrOutput() GetResourceIdentityPtrOutput {
+func (o GetResourceIdentityArrayOutput) ToGetResourceIdentityArrayOutput() GetResourceIdentityArrayOutput {
 	return o
 }
 
-func (o GetResourceIdentityPtrOutput) ToGetResourceIdentityPtrOutputWithContext(ctx context.Context) GetResourceIdentityPtrOutput {
+func (o GetResourceIdentityArrayOutput) ToGetResourceIdentityArrayOutputWithContext(ctx context.Context) GetResourceIdentityArrayOutput {
 	return o
 }
 
-func (o GetResourceIdentityPtrOutput) Elem() GetResourceIdentityOutput {
-	return o.ApplyT(func(v *GetResourceIdentity) GetResourceIdentity {
-		if v != nil {
-			return *v
-		}
-		var ret GetResourceIdentity
-		return ret
+func (o GetResourceIdentityArrayOutput) Index(i pulumi.IntInput) GetResourceIdentityOutput {
+	return pulumi.All(o, i).ApplyT(func(vs []interface{}) GetResourceIdentity {
+		return vs[0].([]GetResourceIdentity)[vs[1].(int)]
 	}).(GetResourceIdentityOutput)
 }
 
-// A list of User Managed Identity ID's which should be assigned to the azure resource.
-func (o GetResourceIdentityPtrOutput) IdentityIds() pulumi.StringArrayOutput {
-	return o.ApplyT(func(v *GetResourceIdentity) []string {
+type GetResourceListRetry struct {
+	// A list of regular expressions to match against error messages. If any of the regular expressions match, the request will be retried.
+	ErrorMessageRegexes []string `pulumi:"errorMessageRegexes"`
+	// The base number of seconds to wait between retries. Default is `10`.
+	IntervalSeconds int `pulumi:"intervalSeconds"`
+	// The maximum number of seconds to wait between retries. Default is `180`.
+	MaxIntervalSeconds int `pulumi:"maxIntervalSeconds"`
+	// The multiplier to apply to the interval between retries. Default is `1.5`.
+	Multiplier float64 `pulumi:"multiplier"`
+	// The randomization factor to apply to the interval between retries. The formula for the randomized interval is: `RetryInterval * (random value in range [1 - RandomizationFactor, 1 + RandomizationFactor])`. Therefore set to zero `0.0` for no randomization. Default is `0.5`.
+	RandomizationFactor float64 `pulumi:"randomizationFactor"`
+}
+
+// GetResourceListRetryInput is an input type that accepts GetResourceListRetryArgs and GetResourceListRetryOutput values.
+// You can construct a concrete instance of `GetResourceListRetryInput` via:
+//
+//	GetResourceListRetryArgs{...}
+type GetResourceListRetryInput interface {
+	pulumi.Input
+
+	ToGetResourceListRetryOutput() GetResourceListRetryOutput
+	ToGetResourceListRetryOutputWithContext(context.Context) GetResourceListRetryOutput
+}
+
+type GetResourceListRetryArgs struct {
+	// A list of regular expressions to match against error messages. If any of the regular expressions match, the request will be retried.
+	ErrorMessageRegexes pulumi.StringArrayInput `pulumi:"errorMessageRegexes"`
+	// The base number of seconds to wait between retries. Default is `10`.
+	IntervalSeconds pulumi.IntInput `pulumi:"intervalSeconds"`
+	// The maximum number of seconds to wait between retries. Default is `180`.
+	MaxIntervalSeconds pulumi.IntInput `pulumi:"maxIntervalSeconds"`
+	// The multiplier to apply to the interval between retries. Default is `1.5`.
+	Multiplier pulumi.Float64Input `pulumi:"multiplier"`
+	// The randomization factor to apply to the interval between retries. The formula for the randomized interval is: `RetryInterval * (random value in range [1 - RandomizationFactor, 1 + RandomizationFactor])`. Therefore set to zero `0.0` for no randomization. Default is `0.5`.
+	RandomizationFactor pulumi.Float64Input `pulumi:"randomizationFactor"`
+}
+
+func (GetResourceListRetryArgs) ElementType() reflect.Type {
+	return reflect.TypeOf((*GetResourceListRetry)(nil)).Elem()
+}
+
+func (i GetResourceListRetryArgs) ToGetResourceListRetryOutput() GetResourceListRetryOutput {
+	return i.ToGetResourceListRetryOutputWithContext(context.Background())
+}
+
+func (i GetResourceListRetryArgs) ToGetResourceListRetryOutputWithContext(ctx context.Context) GetResourceListRetryOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(GetResourceListRetryOutput)
+}
+
+func (i GetResourceListRetryArgs) ToGetResourceListRetryPtrOutput() GetResourceListRetryPtrOutput {
+	return i.ToGetResourceListRetryPtrOutputWithContext(context.Background())
+}
+
+func (i GetResourceListRetryArgs) ToGetResourceListRetryPtrOutputWithContext(ctx context.Context) GetResourceListRetryPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(GetResourceListRetryOutput).ToGetResourceListRetryPtrOutputWithContext(ctx)
+}
+
+// GetResourceListRetryPtrInput is an input type that accepts GetResourceListRetryArgs, GetResourceListRetryPtr and GetResourceListRetryPtrOutput values.
+// You can construct a concrete instance of `GetResourceListRetryPtrInput` via:
+//
+//	        GetResourceListRetryArgs{...}
+//
+//	or:
+//
+//	        nil
+type GetResourceListRetryPtrInput interface {
+	pulumi.Input
+
+	ToGetResourceListRetryPtrOutput() GetResourceListRetryPtrOutput
+	ToGetResourceListRetryPtrOutputWithContext(context.Context) GetResourceListRetryPtrOutput
+}
+
+type getResourceListRetryPtrType GetResourceListRetryArgs
+
+func GetResourceListRetryPtr(v *GetResourceListRetryArgs) GetResourceListRetryPtrInput {
+	return (*getResourceListRetryPtrType)(v)
+}
+
+func (*getResourceListRetryPtrType) ElementType() reflect.Type {
+	return reflect.TypeOf((**GetResourceListRetry)(nil)).Elem()
+}
+
+func (i *getResourceListRetryPtrType) ToGetResourceListRetryPtrOutput() GetResourceListRetryPtrOutput {
+	return i.ToGetResourceListRetryPtrOutputWithContext(context.Background())
+}
+
+func (i *getResourceListRetryPtrType) ToGetResourceListRetryPtrOutputWithContext(ctx context.Context) GetResourceListRetryPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(GetResourceListRetryPtrOutput)
+}
+
+type GetResourceListRetryOutput struct{ *pulumi.OutputState }
+
+func (GetResourceListRetryOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*GetResourceListRetry)(nil)).Elem()
+}
+
+func (o GetResourceListRetryOutput) ToGetResourceListRetryOutput() GetResourceListRetryOutput {
+	return o
+}
+
+func (o GetResourceListRetryOutput) ToGetResourceListRetryOutputWithContext(ctx context.Context) GetResourceListRetryOutput {
+	return o
+}
+
+func (o GetResourceListRetryOutput) ToGetResourceListRetryPtrOutput() GetResourceListRetryPtrOutput {
+	return o.ToGetResourceListRetryPtrOutputWithContext(context.Background())
+}
+
+func (o GetResourceListRetryOutput) ToGetResourceListRetryPtrOutputWithContext(ctx context.Context) GetResourceListRetryPtrOutput {
+	return o.ApplyTWithContext(ctx, func(_ context.Context, v GetResourceListRetry) *GetResourceListRetry {
+		return &v
+	}).(GetResourceListRetryPtrOutput)
+}
+
+// A list of regular expressions to match against error messages. If any of the regular expressions match, the request will be retried.
+func (o GetResourceListRetryOutput) ErrorMessageRegexes() pulumi.StringArrayOutput {
+	return o.ApplyT(func(v GetResourceListRetry) []string { return v.ErrorMessageRegexes }).(pulumi.StringArrayOutput)
+}
+
+// The base number of seconds to wait between retries. Default is `10`.
+func (o GetResourceListRetryOutput) IntervalSeconds() pulumi.IntOutput {
+	return o.ApplyT(func(v GetResourceListRetry) int { return v.IntervalSeconds }).(pulumi.IntOutput)
+}
+
+// The maximum number of seconds to wait between retries. Default is `180`.
+func (o GetResourceListRetryOutput) MaxIntervalSeconds() pulumi.IntOutput {
+	return o.ApplyT(func(v GetResourceListRetry) int { return v.MaxIntervalSeconds }).(pulumi.IntOutput)
+}
+
+// The multiplier to apply to the interval between retries. Default is `1.5`.
+func (o GetResourceListRetryOutput) Multiplier() pulumi.Float64Output {
+	return o.ApplyT(func(v GetResourceListRetry) float64 { return v.Multiplier }).(pulumi.Float64Output)
+}
+
+// The randomization factor to apply to the interval between retries. The formula for the randomized interval is: `RetryInterval * (random value in range [1 - RandomizationFactor, 1 + RandomizationFactor])`. Therefore set to zero `0.0` for no randomization. Default is `0.5`.
+func (o GetResourceListRetryOutput) RandomizationFactor() pulumi.Float64Output {
+	return o.ApplyT(func(v GetResourceListRetry) float64 { return v.RandomizationFactor }).(pulumi.Float64Output)
+}
+
+type GetResourceListRetryPtrOutput struct{ *pulumi.OutputState }
+
+func (GetResourceListRetryPtrOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((**GetResourceListRetry)(nil)).Elem()
+}
+
+func (o GetResourceListRetryPtrOutput) ToGetResourceListRetryPtrOutput() GetResourceListRetryPtrOutput {
+	return o
+}
+
+func (o GetResourceListRetryPtrOutput) ToGetResourceListRetryPtrOutputWithContext(ctx context.Context) GetResourceListRetryPtrOutput {
+	return o
+}
+
+func (o GetResourceListRetryPtrOutput) Elem() GetResourceListRetryOutput {
+	return o.ApplyT(func(v *GetResourceListRetry) GetResourceListRetry {
+		if v != nil {
+			return *v
+		}
+		var ret GetResourceListRetry
+		return ret
+	}).(GetResourceListRetryOutput)
+}
+
+// A list of regular expressions to match against error messages. If any of the regular expressions match, the request will be retried.
+func (o GetResourceListRetryPtrOutput) ErrorMessageRegexes() pulumi.StringArrayOutput {
+	return o.ApplyT(func(v *GetResourceListRetry) []string {
 		if v == nil {
 			return nil
 		}
-		return v.IdentityIds
+		return v.ErrorMessageRegexes
 	}).(pulumi.StringArrayOutput)
 }
 
-// The Principal ID for the Service Principal associated with the Managed Service Identity of this azure resource.
-func (o GetResourceIdentityPtrOutput) PrincipalId() pulumi.StringPtrOutput {
-	return o.ApplyT(func(v *GetResourceIdentity) *string {
+// The base number of seconds to wait between retries. Default is `10`.
+func (o GetResourceListRetryPtrOutput) IntervalSeconds() pulumi.IntPtrOutput {
+	return o.ApplyT(func(v *GetResourceListRetry) *int {
 		if v == nil {
 			return nil
 		}
-		return &v.PrincipalId
+		return &v.IntervalSeconds
+	}).(pulumi.IntPtrOutput)
+}
+
+// The maximum number of seconds to wait between retries. Default is `180`.
+func (o GetResourceListRetryPtrOutput) MaxIntervalSeconds() pulumi.IntPtrOutput {
+	return o.ApplyT(func(v *GetResourceListRetry) *int {
+		if v == nil {
+			return nil
+		}
+		return &v.MaxIntervalSeconds
+	}).(pulumi.IntPtrOutput)
+}
+
+// The multiplier to apply to the interval between retries. Default is `1.5`.
+func (o GetResourceListRetryPtrOutput) Multiplier() pulumi.Float64PtrOutput {
+	return o.ApplyT(func(v *GetResourceListRetry) *float64 {
+		if v == nil {
+			return nil
+		}
+		return &v.Multiplier
+	}).(pulumi.Float64PtrOutput)
+}
+
+// The randomization factor to apply to the interval between retries. The formula for the randomized interval is: `RetryInterval * (random value in range [1 - RandomizationFactor, 1 + RandomizationFactor])`. Therefore set to zero `0.0` for no randomization. Default is `0.5`.
+func (o GetResourceListRetryPtrOutput) RandomizationFactor() pulumi.Float64PtrOutput {
+	return o.ApplyT(func(v *GetResourceListRetry) *float64 {
+		if v == nil {
+			return nil
+		}
+		return &v.RandomizationFactor
+	}).(pulumi.Float64PtrOutput)
+}
+
+type GetResourceListTimeouts struct {
+	// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+	Read *string `pulumi:"read"`
+}
+
+// GetResourceListTimeoutsInput is an input type that accepts GetResourceListTimeoutsArgs and GetResourceListTimeoutsOutput values.
+// You can construct a concrete instance of `GetResourceListTimeoutsInput` via:
+//
+//	GetResourceListTimeoutsArgs{...}
+type GetResourceListTimeoutsInput interface {
+	pulumi.Input
+
+	ToGetResourceListTimeoutsOutput() GetResourceListTimeoutsOutput
+	ToGetResourceListTimeoutsOutputWithContext(context.Context) GetResourceListTimeoutsOutput
+}
+
+type GetResourceListTimeoutsArgs struct {
+	// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+	Read pulumi.StringPtrInput `pulumi:"read"`
+}
+
+func (GetResourceListTimeoutsArgs) ElementType() reflect.Type {
+	return reflect.TypeOf((*GetResourceListTimeouts)(nil)).Elem()
+}
+
+func (i GetResourceListTimeoutsArgs) ToGetResourceListTimeoutsOutput() GetResourceListTimeoutsOutput {
+	return i.ToGetResourceListTimeoutsOutputWithContext(context.Background())
+}
+
+func (i GetResourceListTimeoutsArgs) ToGetResourceListTimeoutsOutputWithContext(ctx context.Context) GetResourceListTimeoutsOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(GetResourceListTimeoutsOutput)
+}
+
+func (i GetResourceListTimeoutsArgs) ToGetResourceListTimeoutsPtrOutput() GetResourceListTimeoutsPtrOutput {
+	return i.ToGetResourceListTimeoutsPtrOutputWithContext(context.Background())
+}
+
+func (i GetResourceListTimeoutsArgs) ToGetResourceListTimeoutsPtrOutputWithContext(ctx context.Context) GetResourceListTimeoutsPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(GetResourceListTimeoutsOutput).ToGetResourceListTimeoutsPtrOutputWithContext(ctx)
+}
+
+// GetResourceListTimeoutsPtrInput is an input type that accepts GetResourceListTimeoutsArgs, GetResourceListTimeoutsPtr and GetResourceListTimeoutsPtrOutput values.
+// You can construct a concrete instance of `GetResourceListTimeoutsPtrInput` via:
+//
+//	        GetResourceListTimeoutsArgs{...}
+//
+//	or:
+//
+//	        nil
+type GetResourceListTimeoutsPtrInput interface {
+	pulumi.Input
+
+	ToGetResourceListTimeoutsPtrOutput() GetResourceListTimeoutsPtrOutput
+	ToGetResourceListTimeoutsPtrOutputWithContext(context.Context) GetResourceListTimeoutsPtrOutput
+}
+
+type getResourceListTimeoutsPtrType GetResourceListTimeoutsArgs
+
+func GetResourceListTimeoutsPtr(v *GetResourceListTimeoutsArgs) GetResourceListTimeoutsPtrInput {
+	return (*getResourceListTimeoutsPtrType)(v)
+}
+
+func (*getResourceListTimeoutsPtrType) ElementType() reflect.Type {
+	return reflect.TypeOf((**GetResourceListTimeouts)(nil)).Elem()
+}
+
+func (i *getResourceListTimeoutsPtrType) ToGetResourceListTimeoutsPtrOutput() GetResourceListTimeoutsPtrOutput {
+	return i.ToGetResourceListTimeoutsPtrOutputWithContext(context.Background())
+}
+
+func (i *getResourceListTimeoutsPtrType) ToGetResourceListTimeoutsPtrOutputWithContext(ctx context.Context) GetResourceListTimeoutsPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(GetResourceListTimeoutsPtrOutput)
+}
+
+type GetResourceListTimeoutsOutput struct{ *pulumi.OutputState }
+
+func (GetResourceListTimeoutsOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*GetResourceListTimeouts)(nil)).Elem()
+}
+
+func (o GetResourceListTimeoutsOutput) ToGetResourceListTimeoutsOutput() GetResourceListTimeoutsOutput {
+	return o
+}
+
+func (o GetResourceListTimeoutsOutput) ToGetResourceListTimeoutsOutputWithContext(ctx context.Context) GetResourceListTimeoutsOutput {
+	return o
+}
+
+func (o GetResourceListTimeoutsOutput) ToGetResourceListTimeoutsPtrOutput() GetResourceListTimeoutsPtrOutput {
+	return o.ToGetResourceListTimeoutsPtrOutputWithContext(context.Background())
+}
+
+func (o GetResourceListTimeoutsOutput) ToGetResourceListTimeoutsPtrOutputWithContext(ctx context.Context) GetResourceListTimeoutsPtrOutput {
+	return o.ApplyTWithContext(ctx, func(_ context.Context, v GetResourceListTimeouts) *GetResourceListTimeouts {
+		return &v
+	}).(GetResourceListTimeoutsPtrOutput)
+}
+
+// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+func (o GetResourceListTimeoutsOutput) Read() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v GetResourceListTimeouts) *string { return v.Read }).(pulumi.StringPtrOutput)
+}
+
+type GetResourceListTimeoutsPtrOutput struct{ *pulumi.OutputState }
+
+func (GetResourceListTimeoutsPtrOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((**GetResourceListTimeouts)(nil)).Elem()
+}
+
+func (o GetResourceListTimeoutsPtrOutput) ToGetResourceListTimeoutsPtrOutput() GetResourceListTimeoutsPtrOutput {
+	return o
+}
+
+func (o GetResourceListTimeoutsPtrOutput) ToGetResourceListTimeoutsPtrOutputWithContext(ctx context.Context) GetResourceListTimeoutsPtrOutput {
+	return o
+}
+
+func (o GetResourceListTimeoutsPtrOutput) Elem() GetResourceListTimeoutsOutput {
+	return o.ApplyT(func(v *GetResourceListTimeouts) GetResourceListTimeouts {
+		if v != nil {
+			return *v
+		}
+		var ret GetResourceListTimeouts
+		return ret
+	}).(GetResourceListTimeoutsOutput)
+}
+
+// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+func (o GetResourceListTimeoutsPtrOutput) Read() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *GetResourceListTimeouts) *string {
+		if v == nil {
+			return nil
+		}
+		return v.Read
 	}).(pulumi.StringPtrOutput)
 }
 
-// The Tenant ID for the Service Principal associated with the Managed Service Identity of this azure resource.
-func (o GetResourceIdentityPtrOutput) TenantId() pulumi.StringPtrOutput {
-	return o.ApplyT(func(v *GetResourceIdentity) *string {
-		if v == nil {
-			return nil
-		}
-		return &v.TenantId
-	}).(pulumi.StringPtrOutput)
+type GetResourceRetry struct {
+	// A list of regular expressions to match against error messages. If any of the regular expressions match, the request will be retried.
+	ErrorMessageRegexes []string `pulumi:"errorMessageRegexes"`
+	// The base number of seconds to wait between retries. Default is `10`.
+	IntervalSeconds int `pulumi:"intervalSeconds"`
+	// The maximum number of seconds to wait between retries. Default is `180`.
+	MaxIntervalSeconds int `pulumi:"maxIntervalSeconds"`
+	// The multiplier to apply to the interval between retries. Default is `1.5`.
+	Multiplier float64 `pulumi:"multiplier"`
+	// The randomization factor to apply to the interval between retries. The formula for the randomized interval is: `RetryInterval * (random value in range [1 - RandomizationFactor, 1 + RandomizationFactor])`. Therefore set to zero `0.0` for no randomization. Default is `0.5`.
+	RandomizationFactor float64 `pulumi:"randomizationFactor"`
 }
 
-// It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
-// `<api-version>` is version of the API used to manage this azure resource.
-func (o GetResourceIdentityPtrOutput) Type() pulumi.StringPtrOutput {
-	return o.ApplyT(func(v *GetResourceIdentity) *string {
+// GetResourceRetryInput is an input type that accepts GetResourceRetryArgs and GetResourceRetryOutput values.
+// You can construct a concrete instance of `GetResourceRetryInput` via:
+//
+//	GetResourceRetryArgs{...}
+type GetResourceRetryInput interface {
+	pulumi.Input
+
+	ToGetResourceRetryOutput() GetResourceRetryOutput
+	ToGetResourceRetryOutputWithContext(context.Context) GetResourceRetryOutput
+}
+
+type GetResourceRetryArgs struct {
+	// A list of regular expressions to match against error messages. If any of the regular expressions match, the request will be retried.
+	ErrorMessageRegexes pulumi.StringArrayInput `pulumi:"errorMessageRegexes"`
+	// The base number of seconds to wait between retries. Default is `10`.
+	IntervalSeconds pulumi.IntInput `pulumi:"intervalSeconds"`
+	// The maximum number of seconds to wait between retries. Default is `180`.
+	MaxIntervalSeconds pulumi.IntInput `pulumi:"maxIntervalSeconds"`
+	// The multiplier to apply to the interval between retries. Default is `1.5`.
+	Multiplier pulumi.Float64Input `pulumi:"multiplier"`
+	// The randomization factor to apply to the interval between retries. The formula for the randomized interval is: `RetryInterval * (random value in range [1 - RandomizationFactor, 1 + RandomizationFactor])`. Therefore set to zero `0.0` for no randomization. Default is `0.5`.
+	RandomizationFactor pulumi.Float64Input `pulumi:"randomizationFactor"`
+}
+
+func (GetResourceRetryArgs) ElementType() reflect.Type {
+	return reflect.TypeOf((*GetResourceRetry)(nil)).Elem()
+}
+
+func (i GetResourceRetryArgs) ToGetResourceRetryOutput() GetResourceRetryOutput {
+	return i.ToGetResourceRetryOutputWithContext(context.Background())
+}
+
+func (i GetResourceRetryArgs) ToGetResourceRetryOutputWithContext(ctx context.Context) GetResourceRetryOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(GetResourceRetryOutput)
+}
+
+func (i GetResourceRetryArgs) ToGetResourceRetryPtrOutput() GetResourceRetryPtrOutput {
+	return i.ToGetResourceRetryPtrOutputWithContext(context.Background())
+}
+
+func (i GetResourceRetryArgs) ToGetResourceRetryPtrOutputWithContext(ctx context.Context) GetResourceRetryPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(GetResourceRetryOutput).ToGetResourceRetryPtrOutputWithContext(ctx)
+}
+
+// GetResourceRetryPtrInput is an input type that accepts GetResourceRetryArgs, GetResourceRetryPtr and GetResourceRetryPtrOutput values.
+// You can construct a concrete instance of `GetResourceRetryPtrInput` via:
+//
+//	        GetResourceRetryArgs{...}
+//
+//	or:
+//
+//	        nil
+type GetResourceRetryPtrInput interface {
+	pulumi.Input
+
+	ToGetResourceRetryPtrOutput() GetResourceRetryPtrOutput
+	ToGetResourceRetryPtrOutputWithContext(context.Context) GetResourceRetryPtrOutput
+}
+
+type getResourceRetryPtrType GetResourceRetryArgs
+
+func GetResourceRetryPtr(v *GetResourceRetryArgs) GetResourceRetryPtrInput {
+	return (*getResourceRetryPtrType)(v)
+}
+
+func (*getResourceRetryPtrType) ElementType() reflect.Type {
+	return reflect.TypeOf((**GetResourceRetry)(nil)).Elem()
+}
+
+func (i *getResourceRetryPtrType) ToGetResourceRetryPtrOutput() GetResourceRetryPtrOutput {
+	return i.ToGetResourceRetryPtrOutputWithContext(context.Background())
+}
+
+func (i *getResourceRetryPtrType) ToGetResourceRetryPtrOutputWithContext(ctx context.Context) GetResourceRetryPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(GetResourceRetryPtrOutput)
+}
+
+type GetResourceRetryOutput struct{ *pulumi.OutputState }
+
+func (GetResourceRetryOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*GetResourceRetry)(nil)).Elem()
+}
+
+func (o GetResourceRetryOutput) ToGetResourceRetryOutput() GetResourceRetryOutput {
+	return o
+}
+
+func (o GetResourceRetryOutput) ToGetResourceRetryOutputWithContext(ctx context.Context) GetResourceRetryOutput {
+	return o
+}
+
+func (o GetResourceRetryOutput) ToGetResourceRetryPtrOutput() GetResourceRetryPtrOutput {
+	return o.ToGetResourceRetryPtrOutputWithContext(context.Background())
+}
+
+func (o GetResourceRetryOutput) ToGetResourceRetryPtrOutputWithContext(ctx context.Context) GetResourceRetryPtrOutput {
+	return o.ApplyTWithContext(ctx, func(_ context.Context, v GetResourceRetry) *GetResourceRetry {
+		return &v
+	}).(GetResourceRetryPtrOutput)
+}
+
+// A list of regular expressions to match against error messages. If any of the regular expressions match, the request will be retried.
+func (o GetResourceRetryOutput) ErrorMessageRegexes() pulumi.StringArrayOutput {
+	return o.ApplyT(func(v GetResourceRetry) []string { return v.ErrorMessageRegexes }).(pulumi.StringArrayOutput)
+}
+
+// The base number of seconds to wait between retries. Default is `10`.
+func (o GetResourceRetryOutput) IntervalSeconds() pulumi.IntOutput {
+	return o.ApplyT(func(v GetResourceRetry) int { return v.IntervalSeconds }).(pulumi.IntOutput)
+}
+
+// The maximum number of seconds to wait between retries. Default is `180`.
+func (o GetResourceRetryOutput) MaxIntervalSeconds() pulumi.IntOutput {
+	return o.ApplyT(func(v GetResourceRetry) int { return v.MaxIntervalSeconds }).(pulumi.IntOutput)
+}
+
+// The multiplier to apply to the interval between retries. Default is `1.5`.
+func (o GetResourceRetryOutput) Multiplier() pulumi.Float64Output {
+	return o.ApplyT(func(v GetResourceRetry) float64 { return v.Multiplier }).(pulumi.Float64Output)
+}
+
+// The randomization factor to apply to the interval between retries. The formula for the randomized interval is: `RetryInterval * (random value in range [1 - RandomizationFactor, 1 + RandomizationFactor])`. Therefore set to zero `0.0` for no randomization. Default is `0.5`.
+func (o GetResourceRetryOutput) RandomizationFactor() pulumi.Float64Output {
+	return o.ApplyT(func(v GetResourceRetry) float64 { return v.RandomizationFactor }).(pulumi.Float64Output)
+}
+
+type GetResourceRetryPtrOutput struct{ *pulumi.OutputState }
+
+func (GetResourceRetryPtrOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((**GetResourceRetry)(nil)).Elem()
+}
+
+func (o GetResourceRetryPtrOutput) ToGetResourceRetryPtrOutput() GetResourceRetryPtrOutput {
+	return o
+}
+
+func (o GetResourceRetryPtrOutput) ToGetResourceRetryPtrOutputWithContext(ctx context.Context) GetResourceRetryPtrOutput {
+	return o
+}
+
+func (o GetResourceRetryPtrOutput) Elem() GetResourceRetryOutput {
+	return o.ApplyT(func(v *GetResourceRetry) GetResourceRetry {
+		if v != nil {
+			return *v
+		}
+		var ret GetResourceRetry
+		return ret
+	}).(GetResourceRetryOutput)
+}
+
+// A list of regular expressions to match against error messages. If any of the regular expressions match, the request will be retried.
+func (o GetResourceRetryPtrOutput) ErrorMessageRegexes() pulumi.StringArrayOutput {
+	return o.ApplyT(func(v *GetResourceRetry) []string {
 		if v == nil {
 			return nil
 		}
-		return &v.Type
+		return v.ErrorMessageRegexes
+	}).(pulumi.StringArrayOutput)
+}
+
+// The base number of seconds to wait between retries. Default is `10`.
+func (o GetResourceRetryPtrOutput) IntervalSeconds() pulumi.IntPtrOutput {
+	return o.ApplyT(func(v *GetResourceRetry) *int {
+		if v == nil {
+			return nil
+		}
+		return &v.IntervalSeconds
+	}).(pulumi.IntPtrOutput)
+}
+
+// The maximum number of seconds to wait between retries. Default is `180`.
+func (o GetResourceRetryPtrOutput) MaxIntervalSeconds() pulumi.IntPtrOutput {
+	return o.ApplyT(func(v *GetResourceRetry) *int {
+		if v == nil {
+			return nil
+		}
+		return &v.MaxIntervalSeconds
+	}).(pulumi.IntPtrOutput)
+}
+
+// The multiplier to apply to the interval between retries. Default is `1.5`.
+func (o GetResourceRetryPtrOutput) Multiplier() pulumi.Float64PtrOutput {
+	return o.ApplyT(func(v *GetResourceRetry) *float64 {
+		if v == nil {
+			return nil
+		}
+		return &v.Multiplier
+	}).(pulumi.Float64PtrOutput)
+}
+
+// The randomization factor to apply to the interval between retries. The formula for the randomized interval is: `RetryInterval * (random value in range [1 - RandomizationFactor, 1 + RandomizationFactor])`. Therefore set to zero `0.0` for no randomization. Default is `0.5`.
+func (o GetResourceRetryPtrOutput) RandomizationFactor() pulumi.Float64PtrOutput {
+	return o.ApplyT(func(v *GetResourceRetry) *float64 {
+		if v == nil {
+			return nil
+		}
+		return &v.RandomizationFactor
+	}).(pulumi.Float64PtrOutput)
+}
+
+type GetResourceTimeouts struct {
+	// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+	Read *string `pulumi:"read"`
+}
+
+// GetResourceTimeoutsInput is an input type that accepts GetResourceTimeoutsArgs and GetResourceTimeoutsOutput values.
+// You can construct a concrete instance of `GetResourceTimeoutsInput` via:
+//
+//	GetResourceTimeoutsArgs{...}
+type GetResourceTimeoutsInput interface {
+	pulumi.Input
+
+	ToGetResourceTimeoutsOutput() GetResourceTimeoutsOutput
+	ToGetResourceTimeoutsOutputWithContext(context.Context) GetResourceTimeoutsOutput
+}
+
+type GetResourceTimeoutsArgs struct {
+	// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+	Read pulumi.StringPtrInput `pulumi:"read"`
+}
+
+func (GetResourceTimeoutsArgs) ElementType() reflect.Type {
+	return reflect.TypeOf((*GetResourceTimeouts)(nil)).Elem()
+}
+
+func (i GetResourceTimeoutsArgs) ToGetResourceTimeoutsOutput() GetResourceTimeoutsOutput {
+	return i.ToGetResourceTimeoutsOutputWithContext(context.Background())
+}
+
+func (i GetResourceTimeoutsArgs) ToGetResourceTimeoutsOutputWithContext(ctx context.Context) GetResourceTimeoutsOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(GetResourceTimeoutsOutput)
+}
+
+func (i GetResourceTimeoutsArgs) ToGetResourceTimeoutsPtrOutput() GetResourceTimeoutsPtrOutput {
+	return i.ToGetResourceTimeoutsPtrOutputWithContext(context.Background())
+}
+
+func (i GetResourceTimeoutsArgs) ToGetResourceTimeoutsPtrOutputWithContext(ctx context.Context) GetResourceTimeoutsPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(GetResourceTimeoutsOutput).ToGetResourceTimeoutsPtrOutputWithContext(ctx)
+}
+
+// GetResourceTimeoutsPtrInput is an input type that accepts GetResourceTimeoutsArgs, GetResourceTimeoutsPtr and GetResourceTimeoutsPtrOutput values.
+// You can construct a concrete instance of `GetResourceTimeoutsPtrInput` via:
+//
+//	        GetResourceTimeoutsArgs{...}
+//
+//	or:
+//
+//	        nil
+type GetResourceTimeoutsPtrInput interface {
+	pulumi.Input
+
+	ToGetResourceTimeoutsPtrOutput() GetResourceTimeoutsPtrOutput
+	ToGetResourceTimeoutsPtrOutputWithContext(context.Context) GetResourceTimeoutsPtrOutput
+}
+
+type getResourceTimeoutsPtrType GetResourceTimeoutsArgs
+
+func GetResourceTimeoutsPtr(v *GetResourceTimeoutsArgs) GetResourceTimeoutsPtrInput {
+	return (*getResourceTimeoutsPtrType)(v)
+}
+
+func (*getResourceTimeoutsPtrType) ElementType() reflect.Type {
+	return reflect.TypeOf((**GetResourceTimeouts)(nil)).Elem()
+}
+
+func (i *getResourceTimeoutsPtrType) ToGetResourceTimeoutsPtrOutput() GetResourceTimeoutsPtrOutput {
+	return i.ToGetResourceTimeoutsPtrOutputWithContext(context.Background())
+}
+
+func (i *getResourceTimeoutsPtrType) ToGetResourceTimeoutsPtrOutputWithContext(ctx context.Context) GetResourceTimeoutsPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(GetResourceTimeoutsPtrOutput)
+}
+
+type GetResourceTimeoutsOutput struct{ *pulumi.OutputState }
+
+func (GetResourceTimeoutsOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*GetResourceTimeouts)(nil)).Elem()
+}
+
+func (o GetResourceTimeoutsOutput) ToGetResourceTimeoutsOutput() GetResourceTimeoutsOutput {
+	return o
+}
+
+func (o GetResourceTimeoutsOutput) ToGetResourceTimeoutsOutputWithContext(ctx context.Context) GetResourceTimeoutsOutput {
+	return o
+}
+
+func (o GetResourceTimeoutsOutput) ToGetResourceTimeoutsPtrOutput() GetResourceTimeoutsPtrOutput {
+	return o.ToGetResourceTimeoutsPtrOutputWithContext(context.Background())
+}
+
+func (o GetResourceTimeoutsOutput) ToGetResourceTimeoutsPtrOutputWithContext(ctx context.Context) GetResourceTimeoutsPtrOutput {
+	return o.ApplyTWithContext(ctx, func(_ context.Context, v GetResourceTimeouts) *GetResourceTimeouts {
+		return &v
+	}).(GetResourceTimeoutsPtrOutput)
+}
+
+// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+func (o GetResourceTimeoutsOutput) Read() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v GetResourceTimeouts) *string { return v.Read }).(pulumi.StringPtrOutput)
+}
+
+type GetResourceTimeoutsPtrOutput struct{ *pulumi.OutputState }
+
+func (GetResourceTimeoutsPtrOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((**GetResourceTimeouts)(nil)).Elem()
+}
+
+func (o GetResourceTimeoutsPtrOutput) ToGetResourceTimeoutsPtrOutput() GetResourceTimeoutsPtrOutput {
+	return o
+}
+
+func (o GetResourceTimeoutsPtrOutput) ToGetResourceTimeoutsPtrOutputWithContext(ctx context.Context) GetResourceTimeoutsPtrOutput {
+	return o
+}
+
+func (o GetResourceTimeoutsPtrOutput) Elem() GetResourceTimeoutsOutput {
+	return o.ApplyT(func(v *GetResourceTimeouts) GetResourceTimeouts {
+		if v != nil {
+			return *v
+		}
+		var ret GetResourceTimeouts
+		return ret
+	}).(GetResourceTimeoutsOutput)
+}
+
+// A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+func (o GetResourceTimeoutsPtrOutput) Read() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *GetResourceTimeouts) *string {
+		if v == nil {
+			return nil
+		}
+		return v.Read
 	}).(pulumi.StringPtrOutput)
 }
 
 func init() {
+	pulumi.RegisterInputType(reflect.TypeOf((*DataPlaneResourceRetryInput)(nil)).Elem(), DataPlaneResourceRetryArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*DataPlaneResourceRetryPtrInput)(nil)).Elem(), DataPlaneResourceRetryArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*DataPlaneResourceTimeoutsInput)(nil)).Elem(), DataPlaneResourceTimeoutsArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*DataPlaneResourceTimeoutsPtrInput)(nil)).Elem(), DataPlaneResourceTimeoutsArgs{})
 	pulumi.RegisterInputType(reflect.TypeOf((*ProviderEndpointInput)(nil)).Elem(), ProviderEndpointArgs{})
-	pulumi.RegisterInputType(reflect.TypeOf((*ProviderEndpointPtrInput)(nil)).Elem(), ProviderEndpointArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*ProviderEndpointArrayInput)(nil)).Elem(), ProviderEndpointArray{})
+	pulumi.RegisterInputType(reflect.TypeOf((*ResourceActionRetryInput)(nil)).Elem(), ResourceActionRetryArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*ResourceActionRetryPtrInput)(nil)).Elem(), ResourceActionRetryArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*ResourceActionTimeoutsInput)(nil)).Elem(), ResourceActionTimeoutsArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*ResourceActionTimeoutsPtrInput)(nil)).Elem(), ResourceActionTimeoutsArgs{})
 	pulumi.RegisterInputType(reflect.TypeOf((*ResourceIdentityInput)(nil)).Elem(), ResourceIdentityArgs{})
-	pulumi.RegisterInputType(reflect.TypeOf((*ResourceIdentityPtrInput)(nil)).Elem(), ResourceIdentityArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*ResourceIdentityArrayInput)(nil)).Elem(), ResourceIdentityArray{})
+	pulumi.RegisterInputType(reflect.TypeOf((*ResourceRetryInput)(nil)).Elem(), ResourceRetryArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*ResourceRetryPtrInput)(nil)).Elem(), ResourceRetryArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*ResourceTimeoutsInput)(nil)).Elem(), ResourceTimeoutsArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*ResourceTimeoutsPtrInput)(nil)).Elem(), ResourceTimeoutsArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*UpdateResourceRetryInput)(nil)).Elem(), UpdateResourceRetryArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*UpdateResourceRetryPtrInput)(nil)).Elem(), UpdateResourceRetryArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*UpdateResourceTimeoutsInput)(nil)).Elem(), UpdateResourceTimeoutsArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*UpdateResourceTimeoutsPtrInput)(nil)).Elem(), UpdateResourceTimeoutsArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*GetClientConfigTimeoutsInput)(nil)).Elem(), GetClientConfigTimeoutsArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*GetClientConfigTimeoutsPtrInput)(nil)).Elem(), GetClientConfigTimeoutsArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*GetResourceActionRetryInput)(nil)).Elem(), GetResourceActionRetryArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*GetResourceActionRetryPtrInput)(nil)).Elem(), GetResourceActionRetryArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*GetResourceActionTimeoutsInput)(nil)).Elem(), GetResourceActionTimeoutsArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*GetResourceActionTimeoutsPtrInput)(nil)).Elem(), GetResourceActionTimeoutsArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*GetResourceIdTimeoutsInput)(nil)).Elem(), GetResourceIdTimeoutsArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*GetResourceIdTimeoutsPtrInput)(nil)).Elem(), GetResourceIdTimeoutsArgs{})
 	pulumi.RegisterInputType(reflect.TypeOf((*GetResourceIdentityInput)(nil)).Elem(), GetResourceIdentityArgs{})
-	pulumi.RegisterInputType(reflect.TypeOf((*GetResourceIdentityPtrInput)(nil)).Elem(), GetResourceIdentityArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*GetResourceIdentityArrayInput)(nil)).Elem(), GetResourceIdentityArray{})
+	pulumi.RegisterInputType(reflect.TypeOf((*GetResourceListRetryInput)(nil)).Elem(), GetResourceListRetryArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*GetResourceListRetryPtrInput)(nil)).Elem(), GetResourceListRetryArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*GetResourceListTimeoutsInput)(nil)).Elem(), GetResourceListTimeoutsArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*GetResourceListTimeoutsPtrInput)(nil)).Elem(), GetResourceListTimeoutsArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*GetResourceRetryInput)(nil)).Elem(), GetResourceRetryArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*GetResourceRetryPtrInput)(nil)).Elem(), GetResourceRetryArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*GetResourceTimeoutsInput)(nil)).Elem(), GetResourceTimeoutsArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*GetResourceTimeoutsPtrInput)(nil)).Elem(), GetResourceTimeoutsArgs{})
+	pulumi.RegisterOutputType(DataPlaneResourceRetryOutput{})
+	pulumi.RegisterOutputType(DataPlaneResourceRetryPtrOutput{})
+	pulumi.RegisterOutputType(DataPlaneResourceTimeoutsOutput{})
+	pulumi.RegisterOutputType(DataPlaneResourceTimeoutsPtrOutput{})
 	pulumi.RegisterOutputType(ProviderEndpointOutput{})
-	pulumi.RegisterOutputType(ProviderEndpointPtrOutput{})
+	pulumi.RegisterOutputType(ProviderEndpointArrayOutput{})
+	pulumi.RegisterOutputType(ResourceActionRetryOutput{})
+	pulumi.RegisterOutputType(ResourceActionRetryPtrOutput{})
+	pulumi.RegisterOutputType(ResourceActionTimeoutsOutput{})
+	pulumi.RegisterOutputType(ResourceActionTimeoutsPtrOutput{})
 	pulumi.RegisterOutputType(ResourceIdentityOutput{})
-	pulumi.RegisterOutputType(ResourceIdentityPtrOutput{})
+	pulumi.RegisterOutputType(ResourceIdentityArrayOutput{})
+	pulumi.RegisterOutputType(ResourceRetryOutput{})
+	pulumi.RegisterOutputType(ResourceRetryPtrOutput{})
+	pulumi.RegisterOutputType(ResourceTimeoutsOutput{})
+	pulumi.RegisterOutputType(ResourceTimeoutsPtrOutput{})
+	pulumi.RegisterOutputType(UpdateResourceRetryOutput{})
+	pulumi.RegisterOutputType(UpdateResourceRetryPtrOutput{})
+	pulumi.RegisterOutputType(UpdateResourceTimeoutsOutput{})
+	pulumi.RegisterOutputType(UpdateResourceTimeoutsPtrOutput{})
+	pulumi.RegisterOutputType(GetClientConfigTimeoutsOutput{})
+	pulumi.RegisterOutputType(GetClientConfigTimeoutsPtrOutput{})
+	pulumi.RegisterOutputType(GetResourceActionRetryOutput{})
+	pulumi.RegisterOutputType(GetResourceActionRetryPtrOutput{})
+	pulumi.RegisterOutputType(GetResourceActionTimeoutsOutput{})
+	pulumi.RegisterOutputType(GetResourceActionTimeoutsPtrOutput{})
+	pulumi.RegisterOutputType(GetResourceIdTimeoutsOutput{})
+	pulumi.RegisterOutputType(GetResourceIdTimeoutsPtrOutput{})
 	pulumi.RegisterOutputType(GetResourceIdentityOutput{})
-	pulumi.RegisterOutputType(GetResourceIdentityPtrOutput{})
+	pulumi.RegisterOutputType(GetResourceIdentityArrayOutput{})
+	pulumi.RegisterOutputType(GetResourceListRetryOutput{})
+	pulumi.RegisterOutputType(GetResourceListRetryPtrOutput{})
+	pulumi.RegisterOutputType(GetResourceListTimeoutsOutput{})
+	pulumi.RegisterOutputType(GetResourceListTimeoutsPtrOutput{})
+	pulumi.RegisterOutputType(GetResourceRetryOutput{})
+	pulumi.RegisterOutputType(GetResourceRetryPtrOutput{})
+	pulumi.RegisterOutputType(GetResourceTimeoutsOutput{})
+	pulumi.RegisterOutputType(GetResourceTimeoutsPtrOutput{})
 }

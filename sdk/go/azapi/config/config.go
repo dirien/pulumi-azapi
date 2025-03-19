@@ -11,52 +11,72 @@ import (
 
 var _ = internal.GetEnvOrDefault
 
+// List of auxiliary Tenant IDs required for multi-tenancy and cross-tenant scenarios. This can also be sourced from the
+// `ARM_AUXILIARY_TENANT_IDS` Environment Variable.
 func GetAuxiliaryTenantIds(ctx *pulumi.Context) string {
 	return config.Get(ctx, "azapi:auxiliaryTenantIds")
 }
 
-// The password associated with the Client Certificate. For use when authenticating as a Service Principal using a Client
-// Certificate
+// A base64-encoded PKCS#12 bundle to be used as the client certificate for authentication. This can also be sourced from
+// the `ARM_CLIENT_CERTIFICATE` environment variable.
+func GetClientCertificate(ctx *pulumi.Context) string {
+	return config.Get(ctx, "azapi:clientCertificate")
+}
+
+// The password associated with the Client Certificate. This can also be sourced from the `ARM_CLIENT_CERTIFICATE_PASSWORD`
+// Environment Variable.
 func GetClientCertificatePassword(ctx *pulumi.Context) string {
 	return config.Get(ctx, "azapi:clientCertificatePassword")
 }
 
-// The path to the Client Certificate associated with the Service Principal for use when authenticating as a Service
-// Principal using a Client Certificate.
+// The path to the Client Certificate associated with the Service Principal which should be used. This can also be sourced
+// from the `ARM_CLIENT_CERTIFICATE_PATH` Environment Variable.
 func GetClientCertificatePath(ctx *pulumi.Context) string {
 	return config.Get(ctx, "azapi:clientCertificatePath")
 }
 
-// The Client ID which should be used.
+// The Client ID which should be used. This can also be sourced from the `ARM_CLIENT_ID` Environment Variable.
 func GetClientId(ctx *pulumi.Context) string {
 	return config.Get(ctx, "azapi:clientId")
 }
 
-// The Client Secret which should be used. For use When authenticating as a Service Principal using a Client Secret.
+// The path to a file containing the Client ID which should be used. This can also be sourced from the
+// `ARM_CLIENT_ID_FILE_PATH` Environment Variable.
+func GetClientIdFilePath(ctx *pulumi.Context) string {
+	return config.Get(ctx, "azapi:clientIdFilePath")
+}
+
+// The Client Secret which should be used. This can also be sourced from the `ARM_CLIENT_SECRET` Environment Variable.
 func GetClientSecret(ctx *pulumi.Context) string {
 	return config.Get(ctx, "azapi:clientSecret")
 }
 
-// The value of the x-ms-correlation-request-id header (otherwise an auto-generated UUID will be used).
+// The path to a file containing the Client Secret which should be used. For use When authenticating as a Service Principal
+// using a Client Secret. This can also be sourced from the `ARM_CLIENT_SECRET_FILE_PATH` Environment Variable.
+func GetClientSecretFilePath(ctx *pulumi.Context) string {
+	return config.Get(ctx, "azapi:clientSecretFilePath")
+}
+
+// The value of the `x-ms-correlation-request-id` header, otherwise an auto-generated UUID will be used. This can also be
+// sourced from the `ARM_CORRELATION_REQUEST_ID` environment variable.
 func GetCustomCorrelationRequestId(ctx *pulumi.Context) string {
 	return config.Get(ctx, "azapi:customCorrelationRequestId")
 }
+
+// The default Azure Region where the azure resource should exist. The `location` in each resource block can override the
+// `defaultLocation`. Changing this forces new resources to be created.
 func GetDefaultLocation(ctx *pulumi.Context) string {
 	return config.Get(ctx, "azapi:defaultLocation")
 }
+
+// The default name to create the azure resource. The `name` in each resource block can override the `defaultName`.
+// Changing this forces new resources to be created.
 func GetDefaultName(ctx *pulumi.Context) string {
 	return config.Get(ctx, "azapi:defaultName")
 }
 
-// Deprecated: It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead.
-func GetDefaultNamingPrefix(ctx *pulumi.Context) string {
-	return config.Get(ctx, "azapi:defaultNamingPrefix")
-}
-
-// Deprecated: It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead.
-func GetDefaultNamingSuffix(ctx *pulumi.Context) string {
-	return config.Get(ctx, "azapi:defaultNamingSuffix")
-}
+// A mapping of tags which should be assigned to the azure resource as default tags. The`tags` in each resource block can
+// override the `defaultTags`.
 func GetDefaultTags(ctx *pulumi.Context) string {
 	return config.Get(ctx, "azapi:defaultTags")
 }
@@ -65,71 +85,117 @@ func GetDefaultTags(ctx *pulumi.Context) string {
 func GetDisableCorrelationRequestId(ctx *pulumi.Context) bool {
 	return config.GetBool(ctx, "azapi:disableCorrelationRequestId")
 }
+
+// Disable default output. The default is false. When set to false, the provider will output the read-only properties if
+// `responseExportValues` is not specified in the resource block. When set to true, the provider will disable this output.
+// This can also be sourced from the `ARM_DISABLE_DEFAULT_OUTPUT` Environment Variable.
+func GetDisableDefaultOutput(ctx *pulumi.Context) bool {
+	return config.GetBool(ctx, "azapi:disableDefaultOutput")
+}
 func GetDisableTerraformPartnerId(ctx *pulumi.Context) bool {
 	return config.GetBool(ctx, "azapi:disableTerraformPartnerId")
 }
-func GetEndpoint(ctx *pulumi.Context) string {
-	return config.Get(ctx, "azapi:endpoint")
+
+// Enable Preflight Validation. The default is false. When set to true, the provider will use Preflight to do static
+// validation before really deploying a new resource. When set to false, the provider will disable this validation. This
+// can also be sourced from the `ARM_ENABLE_PREFLIGHT` Environment Variable.
+func GetEnablePreflight(ctx *pulumi.Context) bool {
+	return config.GetBool(ctx, "azapi:enablePreflight")
 }
 
-// The Cloud Environment which should be used. Possible values are public, usgovernment and china. Defaults to public.
+// The Azure API Endpoint Configuration.
+func GetEndpoints(ctx *pulumi.Context) string {
+	return config.Get(ctx, "azapi:endpoints")
+}
+
+// The Cloud Environment which should be used. Possible values are `public`, `usgovernment` and `china`. Defaults to
+// `public`. This can also be sourced from the `ARM_ENVIRONMENT` Environment Variable.
 func GetEnvironment(ctx *pulumi.Context) string {
 	return config.Get(ctx, "azapi:environment")
 }
 
-// The bearer token for the request to the OIDC provider. For use When authenticating as a Service Principal using OpenID
-// Connect.
+// The maximum number of retries to attempt if the Azure API returns an HTTP 408, 429, 500, 502, 503, or 504 response. The
+// default is `3`. The resource-specific retry configuration may additionally be used to retry on other errors and
+// conditions.
+func GetMaximumBusyRetryAttempts(ctx *pulumi.Context) int {
+	return config.GetInt(ctx, "azapi:maximumBusyRetryAttempts")
+}
+
+// The Azure Pipelines Service Connection ID to use for authentication. This can also be sourced from the
+// `ARM_ADO_PIPELINE_SERVICE_CONNECTION_ID` or `ARM_OIDC_AZURE_SERVICE_CONNECTION_ID` Environment Variables.
+func GetOidcAzureServiceConnectionId(ctx *pulumi.Context) string {
+	return config.Get(ctx, "azapi:oidcAzureServiceConnectionId")
+}
+
+// The bearer token for the request to the OIDC provider. This can also be sourced from the `ARM_OIDC_REQUEST_TOKEN` or
+// `ACTIONS_ID_TOKEN_REQUEST_TOKEN` Environment Variables.
 func GetOidcRequestToken(ctx *pulumi.Context) string {
 	return config.Get(ctx, "azapi:oidcRequestToken")
 }
 
-// The URL for the OIDC provider from which to request an ID token. For use When authenticating as a Service Principal
-// using OpenID Connect.
+// The URL for the OIDC provider from which to request an ID token. This can also be sourced from the
+// `ARM_OIDC_REQUEST_URL` or `ACTIONS_ID_TOKEN_REQUEST_URL` Environment Variables.
 func GetOidcRequestUrl(ctx *pulumi.Context) string {
 	return config.Get(ctx, "azapi:oidcRequestUrl")
 }
 
-// The OIDC ID token for use when authenticating as a Service Principal using OpenID Connect.
+// The ID token when authenticating using OpenID Connect (OIDC). This can also be sourced from the `ARM_OIDC_TOKEN`
+// environment Variable.
 func GetOidcToken(ctx *pulumi.Context) string {
 	return config.Get(ctx, "azapi:oidcToken")
 }
 
-// The path to a file containing an OIDC ID token for use when authenticating as a Service Principal using OpenID Connect.
+// The path to a file containing an ID token when authenticating using OpenID Connect (OIDC). This can also be sourced from
+// the `ARM_OIDC_TOKEN_FILE_PATH` environment Variable.
 func GetOidcTokenFilePath(ctx *pulumi.Context) string {
 	return config.Get(ctx, "azapi:oidcTokenFilePath")
 }
 
-// A GUID/UUID that is registered with Microsoft to facilitate partner resource usage attribution.
+// A GUID/UUID that is
+// [registered](https://docs.microsoft.com/azure/marketplace/azure-partner-customer-usage-attribution#register-guids-and-offers)
+// with Microsoft to facilitate partner resource usage attribution. This can also be sourced from the `ARM_PARTNER_ID`
+// Environment Variable.
 func GetPartnerId(ctx *pulumi.Context) string {
 	return config.Get(ctx, "azapi:partnerId")
 }
 
-// Should the Provider skip registering all of the Resource Providers that it supports, if they're not already registered?
+// Should the Provider skip registering the Resource Providers it supports? This can also be sourced from the
+// `ARM_SKIP_PROVIDER_REGISTRATION` Environment Variable. Defaults to `false`.
 func GetSkipProviderRegistration(ctx *pulumi.Context) bool {
 	return config.GetBool(ctx, "azapi:skipProviderRegistration")
 }
 
-// The Subscription ID which should be used.
+// The Subscription ID which should be used. This can also be sourced from the `ARM_SUBSCRIPTION_ID` Environment Variable.
 func GetSubscriptionId(ctx *pulumi.Context) string {
 	return config.Get(ctx, "azapi:subscriptionId")
 }
 
-// The Tenant ID which should be used.
+// The Tenant ID should be used. This can also be sourced from the `ARM_TENANT_ID` Environment Variable.
 func GetTenantId(ctx *pulumi.Context) string {
 	return config.Get(ctx, "azapi:tenantId")
 }
 
-// Allow Azure CLI to be used for Authentication.
+// Should AKS Workload Identity be used for Authentication? This can also be sourced from the
+// `ARM_USE_AKS_WORKLOAD_IDENTITY` Environment Variable. Defaults to `false`. When set, `clientId`, `tenantId` and
+// `oidcTokenFilePath` will be detected from the environment and do not need to be specified.
+func GetUseAksWorkloadIdentity(ctx *pulumi.Context) bool {
+	return config.GetBool(ctx, "azapi:useAksWorkloadIdentity")
+}
+
+// Should Azure CLI be used for authentication? This can also be sourced from the `ARM_USE_CLI` environment variable.
+// Defaults to `true`.
 func GetUseCli(ctx *pulumi.Context) bool {
 	return config.GetBool(ctx, "azapi:useCli")
 }
 
-// Allow Managed Service Identity to be used for Authentication.
+// Should Managed Identity be used for Authentication? This can also be sourced from the `ARM_USE_MSI` Environment
+// Variable. Defaults to `false`.
 func GetUseMsi(ctx *pulumi.Context) bool {
 	return config.GetBool(ctx, "azapi:useMsi")
 }
 
-// Allow OpenID Connect to be used for authentication
+// Should OIDC be used for Authentication? This can also be sourced from the `ARM_USE_OIDC` Environment Variable. Defaults
+// to `false`.
 func GetUseOidc(ctx *pulumi.Context) bool {
 	return config.GetBool(ctx, "azapi:useOidc")
 }

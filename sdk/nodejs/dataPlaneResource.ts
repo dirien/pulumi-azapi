@@ -2,71 +2,12 @@
 // *** Do not edit by hand unless you're certain you know what you are doing! ***
 
 import * as pulumi from "@pulumi/pulumi";
+import * as inputs from "./types/input";
+import * as outputs from "./types/output";
 import * as utilities from "./utilities";
 
 /**
- * This resource can manage some Azure data plane resource.
- *
- * ## Example Usage
- *
- * ## Available Resources
- *
- * | Resource Type | URL | Parent ID Example                                                                           |
- * | --- | --- |---------------------------------------------------------------------------------------------|
- * | Microsoft.AppConfiguration/configurationStores/keyValues | /kv/{key} | {storeName}.azconfig.io                                                                     |
- * | Microsoft.DeviceUpdate/accounts/groups | /deviceupdate/{instanceId}/management/groups/{groupId} | {accountName}.api.adu.microsoft.com/deviceupdate/{instanceName}                             |
- * | Microsoft.DeviceUpdate/accounts/groups/deployments | /deviceUpdate/{instanceId}/management/groups/{groupId}/deployments/{deploymentId} | {accountName}.api.adu.microsoft.com/deviceupdate/{instanceName}/management/groups/{groupId} |
- * | Microsoft.DeviceUpdate/accounts/v2/deployments | /deviceupdate/{instanceId}/v2/management/deployments/{deploymentId} | {accountName}.api.adu.microsoft.com/deviceupdate/{instanceName}                             |
- * | Microsoft.DeviceUpdate/accounts/v2/groups | /deviceupdate/{instanceId}/v2/management/groups/{groupId} | {accountName}.api.adu.microsoft.com/deviceupdate/{instanceName}                             |
- * | Microsoft.DigitalTwins/digitalTwinsInstances/digitaltwins | /digitaltwins/{id} | {instanceName}.api.weu.digitaltwins.azure.net                                               |
- * | Microsoft.DigitalTwins/digitalTwinsInstances/digitaltwins/relationships | /digitaltwins/{id}/relationships/{relationshipId} | {instanceName}.api.weu.digitaltwins.azure.net/digitaltwins/{digitalTwinId}                  |
- * | Microsoft.DigitalTwins/digitalTwinsInstances/eventroutes | /eventroutes/{id} | {instanceName}.api.weu.digitaltwins.azure.net                                               |
- * | Microsoft.DigitalTwins/digitalTwinsInstances/jobs/imports | /jobs/imports/{id} | {instanceName}.api.weu.digitaltwins.azure.net                                               |
- * | Microsoft.IoTCentral/IoTApps/organizations | /organizations/{organizationId} | {appSubdomain}.azureiotcentral.com                                                          |
- * | Microsoft.IoTCentral/IoTApps/scheduledJobs | /scheduledJobs/{scheduledJobId} | {appSubdomain}.azureiotcentral.com                                                          |
- * | Microsoft.IoTCentral/IoTApps/users | /users/{userId} | {appSubdomain}.azureiotcentral.com                                                          |
- * | Microsoft.IoTCentral/iotApps/apiTokens | /apiTokens/{tokenId} | {appSubdomain}.azureiotcentral.com                                                          |
- * | Microsoft.IoTCentral/iotApps/continuousDataExports | /continuousDataExports/{exportId} | {appSubdomain}.azureiotcentral.com                                                          |
- * | Microsoft.IoTCentral/iotApps/dashboards | /dashboards/{dashboardId} | {appSubdomain}.azureiotcentral.com                                                          |
- * | Microsoft.IoTCentral/iotApps/dataExport/destinations | /dataExport/destinations/{destinationId} | {appSubdomain}.azureiotcentral.com                                                          |
- * | Microsoft.IoTCentral/iotApps/dataExport/exports | /dataExport/exports/{exportId} | {appSubdomain}.azureiotcentral.com                                                          |
- * | Microsoft.IoTCentral/iotApps/deploymentManifests | /deploymentManifests/{deploymentManifestId} | {appSubdomain}.azureiotcentral.com                                                          |
- * | Microsoft.IoTCentral/iotApps/deviceGroups | /deviceGroups/{deviceGroupId} | {appSubdomain}.azureiotcentral.com                                                          |
- * | Microsoft.IoTCentral/iotApps/deviceTemplates | /deviceTemplates/{deviceTemplateId} | {appSubdomain}.azureiotcentral.com                                                          |
- * | Microsoft.IoTCentral/iotApps/devices | /devices/{deviceId} | {appSubdomain}.azureiotcentral.com                                                          |
- * | Microsoft.IoTCentral/iotApps/devices/attestation | /devices/{deviceId}/attestation | {appSubdomain}.azureiotcentral.com                                                          |
- * | Microsoft.IoTCentral/iotApps/devices/relationships | /devices/{deviceId}/relationships/{relationshipId} | {appSubdomain}.azureiotcentral.com/devices/{deviceId}                                       |
- * | Microsoft.IoTCentral/iotApps/enrollmentGroups | /enrollmentGroups/{enrollmentGroupId} | {appSubdomain}.azureiotcentral.com                                                          |
- * | Microsoft.IoTCentral/iotApps/enrollmentGroups/certificates | /enrollmentGroups/{enrollmentGroupId}/certificates/{entry} | {appSubdomain}.azureiotcentral.com/enrollmentGroups/{enrollmentGroupId}                     |
- * | Microsoft.KeyVault/vaults/certificates/contacts | /certificates/contacts | {vaultName}.vault.azure.net                                                                 |
- * | Microsoft.KeyVault/vaults/certificates/issuers | /certificates/issuers/{issuer-name} | {vaultName}.vault.azure.net                                                                 |
- * | Microsoft.KeyVault/vaults/storage | /storage/{storage-account-name} | {vaultName}.vault.azure.net                                                                 |
- * | Microsoft.KeyVault/vaults/storage/sas | /storage/{storage-account-name}/sas/{sas-definition-name} | {vaultName}.vault.azure.net/storage/{storage-account-name}                                  |
- * | Microsoft.Purview/accounts/Account/collections | /collections/{collectionName} | {accountName}.purview.azure.com                                                             |
- * | Microsoft.Purview/accounts/Account/resourceSetRuleConfigs | /resourceSetRuleConfigs/defaultResourceSetRuleConfig | {accountName}.purview.azure.com                                                             |
- * | Microsoft.Purview/accounts/Scanning/azureKeyVaults | /azureKeyVaults/{azureKeyVaultName} | {accountName}.purview.azure.com/scan                                                        |
- * | Microsoft.Purview/accounts/Scanning/classificationrules | /classificationrules/{classificationRuleName} | {accountName}.purview.azure.com/scan                                                        |
- * | Microsoft.Purview/accounts/Scanning/credentials | /credentials/{credentialName} | {accountName}.purview.azure.com/scan                                                        |
- * | Microsoft.Purview/accounts/Scanning/datasources | /datasources/{dataSourceName} | {accountName}.purview.azure.com/scan                                                        |
- * | Microsoft.Purview/accounts/Scanning/datasources/scans | /datasources/{dataSourceName}/scans/{scanName} | {accountName}.purview.azure.com/scan/datasources/{dataSourceName}                           |
- * | Microsoft.Purview/accounts/Scanning/datasources/scans/triggers | /datasources/{dataSourceName}/scans/{scanName}/triggers/default | {accountName}.purview.azure.com/scan/datasources/{dataSourceName}/scans/{scanName}          |
- * | Microsoft.Purview/accounts/Scanning/integrationruntimes | /integrationruntimes/{integrationRuntimeName} | {accountName}.purview.azure.com/scan                                                        |
- * | Microsoft.Purview/accounts/Scanning/managedvirtualnetworks/managedprivateendpoints | /managedvirtualnetworks/{managedVirtualNetworkName}/managedprivateendpoints/{managedPrivateEndpointName} | {accountName}.purview.azure.com/scan/managedvirtualnetworks/{managedVirtualNetworkName}     |
- * | Microsoft.Purview/accounts/Workflow/workflows | /workflows/{workflowId} | {accountName}.purview.azure.com                                                             |
- * | Microsoft.Synapse/workspaces/dataflows | /dataflows/{dataFlowName} | {workspaceName}.dev.azuresynapse.net                                                        |
- * | Microsoft.Synapse/workspaces/datasets | /datasets/{datasetName} | {workspaceName}.dev.azuresynapse.net                                                        |
- * | Microsoft.Synapse/workspaces/kqlScripts | /kqlScripts/{kqlScriptName} | {workspaceName}.dev.azuresynapse.net                                                        |
- * | Microsoft.Synapse/workspaces/libraries | /libraries/{libraryName} | {workspaceName}.dev.azuresynapse.net                                                        |
- * | Microsoft.Synapse/workspaces/linkconnections | /linkconnections/{linkConnectionName} | {workspaceName}.dev.azuresynapse.net                                                        |
- * | Microsoft.Synapse/workspaces/linkedservices | /linkedservices/{linkedServiceName} | {workspaceName}.dev.azuresynapse.net                                                        |
- * | Microsoft.Synapse/workspaces/managedVirtualNetworks/managedPrivateEndpoints | /managedVirtualNetworks/{managedVirtualNetworkName}/managedPrivateEndpoints/{managedPrivateEndpointName} | {workspaceName}.dev.azuresynapse.net/managedVirtualNetworks/{managedVirtualNetworkName}     |
- * | Microsoft.Synapse/workspaces/notebooks | /notebooks/{notebookName} | {workspaceName}.dev.azuresynapse.net                                                        |
- * | Microsoft.Synapse/workspaces/pipelines | /pipelines/{pipelineName} | {workspaceName}.dev.azuresynapse.net                                                        |
- * | Microsoft.Synapse/workspaces/roleAssignments | /roleAssignments/{roleAssignmentId} | {workspaceName}.dev.azuresynapse.net                                                        |
- * | Microsoft.Synapse/workspaces/sparkJobDefinitions | /sparkJobDefinitions/{sparkJobDefinitionName} | {workspaceName}.dev.azuresynapse.net                                                        |
- * | Microsoft.Synapse/workspaces/sparkconfigurations | /sparkconfigurations/{sparkConfigurationName} | {workspaceName}.dev.azuresynapse.net                                                        |
- * | Microsoft.Synapse/workspaces/sqlScripts | /sqlScripts/{sqlScriptName} | {workspaceName}.dev.azuresynapse.net                                                        |
- * | Microsoft.Synapse/workspaces/triggers | /triggers/{triggerName} | {workspaceName}.dev.azuresynapse.net                                                        |
+ * This resource can manage some Azure data plane resources.
  */
 export class DataPlaneResource extends pulumi.CustomResource {
     /**
@@ -97,62 +38,96 @@ export class DataPlaneResource extends pulumi.CustomResource {
     }
 
     /**
-     * A JSON object that contains the request body used to create and update data plane resource.
+     * A dynamic attribute that contains the request body.
      */
-    public readonly body!: pulumi.Output<string | undefined>;
+    public readonly body!: pulumi.Output<any>;
     /**
-     * Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.
+     * A mapping of headers to be sent with the create request.
      */
-    public readonly ignoreCasing!: pulumi.Output<boolean | undefined>;
+    public readonly createHeaders!: pulumi.Output<{[key: string]: string} | undefined>;
     /**
-     * Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.
+     * A mapping of query parameters to be sent with the create request.
      */
-    public readonly ignoreMissingProperty!: pulumi.Output<boolean | undefined>;
+    public readonly createQueryParameters!: pulumi.Output<{[key: string]: string[]} | undefined>;
+    /**
+     * A mapping of headers to be sent with the delete request.
+     */
+    public readonly deleteHeaders!: pulumi.Output<{[key: string]: string} | undefined>;
+    /**
+     * A mapping of query parameters to be sent with the delete request.
+     */
+    public readonly deleteQueryParameters!: pulumi.Output<{[key: string]: string[]} | undefined>;
+    /**
+     * A dynamic attribute that contains the request body.
+     */
+    public readonly ignoreCasing!: pulumi.Output<boolean>;
+    /**
+     * Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`. It's recommend to enable this option when some sensitive properties are not returned in response body, instead of setting them in `lifecycle.ignore_changes` because it will make the sensitive fields unable to update.
+     */
+    public readonly ignoreMissingProperty!: pulumi.Output<boolean>;
     /**
      * A list of ARM resource IDs which are used to avoid create/modify/delete azapi resources at the same time.
      */
     public readonly locks!: pulumi.Output<string[] | undefined>;
     /**
-     * Specifies the name of the azure resource. Changing this forces a new resource to be created.
+     * Specifies the name of the Azure resource. Changing this forces a new resource to be created.
      */
     public readonly name!: pulumi.Output<string>;
     /**
-     * The output json containing the properties specified in `responseExportValues`. Here're some examples to decode json and extract the value.
-     * ```
-     * // it will output "registry1.azurecr.io"
-     * output "loginServer" {
-     * value = jsondecode(azapi_data_plane_resource.example.output).properties.loginServer
-     * }
+     * The output HCL object containing the properties specified in `responseExportValues`. Here are some examples to use the
+     * values. ```terraform // it will output "registry1.azurecr.io" output "login_server" { value =
+     * azapi_data_plane_resource.example.output.properties.loginServer } // it will output "disabled" output
+     * "quarantine_policy" { value = azapi_data_plane_resource.example.output.properties.policies.quarantinePolicy.status } ```
      */
-    public /*out*/ readonly output!: pulumi.Output<string>;
+    public /*out*/ readonly output!: pulumi.Output<any>;
     /**
      * The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created.
      */
     public readonly parentId!: pulumi.Output<string>;
     /**
-     * A list of path that needs to be exported from response body.
-     * Setting it to `["*"]` will export the full response body.
-     * Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-     * ```
-     * {
-     * "properties" : {
-     * "loginServer" : "registry1.azurecr.io"
-     * "policies" : {
-     * "quarantinePolicy" = {
-     * "status" = "disabled"
-     * }
-     * }
-     * }
-     * }
-     * ```
+     * A mapping of headers to be sent with the read request.
      */
-    public readonly responseExportValues!: pulumi.Output<string[] | undefined>;
+    public readonly readHeaders!: pulumi.Output<{[key: string]: string} | undefined>;
     /**
-     * It is in a format like `<resource-type>@<api-version>`. `<api-version>` is version of the API used to manage this azure data plane resource.
-     *
-     * > **Note** For the available resource types and parent IDs, please refer to the `Available Resources` section below.
+     * A mapping of query parameters to be sent with the read request.
+     */
+    public readonly readQueryParameters!: pulumi.Output<{[key: string]: string[]} | undefined>;
+    /**
+     * Will trigger a replace of the resource when the value changes and is not `null`. This can be used by practitioners to force a replace of the resource when certain values change, e.g. changing the SKU of a virtual machine based on the value of variables or locals. The value is a `dynamic`, so practitioners can compose the input however they wish. For a "break glass" set the value to `null` to prevent the plan modifier taking effect.
+     * If you have `null` values that you do want to be tracked as affecting the resource replacement, include these inside an object.
+     * Advanced use cases are possible and resource replacement can be triggered by values external to the resource, for example when a dependent resource changes.
+     */
+    public readonly replaceTriggersExternalValues!: pulumi.Output<any | undefined>;
+    public readonly replaceTriggersRefs!: pulumi.Output<string[] | undefined>;
+    /**
+     * The attribute can accept either a list or a map. - **List**: A list of paths that need to be exported from the response
+     * body. Setting it to `["*"]` will export the full response body. Here's an example. If it sets to
+     * `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following HCL object to the
+     * computed property output. ```text { properties = { loginServer = "registry1.azurecr.io" policies = { quarantinePolicy =
+     * { status = "disabled" } } } } ``` - **Map**: A map where the key is the name for the result and the value is a JMESPath
+     * query string to filter the response. Here's an example. If it sets to `{"loginServer": "properties.loginServer",
+     * "quarantineStatus": "properties.policies.quarantinePolicy.status"}`, it will set the following HCL object to the
+     * computed property output. ```text { "login_server" = "registry1.azurecr.io" "quarantine_status" = "disabled" } ``` To
+     * learn more about JMESPath, visit [JMESPath](https://jmespath.org/).
+     */
+    public readonly responseExportValues!: pulumi.Output<any | undefined>;
+    /**
+     * The retry object supports the following attributes:
+     */
+    public readonly retry!: pulumi.Output<outputs.DataPlaneResourceRetry | undefined>;
+    public readonly timeouts!: pulumi.Output<outputs.DataPlaneResourceTimeouts | undefined>;
+    /**
+     * In a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`. `<api-version>` is version of the API used to manage this azure resource.
      */
     public readonly type!: pulumi.Output<string>;
+    /**
+     * A mapping of headers to be sent with the update request.
+     */
+    public readonly updateHeaders!: pulumi.Output<{[key: string]: string} | undefined>;
+    /**
+     * A mapping of query parameters to be sent with the update request.
+     */
+    public readonly updateQueryParameters!: pulumi.Output<{[key: string]: string[]} | undefined>;
 
     /**
      * Create a DataPlaneResource resource with the given unique name, arguments, and options.
@@ -168,14 +143,26 @@ export class DataPlaneResource extends pulumi.CustomResource {
         if (opts.id) {
             const state = argsOrState as DataPlaneResourceState | undefined;
             resourceInputs["body"] = state ? state.body : undefined;
+            resourceInputs["createHeaders"] = state ? state.createHeaders : undefined;
+            resourceInputs["createQueryParameters"] = state ? state.createQueryParameters : undefined;
+            resourceInputs["deleteHeaders"] = state ? state.deleteHeaders : undefined;
+            resourceInputs["deleteQueryParameters"] = state ? state.deleteQueryParameters : undefined;
             resourceInputs["ignoreCasing"] = state ? state.ignoreCasing : undefined;
             resourceInputs["ignoreMissingProperty"] = state ? state.ignoreMissingProperty : undefined;
             resourceInputs["locks"] = state ? state.locks : undefined;
             resourceInputs["name"] = state ? state.name : undefined;
             resourceInputs["output"] = state ? state.output : undefined;
             resourceInputs["parentId"] = state ? state.parentId : undefined;
+            resourceInputs["readHeaders"] = state ? state.readHeaders : undefined;
+            resourceInputs["readQueryParameters"] = state ? state.readQueryParameters : undefined;
+            resourceInputs["replaceTriggersExternalValues"] = state ? state.replaceTriggersExternalValues : undefined;
+            resourceInputs["replaceTriggersRefs"] = state ? state.replaceTriggersRefs : undefined;
             resourceInputs["responseExportValues"] = state ? state.responseExportValues : undefined;
+            resourceInputs["retry"] = state ? state.retry : undefined;
+            resourceInputs["timeouts"] = state ? state.timeouts : undefined;
             resourceInputs["type"] = state ? state.type : undefined;
+            resourceInputs["updateHeaders"] = state ? state.updateHeaders : undefined;
+            resourceInputs["updateQueryParameters"] = state ? state.updateQueryParameters : undefined;
         } else {
             const args = argsOrState as DataPlaneResourceArgs | undefined;
             if ((!args || args.parentId === undefined) && !opts.urn) {
@@ -185,13 +172,25 @@ export class DataPlaneResource extends pulumi.CustomResource {
                 throw new Error("Missing required property 'type'");
             }
             resourceInputs["body"] = args ? args.body : undefined;
+            resourceInputs["createHeaders"] = args ? args.createHeaders : undefined;
+            resourceInputs["createQueryParameters"] = args ? args.createQueryParameters : undefined;
+            resourceInputs["deleteHeaders"] = args ? args.deleteHeaders : undefined;
+            resourceInputs["deleteQueryParameters"] = args ? args.deleteQueryParameters : undefined;
             resourceInputs["ignoreCasing"] = args ? args.ignoreCasing : undefined;
             resourceInputs["ignoreMissingProperty"] = args ? args.ignoreMissingProperty : undefined;
             resourceInputs["locks"] = args ? args.locks : undefined;
             resourceInputs["name"] = args ? args.name : undefined;
             resourceInputs["parentId"] = args ? args.parentId : undefined;
+            resourceInputs["readHeaders"] = args ? args.readHeaders : undefined;
+            resourceInputs["readQueryParameters"] = args ? args.readQueryParameters : undefined;
+            resourceInputs["replaceTriggersExternalValues"] = args ? args.replaceTriggersExternalValues : undefined;
+            resourceInputs["replaceTriggersRefs"] = args ? args.replaceTriggersRefs : undefined;
             resourceInputs["responseExportValues"] = args ? args.responseExportValues : undefined;
+            resourceInputs["retry"] = args ? args.retry : undefined;
+            resourceInputs["timeouts"] = args ? args.timeouts : undefined;
             resourceInputs["type"] = args ? args.type : undefined;
+            resourceInputs["updateHeaders"] = args ? args.updateHeaders : undefined;
+            resourceInputs["updateQueryParameters"] = args ? args.updateQueryParameters : undefined;
             resourceInputs["output"] = undefined /*out*/;
         }
         opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts);
@@ -204,15 +203,31 @@ export class DataPlaneResource extends pulumi.CustomResource {
  */
 export interface DataPlaneResourceState {
     /**
-     * A JSON object that contains the request body used to create and update data plane resource.
+     * A dynamic attribute that contains the request body.
      */
-    body?: pulumi.Input<string>;
+    body?: any;
     /**
-     * Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.
+     * A mapping of headers to be sent with the create request.
+     */
+    createHeaders?: pulumi.Input<{[key: string]: pulumi.Input<string>}>;
+    /**
+     * A mapping of query parameters to be sent with the create request.
+     */
+    createQueryParameters?: pulumi.Input<{[key: string]: pulumi.Input<pulumi.Input<string>[]>}>;
+    /**
+     * A mapping of headers to be sent with the delete request.
+     */
+    deleteHeaders?: pulumi.Input<{[key: string]: pulumi.Input<string>}>;
+    /**
+     * A mapping of query parameters to be sent with the delete request.
+     */
+    deleteQueryParameters?: pulumi.Input<{[key: string]: pulumi.Input<pulumi.Input<string>[]>}>;
+    /**
+     * A dynamic attribute that contains the request body.
      */
     ignoreCasing?: pulumi.Input<boolean>;
     /**
-     * Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.
+     * Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`. It's recommend to enable this option when some sensitive properties are not returned in response body, instead of setting them in `lifecycle.ignore_changes` because it will make the sensitive fields unable to update.
      */
     ignoreMissingProperty?: pulumi.Input<boolean>;
     /**
@@ -220,46 +235,64 @@ export interface DataPlaneResourceState {
      */
     locks?: pulumi.Input<pulumi.Input<string>[]>;
     /**
-     * Specifies the name of the azure resource. Changing this forces a new resource to be created.
+     * Specifies the name of the Azure resource. Changing this forces a new resource to be created.
      */
     name?: pulumi.Input<string>;
     /**
-     * The output json containing the properties specified in `responseExportValues`. Here're some examples to decode json and extract the value.
-     * ```
-     * // it will output "registry1.azurecr.io"
-     * output "loginServer" {
-     * value = jsondecode(azapi_data_plane_resource.example.output).properties.loginServer
-     * }
+     * The output HCL object containing the properties specified in `responseExportValues`. Here are some examples to use the
+     * values. ```terraform // it will output "registry1.azurecr.io" output "login_server" { value =
+     * azapi_data_plane_resource.example.output.properties.loginServer } // it will output "disabled" output
+     * "quarantine_policy" { value = azapi_data_plane_resource.example.output.properties.policies.quarantinePolicy.status } ```
      */
-    output?: pulumi.Input<string>;
+    output?: any;
     /**
      * The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created.
      */
     parentId?: pulumi.Input<string>;
     /**
-     * A list of path that needs to be exported from response body.
-     * Setting it to `["*"]` will export the full response body.
-     * Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-     * ```
-     * {
-     * "properties" : {
-     * "loginServer" : "registry1.azurecr.io"
-     * "policies" : {
-     * "quarantinePolicy" = {
-     * "status" = "disabled"
-     * }
-     * }
-     * }
-     * }
-     * ```
+     * A mapping of headers to be sent with the read request.
      */
-    responseExportValues?: pulumi.Input<pulumi.Input<string>[]>;
+    readHeaders?: pulumi.Input<{[key: string]: pulumi.Input<string>}>;
     /**
-     * It is in a format like `<resource-type>@<api-version>`. `<api-version>` is version of the API used to manage this azure data plane resource.
-     *
-     * > **Note** For the available resource types and parent IDs, please refer to the `Available Resources` section below.
+     * A mapping of query parameters to be sent with the read request.
+     */
+    readQueryParameters?: pulumi.Input<{[key: string]: pulumi.Input<pulumi.Input<string>[]>}>;
+    /**
+     * Will trigger a replace of the resource when the value changes and is not `null`. This can be used by practitioners to force a replace of the resource when certain values change, e.g. changing the SKU of a virtual machine based on the value of variables or locals. The value is a `dynamic`, so practitioners can compose the input however they wish. For a "break glass" set the value to `null` to prevent the plan modifier taking effect.
+     * If you have `null` values that you do want to be tracked as affecting the resource replacement, include these inside an object.
+     * Advanced use cases are possible and resource replacement can be triggered by values external to the resource, for example when a dependent resource changes.
+     */
+    replaceTriggersExternalValues?: any;
+    replaceTriggersRefs?: pulumi.Input<pulumi.Input<string>[]>;
+    /**
+     * The attribute can accept either a list or a map. - **List**: A list of paths that need to be exported from the response
+     * body. Setting it to `["*"]` will export the full response body. Here's an example. If it sets to
+     * `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following HCL object to the
+     * computed property output. ```text { properties = { loginServer = "registry1.azurecr.io" policies = { quarantinePolicy =
+     * { status = "disabled" } } } } ``` - **Map**: A map where the key is the name for the result and the value is a JMESPath
+     * query string to filter the response. Here's an example. If it sets to `{"loginServer": "properties.loginServer",
+     * "quarantineStatus": "properties.policies.quarantinePolicy.status"}`, it will set the following HCL object to the
+     * computed property output. ```text { "login_server" = "registry1.azurecr.io" "quarantine_status" = "disabled" } ``` To
+     * learn more about JMESPath, visit [JMESPath](https://jmespath.org/).
+     */
+    responseExportValues?: any;
+    /**
+     * The retry object supports the following attributes:
+     */
+    retry?: pulumi.Input<inputs.DataPlaneResourceRetry>;
+    timeouts?: pulumi.Input<inputs.DataPlaneResourceTimeouts>;
+    /**
+     * In a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`. `<api-version>` is version of the API used to manage this azure resource.
      */
     type?: pulumi.Input<string>;
+    /**
+     * A mapping of headers to be sent with the update request.
+     */
+    updateHeaders?: pulumi.Input<{[key: string]: pulumi.Input<string>}>;
+    /**
+     * A mapping of query parameters to be sent with the update request.
+     */
+    updateQueryParameters?: pulumi.Input<{[key: string]: pulumi.Input<pulumi.Input<string>[]>}>;
 }
 
 /**
@@ -267,15 +300,31 @@ export interface DataPlaneResourceState {
  */
 export interface DataPlaneResourceArgs {
     /**
-     * A JSON object that contains the request body used to create and update data plane resource.
+     * A dynamic attribute that contains the request body.
      */
-    body?: pulumi.Input<string>;
+    body?: any;
     /**
-     * Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.
+     * A mapping of headers to be sent with the create request.
+     */
+    createHeaders?: pulumi.Input<{[key: string]: pulumi.Input<string>}>;
+    /**
+     * A mapping of query parameters to be sent with the create request.
+     */
+    createQueryParameters?: pulumi.Input<{[key: string]: pulumi.Input<pulumi.Input<string>[]>}>;
+    /**
+     * A mapping of headers to be sent with the delete request.
+     */
+    deleteHeaders?: pulumi.Input<{[key: string]: pulumi.Input<string>}>;
+    /**
+     * A mapping of query parameters to be sent with the delete request.
+     */
+    deleteQueryParameters?: pulumi.Input<{[key: string]: pulumi.Input<pulumi.Input<string>[]>}>;
+    /**
+     * A dynamic attribute that contains the request body.
      */
     ignoreCasing?: pulumi.Input<boolean>;
     /**
-     * Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.
+     * Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`. It's recommend to enable this option when some sensitive properties are not returned in response body, instead of setting them in `lifecycle.ignore_changes` because it will make the sensitive fields unable to update.
      */
     ignoreMissingProperty?: pulumi.Input<boolean>;
     /**
@@ -283,7 +332,7 @@ export interface DataPlaneResourceArgs {
      */
     locks?: pulumi.Input<pulumi.Input<string>[]>;
     /**
-     * Specifies the name of the azure resource. Changing this forces a new resource to be created.
+     * Specifies the name of the Azure resource. Changing this forces a new resource to be created.
      */
     name?: pulumi.Input<string>;
     /**
@@ -291,27 +340,47 @@ export interface DataPlaneResourceArgs {
      */
     parentId: pulumi.Input<string>;
     /**
-     * A list of path that needs to be exported from response body.
-     * Setting it to `["*"]` will export the full response body.
-     * Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-     * ```
-     * {
-     * "properties" : {
-     * "loginServer" : "registry1.azurecr.io"
-     * "policies" : {
-     * "quarantinePolicy" = {
-     * "status" = "disabled"
-     * }
-     * }
-     * }
-     * }
-     * ```
+     * A mapping of headers to be sent with the read request.
      */
-    responseExportValues?: pulumi.Input<pulumi.Input<string>[]>;
+    readHeaders?: pulumi.Input<{[key: string]: pulumi.Input<string>}>;
     /**
-     * It is in a format like `<resource-type>@<api-version>`. `<api-version>` is version of the API used to manage this azure data plane resource.
-     *
-     * > **Note** For the available resource types and parent IDs, please refer to the `Available Resources` section below.
+     * A mapping of query parameters to be sent with the read request.
+     */
+    readQueryParameters?: pulumi.Input<{[key: string]: pulumi.Input<pulumi.Input<string>[]>}>;
+    /**
+     * Will trigger a replace of the resource when the value changes and is not `null`. This can be used by practitioners to force a replace of the resource when certain values change, e.g. changing the SKU of a virtual machine based on the value of variables or locals. The value is a `dynamic`, so practitioners can compose the input however they wish. For a "break glass" set the value to `null` to prevent the plan modifier taking effect.
+     * If you have `null` values that you do want to be tracked as affecting the resource replacement, include these inside an object.
+     * Advanced use cases are possible and resource replacement can be triggered by values external to the resource, for example when a dependent resource changes.
+     */
+    replaceTriggersExternalValues?: any;
+    replaceTriggersRefs?: pulumi.Input<pulumi.Input<string>[]>;
+    /**
+     * The attribute can accept either a list or a map. - **List**: A list of paths that need to be exported from the response
+     * body. Setting it to `["*"]` will export the full response body. Here's an example. If it sets to
+     * `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following HCL object to the
+     * computed property output. ```text { properties = { loginServer = "registry1.azurecr.io" policies = { quarantinePolicy =
+     * { status = "disabled" } } } } ``` - **Map**: A map where the key is the name for the result and the value is a JMESPath
+     * query string to filter the response. Here's an example. If it sets to `{"loginServer": "properties.loginServer",
+     * "quarantineStatus": "properties.policies.quarantinePolicy.status"}`, it will set the following HCL object to the
+     * computed property output. ```text { "login_server" = "registry1.azurecr.io" "quarantine_status" = "disabled" } ``` To
+     * learn more about JMESPath, visit [JMESPath](https://jmespath.org/).
+     */
+    responseExportValues?: any;
+    /**
+     * The retry object supports the following attributes:
+     */
+    retry?: pulumi.Input<inputs.DataPlaneResourceRetry>;
+    timeouts?: pulumi.Input<inputs.DataPlaneResourceTimeouts>;
+    /**
+     * In a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`. `<api-version>` is version of the API used to manage this azure resource.
      */
     type: pulumi.Input<string>;
+    /**
+     * A mapping of headers to be sent with the update request.
+     */
+    updateHeaders?: pulumi.Input<{[key: string]: pulumi.Input<string>}>;
+    /**
+     * A mapping of query parameters to be sent with the update request.
+     */
+    updateQueryParameters?: pulumi.Input<{[key: string]: pulumi.Input<pulumi.Input<string>[]>}>;
 }

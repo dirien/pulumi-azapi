@@ -7,7 +7,6 @@ import (
 	"context"
 	"reflect"
 
-	"errors"
 	"github.com/dirien/pulumi-azapi/sdk/go/azapi/internal"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
@@ -19,41 +18,60 @@ import (
 type Provider struct {
 	pulumi.ProviderResourceState
 
-	// The password associated with the Client Certificate. For use when authenticating as a Service Principal using a Client
-	// Certificate
+	// A base64-encoded PKCS#12 bundle to be used as the client certificate for authentication. This can also be sourced from
+	// the `ARM_CLIENT_CERTIFICATE` environment variable.
+	ClientCertificate pulumi.StringPtrOutput `pulumi:"clientCertificate"`
+	// The password associated with the Client Certificate. This can also be sourced from the `ARM_CLIENT_CERTIFICATE_PASSWORD`
+	// Environment Variable.
 	ClientCertificatePassword pulumi.StringPtrOutput `pulumi:"clientCertificatePassword"`
-	// The path to the Client Certificate associated with the Service Principal for use when authenticating as a Service
-	// Principal using a Client Certificate.
+	// The path to the Client Certificate associated with the Service Principal which should be used. This can also be sourced
+	// from the `ARM_CLIENT_CERTIFICATE_PATH` Environment Variable.
 	ClientCertificatePath pulumi.StringPtrOutput `pulumi:"clientCertificatePath"`
-	// The Client ID which should be used.
+	// The Client ID which should be used. This can also be sourced from the `ARM_CLIENT_ID` Environment Variable.
 	ClientId pulumi.StringPtrOutput `pulumi:"clientId"`
-	// The Client Secret which should be used. For use When authenticating as a Service Principal using a Client Secret.
+	// The path to a file containing the Client ID which should be used. This can also be sourced from the
+	// `ARM_CLIENT_ID_FILE_PATH` Environment Variable.
+	ClientIdFilePath pulumi.StringPtrOutput `pulumi:"clientIdFilePath"`
+	// The Client Secret which should be used. This can also be sourced from the `ARM_CLIENT_SECRET` Environment Variable.
 	ClientSecret pulumi.StringPtrOutput `pulumi:"clientSecret"`
-	// The value of the x-ms-correlation-request-id header (otherwise an auto-generated UUID will be used).
+	// The path to a file containing the Client Secret which should be used. For use When authenticating as a Service Principal
+	// using a Client Secret. This can also be sourced from the `ARM_CLIENT_SECRET_FILE_PATH` Environment Variable.
+	ClientSecretFilePath pulumi.StringPtrOutput `pulumi:"clientSecretFilePath"`
+	// The value of the `x-ms-correlation-request-id` header, otherwise an auto-generated UUID will be used. This can also be
+	// sourced from the `ARM_CORRELATION_REQUEST_ID` environment variable.
 	CustomCorrelationRequestId pulumi.StringPtrOutput `pulumi:"customCorrelationRequestId"`
-	DefaultLocation            pulumi.StringPtrOutput `pulumi:"defaultLocation"`
-	DefaultName                pulumi.StringPtrOutput `pulumi:"defaultName"`
-	// Deprecated: It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead.
-	DefaultNamingPrefix pulumi.StringPtrOutput `pulumi:"defaultNamingPrefix"`
-	// Deprecated: It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead.
-	DefaultNamingSuffix pulumi.StringPtrOutput `pulumi:"defaultNamingSuffix"`
-	// The Cloud Environment which should be used. Possible values are public, usgovernment and china. Defaults to public.
-	Environment pulumi.StringOutput `pulumi:"environment"`
-	// The bearer token for the request to the OIDC provider. For use When authenticating as a Service Principal using OpenID
-	// Connect.
+	// The default Azure Region where the azure resource should exist. The `location` in each resource block can override the
+	// `defaultLocation`. Changing this forces new resources to be created.
+	DefaultLocation pulumi.StringPtrOutput `pulumi:"defaultLocation"`
+	// The default name to create the azure resource. The `name` in each resource block can override the `defaultName`.
+	// Changing this forces new resources to be created.
+	DefaultName pulumi.StringPtrOutput `pulumi:"defaultName"`
+	// The Cloud Environment which should be used. Possible values are `public`, `usgovernment` and `china`. Defaults to
+	// `public`. This can also be sourced from the `ARM_ENVIRONMENT` Environment Variable.
+	Environment pulumi.StringPtrOutput `pulumi:"environment"`
+	// The Azure Pipelines Service Connection ID to use for authentication. This can also be sourced from the
+	// `ARM_ADO_PIPELINE_SERVICE_CONNECTION_ID` or `ARM_OIDC_AZURE_SERVICE_CONNECTION_ID` Environment Variables.
+	OidcAzureServiceConnectionId pulumi.StringPtrOutput `pulumi:"oidcAzureServiceConnectionId"`
+	// The bearer token for the request to the OIDC provider. This can also be sourced from the `ARM_OIDC_REQUEST_TOKEN` or
+	// `ACTIONS_ID_TOKEN_REQUEST_TOKEN` Environment Variables.
 	OidcRequestToken pulumi.StringPtrOutput `pulumi:"oidcRequestToken"`
-	// The URL for the OIDC provider from which to request an ID token. For use When authenticating as a Service Principal
-	// using OpenID Connect.
+	// The URL for the OIDC provider from which to request an ID token. This can also be sourced from the
+	// `ARM_OIDC_REQUEST_URL` or `ACTIONS_ID_TOKEN_REQUEST_URL` Environment Variables.
 	OidcRequestUrl pulumi.StringPtrOutput `pulumi:"oidcRequestUrl"`
-	// The OIDC ID token for use when authenticating as a Service Principal using OpenID Connect.
+	// The ID token when authenticating using OpenID Connect (OIDC). This can also be sourced from the `ARM_OIDC_TOKEN`
+	// environment Variable.
 	OidcToken pulumi.StringPtrOutput `pulumi:"oidcToken"`
-	// The path to a file containing an OIDC ID token for use when authenticating as a Service Principal using OpenID Connect.
+	// The path to a file containing an ID token when authenticating using OpenID Connect (OIDC). This can also be sourced from
+	// the `ARM_OIDC_TOKEN_FILE_PATH` environment Variable.
 	OidcTokenFilePath pulumi.StringPtrOutput `pulumi:"oidcTokenFilePath"`
-	// A GUID/UUID that is registered with Microsoft to facilitate partner resource usage attribution.
+	// A GUID/UUID that is
+	// [registered](https://docs.microsoft.com/azure/marketplace/azure-partner-customer-usage-attribution#register-guids-and-offers)
+	// with Microsoft to facilitate partner resource usage attribution. This can also be sourced from the `ARM_PARTNER_ID`
+	// Environment Variable.
 	PartnerId pulumi.StringPtrOutput `pulumi:"partnerId"`
-	// The Subscription ID which should be used.
+	// The Subscription ID which should be used. This can also be sourced from the `ARM_SUBSCRIPTION_ID` Environment Variable.
 	SubscriptionId pulumi.StringPtrOutput `pulumi:"subscriptionId"`
-	// The Tenant ID which should be used.
+	// The Tenant ID should be used. This can also be sourced from the `ARM_TENANT_ID` Environment Variable.
 	TenantId pulumi.StringPtrOutput `pulumi:"tenantId"`
 }
 
@@ -61,12 +79,9 @@ type Provider struct {
 func NewProvider(ctx *pulumi.Context,
 	name string, args *ProviderArgs, opts ...pulumi.ResourceOption) (*Provider, error) {
 	if args == nil {
-		return nil, errors.New("missing one or more required arguments")
+		args = &ProviderArgs{}
 	}
 
-	if args.Environment == nil {
-		return nil, errors.New("invalid value for required argument 'Environment'")
-	}
 	opts = internal.PkgResourceDefaultOpts(opts)
 	var resource Provider
 	err := ctx.RegisterResource("pulumi:providers:azapi", name, args, &resource, opts...)
@@ -77,109 +92,197 @@ func NewProvider(ctx *pulumi.Context,
 }
 
 type providerArgs struct {
+	// List of auxiliary Tenant IDs required for multi-tenancy and cross-tenant scenarios. This can also be sourced from the
+	// `ARM_AUXILIARY_TENANT_IDS` Environment Variable.
 	AuxiliaryTenantIds []string `pulumi:"auxiliaryTenantIds"`
-	// The password associated with the Client Certificate. For use when authenticating as a Service Principal using a Client
-	// Certificate
+	// A base64-encoded PKCS#12 bundle to be used as the client certificate for authentication. This can also be sourced from
+	// the `ARM_CLIENT_CERTIFICATE` environment variable.
+	ClientCertificate *string `pulumi:"clientCertificate"`
+	// The password associated with the Client Certificate. This can also be sourced from the `ARM_CLIENT_CERTIFICATE_PASSWORD`
+	// Environment Variable.
 	ClientCertificatePassword *string `pulumi:"clientCertificatePassword"`
-	// The path to the Client Certificate associated with the Service Principal for use when authenticating as a Service
-	// Principal using a Client Certificate.
+	// The path to the Client Certificate associated with the Service Principal which should be used. This can also be sourced
+	// from the `ARM_CLIENT_CERTIFICATE_PATH` Environment Variable.
 	ClientCertificatePath *string `pulumi:"clientCertificatePath"`
-	// The Client ID which should be used.
+	// The Client ID which should be used. This can also be sourced from the `ARM_CLIENT_ID` Environment Variable.
 	ClientId *string `pulumi:"clientId"`
-	// The Client Secret which should be used. For use When authenticating as a Service Principal using a Client Secret.
+	// The path to a file containing the Client ID which should be used. This can also be sourced from the
+	// `ARM_CLIENT_ID_FILE_PATH` Environment Variable.
+	ClientIdFilePath *string `pulumi:"clientIdFilePath"`
+	// The Client Secret which should be used. This can also be sourced from the `ARM_CLIENT_SECRET` Environment Variable.
 	ClientSecret *string `pulumi:"clientSecret"`
-	// The value of the x-ms-correlation-request-id header (otherwise an auto-generated UUID will be used).
+	// The path to a file containing the Client Secret which should be used. For use When authenticating as a Service Principal
+	// using a Client Secret. This can also be sourced from the `ARM_CLIENT_SECRET_FILE_PATH` Environment Variable.
+	ClientSecretFilePath *string `pulumi:"clientSecretFilePath"`
+	// The value of the `x-ms-correlation-request-id` header, otherwise an auto-generated UUID will be used. This can also be
+	// sourced from the `ARM_CORRELATION_REQUEST_ID` environment variable.
 	CustomCorrelationRequestId *string `pulumi:"customCorrelationRequestId"`
-	DefaultLocation            *string `pulumi:"defaultLocation"`
-	DefaultName                *string `pulumi:"defaultName"`
-	// Deprecated: It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead.
-	DefaultNamingPrefix *string `pulumi:"defaultNamingPrefix"`
-	// Deprecated: It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead.
-	DefaultNamingSuffix *string           `pulumi:"defaultNamingSuffix"`
-	DefaultTags         map[string]string `pulumi:"defaultTags"`
+	// The default Azure Region where the azure resource should exist. The `location` in each resource block can override the
+	// `defaultLocation`. Changing this forces new resources to be created.
+	DefaultLocation *string `pulumi:"defaultLocation"`
+	// The default name to create the azure resource. The `name` in each resource block can override the `defaultName`.
+	// Changing this forces new resources to be created.
+	DefaultName *string `pulumi:"defaultName"`
+	// A mapping of tags which should be assigned to the azure resource as default tags. The`tags` in each resource block can
+	// override the `defaultTags`.
+	DefaultTags map[string]string `pulumi:"defaultTags"`
 	// This will disable the x-ms-correlation-request-id header.
-	DisableCorrelationRequestId *bool             `pulumi:"disableCorrelationRequestId"`
-	DisableTerraformPartnerId   *bool             `pulumi:"disableTerraformPartnerId"`
-	Endpoint                    *ProviderEndpoint `pulumi:"endpoint"`
-	// The Cloud Environment which should be used. Possible values are public, usgovernment and china. Defaults to public.
-	Environment string `pulumi:"environment"`
-	// The bearer token for the request to the OIDC provider. For use When authenticating as a Service Principal using OpenID
-	// Connect.
+	DisableCorrelationRequestId *bool `pulumi:"disableCorrelationRequestId"`
+	// Disable default output. The default is false. When set to false, the provider will output the read-only properties if
+	// `responseExportValues` is not specified in the resource block. When set to true, the provider will disable this output.
+	// This can also be sourced from the `ARM_DISABLE_DEFAULT_OUTPUT` Environment Variable.
+	DisableDefaultOutput      *bool `pulumi:"disableDefaultOutput"`
+	DisableTerraformPartnerId *bool `pulumi:"disableTerraformPartnerId"`
+	// Enable Preflight Validation. The default is false. When set to true, the provider will use Preflight to do static
+	// validation before really deploying a new resource. When set to false, the provider will disable this validation. This
+	// can also be sourced from the `ARM_ENABLE_PREFLIGHT` Environment Variable.
+	EnablePreflight *bool `pulumi:"enablePreflight"`
+	// The Azure API Endpoint Configuration.
+	Endpoints []ProviderEndpoint `pulumi:"endpoints"`
+	// The Cloud Environment which should be used. Possible values are `public`, `usgovernment` and `china`. Defaults to
+	// `public`. This can also be sourced from the `ARM_ENVIRONMENT` Environment Variable.
+	Environment *string `pulumi:"environment"`
+	// The maximum number of retries to attempt if the Azure API returns an HTTP 408, 429, 500, 502, 503, or 504 response. The
+	// default is `3`. The resource-specific retry configuration may additionally be used to retry on other errors and
+	// conditions.
+	MaximumBusyRetryAttempts *int `pulumi:"maximumBusyRetryAttempts"`
+	// The Azure Pipelines Service Connection ID to use for authentication. This can also be sourced from the
+	// `ARM_ADO_PIPELINE_SERVICE_CONNECTION_ID` or `ARM_OIDC_AZURE_SERVICE_CONNECTION_ID` Environment Variables.
+	OidcAzureServiceConnectionId *string `pulumi:"oidcAzureServiceConnectionId"`
+	// The bearer token for the request to the OIDC provider. This can also be sourced from the `ARM_OIDC_REQUEST_TOKEN` or
+	// `ACTIONS_ID_TOKEN_REQUEST_TOKEN` Environment Variables.
 	OidcRequestToken *string `pulumi:"oidcRequestToken"`
-	// The URL for the OIDC provider from which to request an ID token. For use When authenticating as a Service Principal
-	// using OpenID Connect.
+	// The URL for the OIDC provider from which to request an ID token. This can also be sourced from the
+	// `ARM_OIDC_REQUEST_URL` or `ACTIONS_ID_TOKEN_REQUEST_URL` Environment Variables.
 	OidcRequestUrl *string `pulumi:"oidcRequestUrl"`
-	// The OIDC ID token for use when authenticating as a Service Principal using OpenID Connect.
+	// The ID token when authenticating using OpenID Connect (OIDC). This can also be sourced from the `ARM_OIDC_TOKEN`
+	// environment Variable.
 	OidcToken *string `pulumi:"oidcToken"`
-	// The path to a file containing an OIDC ID token for use when authenticating as a Service Principal using OpenID Connect.
+	// The path to a file containing an ID token when authenticating using OpenID Connect (OIDC). This can also be sourced from
+	// the `ARM_OIDC_TOKEN_FILE_PATH` environment Variable.
 	OidcTokenFilePath *string `pulumi:"oidcTokenFilePath"`
-	// A GUID/UUID that is registered with Microsoft to facilitate partner resource usage attribution.
+	// A GUID/UUID that is
+	// [registered](https://docs.microsoft.com/azure/marketplace/azure-partner-customer-usage-attribution#register-guids-and-offers)
+	// with Microsoft to facilitate partner resource usage attribution. This can also be sourced from the `ARM_PARTNER_ID`
+	// Environment Variable.
 	PartnerId *string `pulumi:"partnerId"`
-	// Should the Provider skip registering all of the Resource Providers that it supports, if they're not already registered?
+	// Should the Provider skip registering the Resource Providers it supports? This can also be sourced from the
+	// `ARM_SKIP_PROVIDER_REGISTRATION` Environment Variable. Defaults to `false`.
 	SkipProviderRegistration *bool `pulumi:"skipProviderRegistration"`
-	// The Subscription ID which should be used.
+	// The Subscription ID which should be used. This can also be sourced from the `ARM_SUBSCRIPTION_ID` Environment Variable.
 	SubscriptionId *string `pulumi:"subscriptionId"`
-	// The Tenant ID which should be used.
+	// The Tenant ID should be used. This can also be sourced from the `ARM_TENANT_ID` Environment Variable.
 	TenantId *string `pulumi:"tenantId"`
-	// Allow Azure CLI to be used for Authentication.
+	// Should AKS Workload Identity be used for Authentication? This can also be sourced from the
+	// `ARM_USE_AKS_WORKLOAD_IDENTITY` Environment Variable. Defaults to `false`. When set, `clientId`, `tenantId` and
+	// `oidcTokenFilePath` will be detected from the environment and do not need to be specified.
+	UseAksWorkloadIdentity *bool `pulumi:"useAksWorkloadIdentity"`
+	// Should Azure CLI be used for authentication? This can also be sourced from the `ARM_USE_CLI` environment variable.
+	// Defaults to `true`.
 	UseCli *bool `pulumi:"useCli"`
-	// Allow Managed Service Identity to be used for Authentication.
+	// Should Managed Identity be used for Authentication? This can also be sourced from the `ARM_USE_MSI` Environment
+	// Variable. Defaults to `false`.
 	UseMsi *bool `pulumi:"useMsi"`
-	// Allow OpenID Connect to be used for authentication
+	// Should OIDC be used for Authentication? This can also be sourced from the `ARM_USE_OIDC` Environment Variable. Defaults
+	// to `false`.
 	UseOidc *bool `pulumi:"useOidc"`
 }
 
 // The set of arguments for constructing a Provider resource.
 type ProviderArgs struct {
+	// List of auxiliary Tenant IDs required for multi-tenancy and cross-tenant scenarios. This can also be sourced from the
+	// `ARM_AUXILIARY_TENANT_IDS` Environment Variable.
 	AuxiliaryTenantIds pulumi.StringArrayInput
-	// The password associated with the Client Certificate. For use when authenticating as a Service Principal using a Client
-	// Certificate
+	// A base64-encoded PKCS#12 bundle to be used as the client certificate for authentication. This can also be sourced from
+	// the `ARM_CLIENT_CERTIFICATE` environment variable.
+	ClientCertificate pulumi.StringPtrInput
+	// The password associated with the Client Certificate. This can also be sourced from the `ARM_CLIENT_CERTIFICATE_PASSWORD`
+	// Environment Variable.
 	ClientCertificatePassword pulumi.StringPtrInput
-	// The path to the Client Certificate associated with the Service Principal for use when authenticating as a Service
-	// Principal using a Client Certificate.
+	// The path to the Client Certificate associated with the Service Principal which should be used. This can also be sourced
+	// from the `ARM_CLIENT_CERTIFICATE_PATH` Environment Variable.
 	ClientCertificatePath pulumi.StringPtrInput
-	// The Client ID which should be used.
+	// The Client ID which should be used. This can also be sourced from the `ARM_CLIENT_ID` Environment Variable.
 	ClientId pulumi.StringPtrInput
-	// The Client Secret which should be used. For use When authenticating as a Service Principal using a Client Secret.
+	// The path to a file containing the Client ID which should be used. This can also be sourced from the
+	// `ARM_CLIENT_ID_FILE_PATH` Environment Variable.
+	ClientIdFilePath pulumi.StringPtrInput
+	// The Client Secret which should be used. This can also be sourced from the `ARM_CLIENT_SECRET` Environment Variable.
 	ClientSecret pulumi.StringPtrInput
-	// The value of the x-ms-correlation-request-id header (otherwise an auto-generated UUID will be used).
+	// The path to a file containing the Client Secret which should be used. For use When authenticating as a Service Principal
+	// using a Client Secret. This can also be sourced from the `ARM_CLIENT_SECRET_FILE_PATH` Environment Variable.
+	ClientSecretFilePath pulumi.StringPtrInput
+	// The value of the `x-ms-correlation-request-id` header, otherwise an auto-generated UUID will be used. This can also be
+	// sourced from the `ARM_CORRELATION_REQUEST_ID` environment variable.
 	CustomCorrelationRequestId pulumi.StringPtrInput
-	DefaultLocation            pulumi.StringPtrInput
-	DefaultName                pulumi.StringPtrInput
-	// Deprecated: It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead.
-	DefaultNamingPrefix pulumi.StringPtrInput
-	// Deprecated: It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead.
-	DefaultNamingSuffix pulumi.StringPtrInput
-	DefaultTags         pulumi.StringMapInput
+	// The default Azure Region where the azure resource should exist. The `location` in each resource block can override the
+	// `defaultLocation`. Changing this forces new resources to be created.
+	DefaultLocation pulumi.StringPtrInput
+	// The default name to create the azure resource. The `name` in each resource block can override the `defaultName`.
+	// Changing this forces new resources to be created.
+	DefaultName pulumi.StringPtrInput
+	// A mapping of tags which should be assigned to the azure resource as default tags. The`tags` in each resource block can
+	// override the `defaultTags`.
+	DefaultTags pulumi.StringMapInput
 	// This will disable the x-ms-correlation-request-id header.
 	DisableCorrelationRequestId pulumi.BoolPtrInput
-	DisableTerraformPartnerId   pulumi.BoolPtrInput
-	Endpoint                    ProviderEndpointPtrInput
-	// The Cloud Environment which should be used. Possible values are public, usgovernment and china. Defaults to public.
-	Environment pulumi.StringInput
-	// The bearer token for the request to the OIDC provider. For use When authenticating as a Service Principal using OpenID
-	// Connect.
+	// Disable default output. The default is false. When set to false, the provider will output the read-only properties if
+	// `responseExportValues` is not specified in the resource block. When set to true, the provider will disable this output.
+	// This can also be sourced from the `ARM_DISABLE_DEFAULT_OUTPUT` Environment Variable.
+	DisableDefaultOutput      pulumi.BoolPtrInput
+	DisableTerraformPartnerId pulumi.BoolPtrInput
+	// Enable Preflight Validation. The default is false. When set to true, the provider will use Preflight to do static
+	// validation before really deploying a new resource. When set to false, the provider will disable this validation. This
+	// can also be sourced from the `ARM_ENABLE_PREFLIGHT` Environment Variable.
+	EnablePreflight pulumi.BoolPtrInput
+	// The Azure API Endpoint Configuration.
+	Endpoints ProviderEndpointArrayInput
+	// The Cloud Environment which should be used. Possible values are `public`, `usgovernment` and `china`. Defaults to
+	// `public`. This can also be sourced from the `ARM_ENVIRONMENT` Environment Variable.
+	Environment pulumi.StringPtrInput
+	// The maximum number of retries to attempt if the Azure API returns an HTTP 408, 429, 500, 502, 503, or 504 response. The
+	// default is `3`. The resource-specific retry configuration may additionally be used to retry on other errors and
+	// conditions.
+	MaximumBusyRetryAttempts pulumi.IntPtrInput
+	// The Azure Pipelines Service Connection ID to use for authentication. This can also be sourced from the
+	// `ARM_ADO_PIPELINE_SERVICE_CONNECTION_ID` or `ARM_OIDC_AZURE_SERVICE_CONNECTION_ID` Environment Variables.
+	OidcAzureServiceConnectionId pulumi.StringPtrInput
+	// The bearer token for the request to the OIDC provider. This can also be sourced from the `ARM_OIDC_REQUEST_TOKEN` or
+	// `ACTIONS_ID_TOKEN_REQUEST_TOKEN` Environment Variables.
 	OidcRequestToken pulumi.StringPtrInput
-	// The URL for the OIDC provider from which to request an ID token. For use When authenticating as a Service Principal
-	// using OpenID Connect.
+	// The URL for the OIDC provider from which to request an ID token. This can also be sourced from the
+	// `ARM_OIDC_REQUEST_URL` or `ACTIONS_ID_TOKEN_REQUEST_URL` Environment Variables.
 	OidcRequestUrl pulumi.StringPtrInput
-	// The OIDC ID token for use when authenticating as a Service Principal using OpenID Connect.
+	// The ID token when authenticating using OpenID Connect (OIDC). This can also be sourced from the `ARM_OIDC_TOKEN`
+	// environment Variable.
 	OidcToken pulumi.StringPtrInput
-	// The path to a file containing an OIDC ID token for use when authenticating as a Service Principal using OpenID Connect.
+	// The path to a file containing an ID token when authenticating using OpenID Connect (OIDC). This can also be sourced from
+	// the `ARM_OIDC_TOKEN_FILE_PATH` environment Variable.
 	OidcTokenFilePath pulumi.StringPtrInput
-	// A GUID/UUID that is registered with Microsoft to facilitate partner resource usage attribution.
+	// A GUID/UUID that is
+	// [registered](https://docs.microsoft.com/azure/marketplace/azure-partner-customer-usage-attribution#register-guids-and-offers)
+	// with Microsoft to facilitate partner resource usage attribution. This can also be sourced from the `ARM_PARTNER_ID`
+	// Environment Variable.
 	PartnerId pulumi.StringPtrInput
-	// Should the Provider skip registering all of the Resource Providers that it supports, if they're not already registered?
+	// Should the Provider skip registering the Resource Providers it supports? This can also be sourced from the
+	// `ARM_SKIP_PROVIDER_REGISTRATION` Environment Variable. Defaults to `false`.
 	SkipProviderRegistration pulumi.BoolPtrInput
-	// The Subscription ID which should be used.
+	// The Subscription ID which should be used. This can also be sourced from the `ARM_SUBSCRIPTION_ID` Environment Variable.
 	SubscriptionId pulumi.StringPtrInput
-	// The Tenant ID which should be used.
+	// The Tenant ID should be used. This can also be sourced from the `ARM_TENANT_ID` Environment Variable.
 	TenantId pulumi.StringPtrInput
-	// Allow Azure CLI to be used for Authentication.
+	// Should AKS Workload Identity be used for Authentication? This can also be sourced from the
+	// `ARM_USE_AKS_WORKLOAD_IDENTITY` Environment Variable. Defaults to `false`. When set, `clientId`, `tenantId` and
+	// `oidcTokenFilePath` will be detected from the environment and do not need to be specified.
+	UseAksWorkloadIdentity pulumi.BoolPtrInput
+	// Should Azure CLI be used for authentication? This can also be sourced from the `ARM_USE_CLI` environment variable.
+	// Defaults to `true`.
 	UseCli pulumi.BoolPtrInput
-	// Allow Managed Service Identity to be used for Authentication.
+	// Should Managed Identity be used for Authentication? This can also be sourced from the `ARM_USE_MSI` Environment
+	// Variable. Defaults to `false`.
 	UseMsi pulumi.BoolPtrInput
-	// Allow OpenID Connect to be used for authentication
+	// Should OIDC be used for Authentication? This can also be sourced from the `ARM_USE_OIDC` Environment Variable. Defaults
+	// to `false`.
 	UseOidc pulumi.BoolPtrInput
 }
 
@@ -220,89 +323,114 @@ func (o ProviderOutput) ToProviderOutputWithContext(ctx context.Context) Provide
 	return o
 }
 
-// The password associated with the Client Certificate. For use when authenticating as a Service Principal using a Client
-// Certificate
+// A base64-encoded PKCS#12 bundle to be used as the client certificate for authentication. This can also be sourced from
+// the `ARM_CLIENT_CERTIFICATE` environment variable.
+func (o ProviderOutput) ClientCertificate() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *Provider) pulumi.StringPtrOutput { return v.ClientCertificate }).(pulumi.StringPtrOutput)
+}
+
+// The password associated with the Client Certificate. This can also be sourced from the `ARM_CLIENT_CERTIFICATE_PASSWORD`
+// Environment Variable.
 func (o ProviderOutput) ClientCertificatePassword() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *Provider) pulumi.StringPtrOutput { return v.ClientCertificatePassword }).(pulumi.StringPtrOutput)
 }
 
-// The path to the Client Certificate associated with the Service Principal for use when authenticating as a Service
-// Principal using a Client Certificate.
+// The path to the Client Certificate associated with the Service Principal which should be used. This can also be sourced
+// from the `ARM_CLIENT_CERTIFICATE_PATH` Environment Variable.
 func (o ProviderOutput) ClientCertificatePath() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *Provider) pulumi.StringPtrOutput { return v.ClientCertificatePath }).(pulumi.StringPtrOutput)
 }
 
-// The Client ID which should be used.
+// The Client ID which should be used. This can also be sourced from the `ARM_CLIENT_ID` Environment Variable.
 func (o ProviderOutput) ClientId() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *Provider) pulumi.StringPtrOutput { return v.ClientId }).(pulumi.StringPtrOutput)
 }
 
-// The Client Secret which should be used. For use When authenticating as a Service Principal using a Client Secret.
+// The path to a file containing the Client ID which should be used. This can also be sourced from the
+// `ARM_CLIENT_ID_FILE_PATH` Environment Variable.
+func (o ProviderOutput) ClientIdFilePath() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *Provider) pulumi.StringPtrOutput { return v.ClientIdFilePath }).(pulumi.StringPtrOutput)
+}
+
+// The Client Secret which should be used. This can also be sourced from the `ARM_CLIENT_SECRET` Environment Variable.
 func (o ProviderOutput) ClientSecret() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *Provider) pulumi.StringPtrOutput { return v.ClientSecret }).(pulumi.StringPtrOutput)
 }
 
-// The value of the x-ms-correlation-request-id header (otherwise an auto-generated UUID will be used).
+// The path to a file containing the Client Secret which should be used. For use When authenticating as a Service Principal
+// using a Client Secret. This can also be sourced from the `ARM_CLIENT_SECRET_FILE_PATH` Environment Variable.
+func (o ProviderOutput) ClientSecretFilePath() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *Provider) pulumi.StringPtrOutput { return v.ClientSecretFilePath }).(pulumi.StringPtrOutput)
+}
+
+// The value of the `x-ms-correlation-request-id` header, otherwise an auto-generated UUID will be used. This can also be
+// sourced from the `ARM_CORRELATION_REQUEST_ID` environment variable.
 func (o ProviderOutput) CustomCorrelationRequestId() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *Provider) pulumi.StringPtrOutput { return v.CustomCorrelationRequestId }).(pulumi.StringPtrOutput)
 }
 
+// The default Azure Region where the azure resource should exist. The `location` in each resource block can override the
+// `defaultLocation`. Changing this forces new resources to be created.
 func (o ProviderOutput) DefaultLocation() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *Provider) pulumi.StringPtrOutput { return v.DefaultLocation }).(pulumi.StringPtrOutput)
 }
 
+// The default name to create the azure resource. The `name` in each resource block can override the `defaultName`.
+// Changing this forces new resources to be created.
 func (o ProviderOutput) DefaultName() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *Provider) pulumi.StringPtrOutput { return v.DefaultName }).(pulumi.StringPtrOutput)
 }
 
-// Deprecated: It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead.
-func (o ProviderOutput) DefaultNamingPrefix() pulumi.StringPtrOutput {
-	return o.ApplyT(func(v *Provider) pulumi.StringPtrOutput { return v.DefaultNamingPrefix }).(pulumi.StringPtrOutput)
+// The Cloud Environment which should be used. Possible values are `public`, `usgovernment` and `china`. Defaults to
+// `public`. This can also be sourced from the `ARM_ENVIRONMENT` Environment Variable.
+func (o ProviderOutput) Environment() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *Provider) pulumi.StringPtrOutput { return v.Environment }).(pulumi.StringPtrOutput)
 }
 
-// Deprecated: It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead.
-func (o ProviderOutput) DefaultNamingSuffix() pulumi.StringPtrOutput {
-	return o.ApplyT(func(v *Provider) pulumi.StringPtrOutput { return v.DefaultNamingSuffix }).(pulumi.StringPtrOutput)
+// The Azure Pipelines Service Connection ID to use for authentication. This can also be sourced from the
+// `ARM_ADO_PIPELINE_SERVICE_CONNECTION_ID` or `ARM_OIDC_AZURE_SERVICE_CONNECTION_ID` Environment Variables.
+func (o ProviderOutput) OidcAzureServiceConnectionId() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *Provider) pulumi.StringPtrOutput { return v.OidcAzureServiceConnectionId }).(pulumi.StringPtrOutput)
 }
 
-// The Cloud Environment which should be used. Possible values are public, usgovernment and china. Defaults to public.
-func (o ProviderOutput) Environment() pulumi.StringOutput {
-	return o.ApplyT(func(v *Provider) pulumi.StringOutput { return v.Environment }).(pulumi.StringOutput)
-}
-
-// The bearer token for the request to the OIDC provider. For use When authenticating as a Service Principal using OpenID
-// Connect.
+// The bearer token for the request to the OIDC provider. This can also be sourced from the `ARM_OIDC_REQUEST_TOKEN` or
+// `ACTIONS_ID_TOKEN_REQUEST_TOKEN` Environment Variables.
 func (o ProviderOutput) OidcRequestToken() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *Provider) pulumi.StringPtrOutput { return v.OidcRequestToken }).(pulumi.StringPtrOutput)
 }
 
-// The URL for the OIDC provider from which to request an ID token. For use When authenticating as a Service Principal
-// using OpenID Connect.
+// The URL for the OIDC provider from which to request an ID token. This can also be sourced from the
+// `ARM_OIDC_REQUEST_URL` or `ACTIONS_ID_TOKEN_REQUEST_URL` Environment Variables.
 func (o ProviderOutput) OidcRequestUrl() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *Provider) pulumi.StringPtrOutput { return v.OidcRequestUrl }).(pulumi.StringPtrOutput)
 }
 
-// The OIDC ID token for use when authenticating as a Service Principal using OpenID Connect.
+// The ID token when authenticating using OpenID Connect (OIDC). This can also be sourced from the `ARM_OIDC_TOKEN`
+// environment Variable.
 func (o ProviderOutput) OidcToken() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *Provider) pulumi.StringPtrOutput { return v.OidcToken }).(pulumi.StringPtrOutput)
 }
 
-// The path to a file containing an OIDC ID token for use when authenticating as a Service Principal using OpenID Connect.
+// The path to a file containing an ID token when authenticating using OpenID Connect (OIDC). This can also be sourced from
+// the `ARM_OIDC_TOKEN_FILE_PATH` environment Variable.
 func (o ProviderOutput) OidcTokenFilePath() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *Provider) pulumi.StringPtrOutput { return v.OidcTokenFilePath }).(pulumi.StringPtrOutput)
 }
 
-// A GUID/UUID that is registered with Microsoft to facilitate partner resource usage attribution.
+// A GUID/UUID that is
+// [registered](https://docs.microsoft.com/azure/marketplace/azure-partner-customer-usage-attribution#register-guids-and-offers)
+// with Microsoft to facilitate partner resource usage attribution. This can also be sourced from the `ARM_PARTNER_ID`
+// Environment Variable.
 func (o ProviderOutput) PartnerId() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *Provider) pulumi.StringPtrOutput { return v.PartnerId }).(pulumi.StringPtrOutput)
 }
 
-// The Subscription ID which should be used.
+// The Subscription ID which should be used. This can also be sourced from the `ARM_SUBSCRIPTION_ID` Environment Variable.
 func (o ProviderOutput) SubscriptionId() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *Provider) pulumi.StringPtrOutput { return v.SubscriptionId }).(pulumi.StringPtrOutput)
 }
 
-// The Tenant ID which should be used.
+// The Tenant ID should be used. This can also be sourced from the `ARM_TENANT_ID` Environment Variable.
 func (o ProviderOutput) TenantId() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *Provider) pulumi.StringPtrOutput { return v.TenantId }).(pulumi.StringPtrOutput)
 }

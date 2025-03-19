@@ -11,9 +11,47 @@ import (
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
-// This resource can parse an Azure resource ID into its separate fields.
-//
 // ## Example Usage
+//
+// ```go
+// package main
+//
+// import (
+//
+//	"github.com/dirien/pulumi-azapi/sdk/go/azapi"
+//	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
+//
+// )
+//
+//	func main() {
+//		pulumi.Run(func(ctx *pulumi.Context) error {
+//			account, err := azapi.GetResourceId(ctx, &azapi.GetResourceIdArgs{
+//				Type:       "Microsoft.Automation/automationAccounts@2021-06-22",
+//				ResourceId: pulumi.StringRef("/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg1/providers/Microsoft.Automation/automationAccounts/automationAccount1"),
+//			}, nil)
+//			if err != nil {
+//				return err
+//			}
+//			ctx.Export("accountName", account.Name)
+//			ctx.Export("accountResourceGroup", account.ResourceGroupName)
+//			ctx.Export("accountSubscription", account.SubscriptionId)
+//			ctx.Export("accountParentId", account.ParentId)
+//			vnet, err := azapi.GetResourceId(ctx, &azapi.GetResourceIdArgs{
+//				Type:     "Microsoft.Network/virtualNetworks@2021-02-01",
+//				ParentId: pulumi.StringRef("/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg1"),
+//				Name:     pulumi.StringRef("vnet1"),
+//			}, nil)
+//			if err != nil {
+//				return err
+//			}
+//			ctx.Export("vnetId", vnet.Id)
+//			ctx.Export("vnetResourceGroup", vnet.ResourceGroupName)
+//			ctx.Export("vnetSubscription", vnet.SubscriptionId)
+//			return nil
+//		})
+//	}
+//
+// ```
 func GetResourceId(ctx *pulumi.Context, args *GetResourceIdArgs, opts ...pulumi.InvokeOption) (*GetResourceIdResult, error) {
 	opts = internal.PkgInvokeDefaultOpts(opts)
 	var rv GetResourceIdResult
@@ -26,79 +64,43 @@ func GetResourceId(ctx *pulumi.Context, args *GetResourceIdArgs, opts ...pulumi.
 
 // A collection of arguments for invoking getResourceId.
 type GetResourceIdArgs struct {
-	// Specifies the name of the azure resource.
-	Name *string `pulumi:"name"`
-	// The ID of the azure resource in which this resource is created. It supports different kinds of deployment scope for **top level** resources:
-	// - resource group scope: `parentId` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.
-	// - management group scope: `parentId` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.
-	// - extension scope: `parentId` should be the ID of the resource you're adding the extension to.
-	// - subscription scope: `parentId` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`
-	// - tenant scope: `parentId` should be `/`
-	//
-	// For child level resources, the `parentId` should be the ID of its parent resource, for example, subnet resource's `parentId` is the ID of the vnet.
-	ParentId *string `pulumi:"parentId"`
-	// The ID of an existing azure source.
-	//
-	// > **Note:** Configuring `name` and `parentId` is an alternative way to configure `resourceId`.
-	ResourceId *string `pulumi:"resourceId"`
-	// It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
-	// `<api-version>` is version of the API used to manage this azure resource.
-	Type string `pulumi:"type"`
+	Name       *string                `pulumi:"name"`
+	ParentId   *string                `pulumi:"parentId"`
+	ResourceId *string                `pulumi:"resourceId"`
+	Timeouts   *GetResourceIdTimeouts `pulumi:"timeouts"`
+	Type       string                 `pulumi:"type"`
 }
 
 // A collection of values returned by getResourceId.
 type GetResourceIdResult struct {
-	// The provider-assigned unique ID for this managed resource.
-	Id string `pulumi:"id"`
-	// The name of the azure resource.
-	Name string `pulumi:"name"`
-	// The ID of the azure resource in which this resource is created.
-	ParentId string `pulumi:"parentId"`
-	// The map of the resource ID parts, where the key is the part name and the value is the part value. e.g. `virtualNetworks=myVnet`.
-	Parts map[string]string `pulumi:"parts"`
-	// The azure resource provider namespace of the azure resource.
-	ProviderNamespace string `pulumi:"providerNamespace"`
-	// The resource group name of the azure resource.
-	ResourceGroupName string `pulumi:"resourceGroupName"`
-	ResourceId        string `pulumi:"resourceId"`
-	// The subscription ID of the azure resource.
-	SubscriptionId string `pulumi:"subscriptionId"`
-	Type           string `pulumi:"type"`
+	Id                string                 `pulumi:"id"`
+	Name              string                 `pulumi:"name"`
+	ParentId          string                 `pulumi:"parentId"`
+	Parts             map[string]string      `pulumi:"parts"`
+	ProviderNamespace string                 `pulumi:"providerNamespace"`
+	ResourceGroupName string                 `pulumi:"resourceGroupName"`
+	ResourceId        string                 `pulumi:"resourceId"`
+	SubscriptionId    string                 `pulumi:"subscriptionId"`
+	Timeouts          *GetResourceIdTimeouts `pulumi:"timeouts"`
+	Type              string                 `pulumi:"type"`
 }
 
 func GetResourceIdOutput(ctx *pulumi.Context, args GetResourceIdOutputArgs, opts ...pulumi.InvokeOption) GetResourceIdResultOutput {
-	return pulumi.ToOutputWithContext(context.Background(), args).
-		ApplyT(func(v interface{}) (GetResourceIdResult, error) {
+	return pulumi.ToOutputWithContext(ctx.Context(), args).
+		ApplyT(func(v interface{}) (GetResourceIdResultOutput, error) {
 			args := v.(GetResourceIdArgs)
-			r, err := GetResourceId(ctx, &args, opts...)
-			var s GetResourceIdResult
-			if r != nil {
-				s = *r
-			}
-			return s, err
+			options := pulumi.InvokeOutputOptions{InvokeOptions: internal.PkgInvokeDefaultOpts(opts)}
+			return ctx.InvokeOutput("azapi:index/getResourceId:getResourceId", args, GetResourceIdResultOutput{}, options).(GetResourceIdResultOutput), nil
 		}).(GetResourceIdResultOutput)
 }
 
 // A collection of arguments for invoking getResourceId.
 type GetResourceIdOutputArgs struct {
-	// Specifies the name of the azure resource.
-	Name pulumi.StringPtrInput `pulumi:"name"`
-	// The ID of the azure resource in which this resource is created. It supports different kinds of deployment scope for **top level** resources:
-	// - resource group scope: `parentId` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.
-	// - management group scope: `parentId` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.
-	// - extension scope: `parentId` should be the ID of the resource you're adding the extension to.
-	// - subscription scope: `parentId` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`
-	// - tenant scope: `parentId` should be `/`
-	//
-	// For child level resources, the `parentId` should be the ID of its parent resource, for example, subnet resource's `parentId` is the ID of the vnet.
-	ParentId pulumi.StringPtrInput `pulumi:"parentId"`
-	// The ID of an existing azure source.
-	//
-	// > **Note:** Configuring `name` and `parentId` is an alternative way to configure `resourceId`.
-	ResourceId pulumi.StringPtrInput `pulumi:"resourceId"`
-	// It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
-	// `<api-version>` is version of the API used to manage this azure resource.
-	Type pulumi.StringInput `pulumi:"type"`
+	Name       pulumi.StringPtrInput         `pulumi:"name"`
+	ParentId   pulumi.StringPtrInput         `pulumi:"parentId"`
+	ResourceId pulumi.StringPtrInput         `pulumi:"resourceId"`
+	Timeouts   GetResourceIdTimeoutsPtrInput `pulumi:"timeouts"`
+	Type       pulumi.StringInput            `pulumi:"type"`
 }
 
 func (GetResourceIdOutputArgs) ElementType() reflect.Type {
@@ -120,32 +122,26 @@ func (o GetResourceIdResultOutput) ToGetResourceIdResultOutputWithContext(ctx co
 	return o
 }
 
-// The provider-assigned unique ID for this managed resource.
 func (o GetResourceIdResultOutput) Id() pulumi.StringOutput {
 	return o.ApplyT(func(v GetResourceIdResult) string { return v.Id }).(pulumi.StringOutput)
 }
 
-// The name of the azure resource.
 func (o GetResourceIdResultOutput) Name() pulumi.StringOutput {
 	return o.ApplyT(func(v GetResourceIdResult) string { return v.Name }).(pulumi.StringOutput)
 }
 
-// The ID of the azure resource in which this resource is created.
 func (o GetResourceIdResultOutput) ParentId() pulumi.StringOutput {
 	return o.ApplyT(func(v GetResourceIdResult) string { return v.ParentId }).(pulumi.StringOutput)
 }
 
-// The map of the resource ID parts, where the key is the part name and the value is the part value. e.g. `virtualNetworks=myVnet`.
 func (o GetResourceIdResultOutput) Parts() pulumi.StringMapOutput {
 	return o.ApplyT(func(v GetResourceIdResult) map[string]string { return v.Parts }).(pulumi.StringMapOutput)
 }
 
-// The azure resource provider namespace of the azure resource.
 func (o GetResourceIdResultOutput) ProviderNamespace() pulumi.StringOutput {
 	return o.ApplyT(func(v GetResourceIdResult) string { return v.ProviderNamespace }).(pulumi.StringOutput)
 }
 
-// The resource group name of the azure resource.
 func (o GetResourceIdResultOutput) ResourceGroupName() pulumi.StringOutput {
 	return o.ApplyT(func(v GetResourceIdResult) string { return v.ResourceGroupName }).(pulumi.StringOutput)
 }
@@ -154,9 +150,12 @@ func (o GetResourceIdResultOutput) ResourceId() pulumi.StringOutput {
 	return o.ApplyT(func(v GetResourceIdResult) string { return v.ResourceId }).(pulumi.StringOutput)
 }
 
-// The subscription ID of the azure resource.
 func (o GetResourceIdResultOutput) SubscriptionId() pulumi.StringOutput {
 	return o.ApplyT(func(v GetResourceIdResult) string { return v.SubscriptionId }).(pulumi.StringOutput)
+}
+
+func (o GetResourceIdResultOutput) Timeouts() GetResourceIdTimeoutsPtrOutput {
+	return o.ApplyT(func(v GetResourceIdResult) *GetResourceIdTimeouts { return v.Timeouts }).(GetResourceIdTimeoutsPtrOutput)
 }
 
 func (o GetResourceIdResultOutput) Type() pulumi.StringOutput {

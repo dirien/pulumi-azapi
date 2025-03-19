@@ -2,20 +2,42 @@
 // *** Do not edit by hand unless you're certain you know what you are doing! ***
 
 import * as pulumi from "@pulumi/pulumi";
+import * as inputs from "./types/input";
+import * as outputs from "./types/output";
 import * as utilities from "./utilities";
 
 /**
- * This resource can parse an Azure resource ID into its separate fields.
- *
  * ## Example Usage
+ *
+ * ```typescript
+ * import * as pulumi from "@pulumi/pulumi";
+ * import * as azapi from "@pulumi/azapi";
+ *
+ * const account = azapi.getResourceId({
+ *     type: "Microsoft.Automation/automationAccounts@2021-06-22",
+ *     resourceId: "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg1/providers/Microsoft.Automation/automationAccounts/automationAccount1",
+ * });
+ * export const accountName = account.then(account => account.name);
+ * export const accountResourceGroup = account.then(account => account.resourceGroupName);
+ * export const accountSubscription = account.then(account => account.subscriptionId);
+ * export const accountParentId = account.then(account => account.parentId);
+ * const vnet = azapi.getResourceId({
+ *     type: "Microsoft.Network/virtualNetworks@2021-02-01",
+ *     parentId: "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg1",
+ *     name: "vnet1",
+ * });
+ * export const vnetId = vnet.then(vnet => vnet.id);
+ * export const vnetResourceGroup = vnet.then(vnet => vnet.resourceGroupName);
+ * export const vnetSubscription = vnet.then(vnet => vnet.subscriptionId);
+ * ```
  */
 export function getResourceId(args: GetResourceIdArgs, opts?: pulumi.InvokeOptions): Promise<GetResourceIdResult> {
-
     opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts || {});
     return pulumi.runtime.invoke("azapi:index/getResourceId:getResourceId", {
         "name": args.name,
         "parentId": args.parentId,
         "resourceId": args.resourceId,
+        "timeouts": args.timeouts,
         "type": args.type,
     }, opts);
 }
@@ -24,31 +46,10 @@ export function getResourceId(args: GetResourceIdArgs, opts?: pulumi.InvokeOptio
  * A collection of arguments for invoking getResourceId.
  */
 export interface GetResourceIdArgs {
-    /**
-     * Specifies the name of the azure resource.
-     */
     name?: string;
-    /**
-     * The ID of the azure resource in which this resource is created. It supports different kinds of deployment scope for **top level** resources:
-     * - resource group scope: `parentId` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.
-     * - management group scope: `parentId` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.
-     * - extension scope: `parentId` should be the ID of the resource you're adding the extension to.
-     * - subscription scope: `parentId` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`
-     * - tenant scope: `parentId` should be `/`
-     *
-     * For child level resources, the `parentId` should be the ID of its parent resource, for example, subnet resource's `parentId` is the ID of the vnet.
-     */
     parentId?: string;
-    /**
-     * The ID of an existing azure source.
-     *
-     * > **Note:** Configuring `name` and `parentId` is an alternative way to configure `resourceId`.
-     */
     resourceId?: string;
-    /**
-     * It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
-     * `<api-version>` is version of the API used to manage this azure resource.
-     */
+    timeouts?: inputs.GetResourceIdTimeouts;
     type: string;
 }
 
@@ -56,74 +57,60 @@ export interface GetResourceIdArgs {
  * A collection of values returned by getResourceId.
  */
 export interface GetResourceIdResult {
-    /**
-     * The provider-assigned unique ID for this managed resource.
-     */
     readonly id: string;
-    /**
-     * The name of the azure resource.
-     */
     readonly name: string;
-    /**
-     * The ID of the azure resource in which this resource is created.
-     */
     readonly parentId: string;
-    /**
-     * The map of the resource ID parts, where the key is the part name and the value is the part value. e.g. `virtualNetworks=myVnet`.
-     */
     readonly parts: {[key: string]: string};
-    /**
-     * The azure resource provider namespace of the azure resource.
-     */
     readonly providerNamespace: string;
-    /**
-     * The resource group name of the azure resource.
-     */
     readonly resourceGroupName: string;
     readonly resourceId: string;
-    /**
-     * The subscription ID of the azure resource.
-     */
     readonly subscriptionId: string;
+    readonly timeouts?: outputs.GetResourceIdTimeouts;
     readonly type: string;
 }
 /**
- * This resource can parse an Azure resource ID into its separate fields.
- *
  * ## Example Usage
+ *
+ * ```typescript
+ * import * as pulumi from "@pulumi/pulumi";
+ * import * as azapi from "@pulumi/azapi";
+ *
+ * const account = azapi.getResourceId({
+ *     type: "Microsoft.Automation/automationAccounts@2021-06-22",
+ *     resourceId: "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg1/providers/Microsoft.Automation/automationAccounts/automationAccount1",
+ * });
+ * export const accountName = account.then(account => account.name);
+ * export const accountResourceGroup = account.then(account => account.resourceGroupName);
+ * export const accountSubscription = account.then(account => account.subscriptionId);
+ * export const accountParentId = account.then(account => account.parentId);
+ * const vnet = azapi.getResourceId({
+ *     type: "Microsoft.Network/virtualNetworks@2021-02-01",
+ *     parentId: "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg1",
+ *     name: "vnet1",
+ * });
+ * export const vnetId = vnet.then(vnet => vnet.id);
+ * export const vnetResourceGroup = vnet.then(vnet => vnet.resourceGroupName);
+ * export const vnetSubscription = vnet.then(vnet => vnet.subscriptionId);
+ * ```
  */
-export function getResourceIdOutput(args: GetResourceIdOutputArgs, opts?: pulumi.InvokeOptions): pulumi.Output<GetResourceIdResult> {
-    return pulumi.output(args).apply((a: any) => getResourceId(a, opts))
+export function getResourceIdOutput(args: GetResourceIdOutputArgs, opts?: pulumi.InvokeOutputOptions): pulumi.Output<GetResourceIdResult> {
+    opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts || {});
+    return pulumi.runtime.invokeOutput("azapi:index/getResourceId:getResourceId", {
+        "name": args.name,
+        "parentId": args.parentId,
+        "resourceId": args.resourceId,
+        "timeouts": args.timeouts,
+        "type": args.type,
+    }, opts);
 }
 
 /**
  * A collection of arguments for invoking getResourceId.
  */
 export interface GetResourceIdOutputArgs {
-    /**
-     * Specifies the name of the azure resource.
-     */
     name?: pulumi.Input<string>;
-    /**
-     * The ID of the azure resource in which this resource is created. It supports different kinds of deployment scope for **top level** resources:
-     * - resource group scope: `parentId` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.
-     * - management group scope: `parentId` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.
-     * - extension scope: `parentId` should be the ID of the resource you're adding the extension to.
-     * - subscription scope: `parentId` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`
-     * - tenant scope: `parentId` should be `/`
-     *
-     * For child level resources, the `parentId` should be the ID of its parent resource, for example, subnet resource's `parentId` is the ID of the vnet.
-     */
     parentId?: pulumi.Input<string>;
-    /**
-     * The ID of an existing azure source.
-     *
-     * > **Note:** Configuring `name` and `parentId` is an alternative way to configure `resourceId`.
-     */
     resourceId?: pulumi.Input<string>;
-    /**
-     * It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
-     * `<api-version>` is version of the API used to manage this azure resource.
-     */
+    timeouts?: pulumi.Input<inputs.GetResourceIdTimeoutsArgs>;
     type: pulumi.Input<string>;
 }

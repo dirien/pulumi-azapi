@@ -1,7 +1,7 @@
 {
-    "name": "@ediri/azapi",
+    "name": "@pulumiverse/azapi",
     "version": "${VERSION}",
-    "description": "A Pulumi package for creating and managing Azapi resources",
+    "description": "A Pulumi package for creating and managing Azapi resources. Based on terraform-provider-azapi: version v2.3.0",
     "keywords": [
         "pulumi",
         "azapi",

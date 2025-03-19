@@ -2,28 +2,45 @@
 // *** Do not edit by hand unless you're certain you know what you are doing! ***
 
 import * as pulumi from "@pulumi/pulumi";
+import * as inputs from "./types/input";
+import * as outputs from "./types/output";
 import * as utilities from "./utilities";
 
 /**
- * This resource can perform resource action which gets information from an existing resource.
- * It's recommended to use `azapi.ResourceAction` data source to perform readonly action, please use `azapi.ResourceAction` resource,
- * if user wants to perform actions which change a resource's state.
- *
  * ## Example Usage
  *
- * Here's an example to use the `azapi.ResourceAction` data source to get a provider's permissions.
+ * ```typescript
+ * import * as pulumi from "@pulumi/pulumi";
+ * import * as azapi from "@pulumi/azapi";
+ * import * as azure from "@pulumi/azure";
  *
- * Here's an example to use the `azapi.ResourceAction` data source to perform a provider action.
+ * const exampleResourceGroup = new azure.core.ResourceGroup("exampleResourceGroup", {location: "west europe"});
+ * const exampleAccount = new azure.automation.Account("exampleAccount", {
+ *     resourceGroupName: exampleResourceGroup.name,
+ *     location: exampleResourceGroup.location,
+ *     skuName: "Basic",
+ * });
+ * const exampleResourceAction = azapi.getResourceActionOutput({
+ *     type: "Microsoft.Automation/automationAccounts@2021-06-22",
+ *     resourceId: exampleAccount.id,
+ *     action: "listKeys",
+ *     responseExportValues: ["*"],
+ * });
+ * ```
  */
 export function getResourceAction(args: GetResourceActionArgs, opts?: pulumi.InvokeOptions): Promise<GetResourceActionResult> {
-
     opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts || {});
     return pulumi.runtime.invoke("azapi:index/getResourceAction:getResourceAction", {
         "action": args.action,
         "body": args.body,
+        "headers": args.headers,
         "method": args.method,
+        "queryParameters": args.queryParameters,
         "resourceId": args.resourceId,
         "responseExportValues": args.responseExportValues,
+        "retry": args.retry,
+        "sensitiveResponseExportValues": args.sensitiveResponseExportValues,
+        "timeouts": args.timeouts,
         "type": args.type,
     }, opts);
 }
@@ -32,48 +49,16 @@ export function getResourceAction(args: GetResourceActionArgs, opts?: pulumi.Inv
  * A collection of arguments for invoking getResourceAction.
  */
 export interface GetResourceActionArgs {
-    /**
-     * The name of the resource action. It's also possible to make Http requests towards the resource ID if leave this field empty.
-     */
     action?: string;
-    /**
-     * A JSON object that contains the request body.
-     */
-    body?: string;
-    /**
-     * Specifies the Http method of the azure resource action. Allowed values are `POST` and `GET`. Defaults to `POST`.
-     */
+    body?: any;
+    headers?: {[key: string]: string};
     method?: string;
-    /**
-     * The ID of an existing azure source.
-     */
+    queryParameters?: {[key: string]: string[]};
     resourceId?: string;
-    /**
-     * A list of path that needs to be exported from response body.
-     * Setting it to `["*"]` will export the full response body.
-     * Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
-     * ```
-     * {
-     * "keys": [
-     * {
-     * "KeyName": "Primary",
-     * "Permissions": "Full",
-     * "Value": "nHGYNd******i4wdug=="
-     * },
-     * {
-     * "KeyName": "Secondary",
-     * "Permissions": "Full",
-     * "Value": "6yoCad******SLzKzg=="
-     * }
-     * ]
-     * }
-     * ```
-     */
-    responseExportValues?: string[];
-    /**
-     * It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
-     * `<api-version>` is version of the API used to manage this azure resource.
-     */
+    responseExportValues?: any;
+    retry?: inputs.GetResourceActionRetry;
+    sensitiveResponseExportValues?: any;
+    timeouts?: inputs.GetResourceActionTimeouts;
     type: string;
 }
 
@@ -82,85 +67,72 @@ export interface GetResourceActionArgs {
  */
 export interface GetResourceActionResult {
     readonly action?: string;
-    readonly body?: string;
-    /**
-     * The provider-assigned unique ID for this managed resource.
-     */
+    readonly body?: any;
+    readonly headers?: {[key: string]: string};
     readonly id: string;
-    readonly method?: string;
-    /**
-     * The output json containing the properties specified in `responseExportValues`. Here are some examples to decode json and extract the value.
-     * ```hcl
-     * // it will output "nHGYNd******i4wdug=="
-     * output "primaryKey" {
-     * value = jsondecode(azapi_resource_action.test.output).keys.0.Value
-     * }
-     */
-    readonly output: string;
+    readonly method: string;
+    readonly output: any;
+    readonly queryParameters?: {[key: string]: string[]};
     readonly resourceId?: string;
-    readonly responseExportValues?: string[];
+    readonly responseExportValues?: any;
+    readonly retry?: outputs.GetResourceActionRetry;
+    readonly sensitiveOutput: any;
+    readonly sensitiveResponseExportValues?: any;
+    readonly timeouts?: outputs.GetResourceActionTimeouts;
     readonly type: string;
 }
 /**
- * This resource can perform resource action which gets information from an existing resource.
- * It's recommended to use `azapi.ResourceAction` data source to perform readonly action, please use `azapi.ResourceAction` resource,
- * if user wants to perform actions which change a resource's state.
- *
  * ## Example Usage
  *
- * Here's an example to use the `azapi.ResourceAction` data source to get a provider's permissions.
+ * ```typescript
+ * import * as pulumi from "@pulumi/pulumi";
+ * import * as azapi from "@pulumi/azapi";
+ * import * as azure from "@pulumi/azure";
  *
- * Here's an example to use the `azapi.ResourceAction` data source to perform a provider action.
+ * const exampleResourceGroup = new azure.core.ResourceGroup("exampleResourceGroup", {location: "west europe"});
+ * const exampleAccount = new azure.automation.Account("exampleAccount", {
+ *     resourceGroupName: exampleResourceGroup.name,
+ *     location: exampleResourceGroup.location,
+ *     skuName: "Basic",
+ * });
+ * const exampleResourceAction = azapi.getResourceActionOutput({
+ *     type: "Microsoft.Automation/automationAccounts@2021-06-22",
+ *     resourceId: exampleAccount.id,
+ *     action: "listKeys",
+ *     responseExportValues: ["*"],
+ * });
+ * ```
  */
-export function getResourceActionOutput(args: GetResourceActionOutputArgs, opts?: pulumi.InvokeOptions): pulumi.Output<GetResourceActionResult> {
-    return pulumi.output(args).apply((a: any) => getResourceAction(a, opts))
+export function getResourceActionOutput(args: GetResourceActionOutputArgs, opts?: pulumi.InvokeOutputOptions): pulumi.Output<GetResourceActionResult> {
+    opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts || {});
+    return pulumi.runtime.invokeOutput("azapi:index/getResourceAction:getResourceAction", {
+        "action": args.action,
+        "body": args.body,
+        "headers": args.headers,
+        "method": args.method,
+        "queryParameters": args.queryParameters,
+        "resourceId": args.resourceId,
+        "responseExportValues": args.responseExportValues,
+        "retry": args.retry,
+        "sensitiveResponseExportValues": args.sensitiveResponseExportValues,
+        "timeouts": args.timeouts,
+        "type": args.type,
+    }, opts);
 }
 
 /**
  * A collection of arguments for invoking getResourceAction.
  */
 export interface GetResourceActionOutputArgs {
-    /**
-     * The name of the resource action. It's also possible to make Http requests towards the resource ID if leave this field empty.
-     */
     action?: pulumi.Input<string>;
-    /**
-     * A JSON object that contains the request body.
-     */
-    body?: pulumi.Input<string>;
-    /**
-     * Specifies the Http method of the azure resource action. Allowed values are `POST` and `GET`. Defaults to `POST`.
-     */
+    body?: any;
+    headers?: pulumi.Input<{[key: string]: pulumi.Input<string>}>;
     method?: pulumi.Input<string>;
-    /**
-     * The ID of an existing azure source.
-     */
+    queryParameters?: pulumi.Input<{[key: string]: pulumi.Input<pulumi.Input<string>[]>}>;
     resourceId?: pulumi.Input<string>;
-    /**
-     * A list of path that needs to be exported from response body.
-     * Setting it to `["*"]` will export the full response body.
-     * Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
-     * ```
-     * {
-     * "keys": [
-     * {
-     * "KeyName": "Primary",
-     * "Permissions": "Full",
-     * "Value": "nHGYNd******i4wdug=="
-     * },
-     * {
-     * "KeyName": "Secondary",
-     * "Permissions": "Full",
-     * "Value": "6yoCad******SLzKzg=="
-     * }
-     * ]
-     * }
-     * ```
-     */
-    responseExportValues?: pulumi.Input<pulumi.Input<string>[]>;
-    /**
-     * It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
-     * `<api-version>` is version of the API used to manage this azure resource.
-     */
+    responseExportValues?: any;
+    retry?: pulumi.Input<inputs.GetResourceActionRetryArgs>;
+    sensitiveResponseExportValues?: any;
+    timeouts?: pulumi.Input<inputs.GetResourceActionTimeoutsArgs>;
     type: pulumi.Input<string>;
 }

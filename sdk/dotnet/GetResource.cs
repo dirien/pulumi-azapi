@@ -8,191 +8,192 @@ using System.Threading.Tasks;
 using Pulumi.Serialization;
 using Pulumi;
 
-namespace ediri.Azapi
+namespace Pulumiverse.Azapi
 {
     public static class GetResource
     {
         /// <summary>
-        /// This resource can access any existing Azure resource manager resource.
+        /// This resource can access any existing Azure resource manager resource.## Example Usage
         /// 
-        /// ## Example Usage
+        /// ```csharp
+        /// using System.Collections.Generic;
+        /// using System.Linq;
+        /// using Pulumi;
+        /// using Azapi = Pulumi.Azapi;
+        /// using Azure = Pulumi.Azure;
         /// 
-        /// ```hcl
-        /// terraform {
-        ///   required_providers {
-        ///     azapi = {
-        ///       source = "Azure/azapi"
-        ///     }
-        ///   }
-        /// }
+        /// return await Deployment.RunAsync(() =&gt; 
+        /// {
+        ///     var exampleResourceGroup = new Azure.Core.ResourceGroup("exampleResourceGroup", new()
+        ///     {
+        ///         Location = "west europe",
+        ///     });
         /// 
-        /// provider "azapi" {
-        /// }
+        ///     var exampleRegistry = new Azure.ContainerService.Registry("exampleRegistry", new()
+        ///     {
+        ///         ResourceGroupName = exampleResourceGroup.Name,
+        ///         Location = exampleResourceGroup.Location,
+        ///         Sku = "Premium",
+        ///         AdminEnabled = false,
+        ///     });
         /// 
-        /// provider "azurerm" {
-        ///   features {}
-        /// }
+        ///     var exampleResource = Azapi.GetResource.Invoke(new()
+        ///     {
+        ///         Name = "example",
+        ///         ParentId = exampleResourceGroup.Id,
+        ///         Type = "Microsoft.ContainerRegistry/registries@2020-11-01-preview",
+        ///         ResponseExportValues = new[]
+        ///         {
+        ///             "properties.loginServer",
+        ///             "properties.policies.quarantinePolicy.status",
+        ///         },
+        ///     });
         /// 
-        /// resource "azurerm_resource_group" "example" {
-        ///   name     = "example-rg"
-        ///   location = "west europe"
-        /// }
-        /// 
-        /// resource "azurerm_container_registry" "example" {
-        ///   name                = "example"
-        ///   resource_group_name = azurerm_resource_group.example.name
-        ///   location            = azurerm_resource_group.example.location
-        ///   sku                 = "Premium"
-        ///   admin_enabled       = false
-        /// }
-        /// 
-        /// data "azapi_resource" "example" {
-        ///   name      = "example"
-        ///   parent_id = azurerm_resource_group.example.id
-        ///   type      = "Microsoft.ContainerRegistry/registries@2020-11-01-preview"
-        /// 
-        ///   response_export_values = ["properties.loginServer", "properties.policies.quarantinePolicy.status"]
-        /// }
-        /// 
-        /// // it will output "registry1.azurecr.io"
-        /// output "login_server" {
-        ///   value = jsondecode(data.azapi_resource.example.output).properties.loginServer
-        /// }
-        /// 
-        /// // it will output "disabled"
-        /// output "quarantine_policy" {
-        ///   value = jsondecode(data.azapi_resource.example.output).properties.policies.quarantinePolicy.status
-        /// }
+        ///     return new Dictionary&lt;string, object?&gt;
+        ///     {
+        ///         ["loginServer"] = exampleResource.Apply(getResourceResult =&gt; getResourceResult.Output?.Properties?.LoginServer),
+        ///         ["quarantinePolicy"] = exampleResource.Apply(getResourceResult =&gt; getResourceResult.Output?.Properties?.Policies?.QuarantinePolicy?.Status),
+        ///     };
+        /// });
         /// ```
         /// </summary>
         public static Task<GetResourceResult> InvokeAsync(GetResourceArgs args, InvokeOptions? options = null)
             => global::Pulumi.Deployment.Instance.InvokeAsync<GetResourceResult>("azapi:index/getResource:getResource", args ?? new GetResourceArgs(), options.WithDefaults());
 
         /// <summary>
-        /// This resource can access any existing Azure resource manager resource.
+        /// This resource can access any existing Azure resource manager resource.## Example Usage
         /// 
-        /// ## Example Usage
+        /// ```csharp
+        /// using System.Collections.Generic;
+        /// using System.Linq;
+        /// using Pulumi;
+        /// using Azapi = Pulumi.Azapi;
+        /// using Azure = Pulumi.Azure;
         /// 
-        /// ```hcl
-        /// terraform {
-        ///   required_providers {
-        ///     azapi = {
-        ///       source = "Azure/azapi"
-        ///     }
-        ///   }
-        /// }
+        /// return await Deployment.RunAsync(() =&gt; 
+        /// {
+        ///     var exampleResourceGroup = new Azure.Core.ResourceGroup("exampleResourceGroup", new()
+        ///     {
+        ///         Location = "west europe",
+        ///     });
         /// 
-        /// provider "azapi" {
-        /// }
+        ///     var exampleRegistry = new Azure.ContainerService.Registry("exampleRegistry", new()
+        ///     {
+        ///         ResourceGroupName = exampleResourceGroup.Name,
+        ///         Location = exampleResourceGroup.Location,
+        ///         Sku = "Premium",
+        ///         AdminEnabled = false,
+        ///     });
         /// 
-        /// provider "azurerm" {
-        ///   features {}
-        /// }
+        ///     var exampleResource = Azapi.GetResource.Invoke(new()
+        ///     {
+        ///         Name = "example",
+        ///         ParentId = exampleResourceGroup.Id,
+        ///         Type = "Microsoft.ContainerRegistry/registries@2020-11-01-preview",
+        ///         ResponseExportValues = new[]
+        ///         {
+        ///             "properties.loginServer",
+        ///             "properties.policies.quarantinePolicy.status",
+        ///         },
+        ///     });
         /// 
-        /// resource "azurerm_resource_group" "example" {
-        ///   name     = "example-rg"
-        ///   location = "west europe"
-        /// }
-        /// 
-        /// resource "azurerm_container_registry" "example" {
-        ///   name                = "example"
-        ///   resource_group_name = azurerm_resource_group.example.name
-        ///   location            = azurerm_resource_group.example.location
-        ///   sku                 = "Premium"
-        ///   admin_enabled       = false
-        /// }
-        /// 
-        /// data "azapi_resource" "example" {
-        ///   name      = "example"
-        ///   parent_id = azurerm_resource_group.example.id
-        ///   type      = "Microsoft.ContainerRegistry/registries@2020-11-01-preview"
-        /// 
-        ///   response_export_values = ["properties.loginServer", "properties.policies.quarantinePolicy.status"]
-        /// }
-        /// 
-        /// // it will output "registry1.azurecr.io"
-        /// output "login_server" {
-        ///   value = jsondecode(data.azapi_resource.example.output).properties.loginServer
-        /// }
-        /// 
-        /// // it will output "disabled"
-        /// output "quarantine_policy" {
-        ///   value = jsondecode(data.azapi_resource.example.output).properties.policies.quarantinePolicy.status
-        /// }
+        ///     return new Dictionary&lt;string, object?&gt;
+        ///     {
+        ///         ["loginServer"] = exampleResource.Apply(getResourceResult =&gt; getResourceResult.Output?.Properties?.LoginServer),
+        ///         ["quarantinePolicy"] = exampleResource.Apply(getResourceResult =&gt; getResourceResult.Output?.Properties?.Policies?.QuarantinePolicy?.Status),
+        ///     };
+        /// });
         /// ```
         /// </summary>
         public static Output<GetResourceResult> Invoke(GetResourceInvokeArgs args, InvokeOptions? options = null)
+            => global::Pulumi.Deployment.Instance.Invoke<GetResourceResult>("azapi:index/getResource:getResource", args ?? new GetResourceInvokeArgs(), options.WithDefaults());
+
+        /// <summary>
+        /// This resource can access any existing Azure resource manager resource.## Example Usage
+        /// 
+        /// ```csharp
+        /// using System.Collections.Generic;
+        /// using System.Linq;
+        /// using Pulumi;
+        /// using Azapi = Pulumi.Azapi;
+        /// using Azure = Pulumi.Azure;
+        /// 
+        /// return await Deployment.RunAsync(() =&gt; 
+        /// {
+        ///     var exampleResourceGroup = new Azure.Core.ResourceGroup("exampleResourceGroup", new()
+        ///     {
+        ///         Location = "west europe",
+        ///     });
+        /// 
+        ///     var exampleRegistry = new Azure.ContainerService.Registry("exampleRegistry", new()
+        ///     {
+        ///         ResourceGroupName = exampleResourceGroup.Name,
+        ///         Location = exampleResourceGroup.Location,
+        ///         Sku = "Premium",
+        ///         AdminEnabled = false,
+        ///     });
+        /// 
+        ///     var exampleResource = Azapi.GetResource.Invoke(new()
+        ///     {
+        ///         Name = "example",
+        ///         ParentId = exampleResourceGroup.Id,
+        ///         Type = "Microsoft.ContainerRegistry/registries@2020-11-01-preview",
+        ///         ResponseExportValues = new[]
+        ///         {
+        ///             "properties.loginServer",
+        ///             "properties.policies.quarantinePolicy.status",
+        ///         },
+        ///     });
+        /// 
+        ///     return new Dictionary&lt;string, object?&gt;
+        ///     {
+        ///         ["loginServer"] = exampleResource.Apply(getResourceResult =&gt; getResourceResult.Output?.Properties?.LoginServer),
+        ///         ["quarantinePolicy"] = exampleResource.Apply(getResourceResult =&gt; getResourceResult.Output?.Properties?.Policies?.QuarantinePolicy?.Status),
+        ///     };
+        /// });
+        /// ```
+        /// </summary>
+        public static Output<GetResourceResult> Invoke(GetResourceInvokeArgs args, InvokeOutputOptions options)
             => global::Pulumi.Deployment.Instance.Invoke<GetResourceResult>("azapi:index/getResource:getResource", args ?? new GetResourceInvokeArgs(), options.WithDefaults());
     }
 
 
     public sealed class GetResourceArgs : global::Pulumi.InvokeArgs
     {
-        /// <summary>
-        /// An `identity` block as defined below, which contains the Managed Service Identity information for this azure resource.
-        /// </summary>
-        [Input("identity")]
-        public Inputs.GetResourceIdentityArgs? Identity { get; set; }
+        [Input("headers")]
+        private Dictionary<string, string>? _headers;
+        public Dictionary<string, string> Headers
+        {
+            get => _headers ?? (_headers = new Dictionary<string, string>());
+            set => _headers = value;
+        }
 
-        /// <summary>
-        /// Specifies the name of the azure resource.
-        /// </summary>
         [Input("name")]
         public string? Name { get; set; }
 
-        /// <summary>
-        /// The ID of the azure resource in which this resource is created. It supports different kinds of deployment scope for **top level** resources: 
-        /// - resource group scope: `parent_id` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.
-        /// - management group scope: `parent_id` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.
-        /// - extension scope: `parent_id` should be the ID of the resource you're adding the extension to.
-        /// - subscription scope: `parent_id` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`
-        /// - tenant scope: `parent_id` should be `/`
-        /// 
-        /// For child level resources, the `parent_id` should be the ID of its parent resource, for example, subnet resource's `parent_id` is the ID of the vnet.
-        /// 
-        /// For type `Microsoft.Resources/resourceGroups`, the `parent_id` could be omitted, it defaults to subscription ID specified in provider or the default subscription(You could check the default subscription by azure cli command: `az account show`).
-        /// </summary>
         [Input("parentId")]
         public string? ParentId { get; set; }
 
-        /// <summary>
-        /// The ID of an existing azure source.
-        /// 
-        /// &gt; **Note:** Configuring `name` and `parent_id` is an alternative way to configure `resource_id`.
-        /// </summary>
+        [Input("queryParameters")]
+        private Dictionary<string, ImmutableArray<string>>? _queryParameters;
+        public Dictionary<string, ImmutableArray<string>> QueryParameters
+        {
+            get => _queryParameters ?? (_queryParameters = new Dictionary<string, ImmutableArray<string>>());
+            set => _queryParameters = value;
+        }
+
         [Input("resourceId")]
         public string? ResourceId { get; set; }
 
         [Input("responseExportValues")]
-        private List<string>? _responseExportValues;
+        public object? ResponseExportValues { get; set; }
 
-        /// <summary>
-        /// A list of path that needs to be exported from response body.
-        /// Setting it to `["*"]` will export the full response body.
-        /// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-        /// ```
-        /// {
-        /// "properties" : {
-        /// "loginServer" : "registry1.azurecr.io"
-        /// "policies" : {
-        /// "quarantinePolicy" = {
-        /// "status" = "disabled"
-        /// }
-        /// }
-        /// }
-        /// }
-        /// ```
-        /// </summary>
-        public List<string> ResponseExportValues
-        {
-            get => _responseExportValues ?? (_responseExportValues = new List<string>());
-            set => _responseExportValues = value;
-        }
+        [Input("retry")]
+        public Inputs.GetResourceRetryArgs? Retry { get; set; }
 
-        /// <summary>
-        /// It is in a format like `&lt;resource-type&gt;@&lt;api-version&gt;`. `&lt;resource-type&gt;` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
-        /// `&lt;api-version&gt;` is version of the API used to manage this azure resource.
-        /// </summary>
+        [Input("timeouts")]
+        public Inputs.GetResourceTimeoutsArgs? Timeouts { get; set; }
+
         [Input("type", required: true)]
         public string Type { get; set; } = null!;
 
@@ -204,71 +205,40 @@ namespace ediri.Azapi
 
     public sealed class GetResourceInvokeArgs : global::Pulumi.InvokeArgs
     {
-        /// <summary>
-        /// An `identity` block as defined below, which contains the Managed Service Identity information for this azure resource.
-        /// </summary>
-        [Input("identity")]
-        public Input<Inputs.GetResourceIdentityInputArgs>? Identity { get; set; }
+        [Input("headers")]
+        private InputMap<string>? _headers;
+        public InputMap<string> Headers
+        {
+            get => _headers ?? (_headers = new InputMap<string>());
+            set => _headers = value;
+        }
 
-        /// <summary>
-        /// Specifies the name of the azure resource.
-        /// </summary>
         [Input("name")]
         public Input<string>? Name { get; set; }
 
-        /// <summary>
-        /// The ID of the azure resource in which this resource is created. It supports different kinds of deployment scope for **top level** resources: 
-        /// - resource group scope: `parent_id` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.
-        /// - management group scope: `parent_id` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.
-        /// - extension scope: `parent_id` should be the ID of the resource you're adding the extension to.
-        /// - subscription scope: `parent_id` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`
-        /// - tenant scope: `parent_id` should be `/`
-        /// 
-        /// For child level resources, the `parent_id` should be the ID of its parent resource, for example, subnet resource's `parent_id` is the ID of the vnet.
-        /// 
-        /// For type `Microsoft.Resources/resourceGroups`, the `parent_id` could be omitted, it defaults to subscription ID specified in provider or the default subscription(You could check the default subscription by azure cli command: `az account show`).
-        /// </summary>
         [Input("parentId")]
         public Input<string>? ParentId { get; set; }
 
-        /// <summary>
-        /// The ID of an existing azure source.
-        /// 
-        /// &gt; **Note:** Configuring `name` and `parent_id` is an alternative way to configure `resource_id`.
-        /// </summary>
+        [Input("queryParameters")]
+        private InputMap<ImmutableArray<string>>? _queryParameters;
+        public InputMap<ImmutableArray<string>> QueryParameters
+        {
+            get => _queryParameters ?? (_queryParameters = new InputMap<ImmutableArray<string>>());
+            set => _queryParameters = value;
+        }
+
         [Input("resourceId")]
         public Input<string>? ResourceId { get; set; }
 
         [Input("responseExportValues")]
-        private InputList<string>? _responseExportValues;
+        public Input<object>? ResponseExportValues { get; set; }
 
-        /// <summary>
-        /// A list of path that needs to be exported from response body.
-        /// Setting it to `["*"]` will export the full response body.
-        /// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-        /// ```
-        /// {
-        /// "properties" : {
-        /// "loginServer" : "registry1.azurecr.io"
-        /// "policies" : {
-        /// "quarantinePolicy" = {
-        /// "status" = "disabled"
-        /// }
-        /// }
-        /// }
-        /// }
-        /// ```
-        /// </summary>
-        public InputList<string> ResponseExportValues
-        {
-            get => _responseExportValues ?? (_responseExportValues = new InputList<string>());
-            set => _responseExportValues = value;
-        }
+        [Input("retry")]
+        public Input<Inputs.GetResourceRetryInputArgs>? Retry { get; set; }
 
-        /// <summary>
-        /// It is in a format like `&lt;resource-type&gt;@&lt;api-version&gt;`. `&lt;resource-type&gt;` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
-        /// `&lt;api-version&gt;` is version of the API used to manage this azure resource.
-        /// </summary>
+        [Input("timeouts")]
+        public Input<Inputs.GetResourceTimeoutsInputArgs>? Timeouts { get; set; }
+
         [Input("type", required: true)]
         public Input<string> Type { get; set; } = null!;
 
@@ -282,71 +252,64 @@ namespace ediri.Azapi
     [OutputType]
     public sealed class GetResourceResult
     {
-        /// <summary>
-        /// The provider-assigned unique ID for this managed resource.
-        /// </summary>
+        public readonly ImmutableDictionary<string, string>? Headers;
         public readonly string Id;
-        /// <summary>
-        /// An `identity` block as defined below, which contains the Managed Service Identity information for this azure resource.
-        /// </summary>
-        public readonly Outputs.GetResourceIdentityResult Identity;
-        /// <summary>
-        /// The Azure Region where the azure resource should exist.
-        /// </summary>
+        public readonly ImmutableArray<Outputs.GetResourceIdentityResult> Identities;
         public readonly string Location;
-        public readonly string? Name;
-        /// <summary>
-        /// The output json containing the properties specified in `response_export_values`. Here're some examples to decode json and extract the value.
-        /// ```
-        /// // it will output "registry1.azurecr.io"
-        /// output "login_server" {
-        /// value = jsondecode(azapi_resource.example.output).properties.loginServer
-        /// }
-        /// </summary>
-        public readonly string Output;
+        public readonly string Name;
+        public readonly object Output;
         public readonly string ParentId;
-        public readonly string? ResourceId;
-        public readonly ImmutableArray<string> ResponseExportValues;
-        /// <summary>
-        /// A mapping of tags which should be assigned to the azure resource.
-        /// </summary>
+        public readonly ImmutableDictionary<string, ImmutableArray<string>>? QueryParameters;
+        public readonly string ResourceId;
+        public readonly object? ResponseExportValues;
+        public readonly Outputs.GetResourceRetryResult? Retry;
         public readonly ImmutableDictionary<string, string> Tags;
-        /// <summary>
-        /// The Type of Identity which should be used for this azure resource. Possible values are `SystemAssigned`, `UserAssigned` and `SystemAssigned,UserAssigned`.
-        /// </summary>
+        public readonly Outputs.GetResourceTimeoutsResult? Timeouts;
         public readonly string Type;
 
         [OutputConstructor]
         private GetResourceResult(
+            ImmutableDictionary<string, string>? headers,
+
             string id,
 
-            Outputs.GetResourceIdentityResult identity,
+            ImmutableArray<Outputs.GetResourceIdentityResult> identities,
 
             string location,
 
-            string? name,
+            string name,
 
-            string output,
+            object output,
 
             string parentId,
 
-            string? resourceId,
+            ImmutableDictionary<string, ImmutableArray<string>>? queryParameters,
 
-            ImmutableArray<string> responseExportValues,
+            string resourceId,
+
+            object? responseExportValues,
+
+            Outputs.GetResourceRetryResult? retry,
 
             ImmutableDictionary<string, string> tags,
 
+            Outputs.GetResourceTimeoutsResult? timeouts,
+
             string type)
         {
+            Headers = headers;
             Id = id;
-            Identity = identity;
+            Identities = identities;
             Location = location;
             Name = name;
             Output = output;
             ParentId = parentId;
+            QueryParameters = queryParameters;
             ResourceId = resourceId;
             ResponseExportValues = responseExportValues;
+            Retry = retry;
             Tags = tags;
+            Timeouts = timeouts;
             Type = type;
         }
     }

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Pulumi.Serialization;
 using Pulumi;
 
-namespace ediri.Azapi.Inputs
+namespace Pulumiverse.Azapi.Inputs
 {
 
     public sealed class ResourceIdentityGetArgs : global::Pulumi.ResourceArgs
@@ -26,19 +26,19 @@ namespace ediri.Azapi.Inputs
         }
 
         /// <summary>
-        /// The Principal ID for the Service Principal associated with the Managed Service Identity of this azure resource.
+        /// The Principal ID for the Service Principal associated with the Managed Service Identity of this Azure resource.
         /// </summary>
         [Input("principalId")]
         public Input<string>? PrincipalId { get; set; }
 
         /// <summary>
-        /// The Tenant ID for the Service Principal associated with the Managed Service Identity of this azure resource.
+        /// The Tenant ID for the Service Principal associated with the Managed Service Identity of this Azure resource.
         /// </summary>
         [Input("tenantId")]
         public Input<string>? TenantId { get; set; }
 
         /// <summary>
-        /// The Type of Identity which should be used for this azure resource. Possible values are `SystemAssigned`, `UserAssigned` and `SystemAssigned,UserAssigned`.
+        /// The Type of Identity which should be used for this azure resource. Possible values are `SystemAssigned`, `UserAssigned` and `SystemAssigned,UserAssigned`
         /// </summary>
         [Input("type", required: true)]
         public Input<string> Type { get; set; } = null!;

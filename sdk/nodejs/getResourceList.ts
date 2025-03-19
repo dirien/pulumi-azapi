@@ -2,19 +2,48 @@
 // *** Do not edit by hand unless you're certain you know what you are doing! ***
 
 import * as pulumi from "@pulumi/pulumi";
+import * as inputs from "./types/input";
+import * as outputs from "./types/output";
 import * as utilities from "./utilities";
 
 /**
- * This resource can list all resources of a specific type under a scope. If the API supports paging, it will automatically fetch all pages and return the full list.
- *
  * ## Example Usage
+ *
+ * ```typescript
+ * import * as pulumi from "@pulumi/pulumi";
+ * import * as azapi from "@pulumi/azapi";
+ *
+ * const listBySubscription = azapi.getResourceList({
+ *     parentId: "/subscriptions/00000000-0000-0000-0000-000000000000",
+ *     responseExportValues: [{
+ *         names: "value[].name",
+ *         values: "value[].{name: name, publicNetworkAccess: properties.publicNetworkAccess}",
+ *     }],
+ *     type: "Microsoft.Automation/automationAccounts@2021-06-22",
+ * });
+ * const listByResourceGroup = azapi.getResourceList({
+ *     parentId: "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg1",
+ *     responseExportValues: [{
+ *         names: "value[].name",
+ *     }],
+ *     type: "Microsoft.Automation/automationAccounts@2021-06-22",
+ * });
+ * const listSubnetsByVnet = azapi.getResourceList({
+ *     parentId: "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg1/providers/Microsoft.Network/virtualNetworks/vnet1",
+ *     responseExportValues: ["*"],
+ *     type: "Microsoft.Network/virtualNetworks/subnets@2021-02-01",
+ * });
+ * ```
  */
 export function getResourceList(args: GetResourceListArgs, opts?: pulumi.InvokeOptions): Promise<GetResourceListResult> {
-
     opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts || {});
     return pulumi.runtime.invoke("azapi:index/getResourceList:getResourceList", {
+        "headers": args.headers,
         "parentId": args.parentId,
+        "queryParameters": args.queryParameters,
         "responseExportValues": args.responseExportValues,
+        "retry": args.retry,
+        "timeouts": args.timeouts,
         "type": args.type,
     }, opts);
 }
@@ -23,34 +52,12 @@ export function getResourceList(args: GetResourceListArgs, opts?: pulumi.InvokeO
  * A collection of arguments for invoking getResourceList.
  */
 export interface GetResourceListArgs {
-    /**
-     * The parent resource ID to list resources under. e.g. `/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/myResourceGroup`.
-     */
+    headers?: {[key: string]: string};
     parentId: string;
-    /**
-     * A list of path that needs to be exported from response body.
-     * Setting it to `["*"]` will export the full response body.
-     * Here's an example. If it sets to `["value"]`, it will set the following json to computed property `output`.
-     * ```
-     * {
-     * "value": [
-     * {
-     * "id": "id1",
-     * "Permissions": "Full"
-     * },
-     * {
-     * "id": "id2",
-     * "Permissions": "Full"
-     * }
-     * ]
-     * }
-     * ```
-     */
-    responseExportValues?: string[];
-    /**
-     * It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
-     * `<api-version>` is version of the API used to manage this azure resource.
-     */
+    queryParameters?: {[key: string]: string[]};
+    responseExportValues?: any;
+    retry?: inputs.GetResourceListRetry;
+    timeouts?: inputs.GetResourceListTimeouts;
     type: string;
 }
 
@@ -58,58 +65,67 @@ export interface GetResourceListArgs {
  * A collection of values returned by getResourceList.
  */
 export interface GetResourceListResult {
-    /**
-     * The provider-assigned unique ID for this managed resource.
-     */
+    readonly headers?: {[key: string]: string};
     readonly id: string;
-    /**
-     * The output json containing the properties specified in `responseExportValues`. Here are some examples to decode json and extract the value.
-     */
-    readonly output: string;
+    readonly output: any;
     readonly parentId: string;
-    readonly responseExportValues?: string[];
+    readonly queryParameters?: {[key: string]: string[]};
+    readonly responseExportValues?: any;
+    readonly retry?: outputs.GetResourceListRetry;
+    readonly timeouts?: outputs.GetResourceListTimeouts;
     readonly type: string;
 }
 /**
- * This resource can list all resources of a specific type under a scope. If the API supports paging, it will automatically fetch all pages and return the full list.
- *
  * ## Example Usage
+ *
+ * ```typescript
+ * import * as pulumi from "@pulumi/pulumi";
+ * import * as azapi from "@pulumi/azapi";
+ *
+ * const listBySubscription = azapi.getResourceList({
+ *     parentId: "/subscriptions/00000000-0000-0000-0000-000000000000",
+ *     responseExportValues: [{
+ *         names: "value[].name",
+ *         values: "value[].{name: name, publicNetworkAccess: properties.publicNetworkAccess}",
+ *     }],
+ *     type: "Microsoft.Automation/automationAccounts@2021-06-22",
+ * });
+ * const listByResourceGroup = azapi.getResourceList({
+ *     parentId: "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg1",
+ *     responseExportValues: [{
+ *         names: "value[].name",
+ *     }],
+ *     type: "Microsoft.Automation/automationAccounts@2021-06-22",
+ * });
+ * const listSubnetsByVnet = azapi.getResourceList({
+ *     parentId: "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg1/providers/Microsoft.Network/virtualNetworks/vnet1",
+ *     responseExportValues: ["*"],
+ *     type: "Microsoft.Network/virtualNetworks/subnets@2021-02-01",
+ * });
+ * ```
  */
-export function getResourceListOutput(args: GetResourceListOutputArgs, opts?: pulumi.InvokeOptions): pulumi.Output<GetResourceListResult> {
-    return pulumi.output(args).apply((a: any) => getResourceList(a, opts))
+export function getResourceListOutput(args: GetResourceListOutputArgs, opts?: pulumi.InvokeOutputOptions): pulumi.Output<GetResourceListResult> {
+    opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts || {});
+    return pulumi.runtime.invokeOutput("azapi:index/getResourceList:getResourceList", {
+        "headers": args.headers,
+        "parentId": args.parentId,
+        "queryParameters": args.queryParameters,
+        "responseExportValues": args.responseExportValues,
+        "retry": args.retry,
+        "timeouts": args.timeouts,
+        "type": args.type,
+    }, opts);
 }
 
 /**
  * A collection of arguments for invoking getResourceList.
  */
 export interface GetResourceListOutputArgs {
-    /**
-     * The parent resource ID to list resources under. e.g. `/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/myResourceGroup`.
-     */
+    headers?: pulumi.Input<{[key: string]: pulumi.Input<string>}>;
     parentId: pulumi.Input<string>;
-    /**
-     * A list of path that needs to be exported from response body.
-     * Setting it to `["*"]` will export the full response body.
-     * Here's an example. If it sets to `["value"]`, it will set the following json to computed property `output`.
-     * ```
-     * {
-     * "value": [
-     * {
-     * "id": "id1",
-     * "Permissions": "Full"
-     * },
-     * {
-     * "id": "id2",
-     * "Permissions": "Full"
-     * }
-     * ]
-     * }
-     * ```
-     */
-    responseExportValues?: pulumi.Input<pulumi.Input<string>[]>;
-    /**
-     * It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
-     * `<api-version>` is version of the API used to manage this azure resource.
-     */
+    queryParameters?: pulumi.Input<{[key: string]: pulumi.Input<pulumi.Input<string>[]>}>;
+    responseExportValues?: any;
+    retry?: pulumi.Input<inputs.GetResourceListRetryArgs>;
+    timeouts?: pulumi.Input<inputs.GetResourceListTimeoutsArgs>;
     type: pulumi.Input<string>;
 }

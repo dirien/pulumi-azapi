@@ -8,88 +8,117 @@ using System.Threading.Tasks;
 using Pulumi.Serialization;
 using Pulumi;
 
-namespace ediri.Azapi
+namespace Pulumiverse.Azapi
 {
     /// <summary>
-    /// This resource can perform any Azure resource manager resource action.
-    /// It's recommended to use `azapi.ResourceAction` resource to perform actions which change a resource's state, please use `azapi.ResourceAction` data source,
-    /// if user wants to perform readonly action.
-    /// 
-    /// &gt; **Note** The action can be performed on either apply or destroy. The default is apply, see `when` argument for more details.
-    /// 
     /// ## Example Usage
-    /// 
-    /// Here's an example to use the `azapi.ResourceAction` resource to register a provider.
-    /// 
-    /// Here's an example to use the `azapi.ResourceAction` resource to perform a provider action.
     /// </summary>
     [AzapiResourceType("azapi:index/resourceAction:ResourceAction")]
     public partial class ResourceAction : global::Pulumi.CustomResource
     {
         /// <summary>
-        /// The name of the resource action. It's also possible to make Http requests towards the resource ID if leave this field empty.
+        /// The name of the resource action. It's also possible to make HTTP requests towards the resource ID if leave this field
+        /// empty.
         /// </summary>
         [Output("action")]
         public Output<string?> Action { get; private set; } = null!;
 
         /// <summary>
-        /// A JSON object that contains the request body.
+        /// A dynamic attribute that contains the request body.
         /// </summary>
         [Output("body")]
-        public Output<string?> Body { get; private set; } = null!;
+        public Output<object?> Body { get; private set; } = null!;
 
         /// <summary>
-        /// A list of ARM resource IDs which are used to avoid modify azapi resources at the same time.
+        /// A map of headers to include in the request
+        /// </summary>
+        [Output("headers")]
+        public Output<ImmutableDictionary<string, string>?> Headers { get; private set; } = null!;
+
+        /// <summary>
+        /// A list of ARM resource IDs which are used to avoid create/modify/delete azapi resources at the same time.
         /// </summary>
         [Output("locks")]
         public Output<ImmutableArray<string>> Locks { get; private set; } = null!;
 
         /// <summary>
-        /// Specifies the Http method of the azure resource action. Allowed values are `POST`, `PATCH`, `PUT` and `DELETE`. Defaults to `POST`.
+        /// Specifies the HTTP method of the azure resource action. Allowed values are `POST`, `PATCH`, `PUT` and `DELETE`. Defaults
+        /// to `POST`.
         /// </summary>
         [Output("method")]
-        public Output<string?> Method { get; private set; } = null!;
+        public Output<string> Method { get; private set; } = null!;
 
         /// <summary>
-        /// The output json containing the properties specified in `response_export_values`. Here are some examples to decode json and extract the value.
+        /// The output HCL object containing the properties specified in `response_export_values`. Here are some examples to use the
+        /// values. ```terraform // it will output "registry1.azurecr.io" output "login_server" { value =
+        /// azapi_resource_action.example.output.properties.loginServer } // it will output "disabled" output "quarantine_policy" {
+        /// value = azapi_resource_action.example.output.properties.policies.quarantinePolicy.status } ```
         /// </summary>
         [Output("output")]
-        public Output<string> Output { get; private set; } = null!;
+        public Output<object> Output { get; private set; } = null!;
 
         /// <summary>
-        /// The ID of an existing azure source.
+        /// A map of query parameters to include in the request
+        /// </summary>
+        [Output("queryParameters")]
+        public Output<ImmutableDictionary<string, ImmutableArray<string>>?> QueryParameters { get; private set; } = null!;
+
+        /// <summary>
+        /// The ID of an existing Azure source.
         /// </summary>
         [Output("resourceId")]
         public Output<string> ResourceId { get; private set; } = null!;
 
         /// <summary>
-        /// A list of path that needs to be exported from response body.
-        /// Setting it to `["*"]` will export the full response body.
-        /// Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
-        /// 
-        /// ```
-        /// {
-        /// "keys": [
-        /// {
-        /// "KeyName": "Primary",
-        /// "Permissions": "Full",
-        /// "Value": "nHGYNd******i4wdug=="
-        /// },
-        /// {
-        /// "KeyName": "Secondary",
-        /// "Permissions": "Full",
-        /// "Value": "6yoCad******SLzKzg=="
-        /// }
-        /// ]
-        /// }
-        /// ```
+        /// The attribute can accept either a list or a map. - **List**: A list of paths that need to be exported from the response
+        /// body. Setting it to `["*"]` will export the full response body. Here's an example. If it sets to
+        /// `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following HCL object to the
+        /// computed property output. ```text { properties = { loginServer = "registry1.azurecr.io" policies = { quarantinePolicy =
+        /// { status = "disabled" } } } } ``` - **Map**: A map where the key is the name for the result and the value is a JMESPath
+        /// query string to filter the response. Here's an example. If it sets to `{"login_server": "properties.loginServer",
+        /// "quarantine_status": "properties.policies.quarantinePolicy.status"}`, it will set the following HCL object to the
+        /// computed property output. ```text { "login_server" = "registry1.azurecr.io" "quarantine_status" = "disabled" } ``` To
+        /// learn more about JMESPath, visit [JMESPath](https://jmespath.org/).
         /// </summary>
         [Output("responseExportValues")]
-        public Output<ImmutableArray<string>> ResponseExportValues { get; private set; } = null!;
+        public Output<object?> ResponseExportValues { get; private set; } = null!;
 
         /// <summary>
-        /// It is in a format like `&lt;resource-type&gt;@&lt;api-version&gt;`. `&lt;resource-type&gt;` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
-        /// `&lt;api-version&gt;` is version of the API used to manage this azure resource.
+        /// The retry object supports the following attributes:
+        /// </summary>
+        [Output("retry")]
+        public Output<Outputs.ResourceActionRetry?> Retry { get; private set; } = null!;
+
+        /// <summary>
+        /// The output HCL object containing the properties specified in `sensitive_response_export_values`. Here are some examples
+        /// to use the values. ```terraform // it will output "registry1.azurecr.io" output "login_server" { value =
+        /// azapi_resource_action.example.sensitive_output.properties.loginServer sensitive = true } // it will output "disabled"
+        /// output "quarantine_policy" { value =
+        /// azapi_resource_action.example.sensitive_output.properties.policies.quarantinePolicy.status sensitive = true } ```
+        /// </summary>
+        [Output("sensitiveOutput")]
+        public Output<object> SensitiveOutput { get; private set; } = null!;
+
+        /// <summary>
+        /// The attribute can accept either a list or a map. - **List**: A list of paths that need to be exported from the response
+        /// body. Setting it to `["*"]` will export the full response body. Here's an example. If it sets to
+        /// `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following HCL object to the
+        /// computed property output. ```text { properties = { loginServer = "registry1.azurecr.io" policies = { quarantinePolicy =
+        /// { status = "disabled" } } } } ``` - **Map**: A map where the key is the name for the result and the value is a JMESPath
+        /// query string to filter the response. Here's an example. If it sets to `{"login_server": "properties.loginServer",
+        /// "quarantine_status": "properties.policies.quarantinePolicy.status"}`, it will set the following HCL object to the
+        /// computed property output. ```text { "login_server" = "registry1.azurecr.io" "quarantine_status" = "disabled" } ``` To
+        /// learn more about JMESPath, visit [JMESPath](https://jmespath.org/).
+        /// </summary>
+        [Output("sensitiveResponseExportValues")]
+        public Output<object?> SensitiveResponseExportValues { get; private set; } = null!;
+
+        [Output("timeouts")]
+        public Output<Outputs.ResourceActionTimeouts?> Timeouts { get; private set; } = null!;
+
+        /// <summary>
+        /// In a format like `&lt;resource-type&gt;@&lt;api-version&gt;`. `&lt;resource-type&gt;` is the Azure resource type, for example,
+        /// `Microsoft.Storage/storageAccounts`. `&lt;api-version&gt;` is version of the API used to manage this azure resource.
         /// </summary>
         [Output("type")]
         public Output<string> Type { get; private set; } = null!;
@@ -98,7 +127,7 @@ namespace ediri.Azapi
         /// When to perform the action, value must be one of: `apply`, `destroy`. Default is `apply`.
         /// </summary>
         [Output("when")]
-        public Output<string?> When { get; private set; } = null!;
+        public Output<string> When { get; private set; } = null!;
 
 
         /// <summary>
@@ -124,6 +153,10 @@ namespace ediri.Azapi
             {
                 Version = Utilities.Version,
                 PluginDownloadURL = "github://api.github.com/dirien/pulumi-azapi",
+                AdditionalSecretOutputs =
+                {
+                    "sensitiveOutput",
+                },
             };
             var merged = CustomResourceOptions.Merge(defaultOptions, options);
             // Override the ID if one was specified for consistency with other language SDKs.
@@ -148,22 +181,35 @@ namespace ediri.Azapi
     public sealed class ResourceActionArgs : global::Pulumi.ResourceArgs
     {
         /// <summary>
-        /// The name of the resource action. It's also possible to make Http requests towards the resource ID if leave this field empty.
+        /// The name of the resource action. It's also possible to make HTTP requests towards the resource ID if leave this field
+        /// empty.
         /// </summary>
         [Input("action")]
         public Input<string>? Action { get; set; }
 
         /// <summary>
-        /// A JSON object that contains the request body.
+        /// A dynamic attribute that contains the request body.
         /// </summary>
         [Input("body")]
-        public Input<string>? Body { get; set; }
+        public Input<object>? Body { get; set; }
+
+        [Input("headers")]
+        private InputMap<string>? _headers;
+
+        /// <summary>
+        /// A map of headers to include in the request
+        /// </summary>
+        public InputMap<string> Headers
+        {
+            get => _headers ?? (_headers = new InputMap<string>());
+            set => _headers = value;
+        }
 
         [Input("locks")]
         private InputList<string>? _locks;
 
         /// <summary>
-        /// A list of ARM resource IDs which are used to avoid modify azapi resources at the same time.
+        /// A list of ARM resource IDs which are used to avoid create/modify/delete azapi resources at the same time.
         /// </summary>
         public InputList<string> Locks
         {
@@ -172,51 +218,70 @@ namespace ediri.Azapi
         }
 
         /// <summary>
-        /// Specifies the Http method of the azure resource action. Allowed values are `POST`, `PATCH`, `PUT` and `DELETE`. Defaults to `POST`.
+        /// Specifies the HTTP method of the azure resource action. Allowed values are `POST`, `PATCH`, `PUT` and `DELETE`. Defaults
+        /// to `POST`.
         /// </summary>
         [Input("method")]
         public Input<string>? Method { get; set; }
 
+        [Input("queryParameters")]
+        private InputMap<ImmutableArray<string>>? _queryParameters;
+
         /// <summary>
-        /// The ID of an existing azure source.
+        /// A map of query parameters to include in the request
+        /// </summary>
+        public InputMap<ImmutableArray<string>> QueryParameters
+        {
+            get => _queryParameters ?? (_queryParameters = new InputMap<ImmutableArray<string>>());
+            set => _queryParameters = value;
+        }
+
+        /// <summary>
+        /// The ID of an existing Azure source.
         /// </summary>
         [Input("resourceId", required: true)]
         public Input<string> ResourceId { get; set; } = null!;
 
-        [Input("responseExportValues")]
-        private InputList<string>? _responseExportValues;
-
         /// <summary>
-        /// A list of path that needs to be exported from response body.
-        /// Setting it to `["*"]` will export the full response body.
-        /// Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
-        /// 
-        /// ```
-        /// {
-        /// "keys": [
-        /// {
-        /// "KeyName": "Primary",
-        /// "Permissions": "Full",
-        /// "Value": "nHGYNd******i4wdug=="
-        /// },
-        /// {
-        /// "KeyName": "Secondary",
-        /// "Permissions": "Full",
-        /// "Value": "6yoCad******SLzKzg=="
-        /// }
-        /// ]
-        /// }
-        /// ```
+        /// The attribute can accept either a list or a map. - **List**: A list of paths that need to be exported from the response
+        /// body. Setting it to `["*"]` will export the full response body. Here's an example. If it sets to
+        /// `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following HCL object to the
+        /// computed property output. ```text { properties = { loginServer = "registry1.azurecr.io" policies = { quarantinePolicy =
+        /// { status = "disabled" } } } } ``` - **Map**: A map where the key is the name for the result and the value is a JMESPath
+        /// query string to filter the response. Here's an example. If it sets to `{"login_server": "properties.loginServer",
+        /// "quarantine_status": "properties.policies.quarantinePolicy.status"}`, it will set the following HCL object to the
+        /// computed property output. ```text { "login_server" = "registry1.azurecr.io" "quarantine_status" = "disabled" } ``` To
+        /// learn more about JMESPath, visit [JMESPath](https://jmespath.org/).
         /// </summary>
-        public InputList<string> ResponseExportValues
-        {
-            get => _responseExportValues ?? (_responseExportValues = new InputList<string>());
-            set => _responseExportValues = value;
-        }
+        [Input("responseExportValues")]
+        public Input<object>? ResponseExportValues { get; set; }
 
         /// <summary>
-        /// It is in a format like `&lt;resource-type&gt;@&lt;api-version&gt;`. `&lt;resource-type&gt;` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
-        /// `&lt;api-version&gt;` is version of the API used to manage this azure resource.
+        /// The retry object supports the following attributes:
+        /// </summary>
+        [Input("retry")]
+        public Input<Inputs.ResourceActionRetryArgs>? Retry { get; set; }
+
+        /// <summary>
+        /// The attribute can accept either a list or a map. - **List**: A list of paths that need to be exported from the response
+        /// body. Setting it to `["*"]` will export the full response body. Here's an example. If it sets to
+        /// `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following HCL object to the
+        /// computed property output. ```text { properties = { loginServer = "registry1.azurecr.io" policies = { quarantinePolicy =
+        /// { status = "disabled" } } } } ``` - **Map**: A map where the key is the name for the result and the value is a JMESPath
+        /// query string to filter the response. Here's an example. If it sets to `{"login_server": "properties.loginServer",
+        /// "quarantine_status": "properties.policies.quarantinePolicy.status"}`, it will set the following HCL object to the
+        /// computed property output. ```text { "login_server" = "registry1.azurecr.io" "quarantine_status" = "disabled" } ``` To
+        /// learn more about JMESPath, visit [JMESPath](https://jmespath.org/).
+        /// </summary>
+        [Input("sensitiveResponseExportValues")]
+        public Input<object>? SensitiveResponseExportValues { get; set; }
+
+        [Input("timeouts")]
+        public Input<Inputs.ResourceActionTimeoutsArgs>? Timeouts { get; set; }
+
+        /// <summary>
+        /// In a format like `&lt;resource-type&gt;@&lt;api-version&gt;`. `&lt;resource-type&gt;` is the Azure resource type, for example,
+        /// `Microsoft.Storage/storageAccounts`. `&lt;api-version&gt;` is version of the API used to manage this azure resource.
         /// </summary>
         [Input("type", required: true)]
         public Input<string> Type { get; set; } = null!;
@@ -236,22 +301,35 @@ namespace ediri.Azapi
     public sealed class ResourceActionState : global::Pulumi.ResourceArgs
     {
         /// <summary>
-        /// The name of the resource action. It's also possible to make Http requests towards the resource ID if leave this field empty.
+        /// The name of the resource action. It's also possible to make HTTP requests towards the resource ID if leave this field
+        /// empty.
         /// </summary>
         [Input("action")]
         public Input<string>? Action { get; set; }
 
         /// <summary>
-        /// A JSON object that contains the request body.
+        /// A dynamic attribute that contains the request body.
         /// </summary>
         [Input("body")]
-        public Input<string>? Body { get; set; }
+        public Input<object>? Body { get; set; }
+
+        [Input("headers")]
+        private InputMap<string>? _headers;
+
+        /// <summary>
+        /// A map of headers to include in the request
+        /// </summary>
+        public InputMap<string> Headers
+        {
+            get => _headers ?? (_headers = new InputMap<string>());
+            set => _headers = value;
+        }
 
         [Input("locks")]
         private InputList<string>? _locks;
 
         /// <summary>
-        /// A list of ARM resource IDs which are used to avoid modify azapi resources at the same time.
+        /// A list of ARM resource IDs which are used to avoid create/modify/delete azapi resources at the same time.
         /// </summary>
         public InputList<string> Locks
         {
@@ -260,57 +338,99 @@ namespace ediri.Azapi
         }
 
         /// <summary>
-        /// Specifies the Http method of the azure resource action. Allowed values are `POST`, `PATCH`, `PUT` and `DELETE`. Defaults to `POST`.
+        /// Specifies the HTTP method of the azure resource action. Allowed values are `POST`, `PATCH`, `PUT` and `DELETE`. Defaults
+        /// to `POST`.
         /// </summary>
         [Input("method")]
         public Input<string>? Method { get; set; }
 
         /// <summary>
-        /// The output json containing the properties specified in `response_export_values`. Here are some examples to decode json and extract the value.
+        /// The output HCL object containing the properties specified in `response_export_values`. Here are some examples to use the
+        /// values. ```terraform // it will output "registry1.azurecr.io" output "login_server" { value =
+        /// azapi_resource_action.example.output.properties.loginServer } // it will output "disabled" output "quarantine_policy" {
+        /// value = azapi_resource_action.example.output.properties.policies.quarantinePolicy.status } ```
         /// </summary>
         [Input("output")]
-        public Input<string>? Output { get; set; }
+        public Input<object>? Output { get; set; }
+
+        [Input("queryParameters")]
+        private InputMap<ImmutableArray<string>>? _queryParameters;
 
         /// <summary>
-        /// The ID of an existing azure source.
+        /// A map of query parameters to include in the request
+        /// </summary>
+        public InputMap<ImmutableArray<string>> QueryParameters
+        {
+            get => _queryParameters ?? (_queryParameters = new InputMap<ImmutableArray<string>>());
+            set => _queryParameters = value;
+        }
+
+        /// <summary>
+        /// The ID of an existing Azure source.
         /// </summary>
         [Input("resourceId")]
         public Input<string>? ResourceId { get; set; }
 
+        /// <summary>
+        /// The attribute can accept either a list or a map. - **List**: A list of paths that need to be exported from the response
+        /// body. Setting it to `["*"]` will export the full response body. Here's an example. If it sets to
+        /// `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following HCL object to the
+        /// computed property output. ```text { properties = { loginServer = "registry1.azurecr.io" policies = { quarantinePolicy =
+        /// { status = "disabled" } } } } ``` - **Map**: A map where the key is the name for the result and the value is a JMESPath
+        /// query string to filter the response. Here's an example. If it sets to `{"login_server": "properties.loginServer",
+        /// "quarantine_status": "properties.policies.quarantinePolicy.status"}`, it will set the following HCL object to the
+        /// computed property output. ```text { "login_server" = "registry1.azurecr.io" "quarantine_status" = "disabled" } ``` To
+        /// learn more about JMESPath, visit [JMESPath](https://jmespath.org/).
+        /// </summary>
         [Input("responseExportValues")]
-        private InputList<string>? _responseExportValues;
+        public Input<object>? ResponseExportValues { get; set; }
 
         /// <summary>
-        /// A list of path that needs to be exported from response body.
-        /// Setting it to `["*"]` will export the full response body.
-        /// Here's an example. If it sets to `["keys"]`, it will set the following json to computed property `output`.
-        /// 
-        /// ```
-        /// {
-        /// "keys": [
-        /// {
-        /// "KeyName": "Primary",
-        /// "Permissions": "Full",
-        /// "Value": "nHGYNd******i4wdug=="
-        /// },
-        /// {
-        /// "KeyName": "Secondary",
-        /// "Permissions": "Full",
-        /// "Value": "6yoCad******SLzKzg=="
-        /// }
-        /// ]
-        /// }
-        /// ```
+        /// The retry object supports the following attributes:
         /// </summary>
-        public InputList<string> ResponseExportValues
+        [Input("retry")]
+        public Input<Inputs.ResourceActionRetryGetArgs>? Retry { get; set; }
+
+        [Input("sensitiveOutput")]
+        private Input<object>? _sensitiveOutput;
+
+        /// <summary>
+        /// The output HCL object containing the properties specified in `sensitive_response_export_values`. Here are some examples
+        /// to use the values. ```terraform // it will output "registry1.azurecr.io" output "login_server" { value =
+        /// azapi_resource_action.example.sensitive_output.properties.loginServer sensitive = true } // it will output "disabled"
+        /// output "quarantine_policy" { value =
+        /// azapi_resource_action.example.sensitive_output.properties.policies.quarantinePolicy.status sensitive = true } ```
+        /// </summary>
+        public Input<object>? SensitiveOutput
         {
-            get => _responseExportValues ?? (_responseExportValues = new InputList<string>());
-            set => _responseExportValues = value;
+            get => _sensitiveOutput;
+            set
+            {
+                var emptySecret = Output.CreateSecret(0);
+                _sensitiveOutput = Output.Tuple<Input<object>?, int>(value, emptySecret).Apply(t => t.Item1);
+            }
         }
 
         /// <summary>
-        /// It is in a format like `&lt;resource-type&gt;@&lt;api-version&gt;`. `&lt;resource-type&gt;` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
-        /// `&lt;api-version&gt;` is version of the API used to manage this azure resource.
+        /// The attribute can accept either a list or a map. - **List**: A list of paths that need to be exported from the response
+        /// body. Setting it to `["*"]` will export the full response body. Here's an example. If it sets to
+        /// `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following HCL object to the
+        /// computed property output. ```text { properties = { loginServer = "registry1.azurecr.io" policies = { quarantinePolicy =
+        /// { status = "disabled" } } } } ``` - **Map**: A map where the key is the name for the result and the value is a JMESPath
+        /// query string to filter the response. Here's an example. If it sets to `{"login_server": "properties.loginServer",
+        /// "quarantine_status": "properties.policies.quarantinePolicy.status"}`, it will set the following HCL object to the
+        /// computed property output. ```text { "login_server" = "registry1.azurecr.io" "quarantine_status" = "disabled" } ``` To
+        /// learn more about JMESPath, visit [JMESPath](https://jmespath.org/).
+        /// </summary>
+        [Input("sensitiveResponseExportValues")]
+        public Input<object>? SensitiveResponseExportValues { get; set; }
+
+        [Input("timeouts")]
+        public Input<Inputs.ResourceActionTimeoutsGetArgs>? Timeouts { get; set; }
+
+        /// <summary>
+        /// In a format like `&lt;resource-type&gt;@&lt;api-version&gt;`. `&lt;resource-type&gt;` is the Azure resource type, for example,
+        /// `Microsoft.Storage/storageAccounts`. `&lt;api-version&gt;` is version of the API used to manage this azure resource.
         /// </summary>
         [Input("type")]
         public Input<string>? Type { get; set; }

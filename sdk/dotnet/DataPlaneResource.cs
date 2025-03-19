@@ -8,92 +8,55 @@ using System.Threading.Tasks;
 using Pulumi.Serialization;
 using Pulumi;
 
-namespace ediri.Azapi
+namespace Pulumiverse.Azapi
 {
     /// <summary>
-    /// This resource can manage some Azure data plane resource.
-    /// 
-    /// ## Example Usage
-    /// 
-    /// ## Available Resources
-    /// 
-    /// | Resource Type | URL | Parent ID Example                                                                           |
-    /// | --- | --- |---------------------------------------------------------------------------------------------|
-    /// | Microsoft.AppConfiguration/configurationStores/keyValues | /kv/{key} | {storeName}.azconfig.io                                                                     |
-    /// | Microsoft.DeviceUpdate/accounts/groups | /deviceupdate/{instanceId}/management/groups/{groupId} | {accountName}.api.adu.microsoft.com/deviceupdate/{instanceName}                             |
-    /// | Microsoft.DeviceUpdate/accounts/groups/deployments | /deviceUpdate/{instanceId}/management/groups/{groupId}/deployments/{deploymentId} | {accountName}.api.adu.microsoft.com/deviceupdate/{instanceName}/management/groups/{groupId} |
-    /// | Microsoft.DeviceUpdate/accounts/v2/deployments | /deviceupdate/{instanceId}/v2/management/deployments/{deploymentId} | {accountName}.api.adu.microsoft.com/deviceupdate/{instanceName}                             |
-    /// | Microsoft.DeviceUpdate/accounts/v2/groups | /deviceupdate/{instanceId}/v2/management/groups/{groupId} | {accountName}.api.adu.microsoft.com/deviceupdate/{instanceName}                             |
-    /// | Microsoft.DigitalTwins/digitalTwinsInstances/digitaltwins | /digitaltwins/{id} | {instanceName}.api.weu.digitaltwins.azure.net                                               |
-    /// | Microsoft.DigitalTwins/digitalTwinsInstances/digitaltwins/relationships | /digitaltwins/{id}/relationships/{relationshipId} | {instanceName}.api.weu.digitaltwins.azure.net/digitaltwins/{digitalTwinId}                  |
-    /// | Microsoft.DigitalTwins/digitalTwinsInstances/eventroutes | /eventroutes/{id} | {instanceName}.api.weu.digitaltwins.azure.net                                               |
-    /// | Microsoft.DigitalTwins/digitalTwinsInstances/jobs/imports | /jobs/imports/{id} | {instanceName}.api.weu.digitaltwins.azure.net                                               |
-    /// | Microsoft.IoTCentral/IoTApps/organizations | /organizations/{organizationId} | {appSubdomain}.azureiotcentral.com                                                          |
-    /// | Microsoft.IoTCentral/IoTApps/scheduledJobs | /scheduledJobs/{scheduledJobId} | {appSubdomain}.azureiotcentral.com                                                          |
-    /// | Microsoft.IoTCentral/IoTApps/users | /users/{userId} | {appSubdomain}.azureiotcentral.com                                                          |
-    /// | Microsoft.IoTCentral/iotApps/apiTokens | /apiTokens/{tokenId} | {appSubdomain}.azureiotcentral.com                                                          |
-    /// | Microsoft.IoTCentral/iotApps/continuousDataExports | /continuousDataExports/{exportId} | {appSubdomain}.azureiotcentral.com                                                          |
-    /// | Microsoft.IoTCentral/iotApps/dashboards | /dashboards/{dashboardId} | {appSubdomain}.azureiotcentral.com                                                          |
-    /// | Microsoft.IoTCentral/iotApps/dataExport/destinations | /dataExport/destinations/{destinationId} | {appSubdomain}.azureiotcentral.com                                                          |
-    /// | Microsoft.IoTCentral/iotApps/dataExport/exports | /dataExport/exports/{exportId} | {appSubdomain}.azureiotcentral.com                                                          |
-    /// | Microsoft.IoTCentral/iotApps/deploymentManifests | /deploymentManifests/{deploymentManifestId} | {appSubdomain}.azureiotcentral.com                                                          |
-    /// | Microsoft.IoTCentral/iotApps/deviceGroups | /deviceGroups/{deviceGroupId} | {appSubdomain}.azureiotcentral.com                                                          |
-    /// | Microsoft.IoTCentral/iotApps/deviceTemplates | /deviceTemplates/{deviceTemplateId} | {appSubdomain}.azureiotcentral.com                                                          |
-    /// | Microsoft.IoTCentral/iotApps/devices | /devices/{deviceId} | {appSubdomain}.azureiotcentral.com                                                          |
-    /// | Microsoft.IoTCentral/iotApps/devices/attestation | /devices/{deviceId}/attestation | {appSubdomain}.azureiotcentral.com                                                          |
-    /// | Microsoft.IoTCentral/iotApps/devices/relationships | /devices/{deviceId}/relationships/{relationshipId} | {appSubdomain}.azureiotcentral.com/devices/{deviceId}                                       |
-    /// | Microsoft.IoTCentral/iotApps/enrollmentGroups | /enrollmentGroups/{enrollmentGroupId} | {appSubdomain}.azureiotcentral.com                                                          |
-    /// | Microsoft.IoTCentral/iotApps/enrollmentGroups/certificates | /enrollmentGroups/{enrollmentGroupId}/certificates/{entry} | {appSubdomain}.azureiotcentral.com/enrollmentGroups/{enrollmentGroupId}                     |
-    /// | Microsoft.KeyVault/vaults/certificates/contacts | /certificates/contacts | {vaultName}.vault.azure.net                                                                 |
-    /// | Microsoft.KeyVault/vaults/certificates/issuers | /certificates/issuers/{issuer-name} | {vaultName}.vault.azure.net                                                                 |
-    /// | Microsoft.KeyVault/vaults/storage | /storage/{storage-account-name} | {vaultName}.vault.azure.net                                                                 |
-    /// | Microsoft.KeyVault/vaults/storage/sas | /storage/{storage-account-name}/sas/{sas-definition-name} | {vaultName}.vault.azure.net/storage/{storage-account-name}                                  |
-    /// | Microsoft.Purview/accounts/Account/collections | /collections/{collectionName} | {accountName}.purview.azure.com                                                             |
-    /// | Microsoft.Purview/accounts/Account/resourceSetRuleConfigs | /resourceSetRuleConfigs/defaultResourceSetRuleConfig | {accountName}.purview.azure.com                                                             |
-    /// | Microsoft.Purview/accounts/Scanning/azureKeyVaults | /azureKeyVaults/{azureKeyVaultName} | {accountName}.purview.azure.com/scan                                                        |
-    /// | Microsoft.Purview/accounts/Scanning/classificationrules | /classificationrules/{classificationRuleName} | {accountName}.purview.azure.com/scan                                                        |
-    /// | Microsoft.Purview/accounts/Scanning/credentials | /credentials/{credentialName} | {accountName}.purview.azure.com/scan                                                        |
-    /// | Microsoft.Purview/accounts/Scanning/datasources | /datasources/{dataSourceName} | {accountName}.purview.azure.com/scan                                                        |
-    /// | Microsoft.Purview/accounts/Scanning/datasources/scans | /datasources/{dataSourceName}/scans/{scanName} | {accountName}.purview.azure.com/scan/datasources/{dataSourceName}                           |
-    /// | Microsoft.Purview/accounts/Scanning/datasources/scans/triggers | /datasources/{dataSourceName}/scans/{scanName}/triggers/default | {accountName}.purview.azure.com/scan/datasources/{dataSourceName}/scans/{scanName}          |
-    /// | Microsoft.Purview/accounts/Scanning/integrationruntimes | /integrationruntimes/{integrationRuntimeName} | {accountName}.purview.azure.com/scan                                                        |
-    /// | Microsoft.Purview/accounts/Scanning/managedvirtualnetworks/managedprivateendpoints | /managedvirtualnetworks/{managedVirtualNetworkName}/managedprivateendpoints/{managedPrivateEndpointName} | {accountName}.purview.azure.com/scan/managedvirtualnetworks/{managedVirtualNetworkName}     |
-    /// | Microsoft.Purview/accounts/Workflow/workflows | /workflows/{workflowId} | {accountName}.purview.azure.com                                                             |
-    /// | Microsoft.Synapse/workspaces/dataflows | /dataflows/{dataFlowName} | {workspaceName}.dev.azuresynapse.net                                                        |
-    /// | Microsoft.Synapse/workspaces/datasets | /datasets/{datasetName} | {workspaceName}.dev.azuresynapse.net                                                        |
-    /// | Microsoft.Synapse/workspaces/kqlScripts | /kqlScripts/{kqlScriptName} | {workspaceName}.dev.azuresynapse.net                                                        |
-    /// | Microsoft.Synapse/workspaces/libraries | /libraries/{libraryName} | {workspaceName}.dev.azuresynapse.net                                                        |
-    /// | Microsoft.Synapse/workspaces/linkconnections | /linkconnections/{linkConnectionName} | {workspaceName}.dev.azuresynapse.net                                                        |
-    /// | Microsoft.Synapse/workspaces/linkedservices | /linkedservices/{linkedServiceName} | {workspaceName}.dev.azuresynapse.net                                                        |
-    /// | Microsoft.Synapse/workspaces/managedVirtualNetworks/managedPrivateEndpoints | /managedVirtualNetworks/{managedVirtualNetworkName}/managedPrivateEndpoints/{managedPrivateEndpointName} | {workspaceName}.dev.azuresynapse.net/managedVirtualNetworks/{managedVirtualNetworkName}     |
-    /// | Microsoft.Synapse/workspaces/notebooks | /notebooks/{notebookName} | {workspaceName}.dev.azuresynapse.net                                                        |
-    /// | Microsoft.Synapse/workspaces/pipelines | /pipelines/{pipelineName} | {workspaceName}.dev.azuresynapse.net                                                        |
-    /// | Microsoft.Synapse/workspaces/roleAssignments | /roleAssignments/{roleAssignmentId} | {workspaceName}.dev.azuresynapse.net                                                        |
-    /// | Microsoft.Synapse/workspaces/sparkJobDefinitions | /sparkJobDefinitions/{sparkJobDefinitionName} | {workspaceName}.dev.azuresynapse.net                                                        |
-    /// | Microsoft.Synapse/workspaces/sparkconfigurations | /sparkconfigurations/{sparkConfigurationName} | {workspaceName}.dev.azuresynapse.net                                                        |
-    /// | Microsoft.Synapse/workspaces/sqlScripts | /sqlScripts/{sqlScriptName} | {workspaceName}.dev.azuresynapse.net                                                        |
-    /// | Microsoft.Synapse/workspaces/triggers | /triggers/{triggerName} | {workspaceName}.dev.azuresynapse.net                                                        |
+    /// This resource can manage some Azure data plane resources.
     /// </summary>
     [AzapiResourceType("azapi:index/dataPlaneResource:DataPlaneResource")]
     public partial class DataPlaneResource : global::Pulumi.CustomResource
     {
         /// <summary>
-        /// A JSON object that contains the request body used to create and update data plane resource.
+        /// A dynamic attribute that contains the request body.
         /// </summary>
         [Output("body")]
-        public Output<string?> Body { get; private set; } = null!;
+        public Output<object> Body { get; private set; } = null!;
 
         /// <summary>
-        /// Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.
+        /// A mapping of headers to be sent with the create request.
+        /// </summary>
+        [Output("createHeaders")]
+        public Output<ImmutableDictionary<string, string>?> CreateHeaders { get; private set; } = null!;
+
+        /// <summary>
+        /// A mapping of query parameters to be sent with the create request.
+        /// </summary>
+        [Output("createQueryParameters")]
+        public Output<ImmutableDictionary<string, ImmutableArray<string>>?> CreateQueryParameters { get; private set; } = null!;
+
+        /// <summary>
+        /// A mapping of headers to be sent with the delete request.
+        /// </summary>
+        [Output("deleteHeaders")]
+        public Output<ImmutableDictionary<string, string>?> DeleteHeaders { get; private set; } = null!;
+
+        /// <summary>
+        /// A mapping of query parameters to be sent with the delete request.
+        /// </summary>
+        [Output("deleteQueryParameters")]
+        public Output<ImmutableDictionary<string, ImmutableArray<string>>?> DeleteQueryParameters { get; private set; } = null!;
+
+        /// <summary>
+        /// A dynamic attribute that contains the request body.
         /// </summary>
         [Output("ignoreCasing")]
-        public Output<bool?> IgnoreCasing { get; private set; } = null!;
+        public Output<bool> IgnoreCasing { get; private set; } = null!;
 
         /// <summary>
-        /// Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.
+        /// Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`. It's recommend to enable this option when some sensitive properties are not returned in response body, instead of setting them in `lifecycle.ignore_changes` because it will make the sensitive fields unable to update.
         /// </summary>
         [Output("ignoreMissingProperty")]
-        public Output<bool?> IgnoreMissingProperty { get; private set; } = null!;
+        public Output<bool> IgnoreMissingProperty { get; private set; } = null!;
 
         /// <summary>
         /// A list of ARM resource IDs which are used to avoid create/modify/delete azapi resources at the same time.
@@ -102,21 +65,19 @@ namespace ediri.Azapi
         public Output<ImmutableArray<string>> Locks { get; private set; } = null!;
 
         /// <summary>
-        /// Specifies the name of the azure resource. Changing this forces a new resource to be created.
+        /// Specifies the name of the Azure resource. Changing this forces a new resource to be created.
         /// </summary>
         [Output("name")]
         public Output<string> Name { get; private set; } = null!;
 
         /// <summary>
-        /// The output json containing the properties specified in `response_export_values`. Here're some examples to decode json and extract the value.
-        /// ```
-        /// // it will output "registry1.azurecr.io"
-        /// output "login_server" {
-        /// value = jsondecode(azapi_data_plane_resource.example.output).properties.loginServer
-        /// }
+        /// The output HCL object containing the properties specified in `response_export_values`. Here are some examples to use the
+        /// values. ```terraform // it will output "registry1.azurecr.io" output "login_server" { value =
+        /// azapi_data_plane_resource.example.output.properties.loginServer } // it will output "disabled" output
+        /// "quarantine_policy" { value = azapi_data_plane_resource.example.output.properties.policies.quarantinePolicy.status } ```
         /// </summary>
         [Output("output")]
-        public Output<string> Output { get; private set; } = null!;
+        public Output<object> Output { get; private set; } = null!;
 
         /// <summary>
         /// The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created.
@@ -125,32 +86,68 @@ namespace ediri.Azapi
         public Output<string> ParentId { get; private set; } = null!;
 
         /// <summary>
-        /// A list of path that needs to be exported from response body.
-        /// Setting it to `["*"]` will export the full response body.
-        /// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-        /// ```
-        /// {
-        /// "properties" : {
-        /// "loginServer" : "registry1.azurecr.io"
-        /// "policies" : {
-        /// "quarantinePolicy" = {
-        /// "status" = "disabled"
-        /// }
-        /// }
-        /// }
-        /// }
-        /// ```
+        /// A mapping of headers to be sent with the read request.
         /// </summary>
-        [Output("responseExportValues")]
-        public Output<ImmutableArray<string>> ResponseExportValues { get; private set; } = null!;
+        [Output("readHeaders")]
+        public Output<ImmutableDictionary<string, string>?> ReadHeaders { get; private set; } = null!;
 
         /// <summary>
-        /// It is in a format like `&lt;resource-type&gt;@&lt;api-version&gt;`. `&lt;api-version&gt;` is version of the API used to manage this azure data plane resource.
-        /// 
-        /// &gt; **Note** For the available resource types and parent IDs, please refer to the `Available Resources` section below.
+        /// A mapping of query parameters to be sent with the read request.
+        /// </summary>
+        [Output("readQueryParameters")]
+        public Output<ImmutableDictionary<string, ImmutableArray<string>>?> ReadQueryParameters { get; private set; } = null!;
+
+        /// <summary>
+        /// Will trigger a replace of the resource when the value changes and is not `null`. This can be used by practitioners to force a replace of the resource when certain values change, e.g. changing the SKU of a virtual machine based on the value of variables or locals. The value is a `dynamic`, so practitioners can compose the input however they wish. For a "break glass" set the value to `null` to prevent the plan modifier taking effect.
+        /// If you have `null` values that you do want to be tracked as affecting the resource replacement, include these inside an object.
+        /// Advanced use cases are possible and resource replacement can be triggered by values external to the resource, for example when a dependent resource changes.
+        /// </summary>
+        [Output("replaceTriggersExternalValues")]
+        public Output<object?> ReplaceTriggersExternalValues { get; private set; } = null!;
+
+        [Output("replaceTriggersRefs")]
+        public Output<ImmutableArray<string>> ReplaceTriggersRefs { get; private set; } = null!;
+
+        /// <summary>
+        /// The attribute can accept either a list or a map. - **List**: A list of paths that need to be exported from the response
+        /// body. Setting it to `["*"]` will export the full response body. Here's an example. If it sets to
+        /// `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following HCL object to the
+        /// computed property output. ```text { properties = { loginServer = "registry1.azurecr.io" policies = { quarantinePolicy =
+        /// { status = "disabled" } } } } ``` - **Map**: A map where the key is the name for the result and the value is a JMESPath
+        /// query string to filter the response. Here's an example. If it sets to `{"login_server": "properties.loginServer",
+        /// "quarantine_status": "properties.policies.quarantinePolicy.status"}`, it will set the following HCL object to the
+        /// computed property output. ```text { "login_server" = "registry1.azurecr.io" "quarantine_status" = "disabled" } ``` To
+        /// learn more about JMESPath, visit [JMESPath](https://jmespath.org/).
+        /// </summary>
+        [Output("responseExportValues")]
+        public Output<object?> ResponseExportValues { get; private set; } = null!;
+
+        /// <summary>
+        /// The retry object supports the following attributes:
+        /// </summary>
+        [Output("retry")]
+        public Output<Outputs.DataPlaneResourceRetry?> Retry { get; private set; } = null!;
+
+        [Output("timeouts")]
+        public Output<Outputs.DataPlaneResourceTimeouts?> Timeouts { get; private set; } = null!;
+
+        /// <summary>
+        /// In a format like `&lt;resource-type&gt;@&lt;api-version&gt;`. `&lt;resource-type&gt;` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`. `&lt;api-version&gt;` is version of the API used to manage this azure resource.
         /// </summary>
         [Output("type")]
         public Output<string> Type { get; private set; } = null!;
+
+        /// <summary>
+        /// A mapping of headers to be sent with the update request.
+        /// </summary>
+        [Output("updateHeaders")]
+        public Output<ImmutableDictionary<string, string>?> UpdateHeaders { get; private set; } = null!;
+
+        /// <summary>
+        /// A mapping of query parameters to be sent with the update request.
+        /// </summary>
+        [Output("updateQueryParameters")]
+        public Output<ImmutableDictionary<string, ImmutableArray<string>>?> UpdateQueryParameters { get; private set; } = null!;
 
 
         /// <summary>
@@ -200,19 +197,67 @@ namespace ediri.Azapi
     public sealed class DataPlaneResourceArgs : global::Pulumi.ResourceArgs
     {
         /// <summary>
-        /// A JSON object that contains the request body used to create and update data plane resource.
+        /// A dynamic attribute that contains the request body.
         /// </summary>
         [Input("body")]
-        public Input<string>? Body { get; set; }
+        public Input<object>? Body { get; set; }
+
+        [Input("createHeaders")]
+        private InputMap<string>? _createHeaders;
 
         /// <summary>
-        /// Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.
+        /// A mapping of headers to be sent with the create request.
+        /// </summary>
+        public InputMap<string> CreateHeaders
+        {
+            get => _createHeaders ?? (_createHeaders = new InputMap<string>());
+            set => _createHeaders = value;
+        }
+
+        [Input("createQueryParameters")]
+        private InputMap<ImmutableArray<string>>? _createQueryParameters;
+
+        /// <summary>
+        /// A mapping of query parameters to be sent with the create request.
+        /// </summary>
+        public InputMap<ImmutableArray<string>> CreateQueryParameters
+        {
+            get => _createQueryParameters ?? (_createQueryParameters = new InputMap<ImmutableArray<string>>());
+            set => _createQueryParameters = value;
+        }
+
+        [Input("deleteHeaders")]
+        private InputMap<string>? _deleteHeaders;
+
+        /// <summary>
+        /// A mapping of headers to be sent with the delete request.
+        /// </summary>
+        public InputMap<string> DeleteHeaders
+        {
+            get => _deleteHeaders ?? (_deleteHeaders = new InputMap<string>());
+            set => _deleteHeaders = value;
+        }
+
+        [Input("deleteQueryParameters")]
+        private InputMap<ImmutableArray<string>>? _deleteQueryParameters;
+
+        /// <summary>
+        /// A mapping of query parameters to be sent with the delete request.
+        /// </summary>
+        public InputMap<ImmutableArray<string>> DeleteQueryParameters
+        {
+            get => _deleteQueryParameters ?? (_deleteQueryParameters = new InputMap<ImmutableArray<string>>());
+            set => _deleteQueryParameters = value;
+        }
+
+        /// <summary>
+        /// A dynamic attribute that contains the request body.
         /// </summary>
         [Input("ignoreCasing")]
         public Input<bool>? IgnoreCasing { get; set; }
 
         /// <summary>
-        /// Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.
+        /// Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`. It's recommend to enable this option when some sensitive properties are not returned in response body, instead of setting them in `lifecycle.ignore_changes` because it will make the sensitive fields unable to update.
         /// </summary>
         [Input("ignoreMissingProperty")]
         public Input<bool>? IgnoreMissingProperty { get; set; }
@@ -230,7 +275,7 @@ namespace ediri.Azapi
         }
 
         /// <summary>
-        /// Specifies the name of the azure resource. Changing this forces a new resource to be created.
+        /// Specifies the name of the Azure resource. Changing this forces a new resource to be created.
         /// </summary>
         [Input("name")]
         public Input<string>? Name { get; set; }
@@ -241,39 +286,98 @@ namespace ediri.Azapi
         [Input("parentId", required: true)]
         public Input<string> ParentId { get; set; } = null!;
 
-        [Input("responseExportValues")]
-        private InputList<string>? _responseExportValues;
+        [Input("readHeaders")]
+        private InputMap<string>? _readHeaders;
 
         /// <summary>
-        /// A list of path that needs to be exported from response body.
-        /// Setting it to `["*"]` will export the full response body.
-        /// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-        /// ```
-        /// {
-        /// "properties" : {
-        /// "loginServer" : "registry1.azurecr.io"
-        /// "policies" : {
-        /// "quarantinePolicy" = {
-        /// "status" = "disabled"
-        /// }
-        /// }
-        /// }
-        /// }
-        /// ```
+        /// A mapping of headers to be sent with the read request.
         /// </summary>
-        public InputList<string> ResponseExportValues
+        public InputMap<string> ReadHeaders
         {
-            get => _responseExportValues ?? (_responseExportValues = new InputList<string>());
-            set => _responseExportValues = value;
+            get => _readHeaders ?? (_readHeaders = new InputMap<string>());
+            set => _readHeaders = value;
+        }
+
+        [Input("readQueryParameters")]
+        private InputMap<ImmutableArray<string>>? _readQueryParameters;
+
+        /// <summary>
+        /// A mapping of query parameters to be sent with the read request.
+        /// </summary>
+        public InputMap<ImmutableArray<string>> ReadQueryParameters
+        {
+            get => _readQueryParameters ?? (_readQueryParameters = new InputMap<ImmutableArray<string>>());
+            set => _readQueryParameters = value;
         }
 
         /// <summary>
-        /// It is in a format like `&lt;resource-type&gt;@&lt;api-version&gt;`. `&lt;api-version&gt;` is version of the API used to manage this azure data plane resource.
-        /// 
-        /// &gt; **Note** For the available resource types and parent IDs, please refer to the `Available Resources` section below.
+        /// Will trigger a replace of the resource when the value changes and is not `null`. This can be used by practitioners to force a replace of the resource when certain values change, e.g. changing the SKU of a virtual machine based on the value of variables or locals. The value is a `dynamic`, so practitioners can compose the input however they wish. For a "break glass" set the value to `null` to prevent the plan modifier taking effect.
+        /// If you have `null` values that you do want to be tracked as affecting the resource replacement, include these inside an object.
+        /// Advanced use cases are possible and resource replacement can be triggered by values external to the resource, for example when a dependent resource changes.
+        /// </summary>
+        [Input("replaceTriggersExternalValues")]
+        public Input<object>? ReplaceTriggersExternalValues { get; set; }
+
+        [Input("replaceTriggersRefs")]
+        private InputList<string>? _replaceTriggersRefs;
+        public InputList<string> ReplaceTriggersRefs
+        {
+            get => _replaceTriggersRefs ?? (_replaceTriggersRefs = new InputList<string>());
+            set => _replaceTriggersRefs = value;
+        }
+
+        /// <summary>
+        /// The attribute can accept either a list or a map. - **List**: A list of paths that need to be exported from the response
+        /// body. Setting it to `["*"]` will export the full response body. Here's an example. If it sets to
+        /// `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following HCL object to the
+        /// computed property output. ```text { properties = { loginServer = "registry1.azurecr.io" policies = { quarantinePolicy =
+        /// { status = "disabled" } } } } ``` - **Map**: A map where the key is the name for the result and the value is a JMESPath
+        /// query string to filter the response. Here's an example. If it sets to `{"login_server": "properties.loginServer",
+        /// "quarantine_status": "properties.policies.quarantinePolicy.status"}`, it will set the following HCL object to the
+        /// computed property output. ```text { "login_server" = "registry1.azurecr.io" "quarantine_status" = "disabled" } ``` To
+        /// learn more about JMESPath, visit [JMESPath](https://jmespath.org/).
+        /// </summary>
+        [Input("responseExportValues")]
+        public Input<object>? ResponseExportValues { get; set; }
+
+        /// <summary>
+        /// The retry object supports the following attributes:
+        /// </summary>
+        [Input("retry")]
+        public Input<Inputs.DataPlaneResourceRetryArgs>? Retry { get; set; }
+
+        [Input("timeouts")]
+        public Input<Inputs.DataPlaneResourceTimeoutsArgs>? Timeouts { get; set; }
+
+        /// <summary>
+        /// In a format like `&lt;resource-type&gt;@&lt;api-version&gt;`. `&lt;resource-type&gt;` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`. `&lt;api-version&gt;` is version of the API used to manage this azure resource.
         /// </summary>
         [Input("type", required: true)]
         public Input<string> Type { get; set; } = null!;
+
+        [Input("updateHeaders")]
+        private InputMap<string>? _updateHeaders;
+
+        /// <summary>
+        /// A mapping of headers to be sent with the update request.
+        /// </summary>
+        public InputMap<string> UpdateHeaders
+        {
+            get => _updateHeaders ?? (_updateHeaders = new InputMap<string>());
+            set => _updateHeaders = value;
+        }
+
+        [Input("updateQueryParameters")]
+        private InputMap<ImmutableArray<string>>? _updateQueryParameters;
+
+        /// <summary>
+        /// A mapping of query parameters to be sent with the update request.
+        /// </summary>
+        public InputMap<ImmutableArray<string>> UpdateQueryParameters
+        {
+            get => _updateQueryParameters ?? (_updateQueryParameters = new InputMap<ImmutableArray<string>>());
+            set => _updateQueryParameters = value;
+        }
 
         public DataPlaneResourceArgs()
         {
@@ -284,19 +388,67 @@ namespace ediri.Azapi
     public sealed class DataPlaneResourceState : global::Pulumi.ResourceArgs
     {
         /// <summary>
-        /// A JSON object that contains the request body used to create and update data plane resource.
+        /// A dynamic attribute that contains the request body.
         /// </summary>
         [Input("body")]
-        public Input<string>? Body { get; set; }
+        public Input<object>? Body { get; set; }
+
+        [Input("createHeaders")]
+        private InputMap<string>? _createHeaders;
 
         /// <summary>
-        /// Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.
+        /// A mapping of headers to be sent with the create request.
+        /// </summary>
+        public InputMap<string> CreateHeaders
+        {
+            get => _createHeaders ?? (_createHeaders = new InputMap<string>());
+            set => _createHeaders = value;
+        }
+
+        [Input("createQueryParameters")]
+        private InputMap<ImmutableArray<string>>? _createQueryParameters;
+
+        /// <summary>
+        /// A mapping of query parameters to be sent with the create request.
+        /// </summary>
+        public InputMap<ImmutableArray<string>> CreateQueryParameters
+        {
+            get => _createQueryParameters ?? (_createQueryParameters = new InputMap<ImmutableArray<string>>());
+            set => _createQueryParameters = value;
+        }
+
+        [Input("deleteHeaders")]
+        private InputMap<string>? _deleteHeaders;
+
+        /// <summary>
+        /// A mapping of headers to be sent with the delete request.
+        /// </summary>
+        public InputMap<string> DeleteHeaders
+        {
+            get => _deleteHeaders ?? (_deleteHeaders = new InputMap<string>());
+            set => _deleteHeaders = value;
+        }
+
+        [Input("deleteQueryParameters")]
+        private InputMap<ImmutableArray<string>>? _deleteQueryParameters;
+
+        /// <summary>
+        /// A mapping of query parameters to be sent with the delete request.
+        /// </summary>
+        public InputMap<ImmutableArray<string>> DeleteQueryParameters
+        {
+            get => _deleteQueryParameters ?? (_deleteQueryParameters = new InputMap<ImmutableArray<string>>());
+            set => _deleteQueryParameters = value;
+        }
+
+        /// <summary>
+        /// A dynamic attribute that contains the request body.
         /// </summary>
         [Input("ignoreCasing")]
         public Input<bool>? IgnoreCasing { get; set; }
 
         /// <summary>
-        /// Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.
+        /// Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`. It's recommend to enable this option when some sensitive properties are not returned in response body, instead of setting them in `lifecycle.ignore_changes` because it will make the sensitive fields unable to update.
         /// </summary>
         [Input("ignoreMissingProperty")]
         public Input<bool>? IgnoreMissingProperty { get; set; }
@@ -314,21 +466,19 @@ namespace ediri.Azapi
         }
 
         /// <summary>
-        /// Specifies the name of the azure resource. Changing this forces a new resource to be created.
+        /// Specifies the name of the Azure resource. Changing this forces a new resource to be created.
         /// </summary>
         [Input("name")]
         public Input<string>? Name { get; set; }
 
         /// <summary>
-        /// The output json containing the properties specified in `response_export_values`. Here're some examples to decode json and extract the value.
-        /// ```
-        /// // it will output "registry1.azurecr.io"
-        /// output "login_server" {
-        /// value = jsondecode(azapi_data_plane_resource.example.output).properties.loginServer
-        /// }
+        /// The output HCL object containing the properties specified in `response_export_values`. Here are some examples to use the
+        /// values. ```terraform // it will output "registry1.azurecr.io" output "login_server" { value =
+        /// azapi_data_plane_resource.example.output.properties.loginServer } // it will output "disabled" output
+        /// "quarantine_policy" { value = azapi_data_plane_resource.example.output.properties.policies.quarantinePolicy.status } ```
         /// </summary>
         [Input("output")]
-        public Input<string>? Output { get; set; }
+        public Input<object>? Output { get; set; }
 
         /// <summary>
         /// The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created.
@@ -336,39 +486,98 @@ namespace ediri.Azapi
         [Input("parentId")]
         public Input<string>? ParentId { get; set; }
 
-        [Input("responseExportValues")]
-        private InputList<string>? _responseExportValues;
+        [Input("readHeaders")]
+        private InputMap<string>? _readHeaders;
 
         /// <summary>
-        /// A list of path that needs to be exported from response body.
-        /// Setting it to `["*"]` will export the full response body.
-        /// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-        /// ```
-        /// {
-        /// "properties" : {
-        /// "loginServer" : "registry1.azurecr.io"
-        /// "policies" : {
-        /// "quarantinePolicy" = {
-        /// "status" = "disabled"
-        /// }
-        /// }
-        /// }
-        /// }
-        /// ```
+        /// A mapping of headers to be sent with the read request.
         /// </summary>
-        public InputList<string> ResponseExportValues
+        public InputMap<string> ReadHeaders
         {
-            get => _responseExportValues ?? (_responseExportValues = new InputList<string>());
-            set => _responseExportValues = value;
+            get => _readHeaders ?? (_readHeaders = new InputMap<string>());
+            set => _readHeaders = value;
+        }
+
+        [Input("readQueryParameters")]
+        private InputMap<ImmutableArray<string>>? _readQueryParameters;
+
+        /// <summary>
+        /// A mapping of query parameters to be sent with the read request.
+        /// </summary>
+        public InputMap<ImmutableArray<string>> ReadQueryParameters
+        {
+            get => _readQueryParameters ?? (_readQueryParameters = new InputMap<ImmutableArray<string>>());
+            set => _readQueryParameters = value;
         }
 
         /// <summary>
-        /// It is in a format like `&lt;resource-type&gt;@&lt;api-version&gt;`. `&lt;api-version&gt;` is version of the API used to manage this azure data plane resource.
-        /// 
-        /// &gt; **Note** For the available resource types and parent IDs, please refer to the `Available Resources` section below.
+        /// Will trigger a replace of the resource when the value changes and is not `null`. This can be used by practitioners to force a replace of the resource when certain values change, e.g. changing the SKU of a virtual machine based on the value of variables or locals. The value is a `dynamic`, so practitioners can compose the input however they wish. For a "break glass" set the value to `null` to prevent the plan modifier taking effect.
+        /// If you have `null` values that you do want to be tracked as affecting the resource replacement, include these inside an object.
+        /// Advanced use cases are possible and resource replacement can be triggered by values external to the resource, for example when a dependent resource changes.
+        /// </summary>
+        [Input("replaceTriggersExternalValues")]
+        public Input<object>? ReplaceTriggersExternalValues { get; set; }
+
+        [Input("replaceTriggersRefs")]
+        private InputList<string>? _replaceTriggersRefs;
+        public InputList<string> ReplaceTriggersRefs
+        {
+            get => _replaceTriggersRefs ?? (_replaceTriggersRefs = new InputList<string>());
+            set => _replaceTriggersRefs = value;
+        }
+
+        /// <summary>
+        /// The attribute can accept either a list or a map. - **List**: A list of paths that need to be exported from the response
+        /// body. Setting it to `["*"]` will export the full response body. Here's an example. If it sets to
+        /// `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following HCL object to the
+        /// computed property output. ```text { properties = { loginServer = "registry1.azurecr.io" policies = { quarantinePolicy =
+        /// { status = "disabled" } } } } ``` - **Map**: A map where the key is the name for the result and the value is a JMESPath
+        /// query string to filter the response. Here's an example. If it sets to `{"login_server": "properties.loginServer",
+        /// "quarantine_status": "properties.policies.quarantinePolicy.status"}`, it will set the following HCL object to the
+        /// computed property output. ```text { "login_server" = "registry1.azurecr.io" "quarantine_status" = "disabled" } ``` To
+        /// learn more about JMESPath, visit [JMESPath](https://jmespath.org/).
+        /// </summary>
+        [Input("responseExportValues")]
+        public Input<object>? ResponseExportValues { get; set; }
+
+        /// <summary>
+        /// The retry object supports the following attributes:
+        /// </summary>
+        [Input("retry")]
+        public Input<Inputs.DataPlaneResourceRetryGetArgs>? Retry { get; set; }
+
+        [Input("timeouts")]
+        public Input<Inputs.DataPlaneResourceTimeoutsGetArgs>? Timeouts { get; set; }
+
+        /// <summary>
+        /// In a format like `&lt;resource-type&gt;@&lt;api-version&gt;`. `&lt;resource-type&gt;` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`. `&lt;api-version&gt;` is version of the API used to manage this azure resource.
         /// </summary>
         [Input("type")]
         public Input<string>? Type { get; set; }
+
+        [Input("updateHeaders")]
+        private InputMap<string>? _updateHeaders;
+
+        /// <summary>
+        /// A mapping of headers to be sent with the update request.
+        /// </summary>
+        public InputMap<string> UpdateHeaders
+        {
+            get => _updateHeaders ?? (_updateHeaders = new InputMap<string>());
+            set => _updateHeaders = value;
+        }
+
+        [Input("updateQueryParameters")]
+        private InputMap<ImmutableArray<string>>? _updateQueryParameters;
+
+        /// <summary>
+        /// A mapping of query parameters to be sent with the update request.
+        /// </summary>
+        public InputMap<ImmutableArray<string>> UpdateQueryParameters
+        {
+            get => _updateQueryParameters ?? (_updateQueryParameters = new InputMap<ImmutableArray<string>>());
+            set => _updateQueryParameters = value;
+        }
 
         public DataPlaneResourceState()
         {

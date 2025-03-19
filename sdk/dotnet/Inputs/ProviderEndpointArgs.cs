@@ -8,25 +8,25 @@ using System.Threading.Tasks;
 using Pulumi.Serialization;
 using Pulumi;
 
-namespace ediri.Azapi.Inputs
+namespace Pulumiverse.Azapi.Inputs
 {
 
     public sealed class ProviderEndpointArgs : global::Pulumi.ResourceArgs
     {
         /// <summary>
-        /// The Active Directory login endpoint which should be used.
+        /// The Azure Resource Manager endpoint to use. This can also be sourced from the `ARM_RESOURCE_MANAGER_ENDPOINT` Environment Variable. Defaults to `https://management.azure.com/` for public cloud.
         /// </summary>
         [Input("activeDirectoryAuthorityHost")]
         public Input<string>? ActiveDirectoryAuthorityHost { get; set; }
 
         /// <summary>
-        /// The resource ID to obtain AD tokens for.
+        /// The Azure Active Directory login endpoint to use. This can also be sourced from the `ARM_ACTIVE_DIRECTORY_AUTHORITY_HOST` Environment Variable. Defaults to `https://login.microsoftonline.com/` for public cloud.
         /// </summary>
         [Input("resourceManagerAudience")]
         public Input<string>? ResourceManagerAudience { get; set; }
 
         /// <summary>
-        /// The Resource Manager Endpoint which should be used.
+        /// The resource ID to obtain AD tokens for. This can also be sourced from the `ARM_RESOURCE_MANAGER_AUDIENCE` Environment Variable. Defaults to `https://management.core.windows.net/` for public cloud.
         /// </summary>
         [Input("resourceManagerEndpoint")]
         public Input<string>? ResourceManagerEndpoint { get; set; }

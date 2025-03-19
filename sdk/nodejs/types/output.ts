@@ -5,24 +5,211 @@ import * as pulumi from "@pulumi/pulumi";
 import * as inputs from "../types/input";
 import * as outputs from "../types/output";
 
+export interface DataPlaneResourceRetry {
+    /**
+     * A list of regular expressions to match against error messages. If any of the regular expressions match, the request will be retried.
+     */
+    errorMessageRegexes: string[];
+    /**
+     * The base number of seconds to wait between retries. Default is `10`.
+     */
+    intervalSeconds: number;
+    /**
+     * The maximum number of seconds to wait between retries. Default is `180`.
+     */
+    maxIntervalSeconds: number;
+    /**
+     * The multiplier to apply to the interval between retries. Default is `1.5`.
+     */
+    multiplier: number;
+    /**
+     * The randomization factor to apply to the interval between retries. The formula for the randomized interval is: `RetryInterval * (random value in range [1 - RandomizationFactor, 1 + RandomizationFactor])`. Therefore set to zero `0.0` for no randomization. Default is `0.5`.
+     */
+    randomizationFactor: number;
+}
+
+export interface DataPlaneResourceTimeouts {
+    /**
+     * A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+     */
+    create?: string;
+    /**
+     * A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Setting a timeout for a Delete operation is only applicable if changes are saved into state before the destroy operation occurs.
+     */
+    delete?: string;
+    /**
+     * A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+     */
+    read?: string;
+    /**
+     * A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+     */
+    update?: string;
+}
+
+export interface GetClientConfigTimeouts {
+    /**
+     * A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+     */
+    read?: string;
+}
+
+export interface GetResourceActionRetry {
+    /**
+     * A list of regular expressions to match against error messages. If any of the regular expressions match, the request will be retried.
+     */
+    errorMessageRegexes: string[];
+    /**
+     * The base number of seconds to wait between retries. Default is `10`.
+     */
+    intervalSeconds: number;
+    /**
+     * The maximum number of seconds to wait between retries. Default is `180`.
+     */
+    maxIntervalSeconds: number;
+    /**
+     * The multiplier to apply to the interval between retries. Default is `1.5`.
+     */
+    multiplier: number;
+    /**
+     * The randomization factor to apply to the interval between retries. The formula for the randomized interval is: `RetryInterval * (random value in range [1 - RandomizationFactor, 1 + RandomizationFactor])`. Therefore set to zero `0.0` for no randomization. Default is `0.5`.
+     */
+    randomizationFactor: number;
+}
+
+export interface GetResourceActionTimeouts {
+    /**
+     * A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+     */
+    read?: string;
+}
+
+export interface GetResourceIdTimeouts {
+    /**
+     * A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+     */
+    read?: string;
+}
+
 export interface GetResourceIdentity {
     /**
      * A list of User Managed Identity ID's which should be assigned to the azure resource.
      */
     identityIds: string[];
     /**
-     * The Principal ID for the Service Principal associated with the Managed Service Identity of this azure resource.
+     * The Principal ID for the Service Principal associated with the Managed Service Identity of this Azure resource.
      */
     principalId: string;
     /**
-     * The Tenant ID for the Service Principal associated with the Managed Service Identity of this azure resource.
+     * The Tenant ID for the Service Principal associated with the Managed Service Identity of this Azure resource.
      */
     tenantId: string;
     /**
-     * It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
-     * `<api-version>` is version of the API used to manage this azure resource.
+     * The Type of Identity which should be used for this azure resource. Possible values are `SystemAssigned`, `UserAssigned` and `SystemAssigned,UserAssigned`
      */
     type: string;
+}
+
+export interface GetResourceListRetry {
+    /**
+     * A list of regular expressions to match against error messages. If any of the regular expressions match, the request will be retried.
+     */
+    errorMessageRegexes: string[];
+    /**
+     * The base number of seconds to wait between retries. Default is `10`.
+     */
+    intervalSeconds: number;
+    /**
+     * The maximum number of seconds to wait between retries. Default is `180`.
+     */
+    maxIntervalSeconds: number;
+    /**
+     * The multiplier to apply to the interval between retries. Default is `1.5`.
+     */
+    multiplier: number;
+    /**
+     * The randomization factor to apply to the interval between retries. The formula for the randomized interval is: `RetryInterval * (random value in range [1 - RandomizationFactor, 1 + RandomizationFactor])`. Therefore set to zero `0.0` for no randomization. Default is `0.5`.
+     */
+    randomizationFactor: number;
+}
+
+export interface GetResourceListTimeouts {
+    /**
+     * A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+     */
+    read?: string;
+}
+
+export interface GetResourceRetry {
+    /**
+     * A list of regular expressions to match against error messages. If any of the regular expressions match, the request will be retried.
+     */
+    errorMessageRegexes: string[];
+    /**
+     * The base number of seconds to wait between retries. Default is `10`.
+     */
+    intervalSeconds: number;
+    /**
+     * The maximum number of seconds to wait between retries. Default is `180`.
+     */
+    maxIntervalSeconds: number;
+    /**
+     * The multiplier to apply to the interval between retries. Default is `1.5`.
+     */
+    multiplier: number;
+    /**
+     * The randomization factor to apply to the interval between retries. The formula for the randomized interval is: `RetryInterval * (random value in range [1 - RandomizationFactor, 1 + RandomizationFactor])`. Therefore set to zero `0.0` for no randomization. Default is `0.5`.
+     */
+    randomizationFactor: number;
+}
+
+export interface GetResourceTimeouts {
+    /**
+     * A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+     */
+    read?: string;
+}
+
+export interface ResourceActionRetry {
+    /**
+     * A list of regular expressions to match against error messages. If any of the regular expressions match, the request will be retried.
+     */
+    errorMessageRegexes: string[];
+    /**
+     * The base number of seconds to wait between retries. Default is `10`.
+     */
+    intervalSeconds: number;
+    /**
+     * The maximum number of seconds to wait between retries. Default is `180`.
+     */
+    maxIntervalSeconds: number;
+    /**
+     * The multiplier to apply to the interval between retries. Default is `1.5`.
+     */
+    multiplier: number;
+    /**
+     * The randomization factor to apply to the interval between retries. The formula for the randomized interval is: `RetryInterval * (random value in range [1 - RandomizationFactor, 1 + RandomizationFactor])`. Therefore set to zero `0.0` for no randomization. Default is `0.5`.
+     */
+    randomizationFactor: number;
+}
+
+export interface ResourceActionTimeouts {
+    /**
+     * A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+     */
+    create?: string;
+    /**
+     * A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Setting a timeout for a Delete operation is only applicable if changes are saved into state before the destroy operation occurs.
+     */
+    delete?: string;
+    /**
+     * A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+     */
+    read?: string;
+    /**
+     * A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+     */
+    update?: string;
 }
 
 export interface ResourceIdentity {
@@ -31,31 +218,115 @@ export interface ResourceIdentity {
      */
     identityIds?: string[];
     /**
-     * The Principal ID for the Service Principal associated with the Managed Service Identity of this azure resource.
+     * The Principal ID for the Service Principal associated with the Managed Service Identity of this Azure resource.
      */
     principalId: string;
     /**
-     * The Tenant ID for the Service Principal associated with the Managed Service Identity of this azure resource.
+     * The Tenant ID for the Service Principal associated with the Managed Service Identity of this Azure resource.
      */
     tenantId: string;
     /**
-     * The Type of Identity which should be used for this azure resource. Possible values are `SystemAssigned`, `UserAssigned` and `SystemAssigned,UserAssigned`.
+     * The Type of Identity which should be used for this azure resource. Possible values are `SystemAssigned`, `UserAssigned` and `SystemAssigned,UserAssigned`
      */
     type: string;
 }
 
+export interface ResourceRetry {
+    /**
+     * A list of regular expressions to match against error messages. If any of the regular expressions match, the request will be retried.
+     */
+    errorMessageRegexes: string[];
+    /**
+     * The base number of seconds to wait between retries. Default is `10`.
+     */
+    intervalSeconds: number;
+    /**
+     * The maximum number of seconds to wait between retries. Default is `180`.
+     */
+    maxIntervalSeconds: number;
+    /**
+     * The multiplier to apply to the interval between retries. Default is `1.5`.
+     */
+    multiplier: number;
+    /**
+     * The randomization factor to apply to the interval between retries. The formula for the randomized interval is: `RetryInterval * (random value in range [1 - RandomizationFactor, 1 + RandomizationFactor])`. Therefore set to zero `0.0` for no randomization. Default is `0.5`.
+     */
+    randomizationFactor: number;
+}
+
+export interface ResourceTimeouts {
+    /**
+     * A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+     */
+    create?: string;
+    /**
+     * A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Setting a timeout for a Delete operation is only applicable if changes are saved into state before the destroy operation occurs.
+     */
+    delete?: string;
+    /**
+     * A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+     */
+    read?: string;
+    /**
+     * A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+     */
+    update?: string;
+}
+
+export interface UpdateResourceRetry {
+    /**
+     * A list of regular expressions to match against error messages. If any of the regular expressions match, the request will be retried.
+     */
+    errorMessageRegexes: string[];
+    /**
+     * The base number of seconds to wait between retries. Default is `10`.
+     */
+    intervalSeconds: number;
+    /**
+     * The maximum number of seconds to wait between retries. Default is `180`.
+     */
+    maxIntervalSeconds: number;
+    /**
+     * The multiplier to apply to the interval between retries. Default is `1.5`.
+     */
+    multiplier: number;
+    /**
+     * The randomization factor to apply to the interval between retries. The formula for the randomized interval is: `RetryInterval * (random value in range [1 - RandomizationFactor, 1 + RandomizationFactor])`. Therefore set to zero `0.0` for no randomization. Default is `0.5`.
+     */
+    randomizationFactor: number;
+}
+
+export interface UpdateResourceTimeouts {
+    /**
+     * A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+     */
+    create?: string;
+    /**
+     * A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Setting a timeout for a Delete operation is only applicable if changes are saved into state before the destroy operation occurs.
+     */
+    delete?: string;
+    /**
+     * A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+     */
+    read?: string;
+    /**
+     * A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+     */
+    update?: string;
+}
+
 export namespace config {
-    export interface Endpoint {
+    export interface Endpoints {
         /**
-         * The Active Directory login endpoint which should be used.
+         * The Azure Resource Manager endpoint to use. This can also be sourced from the `ARM_RESOURCE_MANAGER_ENDPOINT` Environment Variable. Defaults to `https://management.azure.com/` for public cloud.
          */
         activeDirectoryAuthorityHost?: string;
         /**
-         * The resource ID to obtain AD tokens for.
+         * The Azure Active Directory login endpoint to use. This can also be sourced from the `ARM_ACTIVE_DIRECTORY_AUTHORITY_HOST` Environment Variable. Defaults to `https://login.microsoftonline.com/` for public cloud.
          */
         resourceManagerAudience?: string;
         /**
-         * The Resource Manager Endpoint which should be used.
+         * The resource ID to obtain AD tokens for. This can also be sourced from the `ARM_RESOURCE_MANAGER_AUDIENCE` Environment Variable. Defaults to `https://management.core.windows.net/` for public cloud.
          */
         resourceManagerEndpoint?: string;
     }

@@ -7,19 +7,44 @@ import * as outputs from "./types/output";
 import * as utilities from "./utilities";
 
 /**
- * This resource can access any existing Azure resource manager resource.
+ * This resource can access any existing Azure resource manager resource.## Example Usage
  *
- * ## Example Usage
+ * ```typescript
+ * import * as pulumi from "@pulumi/pulumi";
+ * import * as azapi from "@pulumi/azapi";
+ * import * as azure from "@pulumi/azure";
+ *
+ * const exampleResourceGroup = new azure.core.ResourceGroup("exampleResourceGroup", {location: "west europe"});
+ * const exampleRegistry = new azure.containerservice.Registry("exampleRegistry", {
+ *     resourceGroupName: exampleResourceGroup.name,
+ *     location: exampleResourceGroup.location,
+ *     sku: "Premium",
+ *     adminEnabled: false,
+ * });
+ * const exampleResource = azapi.getResourceOutput({
+ *     name: "example",
+ *     parentId: exampleResourceGroup.id,
+ *     type: "Microsoft.ContainerRegistry/registries@2020-11-01-preview",
+ *     responseExportValues: [
+ *         "properties.loginServer",
+ *         "properties.policies.quarantinePolicy.status",
+ *     ],
+ * });
+ * export const loginServer = exampleResource.apply(exampleResource => exampleResource.output?.properties?.loginServer);
+ * export const quarantinePolicy = exampleResource.apply(exampleResource => exampleResource.output?.properties?.policies?.quarantinePolicy?.status);
+ * ```
  */
 export function getResource(args: GetResourceArgs, opts?: pulumi.InvokeOptions): Promise<GetResourceResult> {
-
     opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts || {});
     return pulumi.runtime.invoke("azapi:index/getResource:getResource", {
-        "identity": args.identity,
+        "headers": args.headers,
         "name": args.name,
         "parentId": args.parentId,
+        "queryParameters": args.queryParameters,
         "resourceId": args.resourceId,
         "responseExportValues": args.responseExportValues,
+        "retry": args.retry,
+        "timeouts": args.timeouts,
         "type": args.type,
     }, opts);
 }
@@ -28,55 +53,14 @@ export function getResource(args: GetResourceArgs, opts?: pulumi.InvokeOptions):
  * A collection of arguments for invoking getResource.
  */
 export interface GetResourceArgs {
-    /**
-     * An `identity` block as defined below, which contains the Managed Service Identity information for this azure resource.
-     */
-    identity?: inputs.GetResourceIdentity;
-    /**
-     * Specifies the name of the azure resource.
-     */
+    headers?: {[key: string]: string};
     name?: string;
-    /**
-     * The ID of the azure resource in which this resource is created. It supports different kinds of deployment scope for **top level** resources: 
-     * - resource group scope: `parentId` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.
-     * - management group scope: `parentId` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.
-     * - extension scope: `parentId` should be the ID of the resource you're adding the extension to.
-     * - subscription scope: `parentId` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`
-     * - tenant scope: `parentId` should be `/`
-     *
-     * For child level resources, the `parentId` should be the ID of its parent resource, for example, subnet resource's `parentId` is the ID of the vnet.
-     *
-     * For type `Microsoft.Resources/resourceGroups`, the `parentId` could be omitted, it defaults to subscription ID specified in provider or the default subscription(You could check the default subscription by azure cli command: `az account show`).
-     */
     parentId?: string;
-    /**
-     * The ID of an existing azure source.
-     *
-     * > **Note:** Configuring `name` and `parentId` is an alternative way to configure `resourceId`.
-     */
+    queryParameters?: {[key: string]: string[]};
     resourceId?: string;
-    /**
-     * A list of path that needs to be exported from response body.
-     * Setting it to `["*"]` will export the full response body.
-     * Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-     * ```
-     * {
-     * "properties" : {
-     * "loginServer" : "registry1.azurecr.io"
-     * "policies" : {
-     * "quarantinePolicy" = {
-     * "status" = "disabled"
-     * }
-     * }
-     * }
-     * }
-     * ```
-     */
-    responseExportValues?: string[];
-    /**
-     * It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
-     * `<api-version>` is version of the API used to manage this azure resource.
-     */
+    responseExportValues?: any;
+    retry?: inputs.GetResourceRetry;
+    timeouts?: inputs.GetResourceTimeouts;
     type: string;
 }
 
@@ -84,101 +68,75 @@ export interface GetResourceArgs {
  * A collection of values returned by getResource.
  */
 export interface GetResourceResult {
-    /**
-     * The provider-assigned unique ID for this managed resource.
-     */
+    readonly headers?: {[key: string]: string};
     readonly id: string;
-    /**
-     * An `identity` block as defined below, which contains the Managed Service Identity information for this azure resource.
-     */
-    readonly identity: outputs.GetResourceIdentity;
-    /**
-     * The Azure Region where the azure resource should exist.
-     */
+    readonly identities: outputs.GetResourceIdentity[];
     readonly location: string;
-    readonly name?: string;
-    /**
-     * The output json containing the properties specified in `responseExportValues`. Here're some examples to decode json and extract the value.
-     * ```
-     * // it will output "registry1.azurecr.io"
-     * output "loginServer" {
-     * value = jsondecode(azapi_resource.example.output).properties.loginServer
-     * }
-     */
-    readonly output: string;
+    readonly name: string;
+    readonly output: any;
     readonly parentId: string;
-    readonly resourceId?: string;
-    readonly responseExportValues?: string[];
-    /**
-     * A mapping of tags which should be assigned to the azure resource.
-     */
+    readonly queryParameters?: {[key: string]: string[]};
+    readonly resourceId: string;
+    readonly responseExportValues?: any;
+    readonly retry?: outputs.GetResourceRetry;
     readonly tags: {[key: string]: string};
-    /**
-     * The Type of Identity which should be used for this azure resource. Possible values are `SystemAssigned`, `UserAssigned` and `SystemAssigned,UserAssigned`.
-     */
+    readonly timeouts?: outputs.GetResourceTimeouts;
     readonly type: string;
 }
 /**
- * This resource can access any existing Azure resource manager resource.
+ * This resource can access any existing Azure resource manager resource.## Example Usage
  *
- * ## Example Usage
+ * ```typescript
+ * import * as pulumi from "@pulumi/pulumi";
+ * import * as azapi from "@pulumi/azapi";
+ * import * as azure from "@pulumi/azure";
+ *
+ * const exampleResourceGroup = new azure.core.ResourceGroup("exampleResourceGroup", {location: "west europe"});
+ * const exampleRegistry = new azure.containerservice.Registry("exampleRegistry", {
+ *     resourceGroupName: exampleResourceGroup.name,
+ *     location: exampleResourceGroup.location,
+ *     sku: "Premium",
+ *     adminEnabled: false,
+ * });
+ * const exampleResource = azapi.getResourceOutput({
+ *     name: "example",
+ *     parentId: exampleResourceGroup.id,
+ *     type: "Microsoft.ContainerRegistry/registries@2020-11-01-preview",
+ *     responseExportValues: [
+ *         "properties.loginServer",
+ *         "properties.policies.quarantinePolicy.status",
+ *     ],
+ * });
+ * export const loginServer = exampleResource.apply(exampleResource => exampleResource.output?.properties?.loginServer);
+ * export const quarantinePolicy = exampleResource.apply(exampleResource => exampleResource.output?.properties?.policies?.quarantinePolicy?.status);
+ * ```
  */
-export function getResourceOutput(args: GetResourceOutputArgs, opts?: pulumi.InvokeOptions): pulumi.Output<GetResourceResult> {
-    return pulumi.output(args).apply((a: any) => getResource(a, opts))
+export function getResourceOutput(args: GetResourceOutputArgs, opts?: pulumi.InvokeOutputOptions): pulumi.Output<GetResourceResult> {
+    opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts || {});
+    return pulumi.runtime.invokeOutput("azapi:index/getResource:getResource", {
+        "headers": args.headers,
+        "name": args.name,
+        "parentId": args.parentId,
+        "queryParameters": args.queryParameters,
+        "resourceId": args.resourceId,
+        "responseExportValues": args.responseExportValues,
+        "retry": args.retry,
+        "timeouts": args.timeouts,
+        "type": args.type,
+    }, opts);
 }
 
 /**
  * A collection of arguments for invoking getResource.
  */
 export interface GetResourceOutputArgs {
-    /**
-     * An `identity` block as defined below, which contains the Managed Service Identity information for this azure resource.
-     */
-    identity?: pulumi.Input<inputs.GetResourceIdentityArgs>;
-    /**
-     * Specifies the name of the azure resource.
-     */
+    headers?: pulumi.Input<{[key: string]: pulumi.Input<string>}>;
     name?: pulumi.Input<string>;
-    /**
-     * The ID of the azure resource in which this resource is created. It supports different kinds of deployment scope for **top level** resources: 
-     * - resource group scope: `parentId` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.
-     * - management group scope: `parentId` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.
-     * - extension scope: `parentId` should be the ID of the resource you're adding the extension to.
-     * - subscription scope: `parentId` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`
-     * - tenant scope: `parentId` should be `/`
-     *
-     * For child level resources, the `parentId` should be the ID of its parent resource, for example, subnet resource's `parentId` is the ID of the vnet.
-     *
-     * For type `Microsoft.Resources/resourceGroups`, the `parentId` could be omitted, it defaults to subscription ID specified in provider or the default subscription(You could check the default subscription by azure cli command: `az account show`).
-     */
     parentId?: pulumi.Input<string>;
-    /**
-     * The ID of an existing azure source.
-     *
-     * > **Note:** Configuring `name` and `parentId` is an alternative way to configure `resourceId`.
-     */
+    queryParameters?: pulumi.Input<{[key: string]: pulumi.Input<pulumi.Input<string>[]>}>;
     resourceId?: pulumi.Input<string>;
-    /**
-     * A list of path that needs to be exported from response body.
-     * Setting it to `["*"]` will export the full response body.
-     * Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-     * ```
-     * {
-     * "properties" : {
-     * "loginServer" : "registry1.azurecr.io"
-     * "policies" : {
-     * "quarantinePolicy" = {
-     * "status" = "disabled"
-     * }
-     * }
-     * }
-     * }
-     * ```
-     */
-    responseExportValues?: pulumi.Input<pulumi.Input<string>[]>;
-    /**
-     * It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
-     * `<api-version>` is version of the API used to manage this azure resource.
-     */
+    responseExportValues?: any;
+    retry?: pulumi.Input<inputs.GetResourceRetryArgs>;
+    timeouts?: pulumi.Input<inputs.GetResourceTimeoutsArgs>;
     type: pulumi.Input<string>;
 }

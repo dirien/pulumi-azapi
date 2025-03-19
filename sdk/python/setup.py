@@ -17,8 +17,8 @@ def readme():
         return "azapi Pulumi Package - Development Version"
 
 
-setup(name='ediri_azapi',
-      python_requires='>=3.8',
+setup(name='pulumiverse_azapi',
+      python_requires='>=3.9',
       version=VERSION,
       description="A Pulumi package for creating and managing Azapi resources",
       long_description=readme(),
@@ -31,7 +31,7 @@ setup(name='ediri_azapi',
       license='Apache-2.0',
       packages=find_packages(),
       package_data={
-          'ediri_azapi': [
+          'pulumiverse_azapi': [
               'py.typed',
               'pulumi-plugin.json',
           ]
@@ -39,6 +39,7 @@ setup(name='ediri_azapi',
       install_requires=[
           'parver>=0.2.1',
           'pulumi>=3.0.0,<4.0.0',
-          'semver>=2.8.1'
+          'semver>=2.8.1',
+          'typing-extensions>=4.11,<5; python_version < "3.11"'
       ],
       zip_safe=False)

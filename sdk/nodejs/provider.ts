@@ -28,69 +28,96 @@ export class Provider extends pulumi.ProviderResource {
     }
 
     /**
-     * The password associated with the Client Certificate. For use when authenticating as a Service Principal using a Client
-     * Certificate
+     * A base64-encoded PKCS#12 bundle to be used as the client certificate for authentication. This can also be sourced from
+     * the `ARM_CLIENT_CERTIFICATE` environment variable.
+     */
+    public readonly clientCertificate!: pulumi.Output<string | undefined>;
+    /**
+     * The password associated with the Client Certificate. This can also be sourced from the `ARM_CLIENT_CERTIFICATE_PASSWORD`
+     * Environment Variable.
      */
     public readonly clientCertificatePassword!: pulumi.Output<string | undefined>;
     /**
-     * The path to the Client Certificate associated with the Service Principal for use when authenticating as a Service
-     * Principal using a Client Certificate.
+     * The path to the Client Certificate associated with the Service Principal which should be used. This can also be sourced
+     * from the `ARM_CLIENT_CERTIFICATE_PATH` Environment Variable.
      */
     public readonly clientCertificatePath!: pulumi.Output<string | undefined>;
     /**
-     * The Client ID which should be used.
+     * The Client ID which should be used. This can also be sourced from the `ARM_CLIENT_ID` Environment Variable.
      */
     public readonly clientId!: pulumi.Output<string | undefined>;
     /**
-     * The Client Secret which should be used. For use When authenticating as a Service Principal using a Client Secret.
+     * The path to a file containing the Client ID which should be used. This can also be sourced from the
+     * `ARM_CLIENT_ID_FILE_PATH` Environment Variable.
+     */
+    public readonly clientIdFilePath!: pulumi.Output<string | undefined>;
+    /**
+     * The Client Secret which should be used. This can also be sourced from the `ARM_CLIENT_SECRET` Environment Variable.
      */
     public readonly clientSecret!: pulumi.Output<string | undefined>;
     /**
-     * The value of the x-ms-correlation-request-id header (otherwise an auto-generated UUID will be used).
+     * The path to a file containing the Client Secret which should be used. For use When authenticating as a Service Principal
+     * using a Client Secret. This can also be sourced from the `ARM_CLIENT_SECRET_FILE_PATH` Environment Variable.
+     */
+    public readonly clientSecretFilePath!: pulumi.Output<string | undefined>;
+    /**
+     * The value of the `x-ms-correlation-request-id` header, otherwise an auto-generated UUID will be used. This can also be
+     * sourced from the `ARM_CORRELATION_REQUEST_ID` environment variable.
      */
     public readonly customCorrelationRequestId!: pulumi.Output<string | undefined>;
+    /**
+     * The default Azure Region where the azure resource should exist. The `location` in each resource block can override the
+     * `defaultLocation`. Changing this forces new resources to be created.
+     */
     public readonly defaultLocation!: pulumi.Output<string | undefined>;
+    /**
+     * The default name to create the azure resource. The `name` in each resource block can override the `defaultName`.
+     * Changing this forces new resources to be created.
+     */
     public readonly defaultName!: pulumi.Output<string | undefined>;
     /**
-     * @deprecated It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead.
+     * The Cloud Environment which should be used. Possible values are `public`, `usgovernment` and `china`. Defaults to
+     * `public`. This can also be sourced from the `ARM_ENVIRONMENT` Environment Variable.
      */
-    public readonly defaultNamingPrefix!: pulumi.Output<string | undefined>;
+    public readonly environment!: pulumi.Output<string | undefined>;
     /**
-     * @deprecated It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead.
+     * The Azure Pipelines Service Connection ID to use for authentication. This can also be sourced from the
+     * `ARM_ADO_PIPELINE_SERVICE_CONNECTION_ID` or `ARM_OIDC_AZURE_SERVICE_CONNECTION_ID` Environment Variables.
      */
-    public readonly defaultNamingSuffix!: pulumi.Output<string | undefined>;
+    public readonly oidcAzureServiceConnectionId!: pulumi.Output<string | undefined>;
     /**
-     * The Cloud Environment which should be used. Possible values are public, usgovernment and china. Defaults to public.
-     */
-    public readonly environment!: pulumi.Output<string>;
-    /**
-     * The bearer token for the request to the OIDC provider. For use When authenticating as a Service Principal using OpenID
-     * Connect.
+     * The bearer token for the request to the OIDC provider. This can also be sourced from the `ARM_OIDC_REQUEST_TOKEN` or
+     * `ACTIONS_ID_TOKEN_REQUEST_TOKEN` Environment Variables.
      */
     public readonly oidcRequestToken!: pulumi.Output<string | undefined>;
     /**
-     * The URL for the OIDC provider from which to request an ID token. For use When authenticating as a Service Principal
-     * using OpenID Connect.
+     * The URL for the OIDC provider from which to request an ID token. This can also be sourced from the
+     * `ARM_OIDC_REQUEST_URL` or `ACTIONS_ID_TOKEN_REQUEST_URL` Environment Variables.
      */
     public readonly oidcRequestUrl!: pulumi.Output<string | undefined>;
     /**
-     * The OIDC ID token for use when authenticating as a Service Principal using OpenID Connect.
+     * The ID token when authenticating using OpenID Connect (OIDC). This can also be sourced from the `ARM_OIDC_TOKEN`
+     * environment Variable.
      */
     public readonly oidcToken!: pulumi.Output<string | undefined>;
     /**
-     * The path to a file containing an OIDC ID token for use when authenticating as a Service Principal using OpenID Connect.
+     * The path to a file containing an ID token when authenticating using OpenID Connect (OIDC). This can also be sourced from
+     * the `ARM_OIDC_TOKEN_FILE_PATH` environment Variable.
      */
     public readonly oidcTokenFilePath!: pulumi.Output<string | undefined>;
     /**
-     * A GUID/UUID that is registered with Microsoft to facilitate partner resource usage attribution.
+     * A GUID/UUID that is
+     * [registered](https://docs.microsoft.com/azure/marketplace/azure-partner-customer-usage-attribution#register-guids-and-offers)
+     * with Microsoft to facilitate partner resource usage attribution. This can also be sourced from the `ARM_PARTNER_ID`
+     * Environment Variable.
      */
     public readonly partnerId!: pulumi.Output<string | undefined>;
     /**
-     * The Subscription ID which should be used.
+     * The Subscription ID which should be used. This can also be sourced from the `ARM_SUBSCRIPTION_ID` Environment Variable.
      */
     public readonly subscriptionId!: pulumi.Output<string | undefined>;
     /**
-     * The Tenant ID which should be used.
+     * The Tenant ID should be used. This can also be sourced from the `ARM_TENANT_ID` Environment Variable.
      */
     public readonly tenantId!: pulumi.Output<string | undefined>;
 
@@ -101,28 +128,30 @@ export class Provider extends pulumi.ProviderResource {
      * @param args The arguments to use to populate this resource's properties.
      * @param opts A bag of options that control this resource's behavior.
      */
-    constructor(name: string, args: ProviderArgs, opts?: pulumi.ResourceOptions) {
+    constructor(name: string, args?: ProviderArgs, opts?: pulumi.ResourceOptions) {
         let resourceInputs: pulumi.Inputs = {};
         opts = opts || {};
         {
-            if ((!args || args.environment === undefined) && !opts.urn) {
-                throw new Error("Missing required property 'environment'");
-            }
             resourceInputs["auxiliaryTenantIds"] = pulumi.output(args ? args.auxiliaryTenantIds : undefined).apply(JSON.stringify);
+            resourceInputs["clientCertificate"] = args ? args.clientCertificate : undefined;
             resourceInputs["clientCertificatePassword"] = args ? args.clientCertificatePassword : undefined;
             resourceInputs["clientCertificatePath"] = args ? args.clientCertificatePath : undefined;
             resourceInputs["clientId"] = args ? args.clientId : undefined;
+            resourceInputs["clientIdFilePath"] = args ? args.clientIdFilePath : undefined;
             resourceInputs["clientSecret"] = args ? args.clientSecret : undefined;
+            resourceInputs["clientSecretFilePath"] = args ? args.clientSecretFilePath : undefined;
             resourceInputs["customCorrelationRequestId"] = args ? args.customCorrelationRequestId : undefined;
             resourceInputs["defaultLocation"] = args ? args.defaultLocation : undefined;
             resourceInputs["defaultName"] = args ? args.defaultName : undefined;
-            resourceInputs["defaultNamingPrefix"] = args ? args.defaultNamingPrefix : undefined;
-            resourceInputs["defaultNamingSuffix"] = args ? args.defaultNamingSuffix : undefined;
             resourceInputs["defaultTags"] = pulumi.output(args ? args.defaultTags : undefined).apply(JSON.stringify);
             resourceInputs["disableCorrelationRequestId"] = pulumi.output(args ? args.disableCorrelationRequestId : undefined).apply(JSON.stringify);
+            resourceInputs["disableDefaultOutput"] = pulumi.output(args ? args.disableDefaultOutput : undefined).apply(JSON.stringify);
             resourceInputs["disableTerraformPartnerId"] = pulumi.output(args ? args.disableTerraformPartnerId : undefined).apply(JSON.stringify);
-            resourceInputs["endpoint"] = pulumi.output(args ? args.endpoint : undefined).apply(JSON.stringify);
+            resourceInputs["enablePreflight"] = pulumi.output(args ? args.enablePreflight : undefined).apply(JSON.stringify);
+            resourceInputs["endpoints"] = pulumi.output(args ? args.endpoints : undefined).apply(JSON.stringify);
             resourceInputs["environment"] = args ? args.environment : undefined;
+            resourceInputs["maximumBusyRetryAttempts"] = pulumi.output(args ? args.maximumBusyRetryAttempts : undefined).apply(JSON.stringify);
+            resourceInputs["oidcAzureServiceConnectionId"] = args ? args.oidcAzureServiceConnectionId : undefined;
             resourceInputs["oidcRequestToken"] = args ? args.oidcRequestToken : undefined;
             resourceInputs["oidcRequestUrl"] = args ? args.oidcRequestUrl : undefined;
             resourceInputs["oidcToken"] = args ? args.oidcToken : undefined;
@@ -131,6 +160,7 @@ export class Provider extends pulumi.ProviderResource {
             resourceInputs["skipProviderRegistration"] = pulumi.output(args ? args.skipProviderRegistration : undefined).apply(JSON.stringify);
             resourceInputs["subscriptionId"] = args ? args.subscriptionId : undefined;
             resourceInputs["tenantId"] = args ? args.tenantId : undefined;
+            resourceInputs["useAksWorkloadIdentity"] = pulumi.output(args ? args.useAksWorkloadIdentity : undefined).apply(JSON.stringify);
             resourceInputs["useCli"] = pulumi.output(args ? args.useCli : undefined).apply(JSON.stringify);
             resourceInputs["useMsi"] = pulumi.output(args ? args.useMsi : undefined).apply(JSON.stringify);
             resourceInputs["useOidc"] = pulumi.output(args ? args.useOidc : undefined).apply(JSON.stringify);
@@ -144,94 +174,160 @@ export class Provider extends pulumi.ProviderResource {
  * The set of arguments for constructing a Provider resource.
  */
 export interface ProviderArgs {
+    /**
+     * List of auxiliary Tenant IDs required for multi-tenancy and cross-tenant scenarios. This can also be sourced from the
+     * `ARM_AUXILIARY_TENANT_IDS` Environment Variable.
+     */
     auxiliaryTenantIds?: pulumi.Input<pulumi.Input<string>[]>;
     /**
-     * The password associated with the Client Certificate. For use when authenticating as a Service Principal using a Client
-     * Certificate
+     * A base64-encoded PKCS#12 bundle to be used as the client certificate for authentication. This can also be sourced from
+     * the `ARM_CLIENT_CERTIFICATE` environment variable.
+     */
+    clientCertificate?: pulumi.Input<string>;
+    /**
+     * The password associated with the Client Certificate. This can also be sourced from the `ARM_CLIENT_CERTIFICATE_PASSWORD`
+     * Environment Variable.
      */
     clientCertificatePassword?: pulumi.Input<string>;
     /**
-     * The path to the Client Certificate associated with the Service Principal for use when authenticating as a Service
-     * Principal using a Client Certificate.
+     * The path to the Client Certificate associated with the Service Principal which should be used. This can also be sourced
+     * from the `ARM_CLIENT_CERTIFICATE_PATH` Environment Variable.
      */
     clientCertificatePath?: pulumi.Input<string>;
     /**
-     * The Client ID which should be used.
+     * The Client ID which should be used. This can also be sourced from the `ARM_CLIENT_ID` Environment Variable.
      */
     clientId?: pulumi.Input<string>;
     /**
-     * The Client Secret which should be used. For use When authenticating as a Service Principal using a Client Secret.
+     * The path to a file containing the Client ID which should be used. This can also be sourced from the
+     * `ARM_CLIENT_ID_FILE_PATH` Environment Variable.
+     */
+    clientIdFilePath?: pulumi.Input<string>;
+    /**
+     * The Client Secret which should be used. This can also be sourced from the `ARM_CLIENT_SECRET` Environment Variable.
      */
     clientSecret?: pulumi.Input<string>;
     /**
-     * The value of the x-ms-correlation-request-id header (otherwise an auto-generated UUID will be used).
+     * The path to a file containing the Client Secret which should be used. For use When authenticating as a Service Principal
+     * using a Client Secret. This can also be sourced from the `ARM_CLIENT_SECRET_FILE_PATH` Environment Variable.
+     */
+    clientSecretFilePath?: pulumi.Input<string>;
+    /**
+     * The value of the `x-ms-correlation-request-id` header, otherwise an auto-generated UUID will be used. This can also be
+     * sourced from the `ARM_CORRELATION_REQUEST_ID` environment variable.
      */
     customCorrelationRequestId?: pulumi.Input<string>;
+    /**
+     * The default Azure Region where the azure resource should exist. The `location` in each resource block can override the
+     * `defaultLocation`. Changing this forces new resources to be created.
+     */
     defaultLocation?: pulumi.Input<string>;
+    /**
+     * The default name to create the azure resource. The `name` in each resource block can override the `defaultName`.
+     * Changing this forces new resources to be created.
+     */
     defaultName?: pulumi.Input<string>;
     /**
-     * @deprecated It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead.
+     * A mapping of tags which should be assigned to the azure resource as default tags. The`tags` in each resource block can
+     * override the `defaultTags`.
      */
-    defaultNamingPrefix?: pulumi.Input<string>;
-    /**
-     * @deprecated It will not work in the next minor release and will be removed in the next major release. Please specify the naming prefix and suffix in the resource's `name` field instead.
-     */
-    defaultNamingSuffix?: pulumi.Input<string>;
     defaultTags?: pulumi.Input<{[key: string]: pulumi.Input<string>}>;
     /**
      * This will disable the x-ms-correlation-request-id header.
      */
     disableCorrelationRequestId?: pulumi.Input<boolean>;
-    disableTerraformPartnerId?: pulumi.Input<boolean>;
-    endpoint?: pulumi.Input<inputs.ProviderEndpoint>;
     /**
-     * The Cloud Environment which should be used. Possible values are public, usgovernment and china. Defaults to public.
+     * Disable default output. The default is false. When set to false, the provider will output the read-only properties if
+     * `responseExportValues` is not specified in the resource block. When set to true, the provider will disable this output.
+     * This can also be sourced from the `ARM_DISABLE_DEFAULT_OUTPUT` Environment Variable.
      */
-    environment: pulumi.Input<string>;
+    disableDefaultOutput?: pulumi.Input<boolean>;
+    disableTerraformPartnerId?: pulumi.Input<boolean>;
     /**
-     * The bearer token for the request to the OIDC provider. For use When authenticating as a Service Principal using OpenID
-     * Connect.
+     * Enable Preflight Validation. The default is false. When set to true, the provider will use Preflight to do static
+     * validation before really deploying a new resource. When set to false, the provider will disable this validation. This
+     * can also be sourced from the `ARM_ENABLE_PREFLIGHT` Environment Variable.
+     */
+    enablePreflight?: pulumi.Input<boolean>;
+    /**
+     * The Azure API Endpoint Configuration.
+     */
+    endpoints?: pulumi.Input<pulumi.Input<inputs.ProviderEndpoint>[]>;
+    /**
+     * The Cloud Environment which should be used. Possible values are `public`, `usgovernment` and `china`. Defaults to
+     * `public`. This can also be sourced from the `ARM_ENVIRONMENT` Environment Variable.
+     */
+    environment?: pulumi.Input<string>;
+    /**
+     * The maximum number of retries to attempt if the Azure API returns an HTTP 408, 429, 500, 502, 503, or 504 response. The
+     * default is `3`. The resource-specific retry configuration may additionally be used to retry on other errors and
+     * conditions.
+     */
+    maximumBusyRetryAttempts?: pulumi.Input<number>;
+    /**
+     * The Azure Pipelines Service Connection ID to use for authentication. This can also be sourced from the
+     * `ARM_ADO_PIPELINE_SERVICE_CONNECTION_ID` or `ARM_OIDC_AZURE_SERVICE_CONNECTION_ID` Environment Variables.
+     */
+    oidcAzureServiceConnectionId?: pulumi.Input<string>;
+    /**
+     * The bearer token for the request to the OIDC provider. This can also be sourced from the `ARM_OIDC_REQUEST_TOKEN` or
+     * `ACTIONS_ID_TOKEN_REQUEST_TOKEN` Environment Variables.
      */
     oidcRequestToken?: pulumi.Input<string>;
     /**
-     * The URL for the OIDC provider from which to request an ID token. For use When authenticating as a Service Principal
-     * using OpenID Connect.
+     * The URL for the OIDC provider from which to request an ID token. This can also be sourced from the
+     * `ARM_OIDC_REQUEST_URL` or `ACTIONS_ID_TOKEN_REQUEST_URL` Environment Variables.
      */
     oidcRequestUrl?: pulumi.Input<string>;
     /**
-     * The OIDC ID token for use when authenticating as a Service Principal using OpenID Connect.
+     * The ID token when authenticating using OpenID Connect (OIDC). This can also be sourced from the `ARM_OIDC_TOKEN`
+     * environment Variable.
      */
     oidcToken?: pulumi.Input<string>;
     /**
-     * The path to a file containing an OIDC ID token for use when authenticating as a Service Principal using OpenID Connect.
+     * The path to a file containing an ID token when authenticating using OpenID Connect (OIDC). This can also be sourced from
+     * the `ARM_OIDC_TOKEN_FILE_PATH` environment Variable.
      */
     oidcTokenFilePath?: pulumi.Input<string>;
     /**
-     * A GUID/UUID that is registered with Microsoft to facilitate partner resource usage attribution.
+     * A GUID/UUID that is
+     * [registered](https://docs.microsoft.com/azure/marketplace/azure-partner-customer-usage-attribution#register-guids-and-offers)
+     * with Microsoft to facilitate partner resource usage attribution. This can also be sourced from the `ARM_PARTNER_ID`
+     * Environment Variable.
      */
     partnerId?: pulumi.Input<string>;
     /**
-     * Should the Provider skip registering all of the Resource Providers that it supports, if they're not already registered?
+     * Should the Provider skip registering the Resource Providers it supports? This can also be sourced from the
+     * `ARM_SKIP_PROVIDER_REGISTRATION` Environment Variable. Defaults to `false`.
      */
     skipProviderRegistration?: pulumi.Input<boolean>;
     /**
-     * The Subscription ID which should be used.
+     * The Subscription ID which should be used. This can also be sourced from the `ARM_SUBSCRIPTION_ID` Environment Variable.
      */
     subscriptionId?: pulumi.Input<string>;
     /**
-     * The Tenant ID which should be used.
+     * The Tenant ID should be used. This can also be sourced from the `ARM_TENANT_ID` Environment Variable.
      */
     tenantId?: pulumi.Input<string>;
     /**
-     * Allow Azure CLI to be used for Authentication.
+     * Should AKS Workload Identity be used for Authentication? This can also be sourced from the
+     * `ARM_USE_AKS_WORKLOAD_IDENTITY` Environment Variable. Defaults to `false`. When set, `clientId`, `tenantId` and
+     * `oidcTokenFilePath` will be detected from the environment and do not need to be specified.
+     */
+    useAksWorkloadIdentity?: pulumi.Input<boolean>;
+    /**
+     * Should Azure CLI be used for authentication? This can also be sourced from the `ARM_USE_CLI` environment variable.
+     * Defaults to `true`.
      */
     useCli?: pulumi.Input<boolean>;
     /**
-     * Allow Managed Service Identity to be used for Authentication.
+     * Should Managed Identity be used for Authentication? This can also be sourced from the `ARM_USE_MSI` Environment
+     * Variable. Defaults to `false`.
      */
     useMsi?: pulumi.Input<boolean>;
     /**
-     * Allow OpenID Connect to be used for authentication
+     * Should OIDC be used for Authentication? This can also be sourced from the `ARM_USE_OIDC` Environment Variable. Defaults
+     * to `false`.
      */
     useOidc?: pulumi.Input<boolean>;
 }

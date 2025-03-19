@@ -14,48 +14,145 @@ import (
 
 // This resource can manage a subset of any existing Azure resource manager resource's properties.
 //
-// > **Note** This resource is used to add or modify properties on an existing resource.
-// When delete `UpdateResource`, no operation will be performed, and these properties will stay unchanged.
-// If you want to restore the modified properties to some values, you must apply the restored properties before deleting.
+// > **Note** This resource is used to add or modify properties on an existing resource. When delete `UpdateResource`, no operation will be performed, and these properties will stay unchanged. If you want to restore the modified properties to some values, you must apply the restored properties before deleting.
 //
 // ## Example Usage
+//
+// ```go
+// package main
+//
+// import (
+//
+//	"github.com/dirien/pulumi-azapi/sdk/go/azapi"
+//	"github.com/pulumi/pulumi-azure/sdk/v6/go/azure/core"
+//	"github.com/pulumi/pulumi-azure/sdk/v6/go/azure/lb"
+//	"github.com/pulumi/pulumi-azure/sdk/v6/go/azure/network"
+//	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
+//
+// )
+//
+//	func main() {
+//	   pulumi.Run(func(ctx *pulumi.Context) error {
+//	       exampleResourceGroup, err := core.NewResourceGroup(ctx, "exampleResourceGroup", &core.ResourceGroupArgs{
+//	           Location: pulumi.String("west europe"),
+//	       })
+//	       if err != nil {
+//	           return err
+//	       }
+//	       examplePublicIp, err := network.NewPublicIp(ctx, "examplePublicIp", &network.PublicIpArgs{
+//	           Location:          exampleResourceGroup.Location,
+//	           ResourceGroupName: exampleResourceGroup.Name,
+//	           AllocationMethod:  pulumi.String("Static"),
+//	       })
+//	       if err != nil {
+//	           return err
+//	       }
+//	       exampleLoadBalancer, err := lb.NewLoadBalancer(ctx, "exampleLoadBalancer", &lb.LoadBalancerArgs{
+//	           Location:          exampleResourceGroup.Location,
+//	           ResourceGroupName: exampleResourceGroup.Name,
+//	           FrontendIpConfigurations: lb.LoadBalancerFrontendIpConfigurationArray{
+//	               &lb.LoadBalancerFrontendIpConfigurationArgs{
+//	                   Name:              pulumi.String("PublicIPAddress"),
+//	                   PublicIpAddressId: examplePublicIp.ID(),
+//	               },
+//	           },
+//	       })
+//	       if err != nil {
+//	           return err
+//	       }
+//	       exampleNatRule, err := lb.NewNatRule(ctx, "exampleNatRule", &lb.NatRuleArgs{
+//	           ResourceGroupName:           exampleResourceGroup.Name,
+//	           LoadbalancerId:              exampleLoadBalancer.ID(),
+//	           Protocol:                    pulumi.String("Tcp"),
+//	           FrontendPort:                pulumi.Int(3389),
+//	           BackendPort:                 pulumi.Int(3389),
+//	           FrontendIpConfigurationName: pulumi.String("PublicIPAddress"),
+//	       })
+//	       if err != nil {
+//	           return err
+//	       }
+//	       _, err = azapi.NewUpdateResource(ctx, "exampleUpdateResource", &azapi.UpdateResourceArgs{
+//	           Type:       pulumi.String("Microsoft.Network/loadBalancers@2021-03-01"),
+//	           ResourceId: exampleLoadBalancer.ID(),
+//	           Body: pulumi.Any(map[string]interface{}{
+//	               "properties": map[string]interface{}{
+//	                   "inboundNatRules": []map[string]interface{}{
+//	                       map[string]interface{}{
+//	                           "properties": map[string]interface{}{
+//	                               "idleTimeoutInMinutes": 15,
+//	                           },
+//	                       },
+//	                   },
+//	               },
+//	           }),
+//	       }, pulumi.DependsOn([]pulumi.Resource{
+//	           exampleNatRule,
+//	       }))
+//	       if err != nil {
+//	           return err
+//	       }
+//	       return nil
+//	   })
+//	}
+//
+// ```
 type UpdateResource struct {
 	pulumi.CustomResourceState
 
-	// A JSON object that contains the request body used to add on an existing azure resource.
-	Body pulumi.StringPtrOutput `pulumi:"body"`
-	// A list of properties that should be ignored when comparing the `body` with its current state.
-	IgnoreBodyChanges pulumi.StringArrayOutput `pulumi:"ignoreBodyChanges"`
-	// Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.
-	IgnoreCasing pulumi.BoolPtrOutput `pulumi:"ignoreCasing"`
-	// Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.
-	IgnoreMissingProperty pulumi.BoolPtrOutput `pulumi:"ignoreMissingProperty"`
+	// A dynamic attribute that contains the request body.
+	Body pulumi.AnyOutput `pulumi:"body"`
+	// Whether ignore the casing of the property names in the response body. Defaults to `false`.
+	IgnoreCasing pulumi.BoolOutput `pulumi:"ignoreCasing"`
+	// Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`. It's
+	// recommend to enable this option when some sensitive properties are not returned in response body, instead of setting
+	// them in `lifecycle.ignore_changes` because it will make the sensitive fields unable to update.
+	IgnoreMissingProperty pulumi.BoolOutput `pulumi:"ignoreMissingProperty"`
 	// A list of ARM resource IDs which are used to avoid create/modify/delete azapi resources at the same time.
 	Locks pulumi.StringArrayOutput `pulumi:"locks"`
-	// Specifies the name of the azure resource. Changing this forces a new resource to be created.
+	// Specifies the name of the Azure resource. Changing this forces a new resource to be created.
 	Name pulumi.StringOutput `pulumi:"name"`
-	// The output json containing the properties specified in `responseExportValues`. Here're some examples to decode json and extract the value.
-	Output pulumi.StringOutput `pulumi:"output"`
-	// The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created. It supports different kinds of deployment scope for **top level** resources:
-	// - resource group scope: `parentId` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.
-	// - management group scope: `parentId` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.
-	// - extension scope: `parentId` should be the ID of the resource you're adding the extension to.
-	// - subscription scope: `parentId` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`
-	// - tenant scope: `parentId` should be `/`
-	//
-	// For child level resources, the `parentId` should be the ID of its parent resource, for example, subnet resource's `parentId` is the ID of the vnet.
+	// The output HCL object containing the properties specified in `responseExportValues`. Here are some examples to use the
+	// values. ```terraform // it will output "registry1.azurecr.io" output "login_server" { value =
+	// azapi_update_resource.example.output.properties.loginServer } // it will output "disabled" output "quarantine_policy" {
+	// value = azapi_update_resource.example.output.properties.policies.quarantinePolicy.status } ```
+	Output pulumi.AnyOutput `pulumi:"output"`
+	// The ID of the azure resource in which this resource is created. It supports different kinds of deployment scope for
+	// **top level** resources: - resource group scope: `parentId` should be the ID of a resource group, it's recommended to
+	// manage a resource group by azurerm_resource_group. - management group scope: `parentId` should be the ID of a management
+	// group, it's recommended to manage a management group by azurerm_management_group. - extension scope: `parentId` should
+	// be the ID of the resource you're adding the extension to. - subscription scope: `parentId` should be like
+	// \x60/subscriptions/00000000-0000-0000-0000-000000000000\x60 - tenant scope: `parentId` should be / For child level
+	// resources, the `parentId` should be the ID of its parent resource, for example, subnet resource's `parentId` is the ID
+	// of the vnet. For type `Microsoft.Resources/resourceGroups`, the `parentId` could be omitted, it defaults to subscription
+	// ID specified in provider or the default subscription (You could check the default subscription by azure cli command: `az
+	// account show`).
 	ParentId pulumi.StringOutput `pulumi:"parentId"`
-	// The ID of an existing azure source. Changing this forces a new azure resource to be created.
-	//
-	// > **Note:** Configuring `name` and `parentId` is an alternative way to configure `resourceId`.
+	// A mapping of headers to be sent with the read request.
+	ReadHeaders pulumi.StringMapOutput `pulumi:"readHeaders"`
+	// A mapping of query parameters to be sent with the read request.
+	ReadQueryParameters pulumi.StringArrayMapOutput `pulumi:"readQueryParameters"`
+	// The ID of an existing Azure source.
 	ResourceId pulumi.StringOutput `pulumi:"resourceId"`
-	// A list of path that needs to be exported from response body.
-	// Setting it to `["*"]` will export the full response body.
-	// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-	ResponseExportValues pulumi.StringArrayOutput `pulumi:"responseExportValues"`
-	// It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
-	// `<api-version>` is version of the API used to manage this azure resource.
+	// The attribute can accept either a list or a map. - **List**: A list of paths that need to be exported from the response
+	// body. Setting it to `["*"]` will export the full response body. Here's an example. If it sets to
+	// `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following HCL object to the
+	// computed property output. ```text { properties = { loginServer = "registry1.azurecr.io" policies = { quarantinePolicy =
+	// { status = "disabled" } } } } ``` - **Map**: A map where the key is the name for the result and the value is a JMESPath
+	// query string to filter the response. Here's an example. If it sets to `{"loginServer": "properties.loginServer",
+	// "quarantineStatus": "properties.policies.quarantinePolicy.status"}`, it will set the following HCL object to the
+	// computed property output. ``` text { "login_server" = "registry1.azurecr.io" "quarantine_status" = "disabled" }  ``` To
+	// learn more about JMESPath, visit [JMESPath](https://jmespath.org/).
+	ResponseExportValues pulumi.AnyOutput `pulumi:"responseExportValues"`
+	// The retry object supports the following attributes:
+	Retry    UpdateResourceRetryPtrOutput    `pulumi:"retry"`
+	Timeouts UpdateResourceTimeoutsPtrOutput `pulumi:"timeouts"`
+	// In a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example,
+	// `Microsoft.Storage/storageAccounts`. `<api-version>` is version of the API used to manage this azure resource.
 	Type pulumi.StringOutput `pulumi:"type"`
+	// A mapping of headers to be sent with the update request.
+	UpdateHeaders pulumi.StringMapOutput `pulumi:"updateHeaders"`
+	// A mapping of query parameters to be sent with the update request.
+	UpdateQueryParameters pulumi.StringArrayMapOutput `pulumi:"updateQueryParameters"`
 }
 
 // NewUpdateResource registers a new resource with the given unique name, arguments, and options.
@@ -91,77 +188,117 @@ func GetUpdateResource(ctx *pulumi.Context,
 
 // Input properties used for looking up and filtering UpdateResource resources.
 type updateResourceState struct {
-	// A JSON object that contains the request body used to add on an existing azure resource.
-	Body *string `pulumi:"body"`
-	// A list of properties that should be ignored when comparing the `body` with its current state.
-	IgnoreBodyChanges []string `pulumi:"ignoreBodyChanges"`
-	// Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.
+	// A dynamic attribute that contains the request body.
+	Body interface{} `pulumi:"body"`
+	// Whether ignore the casing of the property names in the response body. Defaults to `false`.
 	IgnoreCasing *bool `pulumi:"ignoreCasing"`
-	// Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.
+	// Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`. It's
+	// recommend to enable this option when some sensitive properties are not returned in response body, instead of setting
+	// them in `lifecycle.ignore_changes` because it will make the sensitive fields unable to update.
 	IgnoreMissingProperty *bool `pulumi:"ignoreMissingProperty"`
 	// A list of ARM resource IDs which are used to avoid create/modify/delete azapi resources at the same time.
 	Locks []string `pulumi:"locks"`
-	// Specifies the name of the azure resource. Changing this forces a new resource to be created.
+	// Specifies the name of the Azure resource. Changing this forces a new resource to be created.
 	Name *string `pulumi:"name"`
-	// The output json containing the properties specified in `responseExportValues`. Here're some examples to decode json and extract the value.
-	Output *string `pulumi:"output"`
-	// The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created. It supports different kinds of deployment scope for **top level** resources:
-	// - resource group scope: `parentId` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.
-	// - management group scope: `parentId` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.
-	// - extension scope: `parentId` should be the ID of the resource you're adding the extension to.
-	// - subscription scope: `parentId` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`
-	// - tenant scope: `parentId` should be `/`
-	//
-	// For child level resources, the `parentId` should be the ID of its parent resource, for example, subnet resource's `parentId` is the ID of the vnet.
+	// The output HCL object containing the properties specified in `responseExportValues`. Here are some examples to use the
+	// values. ```terraform // it will output "registry1.azurecr.io" output "login_server" { value =
+	// azapi_update_resource.example.output.properties.loginServer } // it will output "disabled" output "quarantine_policy" {
+	// value = azapi_update_resource.example.output.properties.policies.quarantinePolicy.status } ```
+	Output interface{} `pulumi:"output"`
+	// The ID of the azure resource in which this resource is created. It supports different kinds of deployment scope for
+	// **top level** resources: - resource group scope: `parentId` should be the ID of a resource group, it's recommended to
+	// manage a resource group by azurerm_resource_group. - management group scope: `parentId` should be the ID of a management
+	// group, it's recommended to manage a management group by azurerm_management_group. - extension scope: `parentId` should
+	// be the ID of the resource you're adding the extension to. - subscription scope: `parentId` should be like
+	// \x60/subscriptions/00000000-0000-0000-0000-000000000000\x60 - tenant scope: `parentId` should be / For child level
+	// resources, the `parentId` should be the ID of its parent resource, for example, subnet resource's `parentId` is the ID
+	// of the vnet. For type `Microsoft.Resources/resourceGroups`, the `parentId` could be omitted, it defaults to subscription
+	// ID specified in provider or the default subscription (You could check the default subscription by azure cli command: `az
+	// account show`).
 	ParentId *string `pulumi:"parentId"`
-	// The ID of an existing azure source. Changing this forces a new azure resource to be created.
-	//
-	// > **Note:** Configuring `name` and `parentId` is an alternative way to configure `resourceId`.
+	// A mapping of headers to be sent with the read request.
+	ReadHeaders map[string]string `pulumi:"readHeaders"`
+	// A mapping of query parameters to be sent with the read request.
+	ReadQueryParameters map[string][]string `pulumi:"readQueryParameters"`
+	// The ID of an existing Azure source.
 	ResourceId *string `pulumi:"resourceId"`
-	// A list of path that needs to be exported from response body.
-	// Setting it to `["*"]` will export the full response body.
-	// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-	ResponseExportValues []string `pulumi:"responseExportValues"`
-	// It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
-	// `<api-version>` is version of the API used to manage this azure resource.
+	// The attribute can accept either a list or a map. - **List**: A list of paths that need to be exported from the response
+	// body. Setting it to `["*"]` will export the full response body. Here's an example. If it sets to
+	// `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following HCL object to the
+	// computed property output. ```text { properties = { loginServer = "registry1.azurecr.io" policies = { quarantinePolicy =
+	// { status = "disabled" } } } } ``` - **Map**: A map where the key is the name for the result and the value is a JMESPath
+	// query string to filter the response. Here's an example. If it sets to `{"loginServer": "properties.loginServer",
+	// "quarantineStatus": "properties.policies.quarantinePolicy.status"}`, it will set the following HCL object to the
+	// computed property output. ``` text { "login_server" = "registry1.azurecr.io" "quarantine_status" = "disabled" }  ``` To
+	// learn more about JMESPath, visit [JMESPath](https://jmespath.org/).
+	ResponseExportValues interface{} `pulumi:"responseExportValues"`
+	// The retry object supports the following attributes:
+	Retry    *UpdateResourceRetry    `pulumi:"retry"`
+	Timeouts *UpdateResourceTimeouts `pulumi:"timeouts"`
+	// In a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example,
+	// `Microsoft.Storage/storageAccounts`. `<api-version>` is version of the API used to manage this azure resource.
 	Type *string `pulumi:"type"`
+	// A mapping of headers to be sent with the update request.
+	UpdateHeaders map[string]string `pulumi:"updateHeaders"`
+	// A mapping of query parameters to be sent with the update request.
+	UpdateQueryParameters map[string][]string `pulumi:"updateQueryParameters"`
 }
 
 type UpdateResourceState struct {
-	// A JSON object that contains the request body used to add on an existing azure resource.
-	Body pulumi.StringPtrInput
-	// A list of properties that should be ignored when comparing the `body` with its current state.
-	IgnoreBodyChanges pulumi.StringArrayInput
-	// Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.
+	// A dynamic attribute that contains the request body.
+	Body pulumi.Input
+	// Whether ignore the casing of the property names in the response body. Defaults to `false`.
 	IgnoreCasing pulumi.BoolPtrInput
-	// Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.
+	// Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`. It's
+	// recommend to enable this option when some sensitive properties are not returned in response body, instead of setting
+	// them in `lifecycle.ignore_changes` because it will make the sensitive fields unable to update.
 	IgnoreMissingProperty pulumi.BoolPtrInput
 	// A list of ARM resource IDs which are used to avoid create/modify/delete azapi resources at the same time.
 	Locks pulumi.StringArrayInput
-	// Specifies the name of the azure resource. Changing this forces a new resource to be created.
+	// Specifies the name of the Azure resource. Changing this forces a new resource to be created.
 	Name pulumi.StringPtrInput
-	// The output json containing the properties specified in `responseExportValues`. Here're some examples to decode json and extract the value.
-	Output pulumi.StringPtrInput
-	// The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created. It supports different kinds of deployment scope for **top level** resources:
-	// - resource group scope: `parentId` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.
-	// - management group scope: `parentId` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.
-	// - extension scope: `parentId` should be the ID of the resource you're adding the extension to.
-	// - subscription scope: `parentId` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`
-	// - tenant scope: `parentId` should be `/`
-	//
-	// For child level resources, the `parentId` should be the ID of its parent resource, for example, subnet resource's `parentId` is the ID of the vnet.
+	// The output HCL object containing the properties specified in `responseExportValues`. Here are some examples to use the
+	// values. ```terraform // it will output "registry1.azurecr.io" output "login_server" { value =
+	// azapi_update_resource.example.output.properties.loginServer } // it will output "disabled" output "quarantine_policy" {
+	// value = azapi_update_resource.example.output.properties.policies.quarantinePolicy.status } ```
+	Output pulumi.Input
+	// The ID of the azure resource in which this resource is created. It supports different kinds of deployment scope for
+	// **top level** resources: - resource group scope: `parentId` should be the ID of a resource group, it's recommended to
+	// manage a resource group by azurerm_resource_group. - management group scope: `parentId` should be the ID of a management
+	// group, it's recommended to manage a management group by azurerm_management_group. - extension scope: `parentId` should
+	// be the ID of the resource you're adding the extension to. - subscription scope: `parentId` should be like
+	// \x60/subscriptions/00000000-0000-0000-0000-000000000000\x60 - tenant scope: `parentId` should be / For child level
+	// resources, the `parentId` should be the ID of its parent resource, for example, subnet resource's `parentId` is the ID
+	// of the vnet. For type `Microsoft.Resources/resourceGroups`, the `parentId` could be omitted, it defaults to subscription
+	// ID specified in provider or the default subscription (You could check the default subscription by azure cli command: `az
+	// account show`).
 	ParentId pulumi.StringPtrInput
-	// The ID of an existing azure source. Changing this forces a new azure resource to be created.
-	//
-	// > **Note:** Configuring `name` and `parentId` is an alternative way to configure `resourceId`.
+	// A mapping of headers to be sent with the read request.
+	ReadHeaders pulumi.StringMapInput
+	// A mapping of query parameters to be sent with the read request.
+	ReadQueryParameters pulumi.StringArrayMapInput
+	// The ID of an existing Azure source.
 	ResourceId pulumi.StringPtrInput
-	// A list of path that needs to be exported from response body.
-	// Setting it to `["*"]` will export the full response body.
-	// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-	ResponseExportValues pulumi.StringArrayInput
-	// It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
-	// `<api-version>` is version of the API used to manage this azure resource.
+	// The attribute can accept either a list or a map. - **List**: A list of paths that need to be exported from the response
+	// body. Setting it to `["*"]` will export the full response body. Here's an example. If it sets to
+	// `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following HCL object to the
+	// computed property output. ```text { properties = { loginServer = "registry1.azurecr.io" policies = { quarantinePolicy =
+	// { status = "disabled" } } } } ``` - **Map**: A map where the key is the name for the result and the value is a JMESPath
+	// query string to filter the response. Here's an example. If it sets to `{"loginServer": "properties.loginServer",
+	// "quarantineStatus": "properties.policies.quarantinePolicy.status"}`, it will set the following HCL object to the
+	// computed property output. ``` text { "login_server" = "registry1.azurecr.io" "quarantine_status" = "disabled" }  ``` To
+	// learn more about JMESPath, visit [JMESPath](https://jmespath.org/).
+	ResponseExportValues pulumi.Input
+	// The retry object supports the following attributes:
+	Retry    UpdateResourceRetryPtrInput
+	Timeouts UpdateResourceTimeoutsPtrInput
+	// In a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example,
+	// `Microsoft.Storage/storageAccounts`. `<api-version>` is version of the API used to manage this azure resource.
 	Type pulumi.StringPtrInput
+	// A mapping of headers to be sent with the update request.
+	UpdateHeaders pulumi.StringMapInput
+	// A mapping of query parameters to be sent with the update request.
+	UpdateQueryParameters pulumi.StringArrayMapInput
 }
 
 func (UpdateResourceState) ElementType() reflect.Type {
@@ -169,74 +306,108 @@ func (UpdateResourceState) ElementType() reflect.Type {
 }
 
 type updateResourceArgs struct {
-	// A JSON object that contains the request body used to add on an existing azure resource.
-	Body *string `pulumi:"body"`
-	// A list of properties that should be ignored when comparing the `body` with its current state.
-	IgnoreBodyChanges []string `pulumi:"ignoreBodyChanges"`
-	// Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.
+	// A dynamic attribute that contains the request body.
+	Body interface{} `pulumi:"body"`
+	// Whether ignore the casing of the property names in the response body. Defaults to `false`.
 	IgnoreCasing *bool `pulumi:"ignoreCasing"`
-	// Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.
+	// Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`. It's
+	// recommend to enable this option when some sensitive properties are not returned in response body, instead of setting
+	// them in `lifecycle.ignore_changes` because it will make the sensitive fields unable to update.
 	IgnoreMissingProperty *bool `pulumi:"ignoreMissingProperty"`
 	// A list of ARM resource IDs which are used to avoid create/modify/delete azapi resources at the same time.
 	Locks []string `pulumi:"locks"`
-	// Specifies the name of the azure resource. Changing this forces a new resource to be created.
+	// Specifies the name of the Azure resource. Changing this forces a new resource to be created.
 	Name *string `pulumi:"name"`
-	// The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created. It supports different kinds of deployment scope for **top level** resources:
-	// - resource group scope: `parentId` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.
-	// - management group scope: `parentId` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.
-	// - extension scope: `parentId` should be the ID of the resource you're adding the extension to.
-	// - subscription scope: `parentId` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`
-	// - tenant scope: `parentId` should be `/`
-	//
-	// For child level resources, the `parentId` should be the ID of its parent resource, for example, subnet resource's `parentId` is the ID of the vnet.
+	// The ID of the azure resource in which this resource is created. It supports different kinds of deployment scope for
+	// **top level** resources: - resource group scope: `parentId` should be the ID of a resource group, it's recommended to
+	// manage a resource group by azurerm_resource_group. - management group scope: `parentId` should be the ID of a management
+	// group, it's recommended to manage a management group by azurerm_management_group. - extension scope: `parentId` should
+	// be the ID of the resource you're adding the extension to. - subscription scope: `parentId` should be like
+	// \x60/subscriptions/00000000-0000-0000-0000-000000000000\x60 - tenant scope: `parentId` should be / For child level
+	// resources, the `parentId` should be the ID of its parent resource, for example, subnet resource's `parentId` is the ID
+	// of the vnet. For type `Microsoft.Resources/resourceGroups`, the `parentId` could be omitted, it defaults to subscription
+	// ID specified in provider or the default subscription (You could check the default subscription by azure cli command: `az
+	// account show`).
 	ParentId *string `pulumi:"parentId"`
-	// The ID of an existing azure source. Changing this forces a new azure resource to be created.
-	//
-	// > **Note:** Configuring `name` and `parentId` is an alternative way to configure `resourceId`.
+	// A mapping of headers to be sent with the read request.
+	ReadHeaders map[string]string `pulumi:"readHeaders"`
+	// A mapping of query parameters to be sent with the read request.
+	ReadQueryParameters map[string][]string `pulumi:"readQueryParameters"`
+	// The ID of an existing Azure source.
 	ResourceId *string `pulumi:"resourceId"`
-	// A list of path that needs to be exported from response body.
-	// Setting it to `["*"]` will export the full response body.
-	// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-	ResponseExportValues []string `pulumi:"responseExportValues"`
-	// It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
-	// `<api-version>` is version of the API used to manage this azure resource.
+	// The attribute can accept either a list or a map. - **List**: A list of paths that need to be exported from the response
+	// body. Setting it to `["*"]` will export the full response body. Here's an example. If it sets to
+	// `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following HCL object to the
+	// computed property output. ```text { properties = { loginServer = "registry1.azurecr.io" policies = { quarantinePolicy =
+	// { status = "disabled" } } } } ``` - **Map**: A map where the key is the name for the result and the value is a JMESPath
+	// query string to filter the response. Here's an example. If it sets to `{"loginServer": "properties.loginServer",
+	// "quarantineStatus": "properties.policies.quarantinePolicy.status"}`, it will set the following HCL object to the
+	// computed property output. ``` text { "login_server" = "registry1.azurecr.io" "quarantine_status" = "disabled" }  ``` To
+	// learn more about JMESPath, visit [JMESPath](https://jmespath.org/).
+	ResponseExportValues interface{} `pulumi:"responseExportValues"`
+	// The retry object supports the following attributes:
+	Retry    *UpdateResourceRetry    `pulumi:"retry"`
+	Timeouts *UpdateResourceTimeouts `pulumi:"timeouts"`
+	// In a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example,
+	// `Microsoft.Storage/storageAccounts`. `<api-version>` is version of the API used to manage this azure resource.
 	Type string `pulumi:"type"`
+	// A mapping of headers to be sent with the update request.
+	UpdateHeaders map[string]string `pulumi:"updateHeaders"`
+	// A mapping of query parameters to be sent with the update request.
+	UpdateQueryParameters map[string][]string `pulumi:"updateQueryParameters"`
 }
 
 // The set of arguments for constructing a UpdateResource resource.
 type UpdateResourceArgs struct {
-	// A JSON object that contains the request body used to add on an existing azure resource.
-	Body pulumi.StringPtrInput
-	// A list of properties that should be ignored when comparing the `body` with its current state.
-	IgnoreBodyChanges pulumi.StringArrayInput
-	// Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.
+	// A dynamic attribute that contains the request body.
+	Body pulumi.Input
+	// Whether ignore the casing of the property names in the response body. Defaults to `false`.
 	IgnoreCasing pulumi.BoolPtrInput
-	// Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.
+	// Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`. It's
+	// recommend to enable this option when some sensitive properties are not returned in response body, instead of setting
+	// them in `lifecycle.ignore_changes` because it will make the sensitive fields unable to update.
 	IgnoreMissingProperty pulumi.BoolPtrInput
 	// A list of ARM resource IDs which are used to avoid create/modify/delete azapi resources at the same time.
 	Locks pulumi.StringArrayInput
-	// Specifies the name of the azure resource. Changing this forces a new resource to be created.
+	// Specifies the name of the Azure resource. Changing this forces a new resource to be created.
 	Name pulumi.StringPtrInput
-	// The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created. It supports different kinds of deployment scope for **top level** resources:
-	// - resource group scope: `parentId` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.
-	// - management group scope: `parentId` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.
-	// - extension scope: `parentId` should be the ID of the resource you're adding the extension to.
-	// - subscription scope: `parentId` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`
-	// - tenant scope: `parentId` should be `/`
-	//
-	// For child level resources, the `parentId` should be the ID of its parent resource, for example, subnet resource's `parentId` is the ID of the vnet.
+	// The ID of the azure resource in which this resource is created. It supports different kinds of deployment scope for
+	// **top level** resources: - resource group scope: `parentId` should be the ID of a resource group, it's recommended to
+	// manage a resource group by azurerm_resource_group. - management group scope: `parentId` should be the ID of a management
+	// group, it's recommended to manage a management group by azurerm_management_group. - extension scope: `parentId` should
+	// be the ID of the resource you're adding the extension to. - subscription scope: `parentId` should be like
+	// \x60/subscriptions/00000000-0000-0000-0000-000000000000\x60 - tenant scope: `parentId` should be / For child level
+	// resources, the `parentId` should be the ID of its parent resource, for example, subnet resource's `parentId` is the ID
+	// of the vnet. For type `Microsoft.Resources/resourceGroups`, the `parentId` could be omitted, it defaults to subscription
+	// ID specified in provider or the default subscription (You could check the default subscription by azure cli command: `az
+	// account show`).
 	ParentId pulumi.StringPtrInput
-	// The ID of an existing azure source. Changing this forces a new azure resource to be created.
-	//
-	// > **Note:** Configuring `name` and `parentId` is an alternative way to configure `resourceId`.
+	// A mapping of headers to be sent with the read request.
+	ReadHeaders pulumi.StringMapInput
+	// A mapping of query parameters to be sent with the read request.
+	ReadQueryParameters pulumi.StringArrayMapInput
+	// The ID of an existing Azure source.
 	ResourceId pulumi.StringPtrInput
-	// A list of path that needs to be exported from response body.
-	// Setting it to `["*"]` will export the full response body.
-	// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-	ResponseExportValues pulumi.StringArrayInput
-	// It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
-	// `<api-version>` is version of the API used to manage this azure resource.
+	// The attribute can accept either a list or a map. - **List**: A list of paths that need to be exported from the response
+	// body. Setting it to `["*"]` will export the full response body. Here's an example. If it sets to
+	// `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following HCL object to the
+	// computed property output. ```text { properties = { loginServer = "registry1.azurecr.io" policies = { quarantinePolicy =
+	// { status = "disabled" } } } } ``` - **Map**: A map where the key is the name for the result and the value is a JMESPath
+	// query string to filter the response. Here's an example. If it sets to `{"loginServer": "properties.loginServer",
+	// "quarantineStatus": "properties.policies.quarantinePolicy.status"}`, it will set the following HCL object to the
+	// computed property output. ``` text { "login_server" = "registry1.azurecr.io" "quarantine_status" = "disabled" }  ``` To
+	// learn more about JMESPath, visit [JMESPath](https://jmespath.org/).
+	ResponseExportValues pulumi.Input
+	// The retry object supports the following attributes:
+	Retry    UpdateResourceRetryPtrInput
+	Timeouts UpdateResourceTimeoutsPtrInput
+	// In a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example,
+	// `Microsoft.Storage/storageAccounts`. `<api-version>` is version of the API used to manage this azure resource.
 	Type pulumi.StringInput
+	// A mapping of headers to be sent with the update request.
+	UpdateHeaders pulumi.StringMapInput
+	// A mapping of query parameters to be sent with the update request.
+	UpdateQueryParameters pulumi.StringArrayMapInput
 }
 
 func (UpdateResourceArgs) ElementType() reflect.Type {
@@ -326,24 +497,21 @@ func (o UpdateResourceOutput) ToUpdateResourceOutputWithContext(ctx context.Cont
 	return o
 }
 
-// A JSON object that contains the request body used to add on an existing azure resource.
-func (o UpdateResourceOutput) Body() pulumi.StringPtrOutput {
-	return o.ApplyT(func(v *UpdateResource) pulumi.StringPtrOutput { return v.Body }).(pulumi.StringPtrOutput)
+// A dynamic attribute that contains the request body.
+func (o UpdateResourceOutput) Body() pulumi.AnyOutput {
+	return o.ApplyT(func(v *UpdateResource) pulumi.AnyOutput { return v.Body }).(pulumi.AnyOutput)
 }
 
-// A list of properties that should be ignored when comparing the `body` with its current state.
-func (o UpdateResourceOutput) IgnoreBodyChanges() pulumi.StringArrayOutput {
-	return o.ApplyT(func(v *UpdateResource) pulumi.StringArrayOutput { return v.IgnoreBodyChanges }).(pulumi.StringArrayOutput)
+// Whether ignore the casing of the property names in the response body. Defaults to `false`.
+func (o UpdateResourceOutput) IgnoreCasing() pulumi.BoolOutput {
+	return o.ApplyT(func(v *UpdateResource) pulumi.BoolOutput { return v.IgnoreCasing }).(pulumi.BoolOutput)
 }
 
-// Whether ignore incorrect casing returned in `body` to suppress plan-diff. Defaults to `false`.
-func (o UpdateResourceOutput) IgnoreCasing() pulumi.BoolPtrOutput {
-	return o.ApplyT(func(v *UpdateResource) pulumi.BoolPtrOutput { return v.IgnoreCasing }).(pulumi.BoolPtrOutput)
-}
-
-// Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`.
-func (o UpdateResourceOutput) IgnoreMissingProperty() pulumi.BoolPtrOutput {
-	return o.ApplyT(func(v *UpdateResource) pulumi.BoolPtrOutput { return v.IgnoreMissingProperty }).(pulumi.BoolPtrOutput)
+// Whether ignore not returned properties like credentials in `body` to suppress plan-diff. Defaults to `true`. It's
+// recommend to enable this option when some sensitive properties are not returned in response body, instead of setting
+// them in `lifecycle.ignore_changes` because it will make the sensitive fields unable to update.
+func (o UpdateResourceOutput) IgnoreMissingProperty() pulumi.BoolOutput {
+	return o.ApplyT(func(v *UpdateResource) pulumi.BoolOutput { return v.IgnoreMissingProperty }).(pulumi.BoolOutput)
 }
 
 // A list of ARM resource IDs which are used to avoid create/modify/delete azapi resources at the same time.
@@ -351,46 +519,84 @@ func (o UpdateResourceOutput) Locks() pulumi.StringArrayOutput {
 	return o.ApplyT(func(v *UpdateResource) pulumi.StringArrayOutput { return v.Locks }).(pulumi.StringArrayOutput)
 }
 
-// Specifies the name of the azure resource. Changing this forces a new resource to be created.
+// Specifies the name of the Azure resource. Changing this forces a new resource to be created.
 func (o UpdateResourceOutput) Name() pulumi.StringOutput {
 	return o.ApplyT(func(v *UpdateResource) pulumi.StringOutput { return v.Name }).(pulumi.StringOutput)
 }
 
-// The output json containing the properties specified in `responseExportValues`. Here're some examples to decode json and extract the value.
-func (o UpdateResourceOutput) Output() pulumi.StringOutput {
-	return o.ApplyT(func(v *UpdateResource) pulumi.StringOutput { return v.Output }).(pulumi.StringOutput)
+// The output HCL object containing the properties specified in `responseExportValues`. Here are some examples to use the
+// values. ```terraform // it will output "registry1.azurecr.io" output "login_server" { value =
+// azapi_update_resource.example.output.properties.loginServer } // it will output "disabled" output "quarantine_policy" {
+// value = azapi_update_resource.example.output.properties.policies.quarantinePolicy.status } ```
+func (o UpdateResourceOutput) Output() pulumi.AnyOutput {
+	return o.ApplyT(func(v *UpdateResource) pulumi.AnyOutput { return v.Output }).(pulumi.AnyOutput)
 }
 
-// The ID of the azure resource in which this resource is created. Changing this forces a new resource to be created. It supports different kinds of deployment scope for **top level** resources:
-// - resource group scope: `parentId` should be the ID of a resource group, it's recommended to manage a resource group by azurerm_resource_group.
-// - management group scope: `parentId` should be the ID of a management group, it's recommended to manage a management group by azurerm_management_group.
-// - extension scope: `parentId` should be the ID of the resource you're adding the extension to.
-// - subscription scope: `parentId` should be like `/subscriptions/00000000-0000-0000-0000-000000000000`
-// - tenant scope: `parentId` should be `/`
-//
-// For child level resources, the `parentId` should be the ID of its parent resource, for example, subnet resource's `parentId` is the ID of the vnet.
+// The ID of the azure resource in which this resource is created. It supports different kinds of deployment scope for
+// **top level** resources: - resource group scope: `parentId` should be the ID of a resource group, it's recommended to
+// manage a resource group by azurerm_resource_group. - management group scope: `parentId` should be the ID of a management
+// group, it's recommended to manage a management group by azurerm_management_group. - extension scope: `parentId` should
+// be the ID of the resource you're adding the extension to. - subscription scope: `parentId` should be like
+// \x60/subscriptions/00000000-0000-0000-0000-000000000000\x60 - tenant scope: `parentId` should be / For child level
+// resources, the `parentId` should be the ID of its parent resource, for example, subnet resource's `parentId` is the ID
+// of the vnet. For type `Microsoft.Resources/resourceGroups`, the `parentId` could be omitted, it defaults to subscription
+// ID specified in provider or the default subscription (You could check the default subscription by azure cli command: `az
+// account show`).
 func (o UpdateResourceOutput) ParentId() pulumi.StringOutput {
 	return o.ApplyT(func(v *UpdateResource) pulumi.StringOutput { return v.ParentId }).(pulumi.StringOutput)
 }
 
-// The ID of an existing azure source. Changing this forces a new azure resource to be created.
-//
-// > **Note:** Configuring `name` and `parentId` is an alternative way to configure `resourceId`.
+// A mapping of headers to be sent with the read request.
+func (o UpdateResourceOutput) ReadHeaders() pulumi.StringMapOutput {
+	return o.ApplyT(func(v *UpdateResource) pulumi.StringMapOutput { return v.ReadHeaders }).(pulumi.StringMapOutput)
+}
+
+// A mapping of query parameters to be sent with the read request.
+func (o UpdateResourceOutput) ReadQueryParameters() pulumi.StringArrayMapOutput {
+	return o.ApplyT(func(v *UpdateResource) pulumi.StringArrayMapOutput { return v.ReadQueryParameters }).(pulumi.StringArrayMapOutput)
+}
+
+// The ID of an existing Azure source.
 func (o UpdateResourceOutput) ResourceId() pulumi.StringOutput {
 	return o.ApplyT(func(v *UpdateResource) pulumi.StringOutput { return v.ResourceId }).(pulumi.StringOutput)
 }
 
-// A list of path that needs to be exported from response body.
-// Setting it to `["*"]` will export the full response body.
-// Here's an example. If it sets to `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following json to computed property `output`.
-func (o UpdateResourceOutput) ResponseExportValues() pulumi.StringArrayOutput {
-	return o.ApplyT(func(v *UpdateResource) pulumi.StringArrayOutput { return v.ResponseExportValues }).(pulumi.StringArrayOutput)
+// The attribute can accept either a list or a map. - **List**: A list of paths that need to be exported from the response
+// body. Setting it to `["*"]` will export the full response body. Here's an example. If it sets to
+// `["properties.loginServer", "properties.policies.quarantinePolicy.status"]`, it will set the following HCL object to the
+// computed property output. ```text { properties = { loginServer = "registry1.azurecr.io" policies = { quarantinePolicy =
+// { status = "disabled" } } } } ``` - **Map**: A map where the key is the name for the result and the value is a JMESPath
+// query string to filter the response. Here's an example. If it sets to `{"loginServer": "properties.loginServer",
+// "quarantineStatus": "properties.policies.quarantinePolicy.status"}`, it will set the following HCL object to the
+// computed property output. ``` text { "login_server" = "registry1.azurecr.io" "quarantine_status" = "disabled" }  ``` To
+// learn more about JMESPath, visit [JMESPath](https://jmespath.org/).
+func (o UpdateResourceOutput) ResponseExportValues() pulumi.AnyOutput {
+	return o.ApplyT(func(v *UpdateResource) pulumi.AnyOutput { return v.ResponseExportValues }).(pulumi.AnyOutput)
 }
 
-// It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
-// `<api-version>` is version of the API used to manage this azure resource.
+// The retry object supports the following attributes:
+func (o UpdateResourceOutput) Retry() UpdateResourceRetryPtrOutput {
+	return o.ApplyT(func(v *UpdateResource) UpdateResourceRetryPtrOutput { return v.Retry }).(UpdateResourceRetryPtrOutput)
+}
+
+func (o UpdateResourceOutput) Timeouts() UpdateResourceTimeoutsPtrOutput {
+	return o.ApplyT(func(v *UpdateResource) UpdateResourceTimeoutsPtrOutput { return v.Timeouts }).(UpdateResourceTimeoutsPtrOutput)
+}
+
+// In a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example,
+// `Microsoft.Storage/storageAccounts`. `<api-version>` is version of the API used to manage this azure resource.
 func (o UpdateResourceOutput) Type() pulumi.StringOutput {
 	return o.ApplyT(func(v *UpdateResource) pulumi.StringOutput { return v.Type }).(pulumi.StringOutput)
+}
+
+// A mapping of headers to be sent with the update request.
+func (o UpdateResourceOutput) UpdateHeaders() pulumi.StringMapOutput {
+	return o.ApplyT(func(v *UpdateResource) pulumi.StringMapOutput { return v.UpdateHeaders }).(pulumi.StringMapOutput)
+}
+
+// A mapping of query parameters to be sent with the update request.
+func (o UpdateResourceOutput) UpdateQueryParameters() pulumi.StringArrayMapOutput {
+	return o.ApplyT(func(v *UpdateResource) pulumi.StringArrayMapOutput { return v.UpdateQueryParameters }).(pulumi.StringArrayMapOutput)
 }
 
 type UpdateResourceArrayOutput struct{ *pulumi.OutputState }

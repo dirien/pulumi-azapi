@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Pulumi.Serialization;
 using Pulumi;
 
-namespace ediri.Azapi.Outputs
+namespace Pulumiverse.Azapi.Outputs
 {
 
     [OutputType]
@@ -19,16 +19,15 @@ namespace ediri.Azapi.Outputs
         /// </summary>
         public readonly ImmutableArray<string> IdentityIds;
         /// <summary>
-        /// The Principal ID for the Service Principal associated with the Managed Service Identity of this azure resource.
+        /// The Principal ID for the Service Principal associated with the Managed Service Identity of this Azure resource.
         /// </summary>
         public readonly string PrincipalId;
         /// <summary>
-        /// The Tenant ID for the Service Principal associated with the Managed Service Identity of this azure resource.
+        /// The Tenant ID for the Service Principal associated with the Managed Service Identity of this Azure resource.
         /// </summary>
         public readonly string TenantId;
         /// <summary>
-        /// It is in a format like `&lt;resource-type&gt;@&lt;api-version&gt;`. `&lt;resource-type&gt;` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
-        /// `&lt;api-version&gt;` is version of the API used to manage this azure resource.
+        /// The Type of Identity which should be used for this azure resource. Possible values are `SystemAssigned`, `UserAssigned` and `SystemAssigned,UserAssigned`
         /// </summary>
         public readonly string Type;
 

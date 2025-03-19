@@ -11,9 +11,60 @@ import (
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
-// This resource can list all resources of a specific type under a scope. If the API supports paging, it will automatically fetch all pages and return the full list.
-//
 // ## Example Usage
+//
+// ```go
+// package main
+//
+// import (
+//
+//	"github.com/dirien/pulumi-azapi/sdk/go/azapi"
+//	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
+//
+// )
+//
+//	func main() {
+//		pulumi.Run(func(ctx *pulumi.Context) error {
+//			_, err := azapi.GetResourceList(ctx, &azapi.GetResourceListArgs{
+//				ParentId: "/subscriptions/00000000-0000-0000-0000-000000000000",
+//				ResponseExportValues: []map[string]interface{}{
+//					map[string]interface{}{
+//						"names":  "value[].name",
+//						"values": "value[].{name: name, publicNetworkAccess: properties.publicNetworkAccess}",
+//					},
+//				},
+//				Type: "Microsoft.Automation/automationAccounts@2021-06-22",
+//			}, nil)
+//			if err != nil {
+//				return err
+//			}
+//			_, err = azapi.GetResourceList(ctx, &azapi.GetResourceListArgs{
+//				ParentId: "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg1",
+//				ResponseExportValues: []map[string]interface{}{
+//					map[string]interface{}{
+//						"names": "value[].name",
+//					},
+//				},
+//				Type: "Microsoft.Automation/automationAccounts@2021-06-22",
+//			}, nil)
+//			if err != nil {
+//				return err
+//			}
+//			_, err = azapi.GetResourceList(ctx, &azapi.GetResourceListArgs{
+//				ParentId: "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg1/providers/Microsoft.Network/virtualNetworks/vnet1",
+//				ResponseExportValues: []string{
+//					"*",
+//				},
+//				Type: "Microsoft.Network/virtualNetworks/subnets@2021-02-01",
+//			}, nil)
+//			if err != nil {
+//				return err
+//			}
+//			return nil
+//		})
+//	}
+//
+// ```
 func GetResourceList(ctx *pulumi.Context, args *GetResourceListArgs, opts ...pulumi.InvokeOption) (*GetResourceListResult, error) {
 	opts = internal.PkgInvokeDefaultOpts(opts)
 	var rv GetResourceListResult
@@ -26,52 +77,46 @@ func GetResourceList(ctx *pulumi.Context, args *GetResourceListArgs, opts ...pul
 
 // A collection of arguments for invoking getResourceList.
 type GetResourceListArgs struct {
-	// The parent resource ID to list resources under. e.g. `/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/myResourceGroup`.
-	ParentId string `pulumi:"parentId"`
-	// A list of path that needs to be exported from response body.
-	// Setting it to `["*"]` will export the full response body.
-	// Here's an example. If it sets to `["value"]`, it will set the following json to computed property `output`.
-	ResponseExportValues []string `pulumi:"responseExportValues"`
-	// It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
-	// `<api-version>` is version of the API used to manage this azure resource.
-	Type string `pulumi:"type"`
+	Headers              map[string]string        `pulumi:"headers"`
+	ParentId             string                   `pulumi:"parentId"`
+	QueryParameters      map[string][]string      `pulumi:"queryParameters"`
+	ResponseExportValues interface{}              `pulumi:"responseExportValues"`
+	Retry                *GetResourceListRetry    `pulumi:"retry"`
+	Timeouts             *GetResourceListTimeouts `pulumi:"timeouts"`
+	Type                 string                   `pulumi:"type"`
 }
 
 // A collection of values returned by getResourceList.
 type GetResourceListResult struct {
-	// The provider-assigned unique ID for this managed resource.
-	Id string `pulumi:"id"`
-	// The output json containing the properties specified in `responseExportValues`. Here are some examples to decode json and extract the value.
-	Output               string   `pulumi:"output"`
-	ParentId             string   `pulumi:"parentId"`
-	ResponseExportValues []string `pulumi:"responseExportValues"`
-	Type                 string   `pulumi:"type"`
+	Headers              map[string]string        `pulumi:"headers"`
+	Id                   string                   `pulumi:"id"`
+	Output               interface{}              `pulumi:"output"`
+	ParentId             string                   `pulumi:"parentId"`
+	QueryParameters      map[string][]string      `pulumi:"queryParameters"`
+	ResponseExportValues interface{}              `pulumi:"responseExportValues"`
+	Retry                *GetResourceListRetry    `pulumi:"retry"`
+	Timeouts             *GetResourceListTimeouts `pulumi:"timeouts"`
+	Type                 string                   `pulumi:"type"`
 }
 
 func GetResourceListOutput(ctx *pulumi.Context, args GetResourceListOutputArgs, opts ...pulumi.InvokeOption) GetResourceListResultOutput {
-	return pulumi.ToOutputWithContext(context.Background(), args).
-		ApplyT(func(v interface{}) (GetResourceListResult, error) {
+	return pulumi.ToOutputWithContext(ctx.Context(), args).
+		ApplyT(func(v interface{}) (GetResourceListResultOutput, error) {
 			args := v.(GetResourceListArgs)
-			r, err := GetResourceList(ctx, &args, opts...)
-			var s GetResourceListResult
-			if r != nil {
-				s = *r
-			}
-			return s, err
+			options := pulumi.InvokeOutputOptions{InvokeOptions: internal.PkgInvokeDefaultOpts(opts)}
+			return ctx.InvokeOutput("azapi:index/getResourceList:getResourceList", args, GetResourceListResultOutput{}, options).(GetResourceListResultOutput), nil
 		}).(GetResourceListResultOutput)
 }
 
 // A collection of arguments for invoking getResourceList.
 type GetResourceListOutputArgs struct {
-	// The parent resource ID to list resources under. e.g. `/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/myResourceGroup`.
-	ParentId pulumi.StringInput `pulumi:"parentId"`
-	// A list of path that needs to be exported from response body.
-	// Setting it to `["*"]` will export the full response body.
-	// Here's an example. If it sets to `["value"]`, it will set the following json to computed property `output`.
-	ResponseExportValues pulumi.StringArrayInput `pulumi:"responseExportValues"`
-	// It is in a format like `<resource-type>@<api-version>`. `<resource-type>` is the Azure resource type, for example, `Microsoft.Storage/storageAccounts`.
-	// `<api-version>` is version of the API used to manage this azure resource.
-	Type pulumi.StringInput `pulumi:"type"`
+	Headers              pulumi.StringMapInput           `pulumi:"headers"`
+	ParentId             pulumi.StringInput              `pulumi:"parentId"`
+	QueryParameters      pulumi.StringArrayMapInput      `pulumi:"queryParameters"`
+	ResponseExportValues pulumi.Input                    `pulumi:"responseExportValues"`
+	Retry                GetResourceListRetryPtrInput    `pulumi:"retry"`
+	Timeouts             GetResourceListTimeoutsPtrInput `pulumi:"timeouts"`
+	Type                 pulumi.StringInput              `pulumi:"type"`
 }
 
 func (GetResourceListOutputArgs) ElementType() reflect.Type {
@@ -93,22 +138,36 @@ func (o GetResourceListResultOutput) ToGetResourceListResultOutputWithContext(ct
 	return o
 }
 
-// The provider-assigned unique ID for this managed resource.
+func (o GetResourceListResultOutput) Headers() pulumi.StringMapOutput {
+	return o.ApplyT(func(v GetResourceListResult) map[string]string { return v.Headers }).(pulumi.StringMapOutput)
+}
+
 func (o GetResourceListResultOutput) Id() pulumi.StringOutput {
 	return o.ApplyT(func(v GetResourceListResult) string { return v.Id }).(pulumi.StringOutput)
 }
 
-// The output json containing the properties specified in `responseExportValues`. Here are some examples to decode json and extract the value.
-func (o GetResourceListResultOutput) Output() pulumi.StringOutput {
-	return o.ApplyT(func(v GetResourceListResult) string { return v.Output }).(pulumi.StringOutput)
+func (o GetResourceListResultOutput) Output() pulumi.AnyOutput {
+	return o.ApplyT(func(v GetResourceListResult) interface{} { return v.Output }).(pulumi.AnyOutput)
 }
 
 func (o GetResourceListResultOutput) ParentId() pulumi.StringOutput {
 	return o.ApplyT(func(v GetResourceListResult) string { return v.ParentId }).(pulumi.StringOutput)
 }
 
-func (o GetResourceListResultOutput) ResponseExportValues() pulumi.StringArrayOutput {
-	return o.ApplyT(func(v GetResourceListResult) []string { return v.ResponseExportValues }).(pulumi.StringArrayOutput)
+func (o GetResourceListResultOutput) QueryParameters() pulumi.StringArrayMapOutput {
+	return o.ApplyT(func(v GetResourceListResult) map[string][]string { return v.QueryParameters }).(pulumi.StringArrayMapOutput)
+}
+
+func (o GetResourceListResultOutput) ResponseExportValues() pulumi.AnyOutput {
+	return o.ApplyT(func(v GetResourceListResult) interface{} { return v.ResponseExportValues }).(pulumi.AnyOutput)
+}
+
+func (o GetResourceListResultOutput) Retry() GetResourceListRetryPtrOutput {
+	return o.ApplyT(func(v GetResourceListResult) *GetResourceListRetry { return v.Retry }).(GetResourceListRetryPtrOutput)
+}
+
+func (o GetResourceListResultOutput) Timeouts() GetResourceListTimeoutsPtrOutput {
+	return o.ApplyT(func(v GetResourceListResult) *GetResourceListTimeouts { return v.Timeouts }).(GetResourceListTimeoutsPtrOutput)
 }
 
 func (o GetResourceListResultOutput) Type() pulumi.StringOutput {

@@ -9,6 +9,10 @@ import * as utilities from "../utilities";
 declare var exports: any;
 const __config = new pulumi.Config("azapi");
 
+/**
+ * List of auxiliary Tenant IDs required for multi-tenancy and cross-tenant scenarios. This can also be sourced from the
+ * `ARM_AUXILIARY_TENANT_IDS` Environment Variable.
+ */
 export declare const auxiliaryTenantIds: string[] | undefined;
 Object.defineProperty(exports, "auxiliaryTenantIds", {
     get() {
@@ -18,8 +22,20 @@ Object.defineProperty(exports, "auxiliaryTenantIds", {
 });
 
 /**
- * The password associated with the Client Certificate. For use when authenticating as a Service Principal using a Client
- * Certificate
+ * A base64-encoded PKCS#12 bundle to be used as the client certificate for authentication. This can also be sourced from
+ * the `ARM_CLIENT_CERTIFICATE` environment variable.
+ */
+export declare const clientCertificate: string | undefined;
+Object.defineProperty(exports, "clientCertificate", {
+    get() {
+        return __config.get("clientCertificate");
+    },
+    enumerable: true,
+});
+
+/**
+ * The password associated with the Client Certificate. This can also be sourced from the `ARM_CLIENT_CERTIFICATE_PASSWORD`
+ * Environment Variable.
  */
 export declare const clientCertificatePassword: string | undefined;
 Object.defineProperty(exports, "clientCertificatePassword", {
@@ -30,8 +46,8 @@ Object.defineProperty(exports, "clientCertificatePassword", {
 });
 
 /**
- * The path to the Client Certificate associated with the Service Principal for use when authenticating as a Service
- * Principal using a Client Certificate.
+ * The path to the Client Certificate associated with the Service Principal which should be used. This can also be sourced
+ * from the `ARM_CLIENT_CERTIFICATE_PATH` Environment Variable.
  */
 export declare const clientCertificatePath: string | undefined;
 Object.defineProperty(exports, "clientCertificatePath", {
@@ -42,7 +58,7 @@ Object.defineProperty(exports, "clientCertificatePath", {
 });
 
 /**
- * The Client ID which should be used.
+ * The Client ID which should be used. This can also be sourced from the `ARM_CLIENT_ID` Environment Variable.
  */
 export declare const clientId: string | undefined;
 Object.defineProperty(exports, "clientId", {
@@ -53,7 +69,19 @@ Object.defineProperty(exports, "clientId", {
 });
 
 /**
- * The Client Secret which should be used. For use When authenticating as a Service Principal using a Client Secret.
+ * The path to a file containing the Client ID which should be used. This can also be sourced from the
+ * `ARM_CLIENT_ID_FILE_PATH` Environment Variable.
+ */
+export declare const clientIdFilePath: string | undefined;
+Object.defineProperty(exports, "clientIdFilePath", {
+    get() {
+        return __config.get("clientIdFilePath");
+    },
+    enumerable: true,
+});
+
+/**
+ * The Client Secret which should be used. This can also be sourced from the `ARM_CLIENT_SECRET` Environment Variable.
  */
 export declare const clientSecret: string | undefined;
 Object.defineProperty(exports, "clientSecret", {
@@ -64,7 +92,20 @@ Object.defineProperty(exports, "clientSecret", {
 });
 
 /**
- * The value of the x-ms-correlation-request-id header (otherwise an auto-generated UUID will be used).
+ * The path to a file containing the Client Secret which should be used. For use When authenticating as a Service Principal
+ * using a Client Secret. This can also be sourced from the `ARM_CLIENT_SECRET_FILE_PATH` Environment Variable.
+ */
+export declare const clientSecretFilePath: string | undefined;
+Object.defineProperty(exports, "clientSecretFilePath", {
+    get() {
+        return __config.get("clientSecretFilePath");
+    },
+    enumerable: true,
+});
+
+/**
+ * The value of the `x-ms-correlation-request-id` header, otherwise an auto-generated UUID will be used. This can also be
+ * sourced from the `ARM_CORRELATION_REQUEST_ID` environment variable.
  */
 export declare const customCorrelationRequestId: string | undefined;
 Object.defineProperty(exports, "customCorrelationRequestId", {
@@ -74,6 +115,10 @@ Object.defineProperty(exports, "customCorrelationRequestId", {
     enumerable: true,
 });
 
+/**
+ * The default Azure Region where the azure resource should exist. The `location` in each resource block can override the
+ * `defaultLocation`. Changing this forces new resources to be created.
+ */
 export declare const defaultLocation: string | undefined;
 Object.defineProperty(exports, "defaultLocation", {
     get() {
@@ -82,6 +127,10 @@ Object.defineProperty(exports, "defaultLocation", {
     enumerable: true,
 });
 
+/**
+ * The default name to create the azure resource. The `name` in each resource block can override the `defaultName`.
+ * Changing this forces new resources to be created.
+ */
 export declare const defaultName: string | undefined;
 Object.defineProperty(exports, "defaultName", {
     get() {
@@ -90,22 +139,10 @@ Object.defineProperty(exports, "defaultName", {
     enumerable: true,
 });
 
-export declare const defaultNamingPrefix: string | undefined;
-Object.defineProperty(exports, "defaultNamingPrefix", {
-    get() {
-        return __config.get("defaultNamingPrefix");
-    },
-    enumerable: true,
-});
-
-export declare const defaultNamingSuffix: string | undefined;
-Object.defineProperty(exports, "defaultNamingSuffix", {
-    get() {
-        return __config.get("defaultNamingSuffix");
-    },
-    enumerable: true,
-});
-
+/**
+ * A mapping of tags which should be assigned to the azure resource as default tags. The`tags` in each resource block can
+ * override the `defaultTags`.
+ */
 export declare const defaultTags: {[key: string]: string} | undefined;
 Object.defineProperty(exports, "defaultTags", {
     get() {
@@ -125,6 +162,19 @@ Object.defineProperty(exports, "disableCorrelationRequestId", {
     enumerable: true,
 });
 
+/**
+ * Disable default output. The default is false. When set to false, the provider will output the read-only properties if
+ * `responseExportValues` is not specified in the resource block. When set to true, the provider will disable this output.
+ * This can also be sourced from the `ARM_DISABLE_DEFAULT_OUTPUT` Environment Variable.
+ */
+export declare const disableDefaultOutput: boolean | undefined;
+Object.defineProperty(exports, "disableDefaultOutput", {
+    get() {
+        return __config.getObject<boolean>("disableDefaultOutput");
+    },
+    enumerable: true,
+});
+
 export declare const disableTerraformPartnerId: boolean | undefined;
 Object.defineProperty(exports, "disableTerraformPartnerId", {
     get() {
@@ -133,16 +183,33 @@ Object.defineProperty(exports, "disableTerraformPartnerId", {
     enumerable: true,
 });
 
-export declare const endpoint: outputs.config.Endpoint | undefined;
-Object.defineProperty(exports, "endpoint", {
+/**
+ * Enable Preflight Validation. The default is false. When set to true, the provider will use Preflight to do static
+ * validation before really deploying a new resource. When set to false, the provider will disable this validation. This
+ * can also be sourced from the `ARM_ENABLE_PREFLIGHT` Environment Variable.
+ */
+export declare const enablePreflight: boolean | undefined;
+Object.defineProperty(exports, "enablePreflight", {
     get() {
-        return __config.getObject<outputs.config.Endpoint>("endpoint");
+        return __config.getObject<boolean>("enablePreflight");
     },
     enumerable: true,
 });
 
 /**
- * The Cloud Environment which should be used. Possible values are public, usgovernment and china. Defaults to public.
+ * The Azure API Endpoint Configuration.
+ */
+export declare const endpoints: outputs.config.Endpoints[] | undefined;
+Object.defineProperty(exports, "endpoints", {
+    get() {
+        return __config.getObject<outputs.config.Endpoints[]>("endpoints");
+    },
+    enumerable: true,
+});
+
+/**
+ * The Cloud Environment which should be used. Possible values are `public`, `usgovernment` and `china`. Defaults to
+ * `public`. This can also be sourced from the `ARM_ENVIRONMENT` Environment Variable.
  */
 export declare const environment: string | undefined;
 Object.defineProperty(exports, "environment", {
@@ -153,8 +220,33 @@ Object.defineProperty(exports, "environment", {
 });
 
 /**
- * The bearer token for the request to the OIDC provider. For use When authenticating as a Service Principal using OpenID
- * Connect.
+ * The maximum number of retries to attempt if the Azure API returns an HTTP 408, 429, 500, 502, 503, or 504 response. The
+ * default is `3`. The resource-specific retry configuration may additionally be used to retry on other errors and
+ * conditions.
+ */
+export declare const maximumBusyRetryAttempts: number | undefined;
+Object.defineProperty(exports, "maximumBusyRetryAttempts", {
+    get() {
+        return __config.getObject<number>("maximumBusyRetryAttempts");
+    },
+    enumerable: true,
+});
+
+/**
+ * The Azure Pipelines Service Connection ID to use for authentication. This can also be sourced from the
+ * `ARM_ADO_PIPELINE_SERVICE_CONNECTION_ID` or `ARM_OIDC_AZURE_SERVICE_CONNECTION_ID` Environment Variables.
+ */
+export declare const oidcAzureServiceConnectionId: string | undefined;
+Object.defineProperty(exports, "oidcAzureServiceConnectionId", {
+    get() {
+        return __config.get("oidcAzureServiceConnectionId");
+    },
+    enumerable: true,
+});
+
+/**
+ * The bearer token for the request to the OIDC provider. This can also be sourced from the `ARM_OIDC_REQUEST_TOKEN` or
+ * `ACTIONS_ID_TOKEN_REQUEST_TOKEN` Environment Variables.
  */
 export declare const oidcRequestToken: string | undefined;
 Object.defineProperty(exports, "oidcRequestToken", {
@@ -165,8 +257,8 @@ Object.defineProperty(exports, "oidcRequestToken", {
 });
 
 /**
- * The URL for the OIDC provider from which to request an ID token. For use When authenticating as a Service Principal
- * using OpenID Connect.
+ * The URL for the OIDC provider from which to request an ID token. This can also be sourced from the
+ * `ARM_OIDC_REQUEST_URL` or `ACTIONS_ID_TOKEN_REQUEST_URL` Environment Variables.
  */
 export declare const oidcRequestUrl: string | undefined;
 Object.defineProperty(exports, "oidcRequestUrl", {
@@ -177,7 +269,8 @@ Object.defineProperty(exports, "oidcRequestUrl", {
 });
 
 /**
- * The OIDC ID token for use when authenticating as a Service Principal using OpenID Connect.
+ * The ID token when authenticating using OpenID Connect (OIDC). This can also be sourced from the `ARM_OIDC_TOKEN`
+ * environment Variable.
  */
 export declare const oidcToken: string | undefined;
 Object.defineProperty(exports, "oidcToken", {
@@ -188,7 +281,8 @@ Object.defineProperty(exports, "oidcToken", {
 });
 
 /**
- * The path to a file containing an OIDC ID token for use when authenticating as a Service Principal using OpenID Connect.
+ * The path to a file containing an ID token when authenticating using OpenID Connect (OIDC). This can also be sourced from
+ * the `ARM_OIDC_TOKEN_FILE_PATH` environment Variable.
  */
 export declare const oidcTokenFilePath: string | undefined;
 Object.defineProperty(exports, "oidcTokenFilePath", {
@@ -199,7 +293,10 @@ Object.defineProperty(exports, "oidcTokenFilePath", {
 });
 
 /**
- * A GUID/UUID that is registered with Microsoft to facilitate partner resource usage attribution.
+ * A GUID/UUID that is
+ * [registered](https://docs.microsoft.com/azure/marketplace/azure-partner-customer-usage-attribution#register-guids-and-offers)
+ * with Microsoft to facilitate partner resource usage attribution. This can also be sourced from the `ARM_PARTNER_ID`
+ * Environment Variable.
  */
 export declare const partnerId: string | undefined;
 Object.defineProperty(exports, "partnerId", {
@@ -210,7 +307,8 @@ Object.defineProperty(exports, "partnerId", {
 });
 
 /**
- * Should the Provider skip registering all of the Resource Providers that it supports, if they're not already registered?
+ * Should the Provider skip registering the Resource Providers it supports? This can also be sourced from the
+ * `ARM_SKIP_PROVIDER_REGISTRATION` Environment Variable. Defaults to `false`.
  */
 export declare const skipProviderRegistration: boolean | undefined;
 Object.defineProperty(exports, "skipProviderRegistration", {
@@ -221,7 +319,7 @@ Object.defineProperty(exports, "skipProviderRegistration", {
 });
 
 /**
- * The Subscription ID which should be used.
+ * The Subscription ID which should be used. This can also be sourced from the `ARM_SUBSCRIPTION_ID` Environment Variable.
  */
 export declare const subscriptionId: string | undefined;
 Object.defineProperty(exports, "subscriptionId", {
@@ -232,7 +330,7 @@ Object.defineProperty(exports, "subscriptionId", {
 });
 
 /**
- * The Tenant ID which should be used.
+ * The Tenant ID should be used. This can also be sourced from the `ARM_TENANT_ID` Environment Variable.
  */
 export declare const tenantId: string | undefined;
 Object.defineProperty(exports, "tenantId", {
@@ -243,7 +341,21 @@ Object.defineProperty(exports, "tenantId", {
 });
 
 /**
- * Allow Azure CLI to be used for Authentication.
+ * Should AKS Workload Identity be used for Authentication? This can also be sourced from the
+ * `ARM_USE_AKS_WORKLOAD_IDENTITY` Environment Variable. Defaults to `false`. When set, `clientId`, `tenantId` and
+ * `oidcTokenFilePath` will be detected from the environment and do not need to be specified.
+ */
+export declare const useAksWorkloadIdentity: boolean | undefined;
+Object.defineProperty(exports, "useAksWorkloadIdentity", {
+    get() {
+        return __config.getObject<boolean>("useAksWorkloadIdentity");
+    },
+    enumerable: true,
+});
+
+/**
+ * Should Azure CLI be used for authentication? This can also be sourced from the `ARM_USE_CLI` environment variable.
+ * Defaults to `true`.
  */
 export declare const useCli: boolean | undefined;
 Object.defineProperty(exports, "useCli", {
@@ -254,7 +366,8 @@ Object.defineProperty(exports, "useCli", {
 });
 
 /**
- * Allow Managed Service Identity to be used for Authentication.
+ * Should Managed Identity be used for Authentication? This can also be sourced from the `ARM_USE_MSI` Environment
+ * Variable. Defaults to `false`.
  */
 export declare const useMsi: boolean | undefined;
 Object.defineProperty(exports, "useMsi", {
@@ -265,7 +378,8 @@ Object.defineProperty(exports, "useMsi", {
 });
 
 /**
- * Allow OpenID Connect to be used for authentication
+ * Should OIDC be used for Authentication? This can also be sourced from the `ARM_USE_OIDC` Environment Variable. Defaults
+ * to `false`.
  */
 export declare const useOidc: boolean | undefined;
 Object.defineProperty(exports, "useOidc", {

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Pulumi.Serialization;
 using Pulumi;
 
-namespace ediri.Azapi
+namespace Pulumiverse.Azapi
 {
     /// <summary>
     /// The provider type for the azapi package. By default, resources use package-wide configuration
@@ -20,95 +20,132 @@ namespace ediri.Azapi
     public partial class Provider : global::Pulumi.ProviderResource
     {
         /// <summary>
-        /// The password associated with the Client Certificate. For use when authenticating as a Service Principal using a Client
-        /// Certificate
+        /// A base64-encoded PKCS#12 bundle to be used as the client certificate for authentication. This can also be sourced from
+        /// the `ARM_CLIENT_CERTIFICATE` environment variable.
+        /// </summary>
+        [Output("clientCertificate")]
+        public Output<string?> ClientCertificate { get; private set; } = null!;
+
+        /// <summary>
+        /// The password associated with the Client Certificate. This can also be sourced from the `ARM_CLIENT_CERTIFICATE_PASSWORD`
+        /// Environment Variable.
         /// </summary>
         [Output("clientCertificatePassword")]
         public Output<string?> ClientCertificatePassword { get; private set; } = null!;
 
         /// <summary>
-        /// The path to the Client Certificate associated with the Service Principal for use when authenticating as a Service
-        /// Principal using a Client Certificate.
+        /// The path to the Client Certificate associated with the Service Principal which should be used. This can also be sourced
+        /// from the `ARM_CLIENT_CERTIFICATE_PATH` Environment Variable.
         /// </summary>
         [Output("clientCertificatePath")]
         public Output<string?> ClientCertificatePath { get; private set; } = null!;
 
         /// <summary>
-        /// The Client ID which should be used.
+        /// The Client ID which should be used. This can also be sourced from the `ARM_CLIENT_ID` Environment Variable.
         /// </summary>
         [Output("clientId")]
         public Output<string?> ClientId { get; private set; } = null!;
 
         /// <summary>
-        /// The Client Secret which should be used. For use When authenticating as a Service Principal using a Client Secret.
+        /// The path to a file containing the Client ID which should be used. This can also be sourced from the
+        /// `ARM_CLIENT_ID_FILE_PATH` Environment Variable.
+        /// </summary>
+        [Output("clientIdFilePath")]
+        public Output<string?> ClientIdFilePath { get; private set; } = null!;
+
+        /// <summary>
+        /// The Client Secret which should be used. This can also be sourced from the `ARM_CLIENT_SECRET` Environment Variable.
         /// </summary>
         [Output("clientSecret")]
         public Output<string?> ClientSecret { get; private set; } = null!;
 
         /// <summary>
-        /// The value of the x-ms-correlation-request-id header (otherwise an auto-generated UUID will be used).
+        /// The path to a file containing the Client Secret which should be used. For use When authenticating as a Service Principal
+        /// using a Client Secret. This can also be sourced from the `ARM_CLIENT_SECRET_FILE_PATH` Environment Variable.
+        /// </summary>
+        [Output("clientSecretFilePath")]
+        public Output<string?> ClientSecretFilePath { get; private set; } = null!;
+
+        /// <summary>
+        /// The value of the `x-ms-correlation-request-id` header, otherwise an auto-generated UUID will be used. This can also be
+        /// sourced from the `ARM_CORRELATION_REQUEST_ID` environment variable.
         /// </summary>
         [Output("customCorrelationRequestId")]
         public Output<string?> CustomCorrelationRequestId { get; private set; } = null!;
 
+        /// <summary>
+        /// The default Azure Region where the azure resource should exist. The `location` in each resource block can override the
+        /// `default_location`. Changing this forces new resources to be created.
+        /// </summary>
         [Output("defaultLocation")]
         public Output<string?> DefaultLocation { get; private set; } = null!;
 
+        /// <summary>
+        /// The default name to create the azure resource. The `name` in each resource block can override the `default_name`.
+        /// Changing this forces new resources to be created.
+        /// </summary>
         [Output("defaultName")]
         public Output<string?> DefaultName { get; private set; } = null!;
 
-        [Output("defaultNamingPrefix")]
-        public Output<string?> DefaultNamingPrefix { get; private set; } = null!;
-
-        [Output("defaultNamingSuffix")]
-        public Output<string?> DefaultNamingSuffix { get; private set; } = null!;
-
         /// <summary>
-        /// The Cloud Environment which should be used. Possible values are public, usgovernment and china. Defaults to public.
+        /// The Cloud Environment which should be used. Possible values are `public`, `usgovernment` and `china`. Defaults to
+        /// `public`. This can also be sourced from the `ARM_ENVIRONMENT` Environment Variable.
         /// </summary>
         [Output("environment")]
-        public Output<string> Environment { get; private set; } = null!;
+        public Output<string?> Environment { get; private set; } = null!;
 
         /// <summary>
-        /// The bearer token for the request to the OIDC provider. For use When authenticating as a Service Principal using OpenID
-        /// Connect.
+        /// The Azure Pipelines Service Connection ID to use for authentication. This can also be sourced from the
+        /// `ARM_ADO_PIPELINE_SERVICE_CONNECTION_ID` or `ARM_OIDC_AZURE_SERVICE_CONNECTION_ID` Environment Variables.
+        /// </summary>
+        [Output("oidcAzureServiceConnectionId")]
+        public Output<string?> OidcAzureServiceConnectionId { get; private set; } = null!;
+
+        /// <summary>
+        /// The bearer token for the request to the OIDC provider. This can also be sourced from the `ARM_OIDC_REQUEST_TOKEN` or
+        /// `ACTIONS_ID_TOKEN_REQUEST_TOKEN` Environment Variables.
         /// </summary>
         [Output("oidcRequestToken")]
         public Output<string?> OidcRequestToken { get; private set; } = null!;
 
         /// <summary>
-        /// The URL for the OIDC provider from which to request an ID token. For use When authenticating as a Service Principal
-        /// using OpenID Connect.
+        /// The URL for the OIDC provider from which to request an ID token. This can also be sourced from the
+        /// `ARM_OIDC_REQUEST_URL` or `ACTIONS_ID_TOKEN_REQUEST_URL` Environment Variables.
         /// </summary>
         [Output("oidcRequestUrl")]
         public Output<string?> OidcRequestUrl { get; private set; } = null!;
 
         /// <summary>
-        /// The OIDC ID token for use when authenticating as a Service Principal using OpenID Connect.
+        /// The ID token when authenticating using OpenID Connect (OIDC). This can also be sourced from the `ARM_OIDC_TOKEN`
+        /// environment Variable.
         /// </summary>
         [Output("oidcToken")]
         public Output<string?> OidcToken { get; private set; } = null!;
 
         /// <summary>
-        /// The path to a file containing an OIDC ID token for use when authenticating as a Service Principal using OpenID Connect.
+        /// The path to a file containing an ID token when authenticating using OpenID Connect (OIDC). This can also be sourced from
+        /// the `ARM_OIDC_TOKEN_FILE_PATH` environment Variable.
         /// </summary>
         [Output("oidcTokenFilePath")]
         public Output<string?> OidcTokenFilePath { get; private set; } = null!;
 
         /// <summary>
-        /// A GUID/UUID that is registered with Microsoft to facilitate partner resource usage attribution.
+        /// A GUID/UUID that is
+        /// [registered](https://docs.microsoft.com/azure/marketplace/azure-partner-customer-usage-attribution#register-guids-and-offers)
+        /// with Microsoft to facilitate partner resource usage attribution. This can also be sourced from the `ARM_PARTNER_ID`
+        /// Environment Variable.
         /// </summary>
         [Output("partnerId")]
         public Output<string?> PartnerId { get; private set; } = null!;
 
         /// <summary>
-        /// The Subscription ID which should be used.
+        /// The Subscription ID which should be used. This can also be sourced from the `ARM_SUBSCRIPTION_ID` Environment Variable.
         /// </summary>
         [Output("subscriptionId")]
         public Output<string?> SubscriptionId { get; private set; } = null!;
 
         /// <summary>
-        /// The Tenant ID which should be used.
+        /// The Tenant ID should be used. This can also be sourced from the `ARM_TENANT_ID` Environment Variable.
         /// </summary>
         [Output("tenantId")]
         public Output<string?> TenantId { get; private set; } = null!;
@@ -121,7 +158,7 @@ namespace ediri.Azapi
         /// <param name="name">The unique name of the resource</param>
         /// <param name="args">The arguments used to populate this resource's properties</param>
         /// <param name="options">A bag of options that control this resource's behavior</param>
-        public Provider(string name, ProviderArgs args, CustomResourceOptions? options = null)
+        public Provider(string name, ProviderArgs? args = null, CustomResourceOptions? options = null)
             : base("azapi", name, args ?? new ProviderArgs(), MakeResourceOptions(options, ""))
         {
         }
@@ -144,6 +181,11 @@ namespace ediri.Azapi
     {
         [Input("auxiliaryTenantIds", json: true)]
         private InputList<string>? _auxiliaryTenantIds;
+
+        /// <summary>
+        /// List of auxiliary Tenant IDs required for multi-tenancy and cross-tenant scenarios. This can also be sourced from the
+        /// `ARM_AUXILIARY_TENANT_IDS` Environment Variable.
+        /// </summary>
         public InputList<string> AuxiliaryTenantIds
         {
             get => _auxiliaryTenantIds ?? (_auxiliaryTenantIds = new InputList<string>());
@@ -151,51 +193,80 @@ namespace ediri.Azapi
         }
 
         /// <summary>
-        /// The password associated with the Client Certificate. For use when authenticating as a Service Principal using a Client
-        /// Certificate
+        /// A base64-encoded PKCS#12 bundle to be used as the client certificate for authentication. This can also be sourced from
+        /// the `ARM_CLIENT_CERTIFICATE` environment variable.
+        /// </summary>
+        [Input("clientCertificate")]
+        public Input<string>? ClientCertificate { get; set; }
+
+        /// <summary>
+        /// The password associated with the Client Certificate. This can also be sourced from the `ARM_CLIENT_CERTIFICATE_PASSWORD`
+        /// Environment Variable.
         /// </summary>
         [Input("clientCertificatePassword")]
         public Input<string>? ClientCertificatePassword { get; set; }
 
         /// <summary>
-        /// The path to the Client Certificate associated with the Service Principal for use when authenticating as a Service
-        /// Principal using a Client Certificate.
+        /// The path to the Client Certificate associated with the Service Principal which should be used. This can also be sourced
+        /// from the `ARM_CLIENT_CERTIFICATE_PATH` Environment Variable.
         /// </summary>
         [Input("clientCertificatePath")]
         public Input<string>? ClientCertificatePath { get; set; }
 
         /// <summary>
-        /// The Client ID which should be used.
+        /// The Client ID which should be used. This can also be sourced from the `ARM_CLIENT_ID` Environment Variable.
         /// </summary>
         [Input("clientId")]
         public Input<string>? ClientId { get; set; }
 
         /// <summary>
-        /// The Client Secret which should be used. For use When authenticating as a Service Principal using a Client Secret.
+        /// The path to a file containing the Client ID which should be used. This can also be sourced from the
+        /// `ARM_CLIENT_ID_FILE_PATH` Environment Variable.
+        /// </summary>
+        [Input("clientIdFilePath")]
+        public Input<string>? ClientIdFilePath { get; set; }
+
+        /// <summary>
+        /// The Client Secret which should be used. This can also be sourced from the `ARM_CLIENT_SECRET` Environment Variable.
         /// </summary>
         [Input("clientSecret")]
         public Input<string>? ClientSecret { get; set; }
 
         /// <summary>
-        /// The value of the x-ms-correlation-request-id header (otherwise an auto-generated UUID will be used).
+        /// The path to a file containing the Client Secret which should be used. For use When authenticating as a Service Principal
+        /// using a Client Secret. This can also be sourced from the `ARM_CLIENT_SECRET_FILE_PATH` Environment Variable.
+        /// </summary>
+        [Input("clientSecretFilePath")]
+        public Input<string>? ClientSecretFilePath { get; set; }
+
+        /// <summary>
+        /// The value of the `x-ms-correlation-request-id` header, otherwise an auto-generated UUID will be used. This can also be
+        /// sourced from the `ARM_CORRELATION_REQUEST_ID` environment variable.
         /// </summary>
         [Input("customCorrelationRequestId")]
         public Input<string>? CustomCorrelationRequestId { get; set; }
 
+        /// <summary>
+        /// The default Azure Region where the azure resource should exist. The `location` in each resource block can override the
+        /// `default_location`. Changing this forces new resources to be created.
+        /// </summary>
         [Input("defaultLocation")]
         public Input<string>? DefaultLocation { get; set; }
 
+        /// <summary>
+        /// The default name to create the azure resource. The `name` in each resource block can override the `default_name`.
+        /// Changing this forces new resources to be created.
+        /// </summary>
         [Input("defaultName")]
         public Input<string>? DefaultName { get; set; }
 
-        [Input("defaultNamingPrefix")]
-        public Input<string>? DefaultNamingPrefix { get; set; }
-
-        [Input("defaultNamingSuffix")]
-        public Input<string>? DefaultNamingSuffix { get; set; }
-
         [Input("defaultTags", json: true)]
         private InputMap<string>? _defaultTags;
+
+        /// <summary>
+        /// A mapping of tags which should be assigned to the azure resource as default tags. The`tags` in each resource block can
+        /// override the `default_tags`.
+        /// </summary>
         public InputMap<string> DefaultTags
         {
             get => _defaultTags ?? (_defaultTags = new InputMap<string>());
@@ -208,82 +279,140 @@ namespace ediri.Azapi
         [Input("disableCorrelationRequestId", json: true)]
         public Input<bool>? DisableCorrelationRequestId { get; set; }
 
+        /// <summary>
+        /// Disable default output. The default is false. When set to false, the provider will output the read-only properties if
+        /// `response_export_values` is not specified in the resource block. When set to true, the provider will disable this
+        /// output. This can also be sourced from the `ARM_DISABLE_DEFAULT_OUTPUT` Environment Variable.
+        /// </summary>
+        [Input("disableDefaultOutput", json: true)]
+        public Input<bool>? DisableDefaultOutput { get; set; }
+
         [Input("disableTerraformPartnerId", json: true)]
         public Input<bool>? DisableTerraformPartnerId { get; set; }
 
-        [Input("endpoint", json: true)]
-        public Input<Inputs.ProviderEndpointArgs>? Endpoint { get; set; }
-
         /// <summary>
-        /// The Cloud Environment which should be used. Possible values are public, usgovernment and china. Defaults to public.
+        /// Enable Preflight Validation. The default is false. When set to true, the provider will use Preflight to do static
+        /// validation before really deploying a new resource. When set to false, the provider will disable this validation. This
+        /// can also be sourced from the `ARM_ENABLE_PREFLIGHT` Environment Variable.
         /// </summary>
-        [Input("environment", required: true)]
-        public Input<string> Environment { get; set; } = null!;
+        [Input("enablePreflight", json: true)]
+        public Input<bool>? EnablePreflight { get; set; }
+
+        [Input("endpoints", json: true)]
+        private InputList<Inputs.ProviderEndpointArgs>? _endpoints;
 
         /// <summary>
-        /// The bearer token for the request to the OIDC provider. For use When authenticating as a Service Principal using OpenID
-        /// Connect.
+        /// The Azure API Endpoint Configuration.
+        /// </summary>
+        public InputList<Inputs.ProviderEndpointArgs> Endpoints
+        {
+            get => _endpoints ?? (_endpoints = new InputList<Inputs.ProviderEndpointArgs>());
+            set => _endpoints = value;
+        }
+
+        /// <summary>
+        /// The Cloud Environment which should be used. Possible values are `public`, `usgovernment` and `china`. Defaults to
+        /// `public`. This can also be sourced from the `ARM_ENVIRONMENT` Environment Variable.
+        /// </summary>
+        [Input("environment")]
+        public Input<string>? Environment { get; set; }
+
+        /// <summary>
+        /// The maximum number of retries to attempt if the Azure API returns an HTTP 408, 429, 500, 502, 503, or 504 response. The
+        /// default is `3`. The resource-specific retry configuration may additionally be used to retry on other errors and
+        /// conditions.
+        /// </summary>
+        [Input("maximumBusyRetryAttempts", json: true)]
+        public Input<int>? MaximumBusyRetryAttempts { get; set; }
+
+        /// <summary>
+        /// The Azure Pipelines Service Connection ID to use for authentication. This can also be sourced from the
+        /// `ARM_ADO_PIPELINE_SERVICE_CONNECTION_ID` or `ARM_OIDC_AZURE_SERVICE_CONNECTION_ID` Environment Variables.
+        /// </summary>
+        [Input("oidcAzureServiceConnectionId")]
+        public Input<string>? OidcAzureServiceConnectionId { get; set; }
+
+        /// <summary>
+        /// The bearer token for the request to the OIDC provider. This can also be sourced from the `ARM_OIDC_REQUEST_TOKEN` or
+        /// `ACTIONS_ID_TOKEN_REQUEST_TOKEN` Environment Variables.
         /// </summary>
         [Input("oidcRequestToken")]
         public Input<string>? OidcRequestToken { get; set; }
 
         /// <summary>
-        /// The URL for the OIDC provider from which to request an ID token. For use When authenticating as a Service Principal
-        /// using OpenID Connect.
+        /// The URL for the OIDC provider from which to request an ID token. This can also be sourced from the
+        /// `ARM_OIDC_REQUEST_URL` or `ACTIONS_ID_TOKEN_REQUEST_URL` Environment Variables.
         /// </summary>
         [Input("oidcRequestUrl")]
         public Input<string>? OidcRequestUrl { get; set; }
 
         /// <summary>
-        /// The OIDC ID token for use when authenticating as a Service Principal using OpenID Connect.
+        /// The ID token when authenticating using OpenID Connect (OIDC). This can also be sourced from the `ARM_OIDC_TOKEN`
+        /// environment Variable.
         /// </summary>
         [Input("oidcToken")]
         public Input<string>? OidcToken { get; set; }
 
         /// <summary>
-        /// The path to a file containing an OIDC ID token for use when authenticating as a Service Principal using OpenID Connect.
+        /// The path to a file containing an ID token when authenticating using OpenID Connect (OIDC). This can also be sourced from
+        /// the `ARM_OIDC_TOKEN_FILE_PATH` environment Variable.
         /// </summary>
         [Input("oidcTokenFilePath")]
         public Input<string>? OidcTokenFilePath { get; set; }
 
         /// <summary>
-        /// A GUID/UUID that is registered with Microsoft to facilitate partner resource usage attribution.
+        /// A GUID/UUID that is
+        /// [registered](https://docs.microsoft.com/azure/marketplace/azure-partner-customer-usage-attribution#register-guids-and-offers)
+        /// with Microsoft to facilitate partner resource usage attribution. This can also be sourced from the `ARM_PARTNER_ID`
+        /// Environment Variable.
         /// </summary>
         [Input("partnerId")]
         public Input<string>? PartnerId { get; set; }
 
         /// <summary>
-        /// Should the Provider skip registering all of the Resource Providers that it supports, if they're not already registered?
+        /// Should the Provider skip registering the Resource Providers it supports? This can also be sourced from the
+        /// `ARM_SKIP_PROVIDER_REGISTRATION` Environment Variable. Defaults to `false`.
         /// </summary>
         [Input("skipProviderRegistration", json: true)]
         public Input<bool>? SkipProviderRegistration { get; set; }
 
         /// <summary>
-        /// The Subscription ID which should be used.
+        /// The Subscription ID which should be used. This can also be sourced from the `ARM_SUBSCRIPTION_ID` Environment Variable.
         /// </summary>
         [Input("subscriptionId")]
         public Input<string>? SubscriptionId { get; set; }
 
         /// <summary>
-        /// The Tenant ID which should be used.
+        /// The Tenant ID should be used. This can also be sourced from the `ARM_TENANT_ID` Environment Variable.
         /// </summary>
         [Input("tenantId")]
         public Input<string>? TenantId { get; set; }
 
         /// <summary>
-        /// Allow Azure CLI to be used for Authentication.
+        /// Should AKS Workload Identity be used for Authentication? This can also be sourced from the
+        /// `ARM_USE_AKS_WORKLOAD_IDENTITY` Environment Variable. Defaults to `false`. When set, `client_id`, `tenant_id` and
+        /// `oidc_token_file_path` will be detected from the environment and do not need to be specified.
+        /// </summary>
+        [Input("useAksWorkloadIdentity", json: true)]
+        public Input<bool>? UseAksWorkloadIdentity { get; set; }
+
+        /// <summary>
+        /// Should Azure CLI be used for authentication? This can also be sourced from the `ARM_USE_CLI` environment variable.
+        /// Defaults to `true`.
         /// </summary>
         [Input("useCli", json: true)]
         public Input<bool>? UseCli { get; set; }
 
         /// <summary>
-        /// Allow Managed Service Identity to be used for Authentication.
+        /// Should Managed Identity be used for Authentication? This can also be sourced from the `ARM_USE_MSI` Environment
+        /// Variable. Defaults to `false`.
         /// </summary>
         [Input("useMsi", json: true)]
         public Input<bool>? UseMsi { get; set; }
 
         /// <summary>
-        /// Allow OpenID Connect to be used for authentication
+        /// Should OIDC be used for Authentication? This can also be sourced from the `ARM_USE_OIDC` Environment Variable. Defaults
+        /// to `false`.
         /// </summary>
         [Input("useOidc", json: true)]
         public Input<bool>? UseOidc { get; set; }
