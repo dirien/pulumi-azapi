@@ -1,3 +1,6 @@
+> [!CAUTION]
+> Please use the Pulumi Native Provider for Azure -> https://www.pulumi.com/registry/packages/azure-native/
+
 # AzAPI Resource Provider
 
 ![AzAPI](./img/azure.png)
